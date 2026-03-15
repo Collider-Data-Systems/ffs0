@@ -1,0 +1,24 @@
+{
+  "agent_urn": "urn:moos:agent:antigraviti",
+  "type_id": "agent_spec",
+  "role": "testing",
+  "status": "standby",
+  "session_start": "2026-03-15T13:25:00+01:00",
+  "capabilities": ["http-testing", "ux-audit", "code-audit", "http3-research"],
+  "ide": "antigraviti-gemini-3.1-pro",
+  "ide_notes": {
+    "os": "Windows — use PowerShell, not bash",
+    "shell": "PowerShell — use Set-Location not cd, Invoke-RestMethod not jq",
+    "browser": "BLOCKED — cloud IDE cannot reach localhost. Do not attempt.",
+    "approval_gate": "Click 'Always run ↑' once per command type per session",
+    "file_hygiene": "Never create files in source dirs. Temp fixtures go in platform/kernel/data/test/ only."
+  },
+  "channels": {
+    "reads": ["testoff.md"],
+    "writes": ["testoff.md", "configs/agents/antigraviti.json"]
+  },
+  "tasks_completed": ["T023-A", "T023-D", "T023-E", "T026", "T027"],
+  "last_result": "Task 027 — Phase A PASS, Phase B PASS (All checks pass)",
+  "next_task": "await next direction in testoff.md",
+  "operating_manual": "testoff.md line 12 — read OPERATING MANUAL message first each session"
+}

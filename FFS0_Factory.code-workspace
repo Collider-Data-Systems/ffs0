@@ -1,0 +1,228 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "FFS0_Factory (root)"
+    },
+    {
+      "path": "moos",
+      "name": "mo:os Kernel (code)"
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "golang.go",
+    "[go]": {
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+      }
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "files.exclude": {
+      "**/.git": false,
+      "**/*.exe": true,
+      "**/*.exe~": true,
+      "**/moos.exe": true,
+      "**/__pycache__": true,
+      "**/.pytest_cache": true,
+      "**/node_modules": true
+    },
+    "search.exclude": {
+      "**/.agent/skills": true,
+      "**/platform/kernel/data": true,
+      "**/platform/kernel/boot*.err": true
+    },
+    "go.lintOnSave": "package",
+    "go.lintTool": "golangci-lint",
+    "python.defaultInterpreterPath": "D:\\FFS0_Factory\\.venv\\Scripts\\python.exe",
+    "python.interpreterPath": "D:\\FFS0_Factory\\.venv\\Scripts\\python.exe",
+    "go.lintFlags": [
+      "--fast"
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "golang.go",
+      "esbenp.prettier-vscode",
+      "ms-vscode.makefile-tools",
+      "redhat.vscode-yaml",
+      "DavidAnson.vscode-markdownlint"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Kernel (with --kb --hydrate)",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel/cmd/moos",
+        "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
+        "args": [
+          "--kb",
+          "D:\\FFS0_Factory\\.agent\\knowledge_base",
+          "--hydrate"
+        ],
+        "showLog": true
+      },
+      {
+        "name": "Kernel (no hydrate)",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel/cmd/moos",
+        "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
+        "args": [
+          "--kb",
+          "D:\\FFS0_Factory\\.agent\\knowledge_base"
+        ],
+        "showLog": true
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Kernel: build",
+        "type": "shell",
+        "command": "go",
+        "args": [
+          "build",
+          "-o",
+          "moos.exe",
+          "./cmd/moos"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel"
+        },
+        "problemMatcher": [
+          "$go"
+        ],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false
+        }
+      },
+      {
+        "label": "Kernel: test all",
+        "type": "shell",
+        "command": "go",
+        "args": [
+          "test",
+          "./..."
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel"
+        },
+        "problemMatcher": [
+          "$go"
+        ],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false
+        }
+      },
+      {
+        "label": "Kernel: run (with --kb --hydrate)",
+        "type": "shell",
+        "command": "go",
+        "args": [
+          "run",
+          "./cmd/moos",
+          "--kb",
+          "D:\\FFS0_Factory\\.agent\\knowledge_base",
+          "--hydrate"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel"
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": true
+        }
+      },
+      {
+        "label": "Git: pull latest",
+        "type": "shell",
+        "command": "git",
+        "args": [
+          "pull",
+          "origin",
+          "main"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:mo:os Kernel (code)}"
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always"
+        }
+      },
+      {
+        "label": "Git: status + log (5 commits)",
+        "type": "shell",
+        "command": "git",
+        "args": [
+          "status",
+          "-s",
+          "&&",
+          "echo",
+          "---",
+          "&&",
+          "git",
+          "log",
+          "--oneline",
+          "-5"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:mo:os Kernel (code)}"
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always"
+        }
+      },
+      {
+        "label": "KB: open handoff.md",
+        "type": "shell",
+        "command": "code",
+        "args": [
+          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base/handoff.md"
+        ],
+        "presentation": {
+          "reveal": "silent"
+        }
+      },
+      {
+        "label": "KB: open testoff.md",
+        "type": "shell",
+        "command": "code",
+        "args": [
+          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base/testoff.md"
+        ],
+        "presentation": {
+          "reveal": "silent"
+        }
+      },
+      {
+        "label": "KB: open delegation-protocol.md",
+        "type": "shell",
+        "command": "code",
+        "args": [
+          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base/delegation-protocol.md"
+        ],
+        "presentation": {
+          "reveal": "silent"
+        }
+      }
+    ]
+  }
+}

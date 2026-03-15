@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:mariadb.com)",
+      "WebFetch(domain:spdx.org)"
+    ]
+  }
+}

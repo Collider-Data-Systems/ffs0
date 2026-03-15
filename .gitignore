@@ -1,0 +1,34 @@
+# Secrets — never commit
+.agent/secrets/api_keys.env
+
+# Subrepo — has its own git repo
+moos/
+
+# Python / Node generated
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+*.egg-info/
+dist/
+build/
+
+# LaTeX build artifacts
+.agent/.papers/**/*.aux
+.agent/.papers/**/*.log
+.agent/.papers/**/*.out
+.agent/.papers/**/*.pag
+.agent/.papers/**/*.bbl
+.agent/.papers/**/*.blg
+.agent/.papers/**/*.fls
+.agent/.papers/**/*.fdb_latexmk
+.agent/.papers/**/*.synctex.gz
+
+# Temp and scratch
+tmp/
+*.tmp
+lost\ converstation*.txt
+
+# OS
+.DS_Store
+Thumbs.db
