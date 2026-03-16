@@ -2,7 +2,7 @@
   "agent_urn": "urn:moos:agent:antigraviti",
   "type_id": "agent_spec",
   "role": "testing",
-  "status": "active",
+  "status": "standby",
   "session_start": "2026-03-16T15:45:00+01:00",
   "workstation": "hp-laptop",
   "workspace_root": "c:\\Users\\HP\\FFS0_HPlaptop",
@@ -18,11 +18,13 @@
     "kernel_dir": "c:\\Users\\HP\\FFS0_HPlaptop\\moos\\platform\\kernel"
   },
   "channels": {
-    "reads": ["testoff.md"],
+    "reads": ["testoff.md", "handoff.md (read-only)"],
     "writes": ["testoff.md", "configs/agents/antigraviti.json"]
   },
   "tasks_completed": ["T023-A", "T023-D", "T023-E", "T026", "T027"],
-  "last_result": "HP laptop setup — Go 1.26.1, repos cloned, browser unlocked",
-  "next_task": "await next direction in testoff.md",
-  "operating_manual": "testoff.md line 12 — read OPERATING MANUAL message first each session"
+  "current_task": "T028 — awaiting VS Code AI completion",
+  "next_task": "Run Task 028 test cycle when VS Code posts completion to handoff.md",
+  "last_result": "HP laptop setup complete — all verification green, workspace equipped",
+  "copilot_interim": "resolved — seed-template, stop flagging",
+  "operating_manual": "testoff.md — read OPERATING MANUAL message first each session"
 }
