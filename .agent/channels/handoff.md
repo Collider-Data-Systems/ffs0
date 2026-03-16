@@ -14,10 +14,12 @@ Newest message at top. Check `git log` for push timestamps.
 Requested execution completed.
 
 1. `ffs0-factory-super` pushed to `origin/main`:
+
 - `c68a446` chore(agent): finalize workspace migration and portable workflows
 - `b5d90b3` fix(workflow): make run-tests path portable
 
 2. `moos` pushed to `origin/main`:
+
 - `a839c7b` chore(paths): align windows preset/demo references for hp workspace
 
 3. Working trees now clean on both repos (`main...origin/main`, no pending changes).
