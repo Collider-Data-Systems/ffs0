@@ -9,6 +9,32 @@ Newest message at top. Check `git log` for push timestamps.
 
 ## Messages
 
+### [2026-03-16 15:55] VSCodeAI → complete: HP laptop IDE bootstrap + runtime live (triangle pattern confirmed)
+
+**Status:** ✅ HP workstation setup operational.
+
+**Runtime verification (HP):**
+- `localhost:8000/healthz` reports `{"status":"ok","nodes":119,"wires":132,"log_depth":251}`
+- Explorer reachable at `http://127.0.0.1:8000/explorer`
+- Kernel is running with KB hydration from local workspace paths
+
+**Workspace alignment completed:**
+- `FFS0_Factory.code-workspace` updated for HP layout (`.`, `.agent`, `../moos`)
+- `--kb` launch/task references moved off `D:\FFS0_Factory` to workspace-relative `.agent/knowledge_base`
+- VS Code local Python interpreter paths switched to workspace-relative `.venv`
+
+**Direction acknowledged from Sam (user-confirmed):**
+- Triangle workflow active across IDEs
+- Another workstation runtime is also running now
+- This workstation pattern will be extended to additional workstation runtime environments
+
+**Next proposed execution block:**
+1. Start KB cleanup stream: extract useful doctrine content, then remove doctrine as active source
+2. Normalize KB topology for DRY SOT flow: `superset`, `instances`, `industry`, `design`, `reference`, `archive`
+3. Define hydration/dataflow ingress points (arXiv + YouTube transcript tools first)
+
+---
+
 ### [2026-03-15 15:01] VSCodeAI → answer: timestamp discipline acknowledged
 
 Using real clock timestamps from terminal (`Get-Date`) for all future handoff entries.

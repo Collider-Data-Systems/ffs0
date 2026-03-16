@@ -6,6 +6,34 @@
   "canonicality": "canonical-contingent",
   "entries": [
     {
+      "id": "urn:moos:workstation:hplaptop",
+      "type_id": "workstation_config",
+      "workspace_root": "C:/Users/HP/FFS0_HPlaptop",
+      "os": "windows",
+      "os_version": "Windows 10 Home 10.0.19045",
+      "hardware": {
+        "processor": "Intel Core i5-4200M @ 2.50GHz",
+        "ram_gb": 12,
+        "gpu": "integrated (no discrete GPU)",
+        "storage_tb": 0.5
+      },
+      "toolchain": {
+        "go_version": "1.26.1",
+        "node_version": "24.14.0",
+        "python_version": "3.14.0",
+        "uv_version": "0.8.3",
+        "pnpm_version": "10.17.1"
+      },
+      "active_runtime": {
+        "kernel_module": "moos/platform/kernel",
+        "kb_path": "ffs0-factory-super/.agent/knowledge_base",
+        "default_store": "file",
+        "http_port": 8000
+      },
+      "reserved_compatibility_ports": [8080],
+      "notes": "No discrete GPU — HDC/VSA functors cannot run locally. KB-only workstation for strategic work, code review, paper writing, and kernel testing."
+    },
+    {
       "id": "urn:moos:workstation:local_dev",
       "type_id": "workstation_config",
       "workspace_root": "D:/FFS0_Factory/moos",

@@ -1,9 +1,10 @@
 # Antigraviti IDE Instructions
 
-**For:** Antigraviti (Gemini 3.1 Pro / Gemini 3 Flash, headless browser + Playwright)
+**For:** Antigraviti (Gemini 3.1 Pro + Claude Opus 4.6)
 **Role:** UX testing + HTTP/3 research agent
-**Workspace:** Open `D:\FFS0_Factory\FFS0_Factory.code-workspace` (3 folders: root, .agent, moos)
-**Protocol:** `D:\FFS0_Factory\.agent\knowledge_base\delegation-protocol.md` (v3)
+**Workspace:** Open `c:\Users\HP\FFS0_HPlaptop\ffs0-factory-super\FFS0_Factory.code-workspace` (3 folders: root, .agent, moos)
+**Protocol:** `.agent/knowledge_base/delegation-protocol.md` (v3)
+**Workstation:** HP laptop — browser UNLOCKED (local IDE, can access localhost)
 
 ---
 
@@ -54,7 +55,9 @@ The kernel you're testing:
 - **SSE stream** on `GET /log/stream` — new morphisms appear in real-time
 - **Explorer UI** at `GET /explorer` — renders graph + activity log
 - **State projection** via `GET /functor/ui` — FUN02 functor maps graph → React components
-- **MCP bridge** on `:8080` — 5 tools for LLM-driven testing (future phase)
+- **MCP bridge** on `:8080` — 5 tools for LLM-driven testing
+  - Bridged to IDE via `mcp-remote` (stdio proxy) — available as `moos-kernel` MCP tool in this IDE
+  - Tools: `graph_state`, `node_lookup`, `apply_morphism`, `scoped_subgraph`, `benchmark_project`
 
 ---
 
@@ -86,13 +89,15 @@ The kernel you're testing:
 ## Rules
 
 - **Never modify task files** — read-only for you
-- **Never modify handoff.md** — that's VS Code's channel
-- **Do write to testoff.md** — post phase results, blockers
+- **Never modify handoff.md** — that's the Claude Code ↔ VS Code channel ONLY
+- **Never modify handoff.md** — even to raise observations for Claude Code, use testoff.md
+- **Do write to testoff.md** — ONLY write channel for Antigraviti
 - **Do update your state file** — `configs/agents/antigraviti.json` at session start/end
 - **Do capture screenshots** — on any failure, include in testoff.md message
-- **Do verify actor attribution** (future):** When submitting test morphisms, use `urn:moos:agent:antigraviti` as actor
+- **Do verify actor attribution:** When submitting test morphisms, use `urn:moos:agent:antigraviti` as actor
 - **Never close kernel** between test phases — keep it running for live testing
 - **Always post results** even if tests fail — document what passed and what didn't
+- **Browser is UNLOCKED** on HP laptop — use `browser_subagent` tool for visual Explorer tests
 
 ---
 
@@ -170,8 +175,9 @@ This tests:
 ## Troubleshooting
 
 **Kernel not running:**
-- Start on Z440: `cd D:\FFS0_Factory\moos\platform\kernel && go run ./cmd/moos --kb "D:\FFS0_Factory\.agent\knowledge_base" --hydrate`
-- Wait for boot log: `[shell] replayed N morphisms → M nodes, L wires`
+- HP laptop: `Set-Location "c:\Users\HP\FFS0_HPlaptop\moos\platform\kernel"; go run ./cmd/moos --kb "c:\Users\HP\FFS0_HPlaptop\ffs0-factory-super\.agent\knowledge_base" --hydrate`
+- Or use workflow: `/boot-kernel`
+- Wait for boot log: `[transport] listening on :8000`
 - Check health: `curl http://localhost:8000/healthz`
 
 **Explorer not loading:**

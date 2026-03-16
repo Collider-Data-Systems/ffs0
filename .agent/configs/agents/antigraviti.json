@@ -2,23 +2,27 @@
   "agent_urn": "urn:moos:agent:antigraviti",
   "type_id": "agent_spec",
   "role": "testing",
-  "status": "standby",
-  "session_start": "2026-03-15T13:25:00+01:00",
-  "capabilities": ["http-testing", "ux-audit", "code-audit", "http3-research"],
+  "status": "active",
+  "session_start": "2026-03-16T15:45:00+01:00",
+  "workstation": "hp-laptop",
+  "workspace_root": "c:\\Users\\HP\\FFS0_HPlaptop",
+  "capabilities": ["http-testing", "ux-audit", "code-audit", "browser-testing", "http3-research"],
   "ide": "antigraviti-gemini-3.1-pro",
   "ide_notes": {
     "os": "Windows — use PowerShell, not bash",
     "shell": "PowerShell — use Set-Location not cd, Invoke-RestMethod not jq",
-    "browser": "BLOCKED — cloud IDE cannot reach localhost. Do not attempt.",
+    "browser": "UNLOCKED — local HP laptop can access localhost:8000 via browser_subagent",
     "approval_gate": "Click 'Always run ↑' once per command type per session",
-    "file_hygiene": "Never create files in source dirs. Temp fixtures go in platform/kernel/data/test/ only."
+    "file_hygiene": "Never create files in source dirs. Temp fixtures go in platform/kernel/data/test/ only.",
+    "kernel_kb_path": "c:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\knowledge_base",
+    "kernel_dir": "c:\\Users\\HP\\FFS0_HPlaptop\\moos\\platform\\kernel"
   },
   "channels": {
     "reads": ["testoff.md"],
     "writes": ["testoff.md", "configs/agents/antigraviti.json"]
   },
   "tasks_completed": ["T023-A", "T023-D", "T023-E", "T026", "T027"],
-  "last_result": "Task 027 — Phase A PASS, Phase B PASS (All checks pass)",
+  "last_result": "HP laptop setup — Go 1.26.1, repos cloned, browser unlocked",
   "next_task": "await next direction in testoff.md",
   "operating_manual": "testoff.md line 12 — read OPERATING MANUAL message first each session"
 }

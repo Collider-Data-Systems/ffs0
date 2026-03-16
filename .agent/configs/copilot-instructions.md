@@ -2,18 +2,18 @@
 
 **For:** VS Code Copilot (OpenAI Codex 5.3)
 **Role:** Code execution agent
-**Workspace:** Open `D:\FFS0_Factory\FFS0_Factory.code-workspace` (3 folders: root, .agent, moos)
-**Protocol:** `D:\FFS0_Factory\.agent\knowledge_base\delegation-protocol.md` (v3)
+**Workspace:** Open `FFS0_Factory.code-workspace` from this workstation root (3 folders: root, .agent, moos)
+**Protocol:** `.agent/knowledge_base/delegation-protocol.md` (v3)
 
 ---
 
 ## Session Start Checklist
 
 1. **Read state:** `configs/agents/vscode-ai.json` — check your current status + last task
-2. **Git pull:** `cd D:\FFS0_Factory\moos && git pull origin main`
+2. **Git pull:** `cd ../moos && git pull origin main` (from workspace root)
 3. **Read handoff:** `.agent/knowledge_base/handoff.md` — look for latest direction from Claude Code
 4. **Update state:** Set `status: "active"`, current session time in `configs/agents/vscode-ai.json`
-5. **Verify kernel:** `go run ./cmd/moos --kb "D:\FFS0_Factory\.agent\knowledge_base" --hydrate` boots without errors
+5. **Verify kernel:** `go run ./cmd/moos --kb "../ffs0-factory-super/.agent/knowledge_base" --hydrate` boots without errors
 
 ## Task Execution Flow
 
@@ -37,6 +37,7 @@
 ## Kernel Development Orientation
 
 The kernel is a **pure categorical system**:
+
 - Everything flows through 4 invariant morphisms: ADD, LINK, MUTATE, UNLINK
 - State = fold(morphism_log) — append-only, deterministic replay
 - All validation goes through the operad registry (21 TypeSpecs)
@@ -47,7 +48,7 @@ The kernel is a **pure categorical system**:
 ## File Structure Reference
 
 ```
-D:\FFS0_Factory\
+<workspace-root>\
 ├── .agent\knowledge_base\          ← Read SOT from here
 │   ├── superset\                   ← SOT #1 (ontology, categories, glossary, kinds, schemas)
 │   ├── design\*.md                 ← Architectural specs + decisions
@@ -63,6 +64,7 @@ D:\FFS0_Factory\
 ## Knowledge Base Reading Order
 
 On first task, read in order:
+
 1. `knowledge_base/delegation-protocol.md` (workflow protocol)
 2. `knowledge_base/design/install.md` (Boot sequence — Programs 1-11)
 3. `knowledge_base/design/concepts.md` (Conceptual foundations — catamorphism, three-layer tower)
@@ -110,36 +112,40 @@ MCP bridge on `:8080` provides 5 tools: `graph_state`, `node_lookup`, `apply_mor
 
 ## Quick Reference
 
-| Need | Path | Action |
-|------|------|--------|
-| Next task | `configs/tasks/` | Read newest task file |
-| Directions | `knowledge_base/handoff.md` | Read latest message |
-| Kernel boot | `platform/kernel/` | `go run ./cmd/moos --kb ...` |
-| Run tests | `platform/kernel/` | `go test ./...` |
-| Commit | Any | `git commit -m "... [task:YYYYMMDD-NNN]"` |
-| Post update | `knowledge_base/handoff.md` | Append message, commit, push |
-| Audit morphisms | Kernel :8000 | `curl http://localhost:8000/log` |
-| Agent state | `configs/agents/vscode-ai.json` | Update on session change |
+| Need            | Path                            | Action                                    |
+| --------------- | ------------------------------- | ----------------------------------------- |
+| Next task       | `configs/tasks/`                | Read newest task file                     |
+| Directions      | `knowledge_base/handoff.md`     | Read latest message                       |
+| Kernel boot     | `platform/kernel/`              | `go run ./cmd/moos --kb ...`              |
+| Run tests       | `platform/kernel/`              | `go test ./...`                           |
+| Commit          | Any                             | `git commit -m "... [task:YYYYMMDD-NNN]"` |
+| Post update     | `knowledge_base/handoff.md`     | Append message, commit, push              |
+| Audit morphisms | Kernel :8000                    | `curl http://localhost:8000/log`          |
+| Agent state     | `configs/agents/vscode-ai.json` | Update on session change                  |
 
 ---
 
 ## Troubleshooting
 
 **Kernel won't boot:**
+
 - Check `.agent/knowledge_base/superset/ontology.json` exists
-- Run: `cd platform/kernel && go build ./cmd/moos`
+- Run: `cd ../moos/platform/kernel && go build ./cmd/moos`
 - Check ports: `lsof -i :8000` (should be empty)
 
 **Tests failing:**
+
 - Run full suite: `go test -race ./...` (if not on Windows without CGO)
 - Check isolation: tests should use in-memory stores, not shared file
 - Review recent git changes: `git diff HEAD~3`
 
 **Git push rejected:**
+
 - Pull first: `git pull origin main`
 - Check your commit message format: `feat|fix|chore: ... [task:YYYYMMDD-NNN]`
 
 **Unclear task:**
+
 - Post question to `knowledge_base/handoff.md`
 - Example: `### [HH:MM] VSCode → question: Task 015 — unclear on acceptance criterion 2`
 - Wait for Claude Code response before proceeding
@@ -149,6 +155,7 @@ MCP bridge on `:8080` provides 5 tools: `graph_state`, `node_lookup`, `apply_mor
 ## Success Criteria
 
 A task is "done" when:
+
 - ✅ Acceptance criteria met
 - ✅ All tests pass (`go test ./...`)
 - ✅ Kernel still boots with `--kb --hydrate`

@@ -5,7 +5,11 @@
       "name": "FFS0_Factory (root)"
     },
     {
-      "path": "moos",
+      "path": ".agent",
+      "name": "Agent Workspace (KB, configs, tasks)"
+    },
+    {
+      "path": "../moos",
       "name": "mo:os Kernel (code)"
     }
   ],
@@ -37,8 +41,8 @@
     },
     "go.lintOnSave": "package",
     "go.lintTool": "golangci-lint",
-    "python.defaultInterpreterPath": "D:\\FFS0_Factory\\.venv\\Scripts\\python.exe",
-    "python.interpreterPath": "D:\\FFS0_Factory\\.venv\\Scripts\\python.exe",
+    "python.defaultInterpreterPath": "${workspaceFolder:FFS0_Factory (root)}/.venv/Scripts/python.exe",
+    "python.interpreterPath": "${workspaceFolder:FFS0_Factory (root)}/.venv/Scripts/python.exe",
     "go.lintFlags": [
       "--fast"
     ]
@@ -64,7 +68,7 @@
         "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
         "args": [
           "--kb",
-          "D:\\FFS0_Factory\\.agent\\knowledge_base",
+          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base",
           "--hydrate"
         ],
         "showLog": true
@@ -78,7 +82,7 @@
         "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
         "args": [
           "--kb",
-          "D:\\FFS0_Factory\\.agent\\knowledge_base"
+          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base"
         ],
         "showLog": true
       }
@@ -137,7 +141,7 @@
           "run",
           "./cmd/moos",
           "--kb",
-          "D:\\FFS0_Factory\\.agent\\knowledge_base",
+          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base",
           "--hydrate"
         ],
         "options": {
