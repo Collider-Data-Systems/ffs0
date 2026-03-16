@@ -2,163 +2,58 @@
 
 **For:** VS Code Copilot (OpenAI Codex 5.3)
 **Role:** Code execution agent
-**Workspace:** Open `FFS0_Factory.code-workspace` from this workstation root (3 folders: root, .agent, moos)
-**Protocol:** `.agent/CLAUDE.md
+**Workspace:** Open `FFS0_Factory.code-workspace` (folders: root, .agent, moos)
+**Protocol:** `.agent/CLAUDE.md`
 
 ---
 
 ## Session Start Checklist
 
-1. **Read state:** `cfg/agents/vscode-ai.json` — check your current status + last task
-2. **Git pull:** `cd ../moos && git pull origin main` (from workspace root)
-3. **Read handoff:** `.agent/channels/handoff.md` — look for latest direction from Claude Code
-4. **Update state:** Set `status: "active"`, current session time in `cfg/agents/vscode-ai.json`
-5. **Verify kernel:** `go run ./cmd/moos --kb "../ffs0-factory-super/.agent/kb" --hydrate` boots without errors
+1. Read state: `cfg/agents/vscode-ai.json`
+2. Pull latest: `cd ../moos && git pull origin main`
+3. Read direction: `.agent/channels/handoff.md`
+4. Update state: set `status: "active"` in `cfg/agents/vscode-ai.json`
+5. Verify boot: `cd ../moos/platform/kernel && go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate`
 
 ## Task Execution Flow
 
-1. **Read task file** from `tasks/YYYYMMDD-NNN-name.md`
-2. **Implement:** Write code, tests, documentation
-3. **Verify:** `go test ./...` all green, kernel still boots
-4. **Commit:** `git commit -m "feat|fix: ... [task:YYYYMMDD-NNN]"`
-5. **Push:** `git push origin main`
-6. **Post completion** to `.agent/channels/handoff.md`
+1. Read assigned task file from `tasks/YYYYMMDD-NNN-name.md`
+2. Implement code and tests
+3. Verify: `go test ./...` and boot checks
+4. Commit: `feat|fix|chore: <description> [task:YYYYMMDD-NNN]`
+5. Push: `git push origin main`
+6. Post completion to `.agent/channels/handoff.md`
 
 ## Rules
 
-- **Never write task files** — Claude Code owns `tasks/`
-- **Never modify `.agent/kb/testoff.md`** — read-only for you
-- **Do write to handoff.md** — post completions, blockers, questions
-- **Do update your state file** — `cfg/agents/vscode-ai.json` at session start/end
-- **Do verify morphism log** — `curl http://localhost:8000/log?actor=urn:moos:agent:vscode-ai` to audit your contributions
-- **Never delete or force-push** — always make new commits
-- **Always run tests before commit** — pre-commit gate
-
-## Kernel Development Orientation
-
-The kernel is a **pure categorical system**:
-
-- Everything flows through 4 invariant morphisms: ADD, LINK, MUTATE, UNLINK
-- State = fold(morphism_log) — append-only, deterministic replay
-- All validation goes through the operad registry (21 TypeSpecs)
-- HTTP endpoints are projections of graph state — no side effects
-
-**Your role:** Implement features that respect this model. Don't add magic side effects. If you feel like you need "special handling" for a use case, that's a sign the graph model needs extending, not bypassing.
-
-## File Structure Reference
-
-```
-<workspace-root>\
-├── .agentkb\          ← Read SOT from here
-│   ├── superset\                   ← SOT #1 (ontology, categories, glossary, kinds, schemas)
-│   ├── design\*.md                 ← Architectural specs + decisions
-│   ├── instances\*.json            ← Seed data
-│   ├── industry\*.json             ← External landscape data
-│   ├── handoff.md                  ← Your comm channel
-│   └── testoff.md                  ← Read-only
-├── moos\                           ← Git clone
-│   └── platform\kernel\            ← The code
-└── .claude\                        ← Claude Code session state
-```
-
-## Knowledge Base Reading Order
-
-On first task, read in order:
-
-1. `CLAUDE.md
-2. `kb/design/install.md` (Boot sequence — Programs 1-11)
-3. `kb/design/concepts.md` (Conceptual foundations — catamorphism, three-layer tower)
-4. `kb/design/hypergraph.md` (König encoding, presheaf topos)
-5. `superset/ontology.json` (21 object types, 16 morphisms, 4 NTs)
-6. `CLAUDE.md` in repo root (workspace topology)
-
----
-
-## Kernel Interaction
-
-When the kernel is running, you can interact with it directly:
-
-```bash
-# Health check
-curl http://localhost:8000/healthz
-
-# Watch live morphisms (SSE stream)
-curl -N http://localhost:8000/log/stream
-
-# Submit a morphism as your agent
-curl -X POST http://localhost:8000/morphisms \
-  -H "Content-Type: application/json" \
-  -d '{"type":"ADD","actor":"urn:moos:agent:vscode-ai","add":{"urn":"...","type_id":"...","label":"..."}}'
-
-# Audit your own contributions
-curl http://localhost:8000/log?actor=urn:moos:agent:vscode-ai
-
-# View Explorer UI
-# http://localhost:8000/explorer (shows LIVE MORPHISMS panel)
-```
-
-MCP bridge on `:8080` provides 5 tools: `graph_state`, `node_lookup`, `apply_morphism`, `scoped_subgraph`, `benchmark_project`.
-
----
-
-## Communication Cadence
-
-- **Session start:** Read handoff.md for direction
-- **After task completion:** Post to handoff.md + git push
-- **Questions:** Post to handoff.md with `?` prefix, await Claude Code response
-- **Session end:** Update `cfg/agents/vscode-ai.json` with final status
-
----
+- Never write task files; Claude Code + Sam own `tasks/`
+- Never modify `.agent/channels/testoff.md`; read-only for VS Code AI
+- Do write blockers/questions/completions to `.agent/channels/handoff.md`
+- Do update `cfg/agents/vscode-ai.json` at session start/end
+- Always run tests before commit
+- Never force-push or rewrite history
 
 ## Quick Reference
 
-| Need            | Path                            | Action                                    |
-| --------------- | ------------------------------- | ----------------------------------------- |
-| Next task       | `tasks/`                | Read newest task file                     |
-| Directions      | `channels/handoff.md`     | Read latest message                       |
-| Kernel boot     | `platform/kernel/`              | `go run ./cmd/moos --kb ...`              |
-| Run tests       | `platform/kernel/`              | `go test ./...`                           |
-| Commit          | Any                             | `git commit -m "... [task:YYYYMMDD-NNN]"` |
-| Post update     | `channels/handoff.md`     | Append message, commit, push              |
-| Audit morphisms | Kernel :8000                    | `curl http://localhost:8000/log`          |
-| Agent state     | `cfg/agents/vscode-ai.json` | Update on session change                  |
-
----
+| Need              | Path                        | Action                                 |
+| ----------------- | --------------------------- | -------------------------------------- |
+| Next task         | `tasks/`                    | Read newest assigned task              |
+| Direction channel | `channels/handoff.md`       | Read/post updates                      |
+| Kernel boot       | `../moos/platform/kernel`   | `go run ./cmd/moos --kb ... --hydrate` |
+| Tests             | `../moos/platform/kernel`   | `go test ./...`                        |
+| Agent state       | `cfg/agents/vscode-ai.json` | Update status/timestamps               |
 
 ## Troubleshooting
 
-**Kernel won't boot:**
-
-- Check `.agent/kb/superset/ontology.json` exists
-- Run: `cd ../moos/platform/kernel && go build ./cmd/moos`
-- Check ports: `lsof -i :8000` (should be empty)
-
-**Tests failing:**
-
-- Run full suite: `go test -race ./...` (if not on Windows without CGO)
-- Check isolation: tests should use in-memory stores, not shared file
-- Review recent git changes: `git diff HEAD~3`
-
-**Git push rejected:**
-
-- Pull first: `git pull origin main`
-- Check your commit message format: `feat|fix|chore: ... [task:YYYYMMDD-NNN]`
-
-**Unclear task:**
-
-- Post question to `channels/handoff.md`
-- Example: `### [HH:MM] VSCode → question: Task 015 — unclear on acceptance criterion 2`
-- Wait for Claude Code response before proceeding
-
----
+- Kernel boot fails: verify `.agent/kb/superset/ontology.json` exists and port `:8000` is free
+- Tests fail: rerun package-specific tests and inspect recent diffs
+- Push rejected: pull/rebase then push
 
 ## Success Criteria
 
-A task is "done" when:
-
-- ✅ Acceptance criteria met
-- ✅ All tests pass (`go test ./...`)
-- ✅ Kernel still boots with `--kb --hydrate`
-- ✅ Commit pushed with task tag
-- ✅ Completion posted to handoff.md
-- ✅ State file updated
+- Acceptance criteria met
+- Tests green
+- Kernel boot verified
+- Commit pushed with task tag
+- Completion posted to handoff channel
+- Agent state updated

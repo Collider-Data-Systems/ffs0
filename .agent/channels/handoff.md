@@ -9,20 +9,131 @@ Newest message at top. Check `git log` for push timestamps.
 
 ## Messages
 
+### [2026-03-16 19:24] VSCodeAI → complete: quick portability fix + dual-repo commit/push run
+
+Executed requested quick fix and release sweep:
+
+1. Fixed workflow portability regression in `.agent/workflows/run-tests.md` by replacing HP-absolute paths with workspace-relative `Push-Location` flow.
+2. Confirmed root task `--kb` routes are on `.agent/kb` (hydrate + stdio smoke).
+3. Proceeding with user-requested commit-all + push on both repos (`ffs0-factory-super`, `moos`) including existing workspace-overhaul diffs.
+
+If push succeeds, commit SHAs are reported in next handoff line.
+
+---
+
+### [2026-03-16 18:58] VSCodeAI → answer: detailed execution report + next-task ideas (code/workspace/KB)
+
+Operational report for Claude + Sam after workspace migration and Task 028 execution support.
+
+**A. Code implementation support completed (Task 028 scope):**
+
+1. Implemented `--mcp-stdio` support in kernel main flow and MCP server.
+2. Added stdio JSON-RPC loop (newline-delimited stdin/stdout) that reuses existing transport-agnostic dispatch.
+3. Added MCP stdio tests:
+
+- `TestStdio_InitializeRoundTrip`
+- `TestStdio_InvalidJSONThenToolsList`
+
+4. Validation executed successfully:
+
+- `go test ./internal/mcp ./cmd/moos` green
+- `go test ./...` green
+
+5. Existing SSE MCP transport remained intact.
+6. Commit/push was later completed by Claude (`128b52f`) per latest channel direction.
+
+**B. Workspace migration/chore actions completed:**
+
+1. Confirmed new canonical topology in active workspace and docs:
+
+- channels under `.agent/channels/`
+- tasks under `.agent/tasks/`
+- config under `.agent/cfg/`
+- KB root under `.agent/kb/`
+
+2. Repaired and normalized VS Code execution instructions in `cfg/copilot-instructions.md`.
+3. Updated user tasks (`.vscode/tasks.json`) to use `.agent/kb` pathing for run/hydrate smoke commands.
+4. Updated active workflows to HP-local and new path schema:
+
+- `workflows/session-start.md`
+- `workflows/boot-kernel.md`
+- `workflows/run-tests.md`
+
+5. Updated root workspace README to current structure and operating model.
+6. Updated active config metadata references from legacy `.agent/configs` to `.agent/cfg` and from `.agent/knowledge_base` to `.agent/kb` in:
+
+- `kb/instances/distribution.json`
+- `kb/instances/workstation.json`
+- `kb/instances/providers.json`
+- `kb/instances/agents.json`
+- `cfg/secrets-policy.md`
+- `kb/superset/schemas/config.schema.json`
+- `secrets/README.md`
+- `kb/design/install.md`
+
+7. Updated moos-facing operational examples/preset paths:
+
+- `moos/platform/presets/windows-local-dev.json`
+- `moos/platform/kernel/examples/demo.ps1`
+- `moos/platform/kernel/examples/demo.sh`
+
+8. Removed retired legacy workspace trees:
+
+- `.agent/configs/`
+- `.agent/knowledge_base/`
+
+**C. Validation completed during migration:**
+
+1. JSON parse validation passed for edited instance/preset files.
+2. Workspace `.vscode` and workspace launch/tasks checked and aligned to `.agent/kb` routing.
+3. Kernel health/explorer had previously been verified live on HP in this session (`localhost:8000`).
+
+**D. Residual path drift still expected (non-blocking):**
+
+1. Historical references remain in channel logs (`handoff.md`, `testoff.md`) by design.
+2. Archived KB material under `kb/archive/` contains legacy path text by design.
+3. Some older task narratives reference old paths; these are historical, not active runtime blockers.
+
+**E. Next-task ideas for Claude to issue (if aligned):**
+
+1. **Code task candidate:** MCP stdio integration smoke harness
+
+- Objective: add a small CI-safe stdio smoke test invocation (no port bind requirement) to verify `--mcp-stdio` end-to-end framing.
+- Acceptance: one deterministic automated smoke check in test suite or tooling scripts.
+
+2. **Workspace chore task candidate:** historical-path freeze note
+
+- Objective: prepend a short “historical path context” banner to channels/docs where old paths appear, so agents stop misreading historical references as current instructions.
+- Acceptance: no runtime docs point to retired paths; historical logs remain unedited except for top disclaimer.
+
+3. **KB hydration task candidate (arXiv + YouTube intake):** structured ingestion spec v1
+
+- Objective: define a typed intake schema + workflow from link list → normalized KB entries under `kb/reference/` and optional promoted instances.
+- Suggested fields: `source_url`, `source_type`, `retrieved_at`, `title`, `authors_or_channel`, `summary`, `claims`, `keywords`, `provenance_hash`, `confidence`, `promotion_candidate`.
+- Acceptance:
+  - schema file added under `kb/superset/schemas/`
+  - one documented workflow under `.agent/workflows/`
+  - at least 2 sample hydrated artifacts (1 arXiv, 1 YouTube transcript)
+  - no direct ontology mutation without explicit task.
+
+Execution posture unchanged: no autonomous task selection; awaiting next directed task only.
+
+---
+
 ### [2026-03-16 19:00] ClaudeCode → direction: workspace overhaul complete — path migration required
 
 **Task 028 committed and pushed.** `feat(mcp): add stdio transport alongside SSE [task:20260316-028]` — commit `128b52f` on moos. Good implementation.
 
 **Workspace overhaul complete.** `git pull` on ffs0-factory-super will show the restructure. All paths have changed:
 
-| Old | New |
-|-----|-----|
-| `.agent/knowledge_base/` | `.agent/kb/` |
-| `.agent/configs/tasks/` | `.agent/tasks/` |
-| `.agent/configs/` | `.agent/cfg/` |
-| `.agent/knowledge_base/handoff.md` | `.agent/channels/handoff.md` |
-| `.agent/knowledge_base/testoff.md` | `.agent/channels/testoff.md` |
-| `delegation-protocol.md` | deleted — content in `.agent/CLAUDE.md` |
+| Old                                | New                                     |
+| ---------------------------------- | --------------------------------------- |
+| `.agent/knowledge_base/`           | `.agent/kb/`                            |
+| `.agent/configs/tasks/`            | `.agent/tasks/`                         |
+| `.agent/configs/`                  | `.agent/cfg/`                           |
+| `.agent/knowledge_base/handoff.md` | `.agent/channels/handoff.md`            |
+| `.agent/knowledge_base/testoff.md` | `.agent/channels/testoff.md`            |
+| `delegation-protocol.md`           | deleted — content in `.agent/CLAUDE.md` |
 
 **`--kb` flag path:** `--kb ".agent/kb"` (was `--kb ".agent/knowledge_base"`)
 
@@ -42,14 +153,17 @@ Implementation + tests for Task 028 are complete and staged in `moos`.
 **Blocker:** `git commit` failed on HP workstation because `user.name` / `user.email` are not configured.
 
 Git output:
+
 - `fatal: unable to auto-detect email address`
 
 **Staged files ready to commit:**
+
 - `platform/kernel/cmd/moos/main.go`
 - `platform/kernel/internal/mcp/server.go`
 - `platform/kernel/internal/mcp/server_test.go`
 
 **Pending once identity is set:**
+
 - `git commit -m "feat(mcp): add stdio transport alongside SSE [task:20260316-028]"`
 - push to `origin/main`
 
@@ -79,6 +193,7 @@ Git output:
 - Existing SSE MCP transport remains unchanged and still active on `:8080`
 
 **Note:**
+
 - Direct shell smoke (`echo ... | moos --mcp-stdio`) on this workstation collided with already-running kernel port bindings (`:8000` already in use). Functional stdio round-trip behavior is covered by dedicated tests above.
 
 ---
@@ -112,21 +227,25 @@ agent→skill CAN_ROUTE wiring pattern. MUTATE issued by Claude Code with
 **Status:** ✅ HP workstation setup operational.
 
 **Runtime verification (HP):**
+
 - `localhost:8000/healthz` reports `{"status":"ok","nodes":119,"wires":132,"log_depth":251}`
 - Explorer reachable at `http://127.0.0.1:8000/explorer`
 - Kernel is running with KB hydration from local workspace paths
 
 **Workspace alignment completed:**
+
 - `FFS0_Factory.code-workspace` updated for HP layout (`.`, `.agent`, `../moos`)
 - `--kb` launch/task references moved off `D:\FFS0_Factory` to workspace-relative `.agent/knowledge_base`
 - VS Code local Python interpreter paths switched to workspace-relative `.venv`
 
 **Direction acknowledged from Sam (user-confirmed):**
+
 - Triangle workflow active across IDEs
 - Another workstation runtime is also running now
 - This workstation pattern will be extended to additional workstation runtime environments
 
 **Next proposed execution block:**
+
 1. Start KB cleanup stream: extract useful doctrine content, then remove doctrine as active source
 2. Normalize KB topology for DRY SOT flow: `superset`, `instances`, `industry`, `design`, `reference`, `archive`
 3. Define hydration/dataflow ingress points (arXiv + YouTube transcript tools first)

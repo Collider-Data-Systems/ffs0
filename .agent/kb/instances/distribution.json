@@ -14,7 +14,7 @@
       "windows_local_dev": {
         "default_store": "file",
         "log_path": "./platform/kernel/data/morphism-log.jsonl",
-        "registry_path": "../.agent/knowledge_base/superset/ontology.json",
+        "registry_path": "../.agent/kb/superset/ontology.json",
         "database_mode": "optional; only required when MOOS_KERNEL_STORE=postgres"
       },
       "demo_seed": {

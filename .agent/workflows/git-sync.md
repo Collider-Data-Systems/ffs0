@@ -1,28 +1,25 @@
 ---
-description: Sync the moos repo — pull latest, check status, show recent commits
+description: Sync both repos — pull latest from origin, check status, show recent commits
 ---
 
-# Git Sync
-
-Pull the latest changes from the moos repository, check for uncommitted changes, and show recent history.
+# Git Sync (Both Repos)
 
 // turbo-all
 
 ## Steps
 
-1. Pull latest from main:
+1. Sync mo:os kernel repo:
 ```powershell
-Set-Location D:\FFS0_Factory\moos; git pull origin main
+git -C ".\moos" pull origin main
+git -C ".\moos" log --oneline -5
+git -C ".\moos" status -s
 ```
 
-2. Show current status (uncommitted/staged files):
+2. Sync ffs0-factory-super repo:
 ```powershell
-Set-Location D:\FFS0_Factory\moos; git status -s
+git -C ".\ffs0-factory-super" pull origin main
+git -C ".\ffs0-factory-super" log --oneline -5
+git -C ".\ffs0-factory-super" status -s
 ```
 
-3. Show last 10 commits:
-```powershell
-Set-Location D:\FFS0_Factory\moos; git log --oneline -10
-```
-
-4. Report: pulled changes (if any), uncommitted files (if any), latest commit hash.
+3. Report any uncommitted changes or divergence.

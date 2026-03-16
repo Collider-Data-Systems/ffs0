@@ -1,9 +1,0 @@
-{
-  "type": "ADD",
-  "actor": "urn:moos:agent:antigraviti",
-  "add": {
-    "urn": "urn:moos:test:chars-&<>-probe",
-    "type_id": "node_container",
-    "label": "Special Char Probe"
-  }
-}

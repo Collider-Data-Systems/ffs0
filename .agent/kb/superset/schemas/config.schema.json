@@ -2,7 +2,7 @@
     "$id": "https://moos.factory/schemas/config.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Mo:os Environment Config Schema",
-    "description": "Defines what a real-world binding to the graph looks like (.agent/configs/).",
+    "description": "Defines what a real-world binding to the graph looks like (.agent/cfg/).",
     "type": "object",
     "properties": {
         "schema_version": {

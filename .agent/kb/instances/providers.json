@@ -2,7 +2,7 @@
   "$schema": "../superset/schemas/instance.schema.json",
   "schema_version": "3.0",
   "domain": "providers",
-  "description": "Provider instances — VALUE entries for Provider_p (CAT17) and adapter (CAT19) categories. Each provider is a container with OWNS wires to model containers. Adapter type maps to Go interface. Config source: .agent/configs/api_providers.yaml",
+  "description": "Provider instances — VALUE entries for Provider_p (CAT17) and adapter (CAT19) categories. Each provider is a container with OWNS wires to model containers. Adapter type maps to Go interface. Config source: .agent/cfg/api_providers.yaml",
   "entries": [
     {
       "id": "urn:moos:provider:anthropic",
@@ -11,7 +11,7 @@
       "adapter_type": "AnthropicAdapter",
       "api_base_url": "https://api.anthropic.com/v1",
       "auth_pattern": "x-api-key header",
-      "config_source": ".agent/configs/api_providers.yaml#providers.anthropic",
+      "config_source": ".agent/cfg/api_providers.yaml#providers.anthropic",
       "rate_limits": {
         "requests_per_minute": 1000,
         "tokens_per_minute": 100000,
@@ -50,7 +50,7 @@
       "adapter_type": "GeminiAdapter",
       "api_base_url": "https://generativelanguage.googleapis.com/v1beta",
       "auth_pattern": "API key query parameter",
-      "config_source": ".agent/configs/api_providers.yaml#providers.gemini",
+      "config_source": ".agent/cfg/api_providers.yaml#providers.gemini",
       "rate_limits": {
         "requests_per_minute": 1500,
         "tokens_per_minute": 1000000,
@@ -124,7 +124,7 @@
       "adapter_type": "VertexAdapter",
       "api_base_url": null,
       "auth_pattern": "Google Application Default Credentials",
-      "config_source": ".agent/configs/api_providers.yaml#providers.google-vertex",
+      "config_source": ".agent/cfg/api_providers.yaml#providers.google-vertex",
       "models": [
         {
           "id": "urn:moos:model:vertex:gemini-3-pro",
@@ -155,7 +155,7 @@
       "adapter_type": "OpenAIAdapter",
       "api_base_url": "https://api.openai.com/v1",
       "auth_pattern": "Bearer token Authorization header",
-      "config_source": ".agent/configs/api_providers.yaml#providers.openai",
+      "config_source": ".agent/cfg/api_providers.yaml#providers.openai",
       "rate_limits": {
         "requests_per_minute": 500,
         "tokens_per_minute": 200000,
@@ -194,7 +194,7 @@
       "adapter_type": "OllamaAdapter",
       "api_base_url": "http://localhost:11434",
       "auth_pattern": "none",
-      "config_source": ".agent/configs/api_providers.yaml#providers.ollama",
+      "config_source": ".agent/cfg/api_providers.yaml#providers.ollama",
       "models": [
         {
           "id": "urn:moos:model:ollama:llama3.2",
@@ -222,7 +222,7 @@
       "adapter_type": "MetaAdapter",
       "api_base_url": "https://api.llama.com/v1",
       "auth_pattern": "Bearer token Authorization header",
-      "config_source": ".agent/configs/api_providers.yaml#providers.meta",
+      "config_source": ".agent/cfg/api_providers.yaml#providers.meta",
       "models": []
     }
   ]

@@ -11,7 +11,7 @@ This document is the canonical reference for the install-as-Programs specificati
 ```
 git clone <repo> && cd moos
 go build -o moos platform/kernel/cmd/kernel
-./moos --kb .agent/knowledge_base
+./moos --kb .agent/kb
 ```
 
 ---

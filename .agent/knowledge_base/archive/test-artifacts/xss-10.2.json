@@ -1,9 +1,0 @@
-{
-  "type": "ADD",
-  "actor": "urn:moos:agent:antigraviti",
-  "add": {
-    "urn": "urn:moos:test:xss-quote-probe",
-    "type_id": "node_container",
-    "label": "\"onload=\"alert('XSS-10.2')"
-  }
-}
