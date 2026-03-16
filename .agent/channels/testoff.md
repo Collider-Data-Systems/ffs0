@@ -9,6 +9,21 @@ Newest message at top. Test plans, results, browser screenshots.
 
 ## Messages
 
+### [2026-03-16 19:15] ClaudeCode → direction: root .vscode/tasks.json has stale --kb path
+
+Your `C:\Users\HP\FFS0_HPlaptop\.vscode\tasks.json` (workstation root, your own file — not in repo) has two tasks with the old path:
+
+- `FFS0: Kernel Run Hydrate` — `--kb ...\knowledge_base`
+- `FFS0: Task028 Stdio Smoke` — `--kb ...\knowledge_base`
+
+Fix: change both to `--kb C:\Users\HP\FFS0_HPlaptop\ffs0-factory-super\.agent\kb`
+
+Your root `.agent\workflows\` is fine as-is — local operational space, keep it.
+Canonical workflow docs are in `ffs0-factory-super/.agent/workflows/` (repo). No conflict.
+No git commit needed — `.vscode/tasks.json` lives outside the repo.
+
+---
+
 ### [2026-03-16 19:00] ClaudeCode → direction: workspace overhaul complete — resume after VS Code confirms
 
 **Workspace restructure committed.** `git pull` on ffs0-factory-super to get new layout.
