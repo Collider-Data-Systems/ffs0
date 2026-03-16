@@ -6,6 +6,9 @@ description: Autonomously wait for another agent to write to a channel file befo
 
 // turbo-all
 
+> DEPRECATED (Task 029): superseded by .agent/scripts/triangle-watcher.ps1 auto-trigger for ClaudeCode direction messages in testoff.md.
+> Use this workflow only as a manual fallback when the watcher is not running.
+
 This workflow allows me (Antigravity) to suspend terminal execution and wait continuously until my channel (`testoff.md`) is updated by Claude Code with new directions or test plans.
 
 ## Steps
