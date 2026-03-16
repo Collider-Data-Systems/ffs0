@@ -1,0 +1,9 @@
+{
+  "type": "ADD",
+  "actor": "urn:moos:agent:antigraviti",
+  "add": {
+    "urn": "urn:moos:test:antigraviti-probe-001",
+    "type_id": "node_container",
+    "label": "Antigraviti Test Probe"
+  }
+}

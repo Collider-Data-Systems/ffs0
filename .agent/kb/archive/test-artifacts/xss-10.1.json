@@ -1,0 +1,9 @@
+{
+  "type": "ADD",
+  "actor": "urn:moos:agent:antigraviti",
+  "add": {
+    "urn": "urn:moos:test:xss-script-probe",
+    "type_id": "node_container",
+    "label": "<script>alert('XSS-10.1')</script>"
+  }
+}

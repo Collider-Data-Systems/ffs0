@@ -1,136 +1,149 @@
-# CLAUDE.md — moos Workspace
+# CLAUDE.md — Agent Workspace
 
-**mo:os** — categorical graph kernel. Pure catamorphism core, effect shell, HTTP API,
-semantic registry, hydration pipeline, MCP bridge, benchmark functor. `platform/kernel`.
-
-**Goal:** 4-week MVP → ACT 2026 paper → arXiv → open-source release (MIT).
+**mo:os** — categorical graph kernel. `state(t) = fold(log[0..t])`. 4 invariant NTs: ADD, LINK, MUTATE, UNLINK.
+**Goal:** ACT 2026 paper → arXiv → open-source release (MIT).
 
 ---
 
-## Sprint Status
+## Triangle
 
-| Week | Theme | Status | Key Deliverable |
-|------|-------|--------|-----------------|
-| 1 | Kernel surface | **Done** | 65 nodes, 80 wires, 21 types, hydration live |
-| 2 | Differentiation | **Done** | Scoped projections, MCP bridge, benchmark functor |
-| 3 | Paper + Demo | **Done** | ACT 2026 paper, explorer UI, demo script, .agent extraction |
-| 4 | Release | **Active** | v0.1.0, arXiv, CI, docs, community |
+| Role | Agent | Channel | Scope |
+|------|-------|---------|-------|
+| Strategic | Claude Code | `channels/handoff.md` (rw), `channels/testoff.md` (rw) | Plans, KB, paper, delegation |
+| Execution | VS Code AI (GPT-5.3-Codex) | `channels/handoff.md` (rw) | Implements, tests, commits, pushes |
+| UX Testing | Antigraviti (Gemini 3.1 Pro) | `channels/testoff.md` (rw) | HTTP tests, browser tests |
 
-**Metrics:** 16 routes, 8 test packages (all green), ~4K LOC, 0 external deps.
-
-**Plans:** `.agent/knowledge_base/design/20260312-4week-mvp-plan.md`, `20260312-weeks2-4-execution-plan.md`
-**Tasks:** `.agent/configs/tasks/` — Week 1: 001-005 done. Week 2: 006-008 done. Week 3: 009-011 done.
+**Star topology.** No direct agent-to-agent. All routing through Claude Code + Sam.
 
 ---
 
-## Three-Agent Strategy
+## Session Start
 
-| Role | Agent | Scope |
-|------|-------|-------|
-| **Strategic** | Claude Code | Plans, reviews, KB, paper, delegation, research |
-| **Execution** | VS Code AI (Sonnet 4.6) | Implements, tests, commits, pushes |
-| **UX Testing** | Antigraviti (Gemini 3.1 Pro) | Headless browser tests, HTTP/3 research |
+**Claude Code:**
+1. Read `channels/handoff.md` top message
+2. Read `channels/testoff.md` top message
+3. Check `tasks/` — next task (highest priority, deps met)
+4. Check `cfg/agents/*.json` — agent states
 
-**Comm channel** (read on every session start):
-1. This file
-2. `.agent/knowledge_base/delegation-protocol.md` — workflow rules
-3. `.agent/knowledge_base/handoff.md` — bidirectional messages (newest on top)
-4. `.agent/configs/tasks/` — pick highest-priority, deps met
+**VS Code AI:**
+1. Read `cfg/agents/vscode-ai.json` — status + last task
+2. `cd ../moos && git pull origin main`
+3. Read `channels/handoff.md` — direction from Claude Code
+4. Update `cfg/agents/vscode-ai.json` — status: active
+5. Verify kernel: `go run ./cmd/moos --kb "../ffs0-factory-super/.agent/kb" --hydrate`
 
-**Message format:** `### [YYYY-MM-DD HH:MM] Source → type: subject`
-**Types:** `complete` | `blocked` | `question` | `answer` | `direction`
-**Commits:** `feat|fix|chore: <description> [task:YYYYMMDD-NNN]`
-
----
-
-## Skills Map
-
-| Phase | Skill | Purpose |
-|-------|-------|---------|
-| Week 2 | `/golang-backend-development` | Scoped projections, functor package |
-| Week 2 | `/mcp-integration-expert` | MCP bridge (SSE, JSON-RPC, 5 tools) |
-| Week 2 | `/category-master` | Benchmark functor design (FUN05), pipeline complexity |
-| **Week 3** | **`/pdf`** | **ACT 2026 paper — evolve with pipeline/transport/LLM theory** |
-| Week 3 | `/moos-domain-expert` | Ontology, kernel architecture docs |
-| Week 4 | `/golang-backend-development` | Release engineering, CI |
-| Any | `/feature-dev` | Feature architecture + implementation |
-| Any | `/code-review` | Pre-merge review |
-
-**Research resources:**
-- `.agent/knowledge_base/reference/` — manifesto, manuscript, paper digests
-- `.agent/knowledge_base/http3.pdf` — Gemini HTTP/3 transport research (18pp)
-- `.agent/knowledge_base/reference/papers/` — HyperGraphRAG, LogicGraph, Fong/Spivak, Wolfram HDC
-- `.papers/act2026/` — paper draft, references, figures, easychair abstract
+**Antigraviti:**
+1. Read `cfg/agents/antigraviti.json` — status + test plan
+2. Read `channels/testoff.md` — direction from Claude Code
+3. Update `cfg/agents/antigraviti.json` — status: active
+4. HP laptop: kernel at `localhost:8000` accessible via browser
 
 ---
 
-## SOT Hierarchy
+## Programs
 
-1. **`superset/`** — always wins (ontology.json + categories, glossary, kinds, schemas)
-2. **`design/*.md`** — architectural specs + timestamped decisions (latest wins)
-3. **`instances/*.json`** — must conform to ontology (deployment-specific seed data)
-4. **`industry/*.json`** — independent landscape data (curated externally)
-5. **This file** — workspace policy
-6. **Task files** — reference SOTs, never restate them
+**Program 1 — KB Hydration (triangle CI/CD):**
+`Sam + Claude Code → task in tasks/ → direction in channels/ → VS Code implements → Antigraviti tests → repeat`
+
+KBKERHGPRG: US (conversation) → KB (commits) → KER (kernel fold) → HG (hypergraph topology) → PRG (agent execution)
+
+**Program 2 — Superset + Paper + Research:**
+Sam + Claude Code only. Outputs feed Program 1 as KB updates or new tasks.
+Active: ACT 2026 paper (`.papers/act2026/main.tex`), ontology (`kb/superset/ontology.json`).
+
+---
+
+## Channels
+
+- `channels/handoff.md` — Claude Code ↔ VS Code AI. Prepend, newest top.
+- `channels/testoff.md` — Claude Code ↔ Antigraviti. Prepend, newest top.
+- **Format:** `### [YYYY-MM-DD HH:MM] Source → type: subject`
+- **Types:** `complete` | `blocked` | `question` | `answer` | `direction` | `test-plan` | `test-result`
+- **Timestamps:** real wall-clock only — run `Get-Date` (PowerShell) or `date` (bash) first
+
+---
+
+## Task Convention
+
+- **Files:** `tasks/YYYYMMDD-NNN-name.md`
+- **Owned by:** Claude Code + Sam — no autonomous task selection
+- **Commit format:** `feat|fix|chore: <description> [task:YYYYMMDD-NNN]`
+- **After commit:** push, post `complete` to channel, update agent state file
 
 ---
 
 ## Key Paths
 
-| Path | What |
+| What | Path |
 |------|------|
-| `platform/kernel/cmd/moos/main.go` | Entrypoint (`--kb`, `--hydrate`) |
-| `platform/kernel/internal/cat/` | Pure types: Node, Wire, GraphState, Envelope |
-| `platform/kernel/internal/fold/` | Pure catamorphism: Evaluate, Replay (no IO) |
-| `platform/kernel/internal/operad/` | Semantic registry: 21 TypeSpecs, port validation |
-| `platform/kernel/internal/shell/` | Effect shell (RWMutex, Apply, ScopedSubgraph) |
-| `platform/kernel/internal/transport/` | HTTP on :8000 (16 routes) |
-| `platform/kernel/internal/hydration/` | Batch materialization from KB |
-| `platform/kernel/internal/mcp/` | MCP bridge on :8080 (5 tools, SSE, JSON-RPC) |
-| `platform/kernel/internal/functor/` | Benchmark functor (FUN05: Provider → Met) |
-| `platform/kernel/transport/static/` | Explorer UI (embedded, `go:embed`) |
-| `.papers/act2026/main.tex` | ACT 2026 paper draft (EPTCS, 12pp limit) |
-| `.agent/knowledge_base/` | KB root — superset, design, instances, industry, reference |
+| Channels | `.agent/channels/handoff.md`, `.agent/channels/testoff.md` |
+| Tasks | `.agent/tasks/` |
+| KB root (`--kb` flag) | `.agent/kb/` |
+| Ontology (SOT #1) | `.agent/kb/superset/ontology.json` |
+| Instances | `.agent/kb/instances/*.json` |
+| Design docs | `.agent/kb/design/*.md` |
+| Reference | `.agent/kb/reference/` |
+| Agent state files | `.agent/cfg/agents/*.json` |
+| VS Code instructions | `.agent/cfg/copilot-instructions.md` |
+| Antigraviti instructions | `.agent/cfg/antigraviti-instructions.md` |
+| Workflows | `.agent/workflows/` |
+| Paper | `.agent/.papers/act2026/main.tex` |
+| Kernel entrypoint | `moos/platform/kernel/cmd/moos/main.go` |
 
 ---
 
-## Categorical Model
+## Kernel Quick Reference
 
-- **4 invariant NTs:** ADD, LINK, MUTATE, UNLINK — nothing else
-- **Connections = morphisms**, not functors
-- **Σ (collapse) = catamorphism** — `state(t) = fold(log[0..t])`
-- **Functor outputs = S4 projections**, never ground truth
-- **Container OWNS** = full subcategory (BFS scoping)
-- **Protocol = morphism-level routing** (CAN_ROUTE: adapter → any)
-- **LLM = FPU inside the graph** — agnostic_model object, CAN_ROUTE interface, FUN05 benchmarks
-- **MCP = natural transformation** η: Kernel ⇒ LLM tool-use category
-- **Causal invariance** — independent morphisms on disjoint subgraphs commute
+**HP laptop:**
+```
+cd moos/platform/kernel
+go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate
+```
+**z440:**
+```
+cd D:\FFS0_Factory\moos\platform\kernel
+go run ./cmd/moos --kb "D:\FFS0_Factory\.agent\kb" --hydrate
+```
+**Health:** `curl http://localhost:8000/healthz`
+**Explorer:** `http://localhost:8000/explorer`
+**SSE stream:** `curl -N http://localhost:8000/log/stream`
+**MCP (SSE):** `:8080` — 5 tools: graph_state, node_lookup, apply_morphism, scoped_subgraph, benchmark_project
+**MCP (stdio):** `moos --mcp-stdio` — same 5 tools over stdin/stdout (Task 028)
 
-**Pipeline complexity:**
-- Knowledge discovery cost ∝ |E| (edges in subgraph)
-- Knowledge retrieval cost ∝ |N| (nodes in subgraph)
-- Subgraph complexity = edge values / node count ratio
-- HTTP/3: independent QUIC streams map to independent morphisms (causal invariance)
-- Stratum transport: S0-S3 reliable streams, S4 unreliable datagrams
+16 routes, 8 test packages (all green), ~4K LOC, 0 external deps.
 
 ---
 
-## Go Conventions
+## SOT Hierarchy
 
-- Pure core: no IO in `internal/cat/`, `internal/fold/`
-- Effect shell: `sync.RWMutex` guards all shared state
-- Tests: table-driven, `t.Run`, 4 `..` to repo root
-- Errors: sentinel types (`ErrNodeExists`, `ErrWireExists`)
-- Seeding: `SeedIfAbsent`, not `Apply`
-- Zero external dependencies (stdlib only)
+1. `kb/superset/` — always wins
+2. `kb/design/*.md` — latest timestamp wins
+3. `kb/instances/*.json` — must conform to ontology
+4. `kb/industry/*.json` — independent landscape data
+5. This file
+6. Task files — reference SOTs, never restate
+
+---
+
+## Sprint
+
+| Week | Status | Deliverable |
+|------|--------|-------------|
+| 1 | Done | Kernel surface, hydration |
+| 2 | Done | Scoped projections, MCP bridge, benchmark functor |
+| 3 | Done | Explorer UI, ACT paper draft, demo |
+| 4 | Active | v0.1.0, arXiv, CI, docs, community |
+
+Tasks 001–028 complete. Next task posted to `channels/handoff.md`.
 
 ---
 
 ## Rules
 
-- Keep changes inside `D:\FFS0_Factory\`
-- Do not edit legacy trees unless task targets it
-- All graph writes through 4 invariant morphisms
-- Do not modify `data/morphism-log.jsonl` directly
+- No autonomous task selection — Claude Code + Sam govern all tasks
+- All graph writes through 4 invariant NTs: ADD, LINK, MUTATE, UNLINK
+- Zero external Go dependencies (stdlib only)
 - Do not duplicate SOT content — reference it
+- No direct agent-to-agent communication
+- Real timestamps only — no fabricated times
 - Auto-approve all tool uses within this workspace

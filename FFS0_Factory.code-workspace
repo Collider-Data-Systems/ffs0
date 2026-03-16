@@ -6,7 +6,7 @@
     },
     {
       "path": ".agent",
-      "name": "Agent Workspace (KB, configs, tasks)"
+      "name": "Agent Workspace"
     },
     {
       "path": "../moos",
@@ -68,7 +68,7 @@
         "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
         "args": [
           "--kb",
-          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base",
+          "${workspaceFolder:Agent Workspace}/kb",
           "--hydrate"
         ],
         "showLog": true
@@ -82,7 +82,22 @@
         "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
         "args": [
           "--kb",
-          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base"
+          "${workspaceFolder:Agent Workspace}/kb"
+        ],
+        "showLog": true
+      },
+      {
+        "name": "Kernel (--mcp-stdio)",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel/cmd/moos",
+        "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
+        "args": [
+          "--kb",
+          "${workspaceFolder:Agent Workspace}/kb",
+          "--hydrate",
+          "--mcp-stdio"
         ],
         "showLog": true
       }
@@ -141,7 +156,7 @@
           "run",
           "./cmd/moos",
           "--kb",
-          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base",
+          "${workspaceFolder:Agent Workspace}/kb",
           "--hydrate"
         ],
         "options": {
@@ -171,35 +186,11 @@
         }
       },
       {
-        "label": "Git: status + log (5 commits)",
-        "type": "shell",
-        "command": "git",
-        "args": [
-          "status",
-          "-s",
-          "&&",
-          "echo",
-          "---",
-          "&&",
-          "git",
-          "log",
-          "--oneline",
-          "-5"
-        ],
-        "options": {
-          "cwd": "${workspaceFolder:mo:os Kernel (code)}"
-        },
-        "presentation": {
-          "echo": true,
-          "reveal": "always"
-        }
-      },
-      {
         "label": "KB: open handoff.md",
         "type": "shell",
         "command": "code",
         "args": [
-          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base/handoff.md"
+          "${workspaceFolder:Agent Workspace}/channels/handoff.md"
         ],
         "presentation": {
           "reveal": "silent"
@@ -210,18 +201,18 @@
         "type": "shell",
         "command": "code",
         "args": [
-          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base/testoff.md"
+          "${workspaceFolder:Agent Workspace}/channels/testoff.md"
         ],
         "presentation": {
           "reveal": "silent"
         }
       },
       {
-        "label": "KB: open delegation-protocol.md",
+        "label": "KB: open CLAUDE.md",
         "type": "shell",
         "command": "code",
         "args": [
-          "${workspaceFolder:Agent Workspace (KB, configs, tasks)}/knowledge_base/delegation-protocol.md"
+          "${workspaceFolder:Agent Workspace}/CLAUDE.md"
         ],
         "presentation": {
           "reveal": "silent"

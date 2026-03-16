@@ -1,0 +1,21 @@
+https://github.com/MSD21091969/ffs0-factory-super.git please clone this repo. its my z440 workstrations workspace, I use it on diff other workstations as knowledge base for my mo:os codebase. 
+I consider my various local physical workstations as places for local branches to push to feature branches for https://github.com/MSD21091969/moos.git the knowledge framework i am working on. 
+The setup of local workstatoins with multiple workspaces even multiple runtimes is an example (projection of hypergraph) of mo:os in working itsself. 
+
+please clone these repos in a logical way, chck your skills, gitbub connectors etc in this IDE first. Main code is a Go application, ask me questions if in doubt. This conversation is to continue my yesterdays work, z440 workstations conversations in that local workspaces not availabe i think (it mentioned functorial semantics, tying the room together, carpet as metaphire for semantics and syntax being 1. 
+
+You'll get the idea if you read through it completely. skipp legacy and archive folders. consider timestamps of files like handoff testoff and in filename of tasks. the repos are tight and DRY structured and systematic. there is references papers thoughts an article in preparation by Claude and me (Sam). 
+
+There is a manifesto on data sovereignty and pieces on skills and industry buzzing. feel free to read all my thoughts right and wrong assumpions in past. I think I have a logically consistent idea of a hypergraph including its math on projections and metrics for datapipelining. 
+
+The categorical appracoh decouples propertis from object s and morpfishm bringing them in the hypergraph to collide them into structures. Think about that , 
+
+check the references in the field. If all is reduced to state transitions of properties of instantiated objects that have ownership and acces and even userid# is just a property. 
+
+structures programs interfaces tools skills... semantics.but unstructured. so metadata. Think of kernels as runtime processes governed by hypergraph and controlled by AI/Human through lenses. llm and other models as pieces in human owned objects and morphism to be routed in group to user to admin permitted subgraphs/programs.. 
+
+There are already " local worktrees"  |(is that the right term, My experience level as a software developer is sub average, I started april 2025 with chatgpt, moved to gemini in may, started gcloud and python server august messing arounbd with agents but always programming against the interface, pushing to frameworks as google adk pydantic ai and mainly python itsself, I explored math and came on category theory, something i had an intuition of in april 2025 but couldt formalize. 
+
+thought on GPU ram CPU ram HG dbase to promoting structures to Go kernel (current kernel language, could be Rust to but harder bc memory allocations routines, is this corrrect. it is the programming level I am oushing to , OS level), thereby solidying certain structures and keeping the graph structures fluid, even placing them on GPU for fast analysis on functorial level, like RAG but diff. runtime memory is a fluid thing i huess and the hypergrap is distributed over them while the memory is distributed on cpu-gpu-dbdisk. 
+
+Go deep on this all
