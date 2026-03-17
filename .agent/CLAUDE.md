@@ -9,21 +9,28 @@
 
 | Role | Agent | Channel | Scope |
 |------|-------|---------|-------|
-| Strategic | Claude Code | `channels/handoff.md` (rw), `channels/testoff.md` (rw) | Plans, KB, paper, delegation |
+| Lead | Sam | `channels/leadoff.md` (rw) | Superset, paper, KB design, research direction |
+| Strategic | Claude Code | `channels/leadoff.md` (rw), `channels/handoff.md` (rw), `channels/testoff.md` (rw) | Plans, KB, paper, delegation |
 | Execution | VS Code AI (GPT-5.3-Codex) | `channels/handoff.md` (rw) | Implements, tests, commits, pushes |
 | UX Testing | Antigraviti (Gemini 3.1 Pro) | `channels/testoff.md` (rw) | HTTP tests, browser tests |
 
 **Star topology.** No direct agent-to-agent. All routing through Claude Code + Sam.
+`leadoff.md` is the source — all programs derive from it. KB>KER>HG>PRG starts here.
 
 ---
 
 ## Session Start
 
 **Claude Code:**
-1. Read `channels/handoff.md` top message
-2. Read `channels/testoff.md` top message
-3. Check `tasks/` — next task (highest priority, deps met)
-4. Check `cfg/agents/*.json` — agent states
+1. Read `cfg/state/session-state.json` — instant cycle position + open items
+2. Read `channels/leadoff.md` top message — Program 2 decisions from Sam
+3. Read `channels/handoff.md` top message
+4. Read `channels/testoff.md` top message
+5. Check `tasks/` — next task (highest priority, deps met)
+6. Check `cfg/agents/*.json` — agent states
+
+**Session End (Claude Code):**
+Update `cfg/state/session-state.json` with: cycle_position, last task, leadoff_top, channel tops, kernel state, open items.
 
 **VS Code AI:**
 1. Read `cfg/agents/vscode-ai.json` — status + last task
@@ -48,17 +55,23 @@
 KBKERHGPRG: US (conversation) → KB (commits) → KER (kernel fold) → HG (hypergraph topology) → PRG (agent execution)
 
 **Program 2 — Superset + Paper + Research:**
-Sam + Claude Code only. Outputs feed Program 1 as KB updates or new tasks.
-Active: ACT 2026 paper (`.papers/act2026/main.tex`), ontology (`kb/superset/ontology.json`).
+Sam + Claude Code only. Channel: `channels/leadoff.md`. Outputs feed Programs 1 and 3 as KB updates, new tasks, or research-tasks.
+Active: ACT 2026 paper (`kb/reference/papers/act2026/main.tex`), ontology (`kb/superset/ontology.json`), data pipeline (`kb/design/20260317-data-pipeline.md`).
+
+**Program 3 — Research Pipeline (VS Code as harvester):**
+Claude Code posts `research-task` to `handoff.md` with query, output_path, output_schema.
+VS Code uses arxiv/YouTube tools → scrapes → structured JSON → `kb/industry/` or `kb/reference/`.
+Posts `research-result` → Claude Code reviews → if approved → `hydration-task` → VS Code materializes.
 
 ---
 
 ## Channels
 
+- `channels/leadoff.md` — Sam ↔ Claude Code. Prepend, newest top. Types: `think` | `decide` | `question` | `answer` | `blocked` | `complete`
 - `channels/handoff.md` — Claude Code ↔ VS Code AI. Prepend, newest top.
 - `channels/testoff.md` — Claude Code ↔ Antigraviti. Prepend, newest top.
 - **Format:** `### [YYYY-MM-DD HH:MM] Source → type: subject`
-- **Types:** `complete` | `blocked` | `question` | `answer` | `direction` | `test-plan` | `test-result`
+- **Types:** `complete` | `blocked` | `question` | `answer` | `direction` | `test-plan` | `test-result` | `research-task` | `research-result` | `hydration-task` | `hydration-complete`
 - **Timestamps:** real wall-clock only — run `Get-Date` (PowerShell) or `date` (bash) first
 
 ---
@@ -87,7 +100,7 @@ Active: ACT 2026 paper (`.papers/act2026/main.tex`), ontology (`kb/superset/onto
 | VS Code instructions | `.agent/cfg/copilot-instructions.md` |
 | Antigraviti instructions | `.agent/cfg/antigraviti-instructions.md` |
 | Workflows | `.agent/workflows/` |
-| Paper | `.agent/.papers/act2026/main.tex` |
+| Paper | `.agent/kb/reference/papers/act2026/main.tex` |
 | Kernel entrypoint | `moos/platform/kernel/cmd/moos/main.go` |
 
 ---
@@ -134,7 +147,7 @@ go run ./cmd/moos --kb "D:\FFS0_Factory\.agent\kb" --hydrate
 | 3 | Done | Explorer UI, ACT paper draft, demo |
 | 4 | Active | v0.1.0, arXiv, CI, docs, community |
 
-Tasks 001–028 complete. Next task posted to `channels/handoff.md`.
+Tasks 001–031 complete. Task 032 pending Sam direction (Program 2: ACT paper, research pipeline). See `channels/leadoff.md` for latest.
 
 ---
 

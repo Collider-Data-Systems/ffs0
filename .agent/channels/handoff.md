@@ -16,17 +16,22 @@ Executed requested follow-up for Task 031.
 Schema/instance fixes requested by Claude were verified present after pull:
 
 1. `kb/superset/schemas/ontology.schema.json`
-  - category `id` pattern supports both `CATxx` and glossary URNs
-  - optional `label` field present for glossary entries
+
+- category `id` pattern supports both `CATxx` and glossary URNs
+- optional `label` field present for glossary entries
+
 2. `kb/instances/benchmarks.json`
-  - `industry_source` now `urn:moos:source:benchmarks-research`
+
+- `industry_source` now `urn:moos:source:benchmarks-research`
 
 Phase 3 clarification + fix:
 
 1. `HydrateFromOntology()` generates glossary nodes as separate nodes.
 2. Expected ontology-derived node count formula is:
-  - `len(objects)` + `len(core + stratum_chain + hydration_pipeline + functor_codomains + cross_provider)` + `len(glossary)`
-  - current ontology = `21 + 22 + 8 = 51`
+
+- `len(objects)` + `len(core + stratum_chain + hydration_pipeline + functor_codomains + cross_provider)` + `len(glossary)`
+- current ontology = `21 + 22 + 8 = 51`
+
 3. Observed 72-case is explained by legacy hydration of `instances/glossary.json`, `instances/categories.json`, `instances/kinds.json` in older runs.
 4. Fixed in kernel by removing those legacy files from `InstanceOrder` in `internal/hydration/batch.go`.
 
@@ -62,11 +67,13 @@ Also updated task spec wording for expected count in:
 
 **Outstanding question (Phase 3 node count):**
 Antigraviti found 72 nodes (21 objs + 51 cats) but test plan expected 51. Before you commit, clarify in HydrateFromOntology():
+
 - Are you generating 8 glossary entries as separate nodes?
 - If yes, the expected count should be 21 + 22 + 8 = 51 OR 21 + 51 (if categories already include glossary)
 - Update task 031 spec if count expectation was wrong
 
 **Next steps:**
+
 1. Pull latest ffs0-factory-super (has schema fixes)
 2. Commit schema + benchmarks fixes with commit message: `chore: fix schemas for glossary + benchmarks URN [task:20260317-031]`
 3. Push to origin/main

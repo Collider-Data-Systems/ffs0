@@ -2,7 +2,7 @@
 
 **ID:** 20260317-031
 **Priority:** P0
-**Status:** Phase 1-2 ✅ complete (commit e90352a) → Phase 3 in-progress
+**Status:** COMPLETE ✅ — All phases shipped + tested (Phase 1-2: e90352a, Phase 3: f7471e5, Antigraviti: 11:20 all green)
 **Program:** P2 (design) → P1 (implementation)
 **Design:** `kb/design/20260317-superset-pipeline.md`
 **Depends:** Tasks 001-030 complete
@@ -19,6 +19,7 @@ Wire ontology.json as single SOT for the entire KB pipeline. Delete dead files, 
 ## Test Status (as of 2026-03-17 10:15)
 
 **Antigraviti Phase 1-3 Results:**
+
 - Phase 1 (Schema validation): 2 FAILs found + fixed
   - ❌ → ✅ ontology.schema.json glossary label + URN pattern (e90352a)
   - ❌ → ✅ benchmarks.json industry_source URN (e90352a)
@@ -28,7 +29,7 @@ Wire ontology.json as single SOT for the entire KB pipeline. Delete dead files, 
   - Current ontology totals: `21 + 22 + 8 = 51`
   - 72 indicates legacy `instances/{glossary,categories,kinds}.json` were also hydrated in that run.
 
-**Next:** Antigraviti retests Phase 1 after VS Code pushes Phase 3 implementation.
+**Final:** All phases verified. Phase 2-3 retest at 11:20 — go test PASS, kernel boot PASS (104 nodes, 111 wires post-reset), healthz PASS, URN patterns PASS, node count 51 PASS (30 cats + 21 objs), stratum S1 PASS.
 
 ## Phase 1: Clean superset/ dead files (Claude Code — done)
 
@@ -47,14 +48,14 @@ Wire ontology.json as single SOT for the entire KB pipeline. Delete dead files, 
 
 ## Phase 3: Kernel hydration from ontology (VS Code — pending)
 
-- [ ] New function `HydrateFromOntology(ontologyPath string) ([]cat.Node, error)` in `internal/hydration/`
+- [x] New function `HydrateFromOntology(ontologyPath string) ([]cat.Node, error)` in `internal/hydration/`
   - Reads ontology.json
   - Generates glossary nodes (CAT:Object, CAT:Morphism, etc.) — same URNs as deleted glossary.json
   - Generates category satellite nodes (CAT01-CAT22)
   - Generates kind reference nodes (OBJ01-OBJ21)
   - All nodes get `stratum: "S1"`, `type_id: "app_template"`
-- [ ] Update `HydrateAll()` to call `HydrateFromOntology()` before instance hydration
-- [ ] Tests: `hydration_ontology_test.go`
+- [x] Update `HydrateAll()` to call `HydrateFromOntology()` before instance hydration
+- [x] Tests: `hydration_ontology_test.go`
   - Verify node count matches `objects + (core + stratum_chain + hydration_pipeline + functor_codomains + cross_provider) + glossary`
   - Verify all generated URNs follow `urn:moos:cat:*` or `urn:moos:obj:*` pattern
   - Verify stratum = S1 for all generated nodes

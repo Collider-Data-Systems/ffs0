@@ -19,10 +19,11 @@ Three-agent workspace: Claude Code (strategic), VS Code AI (execution), Antigrav
 
 1. Read this file
 2. Read `.agent/CLAUDE.md` — full operational protocol (channels, tasks, programs, paths)
-3. Read `.agent/channels/handoff.md` — latest direction
-4. Read `.agent/channels/testoff.md` — latest test status
-5. Check `.agent/tasks/` — next task (highest priority, deps met)
-6. Check `.agent/cfg/agents/*.json` — agent states
+3. Read `.agent/channels/leadoff.md` — latest Program 2 decision from Sam
+4. Read `.agent/channels/handoff.md` — latest direction
+5. Read `.agent/channels/testoff.md` — latest test status
+6. Check `.agent/tasks/` — next task (highest priority, deps met)
+7. Check `.agent/cfg/agents/*.json` — agent states
 
 ---
 
@@ -38,7 +39,7 @@ Three-agent workspace: Claude Code (strategic), VS Code AI (execution), Antigrav
 | Tasks | `.agent/tasks/` |
 | Agent config | `.agent/cfg/agents/` |
 | Workflows | `.agent/workflows/` |
-| ACT 2026 paper | `.agent/.papers/act2026/main.tex` |
+| ACT 2026 paper | `.agent/kb/reference/papers/act2026/main.tex` |
 
 ---
 
@@ -67,7 +68,8 @@ Three-agent workspace: Claude Code (strategic), VS Code AI (execution), Antigrav
 
 | Role | Agent | Channel |
 |------|-------|---------|
-| Strategic | Claude Code | `channels/handoff.md` (rw), `channels/testoff.md` (rw) |
+| Lead | Sam | `channels/leadoff.md` (rw) |
+| Strategic | Claude Code | `channels/leadoff.md` (rw), `channels/handoff.md` (rw), `channels/testoff.md` (rw) |
 | Execution | VS Code AI | `channels/handoff.md` (rw) |
 | UX Testing | Antigraviti | `channels/testoff.md` (rw) |
 

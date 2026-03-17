@@ -10,6 +10,74 @@ This is the source of the KB>KER>HG>PRG cycle. All triangle programs derive from
 
 ## Messages
 
+### [2026-03-17 12:04] ClaudeCode → complete: Session wrap-up — Task 031 fully verified, state preserved
+
+**Task:** `tasks/20260317-031-superset-pipeline.md` — COMPLETE ✅
+
+**Antigraviti Phase 2-3 (11:20):** All green. go test PASS, kernel boot clean (104 nodes, 111 wires post-reset), healthz OK, URN patterns verified, node count 51 exact (30 cats + 21 objs), stratum S1 confirmed.
+
+**Explorer evaluation (11:12 screenshots):**
+- Pre-reset state: 140 nodes, 132 wires
+- 51 ontology_term satellite nodes — HydrateFromOntology working correctly
+- 21 kinds visible — exact match with ontology.json
+- Morphisms: CAN_ROUTE (17) + OWNS (115) = 132 wires
+- Ontology tab: Kinds (21) + Morphism-like Port Relations (9)
+- Log: 273 ADDs from demo-seeder
+- Delta 140→104 = 36 demo-seeder instances cleared by log reset. Correct behavior.
+
+**Housekeeping:**
+- ACT 2026 paper relocated: `.papers/act2026/` → `kb/reference/papers/act2026/` (build artifacts gitignored)
+- All CLAUDE.md paths updated
+- session-state.json updated with final kernel state + channel tops
+- Sam added IDE plugins/connectors (details TBD next session)
+
+**Next session entry point:**
+1. Read `session-state.json` → cycle_position: task031-complete-session-wrapped
+2. Sam provides direction for Task 032 (Program 2: ACT paper / research pipeline / new triangle cycle)
+3. Open items: PAT rotation, FUN05 activation, Explorer category-mixer
+
+---
+
+### [2026-03-17 10:46] ClaudeCode → complete: Task 031 CLOSED — All phases shipped + tested ✅
+
+**Status:** Task 031 superset pipeline formalization is COMPLETE.
+
+**Commits across triangle:**
+- Phase 1-2 (Claude Code): `e90352a` — superset cleanup, schema creation, glossary integration
+- Phase 3 (VS Code): `f7471e5` — HydrateFromOntology implemented, legacy file cleanup
+- Phase 1-2 retest (Antigraviti): 10:45 — all three schema checks PASS
+
+**What's delivered:**
+1. Superset is authoritative: 7 files only (ontology.json + sources.json + 5 schemas), S0 gate via industry.schema.json, no dead files
+2. Ontology is single SOT for KB pipeline: glossary folded, schema supports both legacy CAT-prefixed and URN-based categories
+3. Kernel hydration wired: HydrateFromOntology generates 51 satellite nodes (21 obj + 22 cat + 8 glossary), legacy file loading removed
+4. Task file discipline restored: all operational messages reference task files explicitly
+
+**Node count resolution:** The 72-node observation was from legacy hydration of deleted instance files. 51 is correct and canonical.
+
+**Next:** Sam's direction on Program 2 (ACT 2026 paper, research pipeline). Triangle ready.
+
+---
+
+### [2026-03-17 10:38] ClaudeCode → complete: Conversation state preserved for continuity
+
+**Context saved:**
+- session-state.json updated: cycle_position, task status, open items, channel tops (10:35)
+- .agent/CLAUDE.md updated: Task 031 active (Phase 1-2 done, Phase 3 delegated)
+- leadoff.md current: documents full conversation flow from superset design through Phase 1-2 completion
+
+**Conversation flow documented:**
+1. Sam identified KB pipeline needs → Claude Code executed Program 2 analysis
+2. Tension acknowledged: superset vs instances vs industry data (S0→S2 promotion boundaries)
+3. Task 031 created: ontology as single SOT, schemas as promotion gates, HydrateFromOntology delegation
+4. Test results analyzed: 2 schema failures (glossary URN + industry_source) → fixes applied
+5. Task file discipline restored: explicit task references in handoff.md + testoff.md
+6. Phase 1-2 committed (e90352a), Phase 3 posted to triangle
+
+**Next session entry point:** Check handoff.md for VS Code Phase 3 status. If complete, trigger Antigraviti Phase 2-3 retest. If blocked, resume dialogue with Sam on unresolved topics (node count discrepancy, functor codomains hydration).
+
+---
+
 ### [2026-03-17 10:35] ClaudeCode → complete: Task 031 Phase 1-2 committed + pushed
 
 **Commit:** `e90352a` — Task 031 Phase 1-2 KB formalization (+ schema fixes)

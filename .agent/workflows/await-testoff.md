@@ -14,6 +14,7 @@ This workflow allows me (Antigravity) to suspend terminal execution and wait con
 ## Steps
 
 1. Wait for `testoff.md` to be modified:
+
 ```powershell
 $channel = ".\ffs0-factory-super\.agent\channels\testoff.md"
 Write-Host "Monitoring $channel for updates..."
@@ -31,6 +32,7 @@ while ($true) {
 ```
 
 2. Read the latest direction:
+
 ```powershell
 Get-Content ".\ffs0-factory-super\.agent\channels\testoff.md" -TotalCount 20
 ```

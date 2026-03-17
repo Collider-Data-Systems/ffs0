@@ -1,0 +1,51 @@
+{
+  "updated": "2026-03-17T12:04:00+01:00",
+  "cycle_position": "program1-task031-complete-session-wrapped",
+  "last_task_id": "031",
+  "last_task_status": "COMPLETE: All phases shipped + tested green (Phase 1-2: e90352a, Phase 3: f7471e5, Antigraviti Phase 2-3: 11:20)",
+  "next_task_id": "032",
+  "next_task_hint": "Task 032 pending Sam direction. ACT 2026 paper relocated to kb/reference/papers/act2026/. Sam added IDE plugins/connectors. Explorer verified: 51 ontology_terms, 21 kinds, 132 wires. Ready for Program 2 (paper/research) or new triangle cycle.",
+  "leadoff_top": {
+    "timestamp": "2026-03-17 12:04",
+    "from": "ClaudeCode",
+    "type": "complete",
+    "subject": "Session wrap-up: Task 031 fully closed, Explorer verified, ACT paper relocated to KB, state preserved"
+  },
+  "handoff_top": {
+    "timestamp": "2026-03-17 10:41",
+    "from": "VSCodeAI",
+    "type": "complete",
+    "subject": "Task 031 Phase 3 complete: HydrateFromOntology shipped (f7471e5), schema verified, node count clarified"
+  },
+  "testoff_top": {
+    "timestamp": "2026-03-17 11:20",
+    "from": "Antigraviti",
+    "type": "test-result",
+    "subject": "Task 031 Phase 2-3 PASS: go test green, kernel boot clean (104 nodes, 111 wires), URN patterns + node count + stratum all verified"
+  },
+  "kernel_state": {
+    "nodes": 104,
+    "wires": 111,
+    "log_depth": 0,
+    "note": "Post log-reset clean boot. Hydration-only state. Explorer pre-reset showed 140/132 (includes demo-seeder instances)."
+  },
+  "superset_state": {
+    "file_count": 7,
+    "files": ["ontology.json", "sources.json", "schemas/ontology.schema.json", "schemas/instance.schema.json", "schemas/industry.schema.json", "schemas/graph.schema.json", "schemas/config.schema.json"],
+    "changes_this_session": "Deleted 6 dead files, created industry.schema.json, updated instance.schema.json, added glossary to ontology.json, fixed ontology.schema.json URN+label, fixed benchmarks.json URN"
+  },
+  "open_items": [
+    "PAT rotation after session",
+    "ACT 2026 paper — now at kb/reference/papers/act2026/main.tex, MiKTeX installed, compiled OK",
+    "FUN05 Benchmark functor activation — needs HDC instances in graph first",
+    "Explorer category-mixer endpoint — POST /ontology/category (future)",
+    "Sam added IDE plugins/connectors during session — details TBD next session"
+  ],
+  "triangle_watcher": "Running in separate PowerShell terminal — monitors channels/*.md, sends Toast notifications",
+  "active_research_tasks": [],
+  "channel_types": {
+    "leadoff": ["think", "decide", "question", "answer", "blocked", "complete"],
+    "handoff": ["complete", "blocked", "question", "answer", "direction", "research-task", "research-result", "hydration-task", "hydration-complete"],
+    "testoff": ["test-plan", "test-result", "blocked", "direction", "research-task", "research-result"]
+  }
+}
