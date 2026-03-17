@@ -2,16 +2,30 @@
 
 **ID:** 20260317-031
 **Priority:** P0
-**Status:** in-progress
+**Status:** Phase 1-2 ✅ complete (commit e90352a) → Phase 3 in-progress
 **Program:** P2 (design) → P1 (implementation)
 **Design:** `kb/design/20260317-superset-pipeline.md`
 **Depends:** Tasks 001-030 complete
+**Phase 1-2 Commit:** e90352a (2026-03-17 10:36)
 
 ---
 
 ## Objective
 
 Wire ontology.json as single SOT for the entire KB pipeline. Delete dead files, create missing S0 gate, update existing schemas, add kernel-level ontology hydration.
+
+---
+
+## Test Status (as of 2026-03-17 10:15)
+
+**Antigraviti Phase 1-3 Results:**
+- Phase 1 (Schema validation): 2 FAILs found + fixed
+  - ❌ → ✅ ontology.schema.json glossary label + URN pattern (e90352a)
+  - ❌ → ✅ benchmarks.json industry_source URN (e90352a)
+- Phase 2 (Kernel boot): ✅ all PASS
+- Phase 3 (Satellite nodes): ⚠️ node count discrepancy (72 found vs 51 expected) — awaiting VS Code clarification
+
+**Next:** Antigraviti retests Phase 1 after VS Code pushes Phase 3 implementation.
 
 ## Phase 1: Clean superset/ dead files (Claude Code — done)
 
