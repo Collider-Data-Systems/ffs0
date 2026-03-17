@@ -204,9 +204,12 @@
                         "properties": {
                             "id": {
                                 "type": "string",
-                                "pattern": "^CAT[0-9]{2,}$"
+                                "pattern": "^(CAT[0-9]{2,}|urn:moos:cat:[a-z-]+)$"
                             },
                             "name": {
+                                "type": "string"
+                            },
+                            "label": {
                                 "type": "string"
                             },
                             "latex": {

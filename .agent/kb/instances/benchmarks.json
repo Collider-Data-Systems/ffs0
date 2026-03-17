@@ -122,7 +122,7 @@
       "type_id": "benchmark_suite",
       "name": "Industry Intelligence Index",
       "description": "Published benchmark suite — Artificial Analysis composite scoring. Functor FUN05 primary domain. Scores are declared S2 facts (immutable published values), not mo:os-computed.",
-      "industry_source": "industry/benchmarks.json",
+      "industry_source": "urn:moos:source:benchmarks-research",
       "tasks": []
     },
     {

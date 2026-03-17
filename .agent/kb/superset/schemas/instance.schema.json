@@ -19,6 +19,15 @@
             "type": "string",
             "minLength": 1
         },
+        "role": {
+            "type": "string",
+            "description": "Instance role (e.g. value-layer, selection-layer)"
+        },
+        "canonicality": {
+            "type": "string",
+            "enum": ["canonical-structural", "canonical-contingent", "contingent"],
+            "description": "How authoritative this instance file is"
+        },
         "description": {
             "type": "string"
         },
@@ -83,6 +92,15 @@
                     },
                     "status": {
                         "type": "string"
+                    },
+                    "industry_source": {
+                        "type": "string",
+                        "pattern": "^urn:moos:source:",
+                        "description": "Optional URN tracing this instance back to its industry source (from sources.json)"
+                    },
+                    "industry_ref": {
+                        "type": "string",
+                        "description": "Optional ID of the industry entry this instance was selected from"
                     }
                 },
                 "additionalProperties": true
