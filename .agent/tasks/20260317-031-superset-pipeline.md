@@ -23,7 +23,10 @@ Wire ontology.json as single SOT for the entire KB pipeline. Delete dead files, 
   - ❌ → ✅ ontology.schema.json glossary label + URN pattern (e90352a)
   - ❌ → ✅ benchmarks.json industry_source URN (e90352a)
 - Phase 2 (Kernel boot): ✅ all PASS
-- Phase 3 (Satellite nodes): ⚠️ node count discrepancy (72 found vs 51 expected) — awaiting VS Code clarification
+- Phase 3 (Satellite nodes): ⚠️ node count discrepancy observed in one run (72 found vs 51 expected). Expected formula is:
+  - `len(objects)` + `len(core+stratum_chain+hydration_pipeline+functor_codomains+cross_provider)` + `len(glossary)`
+  - Current ontology totals: `21 + 22 + 8 = 51`
+  - 72 indicates legacy `instances/{glossary,categories,kinds}.json` were also hydrated in that run.
 
 **Next:** Antigraviti retests Phase 1 after VS Code pushes Phase 3 implementation.
 
@@ -52,7 +55,7 @@ Wire ontology.json as single SOT for the entire KB pipeline. Delete dead files, 
   - All nodes get `stratum: "S1"`, `type_id: "app_template"`
 - [ ] Update `HydrateAll()` to call `HydrateFromOntology()` before instance hydration
 - [ ] Tests: `hydration_ontology_test.go`
-  - Verify node count matches ontology.json objects + categories + glossary
+  - Verify node count matches `objects + (core + stratum_chain + hydration_pipeline + functor_codomains + cross_provider) + glossary`
   - Verify all generated URNs follow `urn:moos:cat:*` or `urn:moos:obj:*` pattern
   - Verify stratum = S1 for all generated nodes
 
