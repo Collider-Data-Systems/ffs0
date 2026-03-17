@@ -12,6 +12,9 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 
+% eptcs+mathptmx can request OT1/ptm/m/scit; map it to small caps to avoid font warnings.
+\DeclareFontShape{OT1}{ptm}{m}{scit}{<->ssub * ptm/m/sc}{}
+
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
@@ -223,11 +226,11 @@ nodes transitively reachable from $a$ via OWNS wires. This is computed by
 breadth-first search under a read lock, yielding all internal wires---those
 whose source and target both lie in $\mathcal{C}_a$.
 
-\input{figures/bottleneck}
-
 %% -----------------------------------------------------------------
 \section{The Semantic Bottleneck and Invariant Morphisms}
 \label{sec:bottleneck}
+
+\input{figures/bottleneck}
 
 \subsection{The Semantic Bottleneck}
 
@@ -351,6 +354,8 @@ achieves \emph{harness agnosticism}: the UI surface is a direct, consistent
 projection of the categorical state, requiring no intermediary state-management
 synchronization. Nested sub-workspaces are submodules in the categorical
 composition, inheriting structural integrity via algebraic closure.
+
+\input{figures/tower}
 
 \subsection{LLM as Endofunctor}
 \label{subsec:llm-endofunctor}
@@ -479,8 +484,8 @@ transformation between two categories.
 
 \begin{definition}[Kernel and Tool Categories]
 Let $\mathcal{C}_K$ be the category whose objects are graph operations
-(\textsc{Add}, \textsc{Link}, \textsc{Mutate}, \textsc{Unlink}, and the
-read operations \textsc{State}, \textsc{Lookup}, \textsc{Scope}) and whose
+(\textup{\textsc{Add}}, \textup{\textsc{Link}}, \textup{\textsc{Mutate}}, \textup{\textsc{Unlink}}, and the
+read operations \textup{\textsc{State}}, \textup{\textsc{Lookup}}, \textup{\textsc{Scope}}) and whose
 morphisms are kernel evaluations (applications of the catamorphic fold). Let
 $\mathcal{C}_L$ be the category whose objects are JSON tool schemas and whose
 morphisms are JSON-RPC 2.0 invocations.
@@ -494,11 +499,11 @@ The MCP bridge is a natural transformation $\eta\colon \mathcal{C}_K
 \toprule
 Component $\eta_i$ & Kernel operation $\to$ Tool schema \\
 \midrule
-$\eta_{\mathrm{state}}$     & \textsc{State} $\mapsto$ \texttt{graph\_state} \\
-$\eta_{\mathrm{lookup}}$    & \textsc{Lookup} $\mapsto$ \texttt{node\_lookup} \\
-$\eta_{\mathrm{apply}}$     & \textsc{Apply} $\mapsto$ \texttt{apply\_morphism} \\
-$\eta_{\mathrm{scope}}$     & \textsc{Scope} $\mapsto$ \texttt{scoped\_subgraph} \\
-$\eta_{\mathrm{bench}}$     & \textsc{Benchmark} $\mapsto$ \texttt{benchmark\_project} \\
+$\eta_{\mathrm{state}}$     & \textup{\textsc{State}} $\mapsto$ \texttt{graph\_state} \\
+$\eta_{\mathrm{lookup}}$    & \textup{\textsc{Lookup}} $\mapsto$ \texttt{node\_lookup} \\
+$\eta_{\mathrm{apply}}$     & \textup{\textsc{Apply}} $\mapsto$ \texttt{apply\_morphism} \\
+$\eta_{\mathrm{scope}}$     & \textup{\textsc{Scope}} $\mapsto$ \texttt{scoped\_subgraph} \\
+$\eta_{\mathrm{bench}}$     & \textup{\textsc{Benchmark}} $\mapsto$ \texttt{benchmark\_project} \\
 \bottomrule
 \end{tabular}
 \end{center}
