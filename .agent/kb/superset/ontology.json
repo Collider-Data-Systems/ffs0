@@ -396,6 +396,23 @@
       "target_connections": [
         "OWNS"
       ]
+    },
+    {
+      "id": "OBJ22",
+      "name": "IndustryEntity",
+      "type_id": "industry_entity",
+      "broad_category": "industry",
+      "description": "External industry data point — immutable S0 reference to real-world entity. Linked to instance nodes via CLASSIFIES morphism. First S0 type in the ontology.",
+      "mutable": false,
+      "allowed_strata": [
+        "S0"
+      ],
+      "source_connections": [
+        "CLASSIFIES"
+      ],
+      "target_connections": [
+        "OWNS"
+      ]
     }
   ],
   "morphisms": [
@@ -526,6 +543,14 @@
       "source": "evaluation.*",
       "target": "evaluation.*",
       "description": "Score belongs to this benchmark suite. New in v3 — cross-provider mapping (§9)."
+    },
+    {
+      "id": "MOR17",
+      "name": "CLASSIFIES",
+      "decomposition": "LINK(industry_node, 'classifies', instance_node, 'source')",
+      "source": "industry.*",
+      "target": "any",
+      "description": "Provenance morphism — links S0 industry entity to S2 instance node. The classifying functor from Industry to Superset, realized as a graph morphism."
     }
   ],
   "invariant_morphisms": {
