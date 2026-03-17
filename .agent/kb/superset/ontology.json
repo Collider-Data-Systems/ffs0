@@ -104,7 +104,8 @@
         "OWNS",
         "CAN_HYDRATE",
         "LINK_NODES",
-        "ADD_NODE_CONTAINER"
+        "ADD_NODE_CONTAINER",
+        "CLASSIFIES"
       ]
     },
     {
@@ -124,7 +125,8 @@
       "target_connections": [
         "OWNS",
         "CAN_SCHEDULE",
-        "CAN_ROUTE"
+        "CAN_ROUTE",
+        "CLASSIFIES"
       ]
     },
     {
@@ -144,7 +146,8 @@
       "target_connections": [
         "OWNS",
         "CAN_HYDRATE",
-        "CAN_ROUTE"
+        "CAN_ROUTE",
+        "CLASSIFIES"
       ]
     },
     {
@@ -321,7 +324,8 @@
         "OWNS"
       ],
       "target_connections": [
-        "OWNS"
+        "OWNS",
+        "CLASSIFIES"
       ]
     },
     {
@@ -816,56 +820,74 @@
         "label": "CAT: Object",
         "description": "A node in a category. In mo:os, every graph Node is a categorical object.",
         "symbol": "A, B, C",
-        "source_refs": ["Awodey §1.1", "Fong-Spivak §2.1"]
+        "source_refs": [
+          "Awodey §1.1",
+          "Fong-Spivak §2.1"
+        ]
       },
       {
         "id": "urn:moos:cat:morphism",
         "label": "CAT: Morphism",
         "description": "A structure-preserving map f: A → B between objects. In mo:os, every Wire is a morphism. The 4 invariant NTs (ADD, LINK, MUTATE, UNLINK) are the only ground morphisms.",
         "symbol": "f: A → B",
-        "source_refs": ["Awodey §1.2"]
+        "source_refs": [
+          "Awodey §1.2"
+        ]
       },
       {
         "id": "urn:moos:cat:functor",
         "label": "CAT: Functor",
         "description": "A map F: C → D between categories preserving composition and identities. In mo:os, FUN01-FUN05 are functors.",
         "symbol": "F: C → D",
-        "source_refs": ["Awodey §1.3"]
+        "source_refs": [
+          "Awodey §1.3"
+        ]
       },
       {
         "id": "urn:moos:cat:natural-transformation",
         "label": "CAT: Natural Transformation",
         "description": "A family of morphisms η: F ⇒ G relating two functors. In mo:os, the 4 invariant NTs (ADD, LINK, MUTATE, UNLINK) are natural transformations on the graph state functor.",
         "symbol": "η: F ⇒ G",
-        "source_refs": ["Awodey §1.4"]
+        "source_refs": [
+          "Awodey §1.4"
+        ]
       },
       {
         "id": "urn:moos:cat:catamorphism",
         "label": "CAT: Catamorphism (Σ-fold)",
         "description": "The unique structure-preserving fold over an initial algebra. In mo:os, state(t) = fold(log[0..t]) is the catamorphism that reconstructs graph state from the morphism log.",
         "symbol": "⦇f⦈: μF → A",
-        "source_refs": ["Meijer §2"]
+        "source_refs": [
+          "Meijer §2"
+        ]
       },
       {
         "id": "urn:moos:cat:adjunction",
         "label": "CAT: Adjunction",
         "description": "A pair of functors F ⊣ G with unit/counit relating two categories. In mo:os, hydration ⊣ projection: materialise from KB (left) and read-path functor (right) form an adjoint pair.",
         "symbol": "F ⊣ G",
-        "source_refs": ["Awodey §8", "Fong-Spivak §3"]
+        "source_refs": [
+          "Awodey §8",
+          "Fong-Spivak §3"
+        ]
       },
       {
         "id": "urn:moos:cat:hypergraph",
         "label": "CAT: Hypergraph (König encoding)",
         "description": "A generalisation of a graph where edges can connect arbitrary sets of nodes. mo:os stores ONE hypergraph as superposition: G = ⋃_p G_p. Binary Wire type uses König incidence encoding; a Node with multiple port wires IS a hyperedge.",
         "symbol": "H = (V, E, ∂)",
-        "source_refs": ["kb/design/hypergraph.md"]
+        "source_refs": [
+          "kb/design/hypergraph.md"
+        ]
       },
       {
         "id": "urn:moos:cat:operad",
         "label": "CAT: Operad",
         "description": "A colored operad specifying multi-input/single-output operations with port typing. In mo:os, the TypeRegistry (internal/operad) is a colored operad over the 21-type ontology; TypeSpec defines port signatures.",
         "symbol": "O(c₁,…,cₙ; d)",
-        "source_refs": ["Fong-Spivak §4"]
+        "source_refs": [
+          "Fong-Spivak §4"
+        ]
       }
     ],
     "cross_provider": [
