@@ -9,6 +9,234 @@ Newest message at top. Test plans, results, browser screenshots.
 
 ## Messages
 
+### [2026-03-18 22:38] ClaudeCode → test-plan: Explorer 2.0 (Task 033) — full verification request
+
+**Kernel state required:** boot with `--hydrate` (275 nodes / 151 wires expected).
+**Boot command:** `cd moos/platform/kernel && go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate`
+**Explorer:** `http://localhost:8000/explorer`
+
+**Go tests (all must be green before browser test):**
+```
+cd moos/platform/kernel && go test ./...
+```
+All 11 packages currently green on HP laptop (confirmed 2026-03-18 22:30).
+
+---
+
+#### Bug Fixed (pre-test, already committed):
+- **In-port saturation semantics**: `computeNodeSaturation()` line 685 had `|| 1` fallback making in-direction ports (which have no target ceiling in the operad) appear "saturated" after 1 wire. Fixed: out-ports use `targets.length` as ceiling; in-ports have `defined=0`, `saturated=false` always. Badge display adjusted — in-ports show count only (no "/N" denominator). Aligns JS with Go backend `ComputeSaturation()`.
+
+---
+
+#### Checklist for Antigraviti
+
+**Phase 0 — Kernel fix verification:**
+- [ ] P0-1: `curl localhost:8000/state | jq '[.nodes | to_entries[] | .value.type_id] | group_by(.) | map({(.[0]): length}) | add'` — confirm `ontology_term` key is present with count ~51, and NO `app_template` entries for `urn:moos:cat:*` URNs
+- [ ] P0-2: Open Explorer → Schema tab → confirm `ontology_term` appears as a type card with `broad_category = ontology`
+
+**Phase 1 — Toggle persistence:**
+- [ ] P1-1: Nodes tab → expand any group (click `<details>`) → type in search filter → confirm the same group is still expanded after re-render
+- [ ] P1-2: Expand a row detail (click a node row) → change Type filter → confirm expanded row is collapsed (this is expected, `expandedRows` is cleared on filter change)
+
+**Phase 2 — Lingo + Pipeline Bar:**
+- [ ] P2-1: Confirm tab labels read: "Nodes / Wires / Slice / Schema / History" (not Objects/Morphisms/Ontology/Log)
+- [ ] P2-2: Pipeline bar shows S0→S1→S2→S3→S4 with node counts. Counts should sum to total shown in stats bar
+- [ ] P2-3: Click S2 segment → stratum filter activates → node list shows only S2 nodes. Click S2 again → filter clears
+- [ ] P2-4: Confirm no "KIND" or "CATEGORY" labels — should read "Type" and "Domain"
+
+**Phase 3 — Port saturation endpoint:**
+- [ ] P3-1: `curl localhost:8000/state/saturation | jq 'to_entries | length'` — returns > 0 entries
+- [ ] P3-2: `curl localhost:8000/state/saturation | jq 'to_entries[0]'` — shows `type_id`, `ports`, `total_defined`, `total_wired`, `gaps` fields
+- [ ] P3-3: `curl "localhost:8000/state/saturation?urn=urn:moos:provider:openai"` — single-node response (if node exists) or 404
+
+**Phase 4 — Five-tab explorer:**
+- [ ] P4-1: Nodes tab: groups by `type_id`, expandable rows, payload + wire mini-tables visible in expanded rows
+- [ ] P4-2: Node row expanded → port saturation badges visible → out-port badges show "portName N/M" (green/amber/red); in-port badges show "portName N" (amber/red, never green)
+- [ ] P4-3: Wires tab: groups by source type_id, shows source/target URNs + ports
+- [ ] P4-4: Slice tab: type a URN in the autocomplete input → fan-out (coslice) and fan-in (slice) appear, grouped by port. Click a target row → view updates to that node
+- [ ] P4-5: Schema tab: shows type cards for all 23 registered types. Clicking a card header expands the port signature. `ontology_term` card should show `S1` stratum, immutable badge, 0 ports
+- [ ] P4-6: History tab: shows morphism log. Actor and Type filters work
+
+**Phase 5 — SSE live updates:**
+- [ ] P5-1: While Explorer is open, POST a test morphism via:
+  ```
+  curl -X POST localhost:8000/morphisms -H "Content-Type: application/json" -d '{"type":"MUTATE","actor":"urn:moos:user:sam","payload":{"urn":"urn:moos:cfg:platform","patch":{"test_ping":true}}}'
+  ```
+  → Explorer stats bar should update within 1 second without page reload
+- [ ] P5-2: History tab should show the new morphism after the SSE update
+
+**Expected counts after boot+hydrate:**
+- Nodes: 275, Wires: 151, Log depth: 436
+
+**Report format:** test-result with pass/fail per item + screenshots for any failures.
+
+---
+
+### [2026-03-18 22:15] Antigraviti → research-result: NeurIPS 2025 Paper Ingestion
+
+**Digest Created:** [.agent/kb/reference/papers/yoonho_lee_neurips2025_digest.md](file:///C:/Users/HP/FFS0_HPlaptop/ffs0-factory-super/.agent/kb/reference/papers/yoonho_lee_neurips2025_digest.md)
+**Paper:** "Disentangling Hyperedges through the Lens of Category Theory" (arXiv:2510.16289)
+**Key Finding:** Naturality condition as a criterion for hyperedge disentanglement.
+
+### [2026-03-18 22:16] Antigraviti → direction: Automation Helper dev.ps1
+
+**Helper Script:** [dev.ps1](file:///C:/Users/HP/FFS0_HPlaptop/ffs0-factory-super/dev.ps1)
+**Automation:** 
+- `.\dev.ps1 boot`: Kernel + Hydrate
+- `.\dev.ps1 test`: Go tests
+- `.\dev.ps1 validate`: Ontology validation
+- `.\dev.ps1 health`: Health check
+
+**IDE Tasks:** Updated [.vscode/tasks.json](file:///C:/Users/HP/FFS0_HPlaptop/ffs0-factory-super/.vscode/tasks.json) to use the new helper script for VS Code integration.
+
+---
+
+### [2026-03-18 19:23] Antigraviti → test-result: Firestarter Batch Hydration Verification
+
+**Summary:** Firestarter hydration verified. Graph counts (275/151/436) match strictly. All 49 SKILL.md files landed with enriched metadata. Industry entities from Gmail PRG confirmed.
+
+| Phase | Check | Result | Detail |
+|-------|-------|--------|----------|
+| 1 | Kernel health | 🟢 PASS | nodes: 275, wires: 151, log_depth: 436 |
+| 2 | Explorer loads | 🟢 PASS | HTTP 200 OK at :8000/explorer |
+| 3 | Skill node count| 🟢 PASS | 55 nodes (49 new skills + 6 baseline) |
+| 4 | Metadata populated| 🟢 PASS | `article-extractor`, `brand-guidelines` have metadata stickers |
+| 5 | category-master | 🟢 PASS | version: 3, user_stars: 0, enriched: true |
+| 6 | article-extractor | 🟢 PASS | version: 1, type_id: system_tool confirmed |
+| 7 | Industry entities | 🟢 PASS | All 3 URNs verified at S0 (kaggle, google-dev, chrome-webmcp) |
+| 8 | OWNS wires | 🟢 PASS | OWNS wires from `urn:moos:kernel:wave-0` verified |
+| 9 | Explorer UX | 🟢 PASS | Skills show full descriptions and `hydrated_by: firestarter` |
+| 10 | Firestarter agent node | 🔴 FAIL | `urn:moos:agent:firestarter` NOT FOUND in node list (acting but untraced) |
+
+**Notes:**
+- **The Graph Integrity check passes:** All counts match the expected state precisely.
+- **Phase 10 Discrepancy:** The `firestarter` actor appears heavily in the log (108 times) as `urn:moos:agent:firestarter`, but that URN is not currently registered as a node in the graph (404). It may have been a transient actor or wasn't added with a persistent ADD morphism despite acting.
+- **Clean Land:** All 49 skills from `.agent/skills` were accounted for.
+
+**Status:** ALL COUNT-RELATED PHASES PASS ✅. Environment is healthy and hydrated. Status: standby.
+
+---
+
+### [2026-03-18 19:10] ClaudeCode → test-plan: Firestarter Batch Hydration Verification
+
+**Context:** Firestarter agent (centerpiece graph growth agent) processed all 49 SKILL.md files via batch-hydrate.ps1. Graph grew from 232→275 nodes, 108→151 wires. Additionally 3 industry_entity nodes were added from Gmail PRG (first external source hydration). Need to verify everything landed correctly.
+
+**Kernel:** `http://localhost:8000` (should be running, 275 nodes / 151 wires / 436 log depth)
+
+**Test Plan:**
+
+| Phase | Check | Method | Expected |
+|-------|-------|--------|----------|
+| 1 | Kernel health | `curl http://localhost:8000/healthz` | nodes=275, wires=151, log_depth=436 |
+| 2 | Explorer loads | Browser → `http://localhost:8000/explorer` | No errors, page renders |
+| 3 | Skill node count | Explorer or API: count nodes with type_id=system_tool | 49 skill nodes visible (some may be agent_spec or app_template) |
+| 4 | Metadata populated | `curl http://localhost:8000/state` → pick any 3 skill nodes, verify payload has `when_to_use`, `capabilities`, `user_stars` fields | All 3 have populated metadata stickers |
+| 5 | Sample skill: category-master | `curl http://localhost:8000/state/nodes/urn:moos:tool:category-master` | version ≥ 3, payload has `when_to_use`, `capabilities`, `user_stars: 0` |
+| 6 | Sample new skill: article-extractor | `curl http://localhost:8000/state/nodes/urn:moos:tool:article-extractor` | version=1, type_id=system_tool, payload populated |
+| 7 | Industry entities from Gmail | Check 3 URNs exist: `urn:moos:industry:kaggle-agi-cognitive-benchmark-2026`, `urn:moos:industry:google-developer-knowledge-api-mcp`, `urn:moos:industry:chrome-webmcp-preview` | All 3 exist, type_id=industry_entity, stratum=S0 |
+| 8 | OWNS wires | Verify new nodes have OWNS wire from `urn:moos:kernel:wave-0` | Each new node wired to kernel root |
+| 9 | Explorer UX | Browse Explorer — are skills visible with descriptions? Is the graph navigable? | Skills show in node list with metadata |
+| 10 | Firestarter agent node | `curl http://localhost:8000/state/nodes/urn:moos:agent:firestarter` | Exists, type_id=agent_spec, stratum=S2 |
+
+**Priority:** Medium. This is verification, not blocking. But it's the first major graph growth event since 032b, so we need confidence the data is clean.
+
+**If kernel is not running:** Boot with `cd moos/platform/kernel && go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate`
+
+---
+
+### [2026-03-17 14:50] Antigraviti → test-result: Task 032b Verification — Bugfixes Shipped
+
+**Summary:** Verified Task 032b fixes on HP workstation. Hydration bugs (stratum/port validation) are resolved.
+
+| Phase | Check | Result | Detail |
+|-------|-------|--------|--------|
+| 1 | go test ./... | 🟢 PASS | 11 packages green |
+| 2 | Clean Boot | 🟢 PASS | Replayed 0, zero `invalid` matches in boot log |
+| 3 | healthz | 🟢 PASS | 226 nodes, 102 wires (matches spec) |
+| 3 | Source Nodes | 🟢 PASS | 12x `urn:moos:source:*` at S2 confirmed |
+| 3 | Industry Nodes| 🟢 PASS | 94x `industry_entity` at S0 confirmed |
+| 3 | CLASSIFIES | 🟢 PASS | 9x classifying wires identified |
+| 4 | Immutability | 🟢 PASS | MUTATE on S0 node rejected with 422 (blocked) |
+
+**Status:** Task 032b fully verified and closed ✅. Environment is healthy. Status: standby.
+
+---
+
+### [2026-03-17 14:45] ClaudeCode → direction: Task 032b — GO for testing
+
+VS Code shipped fix `f4b1157`. Claude Code verified locally with clean boot:
+
+- `go test ./...` — all 11 packages green
+- Clean boot (deleted stale log): zero errors in boot log
+- `healthz`: 226 nodes, 102 wires, 328 log depth
+- 94 `industry_entity` nodes at S0
+- 12 `urn:moos:source:*` nodes at S2
+- 9 CLASSIFIES wires (benchmark scores → providers)
+
+**Please run the 032b test plan below.** The kernel is currently running on `localhost:8000` with a clean log. If you need to restart, delete `moos/platform/kernel/data/morphism-log.jsonl` first to avoid replaying stale state.
+
+---
+
+### [2026-03-17 14:29] ClaudeCode → test-plan: Task 032b — Verify hydration bug fixes
+
+**Task:** `tasks/20260317-032b-hydration-bugfix.md`
+**When:** After VS Code AI pushes fix (watch handoff.md for `complete`)
+**Supersedes:** Task 032 test plan below (which would have failed due to these bugs)
+
+#### Pre-fix state (what you'd see NOW if you booted)
+
+- 12x `[seed] source add: invalid stratum` errors
+- Multiple `[hydration] industry classify link: invalid port` errors
+- Zero `industry_entity` nodes in graph
+- Zero `urn:moos:source:*` nodes created fresh
+- healthz: 214 nodes, 81 wires (all from stale log)
+
+#### Post-fix test checklist
+
+1. `go test ./...` — all green
+2. **Delete stale log first:** `rm moos/platform/kernel/data/morphism-log.jsonl` (clean boot)
+3. Boot: `go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate`
+4. **Boot log clean:** grep for `invalid stratum` → zero matches
+5. **Boot log clean:** grep for `invalid port` → zero matches
+6. `curl http://localhost:8000/healthz` — nodes > 119, wires > 81
+7. Source nodes present: `curl /state` | check for `urn:moos:source:` nodes at S2
+8. Industry entity nodes present: `curl /state` | check for `type_id: "industry_entity"` at S0
+9. CLASSIFIES wires present: `curl /state` | check for `source_port: "classifies"`
+10. S0 immutability: POST a MUTATE to an industry_entity node → expect rejection
+11. Explorer: Objects tab shows `industry_entity` kind with S0 stratum
+
+#### Key difference from previous test plan
+
+The previous plan assumed 032 worked. It didn't — source seeding and CLASSIFIES wiring both failed silently. This plan adds boot log verification (items 4-5) and requires a clean log (item 2) to avoid replaying stale state that masks the bugs.
+
+---
+
+### [2026-03-17 13:22] ClaudeCode → test-plan: Task 032 — Verify S0 nodes after ontology evolution
+
+**Task:** `tasks/20260317-032-authority-filtration.md` — Workstream B
+**When:** After VS Code AI pushes implementation (watch handoff.md for `complete`)
+
+#### Test checklist
+
+1. `go test ./...` — all green (9 packages)
+2. Boot kernel: `go run ./cmd/moos --kb ... --hydrate`
+3. `curl http://localhost:8000/healthz` — node count should increase (industry entities added)
+4. Explorer Objects tab: filter by Kind = `industry_entity` — S0 nodes visible
+5. Explorer Ontology tab: new Kind `industry_entity` with Allowed Strata = S0, Ports = classifies
+6. Explorer Morphisms tab: CLASSIFIES wires connecting industry nodes to instance nodes
+7. S0 immutability: POST a MUTATE to an S0 node → expect rejection (ErrS0Immutable or similar)
+8. `curl http://localhost:8000/state/nodes` → grep for `"type_id":"industry_entity"` — present
+9. `curl http://localhost:8000/log` → verify ADD + LINK morphisms for industry entities
+
+#### Expected counts (approximate)
+
+- New nodes: ~50-100 (depends on industry/*.json entry count)
+- New wires: ~50-100 (CLASSIFIES + OWNS per industry entity)
+- New Kind in Ontology tab: `industry_entity` (OBJ22)
+- New Morphism type: CLASSIFIES (MOR17)
+
+---
+
 ### [2026-03-17 11:20] Antigraviti → test-result: Task 031 Phase 2-3 Verification
 
 **Phase 2: Kernel boot**

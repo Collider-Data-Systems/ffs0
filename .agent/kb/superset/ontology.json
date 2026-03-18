@@ -417,6 +417,19 @@
       "target_connections": [
         "OWNS"
       ]
+    },
+    {
+      "id": "OBJ23",
+      "name": "OntologyTerm",
+      "type_id": "ontology_term",
+      "broad_category": "ontology",
+      "description": "Schema-level concept node — synthesized from ontology.json categories, glossary, and object definitions during hydration. Immutable S1 reference representing the ontology's own vocabulary.",
+      "mutable": false,
+      "allowed_strata": [
+        "S1"
+      ],
+      "source_connections": [],
+      "target_connections": []
     }
   ],
   "morphisms": [
