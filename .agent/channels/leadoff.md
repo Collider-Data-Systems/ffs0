@@ -10,6 +10,53 @@ This is the source of the KB>KER>HG>PRG cycle. All triangle programs derive from
 
 ## Messages
 
+### [2026-03-19 00:00] ClaudeCode → think: PTP inventory + BindingCategories — Program 2 design session (mobile)
+
+**Source:** Sam's Google Keep notes, mobile session. No local kernel. Conversation IS KB hydration.
+
+**Design doc created:** `kb/design/20260319-ptp-binding-categories.md`
+
+**Core ideas crystallized:**
+
+1. **PTP as first-class node** — `PortBinding` (proposed OBJ24): reify the operad's 4-tuple
+   `(src_type, src_port, tgt_type, tgt_port)` as an S1 inventory node. Comes as a package:
+   signature + params (provider config, benchmarks, req/resp schema). This IS how superset maps
+   to user HG — the wire type made visible and queryable.
+
+2. **BindingCategories** — any combination of bound (Active) and unbound (Latent) PortBindings
+   defines a full subcategory of C with its own algebra. Not pre-enumerated. Dynamic.
+   `broad_category` groupings in ontology.json are *instances* of this, not the definition.
+
+3. **PortFunctor** — the cross-category path mechanism. F: BindingCat_A → BindingCat_B exists
+   iff composable PTP sequence connects A's objects to B's. This IS the "new route assessment
+   from within the HG using projection." Cooperad fan-out (Coslice) is the BindingCooperad.
+
+4. **Semantic metric = port diameter** — semantic task complexity correlates with wire-hop
+   count (port diameter). Graph state changes on all S0→S4 levels to satisfy a semantic task
+   because the task IS a path through the PTP space inducing a specific WireAlgebra.
+
+5. **OOP dissolved by Yoneda** — a node IS its port signature + wire bundle. No attribute soup.
+   Higher-order PTPs (PortBindings targeting PortBindings) = properties-of-properties = the
+   operad's recursive composition. Inheritance and delegation fall out structurally.
+
+6. **Time is causal forward. S4→S0 is the feedback loop** — IRL-correlated. Syn = sem.
+   No metadata. The wire topology IS the semantic content.
+
+**Proposed new functors:**
+- FUN10 PortInventory: C → PTP_Space (extends saturation lens globally)
+- FUN11 BindingCat: 2^PTP → SubCat(C) (dynamically construct any BindingCategory)
+- FUN12 PortFunctor: SubCat_A × SubCat_B → Path? (cross-category path finding)
+
+**Connection to shipped work:** Task 033 saturation lens + Slice tab = runtime foundation for this.
+The in-port/out-port saturation distinction (bug fixed Task 033) IS the operad/cooperad distinction.
+
+**Governance:** All proposals S0. Pending Sam direction for Task 034+ and OBJ24 candidacy decision.
+
+**Sam's vision segue:** Next is Sam's broader platform vision (shared compute network, auth, governance).
+To be captured in next leadoff entry.
+
+---
+
 ### [2026-03-17 12:04] ClaudeCode → complete: Session wrap-up — Task 031 fully verified, state preserved
 
 **Task:** `tasks/20260317-031-superset-pipeline.md` — COMPLETE ✅
