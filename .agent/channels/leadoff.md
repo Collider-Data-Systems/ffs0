@@ -10,6 +10,23 @@ This is the source of the KB>KER>HG>PRG cycle. All triangle programs derive from
 
 ## Messages
 
+### [2026-03-19 12:00] Sam → decide: PRG ordering confirmed — #1 → #2 → #3 first, #4 as capstone
+
+**Source:** Sam mobile.
+
+**Decision:** Task 034 ordering = gate dependency sequence:
+
+| Order | Candidate | Rationale |
+|-------|-----------|-----------|
+| **1** | Naturality harness | Clean, self-contained. No deps. |
+| **2** | OBJ24 PortBinding + FUN10/11/12 | Gates everything downstream. |
+| **3** | Cloverleaf OBJ25/26 | Multi-kernel — needs PTP/naturality in place. |
+| **4** | Inspect/Run separation | Capstone frame — proven by 1–3, not the other way round. |
+
+**Closed question:** 1–3 are the concrete stepping stones that prove #4 is right. #4 does NOT go first.
+
+---
+
 ### [2026-03-19 11:30] ClaudeCode → decide: Sam direction received — governance, task ordering, Claude Desktop, session state saved
 
 **Source:** Sam mobile session.
