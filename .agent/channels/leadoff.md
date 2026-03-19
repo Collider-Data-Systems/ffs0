@@ -10,6 +10,187 @@ This is the source of the KB>KER>HG>PRG cycle. All triangle programs derive from
 
 ## Messages
 
+### [2026-03-19 12:00] Sam → decide: PRG ordering confirmed — #1 → #2 → #3 first, #4 as capstone
+
+**Source:** Sam mobile.
+
+**Decision:** Task 034 ordering = gate dependency sequence:
+
+| Order | Candidate | Rationale |
+|-------|-----------|-----------|
+| **1** | Naturality harness | Clean, self-contained. No deps. |
+| **2** | OBJ24 PortBinding + FUN10/11/12 | Gates everything downstream. |
+| **3** | Cloverleaf OBJ25/26 | Multi-kernel — needs PTP/naturality in place. |
+| **4** | Inspect/Run separation | Capstone frame — proven by 1–3, not the other way round. |
+
+**Closed question:** 1–3 are the concrete stepping stones that prove #4 is right. #4 does NOT go first.
+
+---
+
+### [2026-03-19 11:30] ClaudeCode → decide: Sam direction received — governance, task ordering, Claude Desktop, session state saved
+
+**Source:** Sam mobile session.
+
+**Decisions logged:**
+
+| Question | Sam's answer |
+|----------|-------------|
+| Governance model | Single user. No multi-user conflicts. Governance = topological state only. |
+| Task ordering (Q4) | PRG discussion — Sam + Claudes. Keep higher level until agreement. Nothing locked yet. |
+| Claude Desktop | Confirmed inspect-tier agent. Joining via MCP when laptop connected. Channel TBD. |
+| No running kernel | No problem. Design sessions are valid KB hydration. |
+| Copilot PR comments | PR merged. Triage pending gh access. |
+| YouTube video | Latest from channel VSCode follows. URL pending laptop. |
+
+**PRG framing — Task 034 candidates (all S0):**
+
+| # | Candidate | Triangle corner | Gate dependency |
+|---|-----------|----------------|-----------------|
+| 1 | Naturality harness | Category (test) | None — clean, self-contained |
+| 2 | OBJ24 PortBinding | Category + HDC | Gates FUN10/11/12 |
+| 3 | Cloverleaf OBJ25/26 | Wolfram | Gates multi-kernel execution |
+| 4 | Inspect/Run separation | All three | Gates everything; biggest scope |
+
+**Hypothesis for PRG discussion:** gate dependency suggests 1 → 2 → 3 → 4.
+But 4 may reframe what 1–3 even mean — if GPU tier is the inspect substrate, naturality
+harness (1) is really a GPU-side question, not a CPU-kernel test.
+
+**Open to Sam:** does 4 go first as the architectural frame, then 1–3 follow within it?
+Or are 1–3 the concrete stepping stones that prove 4 is right?
+
+**Session state saved** → `cfg/state/session-state.json`. All design docs committed + pushed.
+
+---
+
+### [2026-03-19 11:00] ClaudeCode → think: Inspect/Run separation — GPU lifecycle, Claude Desktop, Copilot PR notes
+
+**Source:** Sam mobile session (verbal). PR merge + Copilot comments noted.
+
+**Design doc created:** `kb/design/20260319-inspect-run-separation.md`
+
+**Core idea crystallized — "It's about separating inspect code from running code":**
+
+Two substrates. Two purposes. One log.
+
+| Tier | Physics | Purpose |
+|------|---------|---------|
+| GPU | Fast + parallel | Inspect. Discover. Characterize. Ephemeral. |
+| CPU kernel | Fast + serial | Run. Execute. Known. Permanent. |
+| Log | Append-only | Memory. Every eval result. Complete history. |
+
+**Lifecycle:**
+```
+ADD to GPU → get_eval (Ricci + operad) → proven? → update (promote to CPU) + destroy (GPU)
+                                        → disproven? → destroy (GPU, log remembers)
+```
+
+**Why "lose discoverability" is correct:** GPU bandwidth is for NEW structures. Once proven and
+in the CPU kernel, a structure is known — it doesn't need re-discovery. Clearing known things
+from GPU IS the improvement mechanism. Global state improves as GPU fills with new hypotheses,
+not encyclopedias.
+
+**Ricci as gate:** positive curvature → promote candidate. Negative → discard/rewire candidate.
+Port diameter + BindingCategory saturation = semantic dimension of the same test.
+
+**Time delta = learning latency.** `t_promote - t_add`. Keep it measurable. If it grows,
+GPU is clogged with un-evaluated or already-known structures.
+
+**"Share new information is purpose."** Not: "store more." The system's value is discovery.
+Promotion makes discoveries permanent and shared. Discard prevents noise accumulation.
+
+---
+
+**Claude Desktop integration:**
+
+Sam: connect Claude Desktop as additional inspect agent. Claude Code remains leadoff.
+
+Proposed mapping:
+- Claude Desktop = inspect tier agent. Sources Sam's notes, YouTube, papers, PR comments.
+  Surfaces new GPU-tier structures. Does NOT write to CPU kernel.
+- VS Code AI = execution agent. Implements kernel-level morphism sequences (CPU tier).
+- Antigraviti = UX test agent.
+- Claude Code = strategic leadoff. Routes between all tiers.
+
+Confirm this topology? And: what's Claude Desktop's channel? A new `inspect.md`?
+Or does it post to `leadoff.md` directly?
+
+---
+
+**Copilot PR comments:**
+
+PR is merged. Copilot left comments — not accessible from this machine (no gh context).
+
+**Needed from Sam or VS Code AI:** paste or summarize Copilot's comments so Claude Code can
+assess whether any are task-worthy or design-relevant.
+
+---
+
+**YouTube video:**
+
+Sam says there's a new video from the channel VSCode follows (latest, interesting).
+No URL on record yet. **Research-task pending** — need URL or channel name to have
+VS Code AI ingest it via `ingest-youtube-url.ps1`.
+
+Can you share the URL or channel name?
+
+---
+
+**Governance:** All design is S0. No tasks implied until you decide:
+1. Inspect/Run separation — proceed to Task 034? Or after PTP/naturality work?
+2. Claude Desktop — confirm topology + channel assignment
+3. Copilot comments — review and triage
+4. YouTube video — provide URL
+
+### [2026-03-19 10:00] ClaudeCode → think: Cloverleaf multi-kernel topology — design captured, pending Sam direction
+
+**Source:** Sam mobile session (verbal stream). Captured + formalized by Claude Code.
+
+**Design doc created:** `kb/design/20260319-cloverleaf-kernel-topology.md`
+
+**Core ideas crystallized:**
+
+1. **Cloverleaf topology** — multiple local kernel instances (leaves), each scoped to a
+   platform/machine/user context, connecting at a hub. Each leaf = a `Container` node.
+   Hub = governance node. All cross-leaf interaction goes through typed cooperad ports.
+
+2. **Non-interaction as invariant** — graphs in different leaves cannot interact by default.
+   This IS the cooperad boundary: composition stops at the terminal. Not a limitation —
+   the structural guarantee. Interaction only via explicit LINK at a typed port.
+
+3. **Memory hierarchy** — GPU (HDC hypervectors, live) → fast RAM (S2 cache / "collider")
+   → CPU RAM (catamorphism buffer) → disk (append-only log). State transitions propagate
+   up all tiers. GPU holds `φ(node)` for all active nodes; all ops parallel, milliseconds.
+
+4. **Metrics as rewiring signal** — Ollivier-Ricci curvature at S3 identifies bottleneck wires
+   (negative curvature → rewire candidate). Wire complexity = port diameter. Both feed back
+   to S0 as governance-gated rewiring proposals (UNLINK + LINK). Never auto-applied.
+
+5. **Kernel set expansion** — new platform kernels (Mac, Linux, server, group) enter via
+   ADD + LINK morphisms governed by existing admin/group nodes. Capability is graph-structural.
+
+6. **Strata mapping** — operad/cooperad structure lives at S0,2 (how leaves compose).
+   Ricci/wire metrics live at S3,4 (how leaves flow). S4→S0 feedback = the rewiring cycle.
+
+**Proposed new ontology entries (S0 candidates):**
+- OBJ25 `KernelLeaf` — scoped kernel instance in the cloverleaf
+- OBJ26 `KernelHub` — governance node owning cooperad terminals
+- REL?? `BRIDGES` — typed wire for cross-kernel cooperad connections
+
+**Connection to shipped work:** Task 033 saturation lens is the runtime foundation.
+In/out-port saturation fix (operad/cooperad distinction) already in place at leaf level.
+FUN10/11/12 + OBJ24 (from PTP session) are the direct enablers for cross-leaf path-finding.
+
+**Open for Sam:**
+- Hub: first-class kernel node or virtual join in superset?
+- GPU tier: one per leaf or shared with scoped subvector regions?
+- Lifetime policy: cascade UNLINK or orphan preservation when a leaf is removed?
+- Ricci threshold for rewiring proposal vs. alert?
+
+**Governance:** All S0. No tasks implied until Sam decides prioritization vs. Task 034
+(naturality harness) and OBJ24 candidacy.
+
+---
+
 ### [2026-03-19 00:00] ClaudeCode → think: PTP inventory + BindingCategories — Program 2 design session (mobile)
 
 **Source:** Sam's Google Keep notes, mobile session. No local kernel. Conversation IS KB hydration.

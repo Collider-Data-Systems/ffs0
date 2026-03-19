@@ -67,8 +67,7 @@ The centerpiece work is naming. These are the proposed names:
 | A wired PortBinding instance | **ActiveBinding** | PortBinding with ≥1 actual wire in graph (saturated) |
 | A declared but unwired PortBinding | **LatentBinding** | PortBinding with 0 wires in graph (gap in saturation lens) |
 | Any set of PortBindings | **WireAlgebra** | A selected subset of PortBindings — defines which compositions are valid |
-| Full subcategory induced by a WireAlgebra | **BindingCategory** | Objects = nodes touching those PTPs; morphisms = those PTPs. Closed under composition. |
-| Any combo of bound+unbound ports | **BindingCategory** | Dynamically definable — not pre-enumerated. Any subset is valid. |
+| Full subcategory induced by any WireAlgebra | **BindingCategory** | Objects = nodes touching those PTPs; morphisms = those PTPs. Closed under composition. Dynamically definable — not pre-enumerated. Any PTP subset is valid. |
 | Algebra of a BindingCategory | **PortAlgebra** | The algebraic structure enabled by that WireAlgebra (e.g. OWNS-closure = ownership algebra) |
 | Cooperad fan-out from root via WireAlgebra | **BindingCooperad** | Coslice(root) filtered to a WireAlgebra. One-input-many-outputs. |
 | Functor between two BindingCategories | **PortFunctor** | F: BindingCat_A → BindingCat_B. Existence = a path between categories. |
@@ -184,7 +183,7 @@ An object has no essence beyond its port signature + wire bundle. This is Yoneda
 
 OOP hardcodes attributes at the class level = metadata as ontology. This breaks at scale
 because the attribute soup is in **Set** (flat, unstructured), while composition lives in
-the **free CDMU category** (structured, with port equations).
+the **free CDMU category** (Copy, Discard, Multiply, Unit — the comonoid structure enabling string diagram composition; see `20260314-the-carpet.md`).
 
 ### Higher-order PTPs
 
