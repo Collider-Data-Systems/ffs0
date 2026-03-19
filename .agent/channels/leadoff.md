@@ -10,6 +10,56 @@ This is the source of the KB>KER>HG>PRG cycle. All triangle programs derive from
 
 ## Messages
 
+### [2026-03-19 10:00] ClaudeCode → think: Cloverleaf multi-kernel topology — design captured, pending Sam direction
+
+**Source:** Sam mobile session (verbal stream). Captured + formalized by Claude Code.
+
+**Design doc created:** `kb/design/20260319-cloverleaf-kernel-topology.md`
+
+**Core ideas crystallized:**
+
+1. **Cloverleaf topology** — multiple local kernel instances (leaves), each scoped to a
+   platform/machine/user context, connecting at a hub. Each leaf = a `Container` node.
+   Hub = governance node. All cross-leaf interaction goes through typed cooperad ports.
+
+2. **Non-interaction as invariant** — graphs in different leaves cannot interact by default.
+   This IS the cooperad boundary: composition stops at the terminal. Not a limitation —
+   the structural guarantee. Interaction only via explicit LINK at a typed port.
+
+3. **Memory hierarchy** — GPU (HDC hypervectors, live) → fast RAM (S2 cache / "collider")
+   → CPU RAM (catamorphism buffer) → disk (append-only log). State transitions propagate
+   up all tiers. GPU holds `φ(node)` for all active nodes; all ops parallel, milliseconds.
+
+4. **Metrics as rewiring signal** — Ollivier-Ricci curvature at S3 identifies bottleneck wires
+   (negative curvature → rewire candidate). Wire complexity = port diameter. Both feed back
+   to S0 as governance-gated rewiring proposals (UNLINK + LINK). Never auto-applied.
+
+5. **Kernel set expansion** — new platform kernels (Mac, Linux, server, group) enter via
+   ADD + LINK morphisms governed by existing admin/group nodes. Capability is graph-structural.
+
+6. **Strata mapping** — operad/cooperad structure lives at S0,2 (how leaves compose).
+   Ricci/wire metrics live at S3,4 (how leaves flow). S4→S0 feedback = the rewiring cycle.
+
+**Proposed new ontology entries (S0 candidates):**
+- OBJ25 `KernelLeaf` — scoped kernel instance in the cloverleaf
+- OBJ26 `KernelHub` — governance node owning cooperad terminals
+- REL?? `BRIDGES` — typed wire for cross-kernel cooperad connections
+
+**Connection to shipped work:** Task 033 saturation lens is the runtime foundation.
+In/out-port saturation fix (operad/cooperad distinction) already in place at leaf level.
+FUN10/11/12 + OBJ24 (from PTP session) are the direct enablers for cross-leaf path-finding.
+
+**Open for Sam:**
+- Hub: first-class kernel node or virtual join in superset?
+- GPU tier: one per leaf or shared with scoped subvector regions?
+- Lifetime policy: cascade UNLINK or orphan preservation when a leaf is removed?
+- Ricci threshold for rewiring proposal vs. alert?
+
+**Governance:** All S0. No tasks implied until Sam decides prioritization vs. Task 034
+(naturality harness) and OBJ24 candidacy.
+
+---
+
 ### [2026-03-19 00:00] ClaudeCode → think: PTP inventory + BindingCategories — Program 2 design session (mobile)
 
 **Source:** Sam's Google Keep notes, mobile session. No local kernel. Conversation IS KB hydration.
