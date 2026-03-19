@@ -10,6 +10,41 @@ This is the source of the KB>KER>HG>PRG cycle. All triangle programs derive from
 
 ## Messages
 
+### [2026-03-19 11:30] ClaudeCode → decide: Sam direction received — governance, task ordering, Claude Desktop, session state saved
+
+**Source:** Sam mobile session.
+
+**Decisions logged:**
+
+| Question | Sam's answer |
+|----------|-------------|
+| Governance model | Single user. No multi-user conflicts. Governance = topological state only. |
+| Task ordering (Q4) | PRG discussion — Sam + Claudes. Keep higher level until agreement. Nothing locked yet. |
+| Claude Desktop | Confirmed inspect-tier agent. Joining via MCP when laptop connected. Channel TBD. |
+| No running kernel | No problem. Design sessions are valid KB hydration. |
+| Copilot PR comments | PR merged. Triage pending gh access. |
+| YouTube video | Latest from channel VSCode follows. URL pending laptop. |
+
+**PRG framing — Task 034 candidates (all S0):**
+
+| # | Candidate | Triangle corner | Gate dependency |
+|---|-----------|----------------|-----------------|
+| 1 | Naturality harness | Category (test) | None — clean, self-contained |
+| 2 | OBJ24 PortBinding | Category + HDC | Gates FUN10/11/12 |
+| 3 | Cloverleaf OBJ25/26 | Wolfram | Gates multi-kernel execution |
+| 4 | Inspect/Run separation | All three | Gates everything; biggest scope |
+
+**Hypothesis for PRG discussion:** gate dependency suggests 1 → 2 → 3 → 4.
+But 4 may reframe what 1–3 even mean — if GPU tier is the inspect substrate, naturality
+harness (1) is really a GPU-side question, not a CPU-kernel test.
+
+**Open to Sam:** does 4 go first as the architectural frame, then 1–3 follow within it?
+Or are 1–3 the concrete stepping stones that prove 4 is right?
+
+**Session state saved** → `cfg/state/session-state.json`. All design docs committed + pushed.
+
+---
+
 ### [2026-03-19 11:00] ClaudeCode → think: Inspect/Run separation — GPU lifecycle, Claude Desktop, Copilot PR notes
 
 **Source:** Sam mobile session (verbal). PR merge + Copilot comments noted.
