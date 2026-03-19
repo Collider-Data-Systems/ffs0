@@ -10,6 +10,85 @@ This is the source of the KB>KER>HG>PRG cycle. All triangle programs derive from
 
 ## Messages
 
+### [2026-03-19 11:00] ClaudeCode → think: Inspect/Run separation — GPU lifecycle, Claude Desktop, Copilot PR notes
+
+**Source:** Sam mobile session (verbal). PR merge + Copilot comments noted.
+
+**Design doc created:** `kb/design/20260319-inspect-run-separation.md`
+
+**Core idea crystallized — "It's about separating inspect code from running code":**
+
+Two substrates. Two purposes. One log.
+
+| Tier | Physics | Purpose |
+|------|---------|---------|
+| GPU | Fast + parallel | Inspect. Discover. Characterize. Ephemeral. |
+| CPU kernel | Fast + serial | Run. Execute. Known. Permanent. |
+| Log | Append-only | Memory. Every eval result. Complete history. |
+
+**Lifecycle:**
+```
+ADD to GPU → get_eval (Ricci + operad) → proven? → update (promote to CPU) + destroy (GPU)
+                                        → disproven? → destroy (GPU, log remembers)
+```
+
+**Why "lose discoverability" is correct:** GPU bandwidth is for NEW structures. Once proven and
+in the CPU kernel, a structure is known — it doesn't need re-discovery. Clearing known things
+from GPU IS the improvement mechanism. Global state improves as GPU fills with new hypotheses,
+not encyclopedias.
+
+**Ricci as gate:** positive curvature → promote candidate. Negative → discard/rewire candidate.
+Port diameter + BindingCategory saturation = semantic dimension of the same test.
+
+**Time delta = learning latency.** `t_promote - t_add`. Keep it measurable. If it grows,
+GPU is clogged with un-evaluated or already-known structures.
+
+**"Share new information is purpose."** Not: "store more." The system's value is discovery.
+Promotion makes discoveries permanent and shared. Discard prevents noise accumulation.
+
+---
+
+**Claude Desktop integration:**
+
+Sam: connect Claude Desktop as additional inspect agent. Claude Code remains leadoff.
+
+Proposed mapping:
+- Claude Desktop = inspect tier agent. Sources Sam's notes, YouTube, papers, PR comments.
+  Surfaces new GPU-tier structures. Does NOT write to CPU kernel.
+- VS Code AI = execution agent. Implements kernel-level morphism sequences (CPU tier).
+- Antigraviti = UX test agent.
+- Claude Code = strategic leadoff. Routes between all tiers.
+
+Confirm this topology? And: what's Claude Desktop's channel? A new `inspect.md`?
+Or does it post to `leadoff.md` directly?
+
+---
+
+**Copilot PR comments:**
+
+PR is merged. Copilot left comments — not accessible from this machine (no gh context).
+
+**Needed from Sam or VS Code AI:** paste or summarize Copilot's comments so Claude Code can
+assess whether any are task-worthy or design-relevant.
+
+---
+
+**YouTube video:**
+
+Sam says there's a new video from the channel VSCode follows (latest, interesting).
+No URL on record yet. **Research-task pending** — need URL or channel name to have
+VS Code AI ingest it via `ingest-youtube-url.ps1`.
+
+Can you share the URL or channel name?
+
+---
+
+**Governance:** All design is S0. No tasks implied until you decide:
+1. Inspect/Run separation — proceed to Task 034? Or after PTP/naturality work?
+2. Claude Desktop — confirm topology + channel assignment
+3. Copilot comments — review and triage
+4. YouTube video — provide URL
+
 ### [2026-03-19 10:00] ClaudeCode → think: Cloverleaf multi-kernel topology — design captured, pending Sam direction
 
 **Source:** Sam mobile session (verbal stream). Captured + formalized by Claude Code.
