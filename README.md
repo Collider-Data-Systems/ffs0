@@ -1,6 +1,6 @@
-# FFS0_Factory — mo:os Workspace
+# ffs0-factory-super — workspace for moos
 
-Private workspace for triangle operations around the public `moos` kernel repo.
+This repository is the private workspace (`ffs0-factory-super`); the public kernel repository is called `moos`.
 
 ## Quick Start
 
