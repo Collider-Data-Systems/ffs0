@@ -25,7 +25,7 @@ Current (implicit):
   TypeSpec{TypeID: "user", PortTargets: [{Port: "owns", TargetType: "any"}]}
 
 Proposed (first-class node):
-  ADD(urn:moos:ptp:user.owns→any)
+  ADD(urn:moos:ptp:user.owns→any.child)
   LINK(ptp_node, "params", benchmark_node, "bench")
   LINK(ptp_node, "params", provider_node, "config")
   LINK(ptp_node, "params", req_schema_node, "req")

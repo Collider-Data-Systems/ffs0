@@ -51,7 +51,7 @@ Two substrates. Different physics. Different purposes.
       proven?            disproven?
         │                   │
         ▼                   ▼
-    get_rval             discard
+    get_eval             discard
     update               destroy (GPU)
     destroy (GPU)        → log remembers
         │

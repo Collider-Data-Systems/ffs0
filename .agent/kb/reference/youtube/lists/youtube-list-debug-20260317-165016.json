@@ -1,0 +1,18 @@
+{
+  "list_id": "youtube-list-debug",
+  "created_at": "2026-03-17T15:50:16.8946718Z",
+  "source": "user-provided",
+  "total": 1,
+  "items": [
+    {
+      "number": 1,
+      "url": "https://youtu.be/AWqvBdqCAAE?si=7i4ujWS5DBlYt6ba",
+      "status": "ingested",
+      "title": "The \"Final Boss\" of Deep Learning",
+      "channel": "Machine Learning Street Talk",
+      "description": "Alias replaced by canonical entry after hard-prune.",
+      "kb_entry_path": ".agent\\kb\\reference\\youtube\\entries\\yt-the-final-boss-of-deep-learning-20260317-164640.json",
+      "error": ""
+    }
+  ]
+}

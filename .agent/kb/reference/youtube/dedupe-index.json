@@ -1,0 +1,284 @@
+﻿{
+    "generated_at":  "2026-03-18T16:19:28.5781001Z",
+    "entries_dir":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries",
+    "total_files":  15,
+    "unique_content_groups":  14,
+    "groups_with_duplicates":  0,
+    "duplicate_file_count":  0,
+    "groups":  [
+                   {
+                       "id":  "yt:we-destroyed-ai-for-good",
+                       "source_url":  "https://youtu.be/9kox34X9IQs?si=EsBlLCmd_dBSCYbJ",
+                       "transcript_sha":  "70523549e1bee96c7f9e1ef872dd7396665d3895decac3204e6039826c3bee8a",
+                       "transcript_len":  22644,
+                       "canonical_file_name":  "yt-we-destroyed-ai-for-good-20260317-164749.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-we-destroyed-ai-for-good-20260317-164749.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:47:49.5298900Z",
+                       "canonical_summary":  "youtube-list-1 item 7",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:ai-inside-an-ai-internal-rl-w-temporal-abstraction",
+                       "source_url":  "https://youtu.be/5gpc3d2rFlg?si=edtmL5fefwYGvWcv",
+                       "transcript_sha":  "9552dcee892b9b983f988078cb1fc69c3d90a4b5a4e044b40b684154ac9f0d2f",
+                       "transcript_len":  42182,
+                       "canonical_file_name":  "yt-ai-inside-an-ai-internal-rl-w-temporal-abstraction-20260317-164847.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-ai-inside-an-ai-internal-rl-w-temporal-abstraction-20260317-164847.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:48:47.7430121Z",
+                       "canonical_summary":  "youtube-list-1 item 13",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:chatgpt-health-identified-respiratory-failure-then-it-said-wait",
+                       "source_url":  "https://youtu.be/4HeS_C02yAE?si=H5XwLq7CNXKLdvYq",
+                       "transcript_sha":  "0410fa2270fa12fc37a518c394b3b043e257125cf31516511ff805882ffc2208",
+                       "transcript_len":  23340,
+                       "canonical_file_name":  "yt-chatgpt-health-identified-respiratory-failure-then-it-said-wait-20260318-171024.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-chatgpt-health-identified-respiratory-failure-then-it-said-wait-20260318-171024.json",
+                       "canonical_retrieved_at":  "2026-03-18T16:10:24.1429532Z",
+                       "canonical_summary":  "New URL retry ingestion",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:vibe-graphing-10x-more-affordable-than-vibe-coding-mas-factory",
+                       "source_url":  "https://youtu.be/QFlQuX_cddk?si=hz1lsLbE44f08Jx_",
+                       "transcript_sha":  "29c46a16e5d98e8a6c90c4069798f20f192fd151fb97c7fa42f0075f2b191952",
+                       "transcript_len":  17498,
+                       "canonical_file_name":  "yt-vibe-graphing-10x-more-affordable-than-vibe-coding-mas-factory-20260317-164809.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-vibe-graphing-10x-more-affordable-than-vibe-coding-mas-factory-20260317-164809.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:48:09.9972702Z",
+                       "canonical_summary":  "youtube-list-1 item 9",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:stop-hardcoding-ai-agents-w-skill-md-discover-karl",
+                       "source_url":  "https://youtu.be/OGT3NoFo-qg?si=2NG3HVxebx03gaFp",
+                       "transcript_sha":  "68136a2af115b256ad20964aed339535f0fc8be72122f2adc4dc15463087c116",
+                       "transcript_len":  27482,
+                       "canonical_file_name":  "yt-stop-hardcoding-ai-agents-w-skill-md-discover-karl-20260317-164739.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-stop-hardcoding-ai-agents-w-skill-md-discover-karl-20260317-164739.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:47:39.9950365Z",
+                       "canonical_summary":  "youtube-list-1 item 6",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:neurosymbolic-80m-ai-from-princeton-beats-gpt",
+                       "source_url":  "https://youtu.be/xh6R2WR49yM?si=Oo4SeyFvajCpbTaw",
+                       "transcript_sha":  "da7b34ca6131389eb9a919b49db07cd57d50579114b4edfb7b2304f7df9b57b1",
+                       "transcript_len":  42781,
+                       "canonical_file_name":  "yt-neurosymbolic-80m-ai-from-princeton-beats-gpt-20260317-164651.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-neurosymbolic-80m-ai-from-princeton-beats-gpt-20260317-164651.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:46:51.5720841Z",
+                       "canonical_summary":  "youtube-list-1 item 2",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:rick-astley-never-gonna-give-you-up-official-video-4k-remaster",
+                       "source_url":  "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                       "transcript_sha":  "4cec191c139e00a620b2e2dd80a292d186306b45cabf24c0928ac986c659095f",
+                       "transcript_len":  1264,
+                       "canonical_file_name":  "yt-rick-astley-never-gonna-give-you-up-official-video-4k-remaster-20260317-162528.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-rick-astley-never-gonna-give-you-up-official-video-4k-remaster-20260317-162528.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:25:28.8302437Z",
+                       "canonical_summary":  "Auto-ingested transcript using yt-dlp captions.",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "transcript",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:chatgpt-health-identified-respiratory-failure-then-it-said-wait",
+                       "source_url":  "https://youtu.be/4HeS_C02yAE?si=H5XwLq7CNXKLdvYq",
+                       "transcript_sha":  "15338305631b25ac80a9c995e7ba02750989d9fb12d0b14f512f8928283738db",
+                       "transcript_len":  23951,
+                       "canonical_file_name":  "yt-chatgpt-health-identified-respiratory-failure-then-it-said-wait-20260318-164251.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-chatgpt-health-identified-respiratory-failure-then-it-said-wait-20260318-164251.json",
+                       "canonical_retrieved_at":  "2026-03-18T15:42:51.3485605Z",
+                       "canonical_summary":  "youtube-list-1 add item 14",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:stop-hardcoding-ai-agents-w-skill-md-discover-karl",
+                       "source_url":  "https://youtu.be/OGT3NoFo-qg?si=31CLw4qYgyefo-P-",
+                       "transcript_sha":  "68136a2af115b256ad20964aed339535f0fc8be72122f2adc4dc15463087c116",
+                       "transcript_len":  27482,
+                       "canonical_file_name":  "yt-stop-hardcoding-ai-agents-w-skill-md-discover-karl-20260317-164729.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-stop-hardcoding-ai-agents-w-skill-md-discover-karl-20260317-164729.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:47:29.9737681Z",
+                       "canonical_summary":  "youtube-list-1 item 5",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:system-3-ai-no-humans-needed",
+                       "source_url":  "https://youtu.be/K4yLplNrY24?si=4xqSzuy3OHsNQjSD",
+                       "transcript_sha":  "9b490bacc12e3dc96ab6e92fb470cabe2b6a2dc509ac4b1e41a205a6046927ca",
+                       "transcript_len":  38848,
+                       "canonical_file_name":  "yt-system-3-ai-no-humans-needed-20260317-164819.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-system-3-ai-no-humans-needed-20260317-164819.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:48:19.5762467Z",
+                       "canonical_summary":  "youtube-list-1 item 10",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:the-final-boss-of-deep-learning",
+                       "source_url":  "https://youtu.be/AWqvBdqCAAE?si=7i4ujWS5DBlYt6ba",
+                       "transcript_sha":  "b6f385af9528f47c82799988f4034fecc80b2de5864dec4b4acab17b47339ae7",
+                       "transcript_len":  45919,
+                       "canonical_file_name":  "yt-the-final-boss-of-deep-learning-20260317-164640.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-the-final-boss-of-deep-learning-20260317-164640.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:46:40.3995282Z",
+                       "canonical_summary":  "youtube-list-1 item 1",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:forget-llm-mit-s-new-rlm-phase-shift-in-ai",
+                       "source_url":  "https://youtu.be/mtRJmIup3b8?si=XaERR3Db2WC5a69l",
+                       "transcript_sha":  "996beb1739711bdbad76fd8be42af6556f3e9444d2b5a4b20d750438f0fdaf25",
+                       "transcript_len":  27341,
+                       "canonical_file_name":  "yt-forget-llm-mit-s-new-rlm-phase-shift-in-ai-20260317-164704.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-forget-llm-mit-s-new-rlm-phase-shift-in-ai-20260317-164704.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:47:04.9275976Z",
+                       "canonical_summary":  "youtube-list-1 item 3",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:dr-jeff-beck-the-probability-approach-to-ai",
+                       "source_url":  "https://youtu.be/c4praCiy9qU?si=ui9fkAFXP4Beci7q",
+                       "transcript_sha":  "7dc72fdc322bd70afc6a2fa6381e6885bcdc83e329f2154e322452507df19add",
+                       "transcript_len":  79877,
+                       "canonical_file_name":  "yt-dr-jeff-beck-the-probability-approach-to-ai-20260317-164800.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-dr-jeff-beck-the-probability-approach-to-ai-20260317-164800.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:48:00.0906707Z",
+                       "canonical_summary":  "youtube-list-1 item 8",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   },
+                   {
+                       "id":  "yt:code-to-build-a-hypergraph-hypergraph-transformers",
+                       "source_url":  "https://youtu.be/iRp0KAOM_SM?si=_P268btE20OUqjbf",
+                       "transcript_sha":  "b8c3a3e6b7b724e0537ea5fca76decf7f2bf5b7e09561cdaebb2c10e89debcf3",
+                       "transcript_len":  13499,
+                       "canonical_file_name":  "yt-code-to-build-a-hypergraph-hypergraph-transformers-20260317-164829.json",
+                       "canonical_file_path":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-code-to-build-a-hypergraph-hypergraph-transformers-20260317-164829.json",
+                       "canonical_retrieved_at":  "2026-03-17T15:48:29.8347689Z",
+                       "canonical_summary":  "youtube-list-1 item 11",
+                       "canonical_keywords":  [
+                                                  "youtube",
+                                                  "youtube-list-1",
+                                                  "kb-ingest"
+                                              ],
+                       "alias_count":  0,
+                       "aliases":  [
+
+                                   ]
+                   }
+               ],
+    "duplicate_groups":  [
+
+                         ],
+    "parse_errors":  [
+                         {
+                             "file":  "C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\reference\\youtube\\entries\\yt-the-mathematical-foundations-of-intelligence-professor-yi-ma-20260317-164716.json",
+                             "error":  "Invalid JSON primitive: P."
+                         }
+                     ]
+}

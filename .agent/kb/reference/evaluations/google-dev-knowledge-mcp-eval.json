@@ -1,0 +1,17 @@
+{
+    "viable": true,
+    "schema_quality": 4,
+    "coverage": [
+        "Google Cloud",
+        "Firebase",
+        "Android",
+        "Chrome",
+        "Google Maps",
+        "Google AI / Gemini",
+        "TensorFlow",
+        "Web",
+        "Google Developers"
+    ],
+    "latency_ms": 354,
+    "notes": "Official Google remote MCP server at https://developerknowledge.googleapis.com/mcp, backed by the Developer Knowledge API (developerknowledge.googleapis.com). Google Cloud credentials were verified in project mailmind-ai-djbuw under account maassenhochrath@gmail.com. The Developer Knowledge API was initially disabled in that project and was enabled successfully via Google Cloud REST control-plane calls. Authenticated tests then succeeded: REST searchDocumentChunks for Cloud Run (~376 ms), Gemini API (~299 ms), and Firebase Auth (~276 ms); full document retrieval for documents/docs.cloud.google.com/run/docs/monitoring (~465 ms); and bearer-authenticated MCP tools/list against the remote endpoint. Advertised tools are read-only and narrow: search_documents returns chunked matches with parent document handles, and get_documents returns full Markdown documents for supplied names. This is a strong READ-adapter candidate for OBJ07/OBJ22 hydration because it is canonical, structured enough for deterministic ingestion, and constrained to documentation retrieval rather than mutation. Limitations remain: Preview / Pre-GA, corpus limited to public Google documentation only, English-only, and Markdown generated from HTML rather than richer typed entities. The recorded latency is a rounded average of successful authenticated search/get calls, not a load-tested benchmark."
+}

@@ -44,6 +44,32 @@
                 ]
             },
             "status": "active"
+        },
+        {
+            "id": "urn:moos:agent:firestarter",
+            "type_id": "agent_spec",
+            "name": "Firestarter Agent",
+            "description": "Graph growth accelerator — reads SKILL.md files, classifies against ontology, generates hydration programs. The morphism that makes the graph grow faster. Wired into the graph it grows.",
+            "model_binding": {
+                "default_provider": "anthropic",
+                "default_model": "claude-opus-4-6",
+                "config_source": ".agent/cfg/workspace_defaults.yaml#agent_defaults"
+            },
+            "tool_routing": [
+                "urn:moos:tool:category-master",
+                "urn:moos:tool:spec-miner"
+            ],
+            "morphisms": {
+                "source": [
+                    "CAN_HYDRATE",
+                    "CAN_ROUTE",
+                    "SYNC_ACTIVE_STATE"
+                ],
+                "target": [
+                    "OWNS"
+                ]
+            },
+            "status": "active"
         }
     ]
 }

@@ -96,6 +96,10 @@ state management.
 \begin{enumerate}
   \item We define the \emph{Container Category} $\mathcal{C}$ and prove it is
         closed under parallel and sequential wiring (Section~\ref{sec:container}).
+  \item We prove the \emph{Authority Filtration} theorem and establish a
+        Galois connection between the causal birth order and the stratum
+        classification, showing that governance is a structural property of
+        the morphism log (Section~\ref{sec:container}).
   \item We formalize four invariant natural transformations and the operadic
         validation algebra that constrains them (Section~\ref{sec:bottleneck}).
   \item We construct the \emph{Recursive Semantic Bridge} as a
@@ -225,6 +229,127 @@ subcategory $\mathcal{C}_a \hookrightarrow \mathcal{C}$ consisting of all
 nodes transitively reachable from $a$ via OWNS wires. This is computed by
 breadth-first search under a read lock, yielding all internal wires---those
 whose source and target both lie in $\mathcal{C}_a$.
+
+\subsection{Authority Filtration}
+\label{subsec:authority}
+
+The morphism log and the stratum lattice each induce a filtration of
+$\mathcal{C}$, but these two filtrations are \emph{independent} and run in
+opposite directions on the lower strata. Making this precise is the key
+structural result of the paper.
+
+\begin{definition}[Causal Filtration]
+\label{def:causal-filtration}
+Let the morphism log have $t$ entries. For each $k \in \{0, \ldots, t\}$,
+let $\mathcal{C}_{\leq k}$ be the full subcategory of $\mathcal{C}$ whose
+objects have been created by \textsc{Add} envelopes at log positions
+$\leq k$. The chain
+\[
+\varnothing = \mathcal{C}_{\leq -1}
+\hookrightarrow \mathcal{C}_{\leq 0}
+\hookrightarrow \mathcal{C}_{\leq 1}
+\hookrightarrow \cdots
+\hookrightarrow \mathcal{C}_{\leq t} = \mathcal{C}
+\]
+is the \emph{causal filtration} of $\mathcal{C}$. Each step adds at most one
+object (the node created by the \textsc{Add} at position $k$, if any).
+\end{definition}
+
+\begin{definition}[Stratum Filtration]
+\label{def:stratum-filtration}
+For each stratum $S_i$, let $\mathcal{C}^{\sigma}_{\leq i}$ be the full
+subcategory of $\mathcal{C}$ whose objects have stratum $\leq S_i$. The chain
+\[
+\mathcal{C}^{\sigma}_{\leq 0} \hookrightarrow
+\mathcal{C}^{\sigma}_{\leq 1} \hookrightarrow
+\mathcal{C}^{\sigma}_{\leq 2} \hookrightarrow
+\mathcal{C}^{\sigma}_{\leq 3} \hookrightarrow
+\mathcal{C}^{\sigma}_{\leq 4} = \mathcal{C}
+\]
+is the \emph{stratum filtration} of $\mathcal{C}$ by full subcategories.
+\end{definition}
+
+The kernel self-seeds at boot: the first morphism in every log is
+$\textsc{Add}(\mathit{urn\!:\!moos\!:\!kernel\!:\!wave\text{-}0})$, a node at
+stratum $S_2$. Every subsequent node enters $\mathcal{C}$ via a finite
+sequence of \textsc{Add} and \textsc{Link} morphisms traceable back to this
+seed through the \emph{causal} filtration---not the stratum filtration.
+
+\begin{theorem}[Authority Filtration]
+\label{thm:authority}
+Every node $n \in \mathrm{Ob}(\mathcal{C})$ has a finite causal path in the
+morphism log to the kernel seed. Formally: for each $n$ with
+$\mathrm{birth}(n) = k > 0$, there exists a \textsc{Link} morphism
+$\ell\colon m \to n$ in the log with $\mathrm{birth}(m) < k$---that is, the
+authorizing node $m$ already exists in $\mathcal{C}_{\leq k-1}$.
+By induction, every node is connected to the seed by a finite chain of such
+\textsc{Link} morphisms.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By construction of the boot sequence and the hydration pipeline. The kernel
+seed at $S_2$ is the first \textsc{Add} (log position~0). Source nodes at
+$S_1$ are seeded next via \textsc{Add} + \textsc{Link}(kernel, source).
+Industry entities at $S_0$ enter later via \textsc{Add} +
+\textsc{Link}(source, industry). Instance nodes at $S_2$ are hydrated via
+\textsc{Add} + \textsc{Link}(industry, instance) or
+\textsc{Link}(kernel, instance). Projections at $S_4$ are functor outputs.
+At each step, the \textsc{Link} envelope's precondition (both endpoints must
+exist) guarantees that the authorizing node has a strictly earlier birth
+position. Since the log is finite, the inductive chain terminates at the seed.
+\end{proof}
+
+Crucially, the authorizing \textsc{Link} need not respect the stratum order:
+the seed at $S_2$ authorizes source nodes at $S_1$ and industry entities at
+$S_0$. Authority flows \emph{down} the stratum lattice while semantic
+dependency flows \emph{up}. This contravariance is not a defect but a
+structural feature, which we now make precise.
+
+\begin{proposition}[Contravariant Orders]
+\label{prop:contravariant}
+Let $\mathrm{complete}\colon \Sigma \to \mathbb{N}$ map each stratum $S_i$ to
+the last log position at which a node of stratum $S_i$ is created, and let
+$\mathrm{filled}\colon \mathbb{N} \to \Sigma$ map each log position $k$ to
+the highest stratum $S_i$ such that all $S_i$-nodes have
+$\mathrm{birth} \leq k$. Then $\mathrm{filled} \dashv \mathrm{complete}$
+is a Galois connection between $(\mathbb{N}, \leq)$ and
+$(\Sigma, \leq)^{\mathrm{op}}$:
+\[
+\mathrm{filled}(k) \geq S_i
+\quad\Longleftrightarrow\quad
+k \geq \mathrm{complete}(S_i).
+\]
+In particular, the stratum order and the causal birth order are contravariant
+on the lower strata: the kernel seed is causally initial
+($\mathrm{birth} = 0$) but resides at $S_2$, while $S_0$ industry entities
+are causally posterior but immutable.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Both maps are well-defined on a finite log. The equivalence holds by
+definition: ``stratum $S_i$ is fully present by depth $k$'' iff
+``$k$ is at least as deep as the last $S_i$ creation.'' Contravariance on the
+lower strata follows from the boot order: $\mathrm{complete}(S_2) = 0 <
+\mathrm{complete}(S_1) < \mathrm{complete}(S_0)$, since the $S_2$ seed
+precedes $S_1$ sources, which precede $S_0$ industry entities in the log.
+The \texttt{applyMutate} guard ($S_0$ nodes reject \textsc{Mutate}) enforces
+the stratum constraint independently of the causal order: a node that is
+causally young can still be immutable.
+\end{proof}
+
+Together, Theorem~\ref{thm:authority} and Proposition~\ref{prop:contravariant}
+upgrade Axiom~5 (``governance is structural'') from a design principle to a
+pair of formal results. Authority is not enforced by middleware or access
+control lists, but by the causal structure of the morphism log itself. The
+Galois connection provides a formal tool for boot sequencing:
+$\mathrm{complete}(S_i)$ tells the kernel when stratum $S_i$ is fully loaded,
+and $\mathrm{filled}(k)$ tells it what structural constraints are satisfiable
+at any point during replay. The contravariance between the two orders is
+analogous to Wolfram's distinction between the causal graph (on rewriting
+events) and the spatial graph (on elements): authority lives on events,
+strata live on elements (Figure~\ref{fig:filtration}).
+
+\input{figures/filtration}
 
 %% -----------------------------------------------------------------
 \section{The Semantic Bottleneck and Invariant Morphisms}
@@ -673,6 +798,13 @@ dependencies, 21 object kinds validated by an operad registry, 118 nodes and
 131 wires post-hydration, and deterministic catamorphic replay---shows that
 mathematical rigor is not an obstacle to practical systems but rather their
 most robust enabling technology.
+The authority filtration (Theorem~\ref{thm:authority}) and contravariant
+orders (Proposition~\ref{prop:contravariant}) upgrade the governance axiom
+from a design principle to a pair of formal results: every node's provenance
+is auditable by tracing \textsc{Link} morphisms back through the causal
+filtration to the kernel seed, and the Galois connection between causal birth
+order and stratum classification provides a formal tool for boot sequencing
+and structural consistency verification.
 The MCP bridge (Section~\ref{subsec:mcp-bridge}) realizes the natural
 transformation $\eta\colon \mathcal{C}_K \Rightarrow \mathcal{C}_L$, making
 the kernel's categorical operations directly accessible to any MCP-compliant

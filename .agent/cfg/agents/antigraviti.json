@@ -21,10 +21,10 @@
     "reads": ["channels/testoff.md", "channels/handoff.md (read-only)"],
     "writes": ["channels/testoff.md", "cfg/agents/antigraviti.json"]
   },
-  "tasks_completed": ["T023-A", "T023-D", "T023-E", "T026", "T027", "T031"],
+  "tasks_completed": ["T023-A", "T023-D", "T023-E", "T026", "T027", "T031", "T032b"],
   "current_task": "None",
   "next_task": "Awaiting next task direction",
-  "last_result": "Task 031 fully verified: Satellite node count 51 validated on clean boot",
+  "last_result": "Task 032b fully verified: 226 nodes, 102 wires, S0 immutability confirmed",
   "copilot_interim": "resolved — seed-template, stop flagging",
   "operating_manual": "testoff.md — read OPERATING MANUAL message first each session"
 }

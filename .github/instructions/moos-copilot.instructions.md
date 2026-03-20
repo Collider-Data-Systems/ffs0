@@ -14,9 +14,9 @@ Apply these instructions to every PR review.
 
 | Path | What it is |
 |------|-----------|
-| `moos/platform/kernel/` | Go kernel — the only executable code |
+| `moos/platform/kernel/` | Go kernel — the only production kernel executable (other executables are tooling/scripts under `.agent/**`) |
 | `.agent/kb/` | Knowledge base — design docs, ontology, instances, papers |
-| `.agent/channels/` | Agent communication channels (Markdown append logs) |
+| `.agent/channels/` | Agent communication channels (Markdown channel logs, newest entries at top — prepend pattern) |
 | `.agent/cfg/` | Agent config and session state |
 | `.agent/tasks/` | Task files — owned by Claude Code + Sam |
 

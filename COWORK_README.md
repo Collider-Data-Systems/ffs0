@@ -19,6 +19,8 @@ The "collider" metaphor is exact: just as a particle collider smashes things tog
 
 This is the **workspace root** — not the kernel source. It contains the knowledge base, agent coordination files, and design documents that govern everything. The kernel implementation lives in the separate public repo (`MSD21091969/moos`), mounted locally at `moos/` when running on-device.
 
+> **Path shorthand:** Throughout this document, `kb/` is shorthand for `.agent/kb/`. The full on-disk path is always `.agent/kb/...`.
+
 ```
 ffs0-factory-super/          ← you are here (workspace root)
 ├── CLAUDE.md                ← workspace rules (read this first, always)
@@ -286,7 +288,7 @@ Tasks 001–033 complete. Task 034+ pending Program 2 direction.
 | Agent states | `.agent/cfg/agents/*.json` |
 | Session state | `.agent/cfg/state/session-state.json` |
 | ACT 2026 paper | `.agent/kb/reference/papers/act2026/main.tex` |
-| Public kernel repo | `github.com/MSD21091969/moos` |
+| Public kernel repo | [github.com/MSD21091969/moos](https://github.com/MSD21091969/moos) |
 
 ---
 
