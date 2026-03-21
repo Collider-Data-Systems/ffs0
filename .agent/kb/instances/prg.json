@@ -1,0 +1,62 @@
+{
+  "domain": "prg",
+  "description": "PRG progression tasks — graph-native task tracking. Dependencies wired post-hydration via kernel HTTP API.",
+  "entries": [
+    {
+      "id": "urn:moos:prg:034-naturality-harness",
+      "type_id": "prg_task",
+      "stratum": "S1",
+      "label": "Task 034 — Naturality harness",
+      "task_id": "034",
+      "title": "Naturality harness for FUN02 UI_Lens",
+      "description": "FUN02 naturality test: Project(Apply(M, S)) == Apply(M', Project(S)). First gate in locked 1-2-3-4 sequence.",
+      "status": "planned",
+      "gate": 1,
+      "depends_on": [],
+      "created": "2026-03-19",
+      "target_functor": "FUN02"
+    },
+    {
+      "id": "urn:moos:prg:035-ptp-portbinding",
+      "type_id": "prg_task",
+      "stratum": "S1",
+      "label": "Task 035 — OBJ PortBinding + FUN10/11/12",
+      "task_id": "035",
+      "title": "PTP PortBinding type + BindingCategory functors",
+      "description": "Reify 4-tuple (src_type, src_port, tgt_type, tgt_port) as S1 node. FUN10 PortInventory, FUN11 BindingCat, FUN12 PortFunctor.",
+      "status": "planned",
+      "gate": 2,
+      "depends_on": ["urn:moos:prg:034-naturality-harness"],
+      "created": "2026-03-19",
+      "design_doc": "kb/design/20260319-ptp-binding-categories.md"
+    },
+    {
+      "id": "urn:moos:prg:036-cloverleaf",
+      "type_id": "prg_task",
+      "stratum": "S1",
+      "label": "Task 036 — Cloverleaf topology",
+      "task_id": "036",
+      "title": "Cloverleaf multi-kernel topology — KernelLeaf + KernelHub",
+      "description": "Non-interaction invariant — leaf graphs cannot interact except through formally typed cooperad ports.",
+      "status": "planned",
+      "gate": 3,
+      "depends_on": ["urn:moos:prg:035-ptp-portbinding"],
+      "created": "2026-03-19",
+      "design_doc": "kb/design/20260319-cloverleaf-kernel-topology.md"
+    },
+    {
+      "id": "urn:moos:prg:037-inspect-run",
+      "type_id": "prg_task",
+      "stratum": "S1",
+      "label": "Task 037 — Inspect/Run separation",
+      "task_id": "037",
+      "title": "Inspect/Run separation — GPU inspect, CPU run, Log memory",
+      "description": "Capstone gate. GPU = inspect (fast, parallel, ephemeral, HDC). CPU = run (serial, deterministic, proven). Log = memory (append-only).",
+      "status": "planned",
+      "gate": 4,
+      "depends_on": ["urn:moos:prg:036-cloverleaf"],
+      "created": "2026-03-19",
+      "design_doc": "kb/design/20260319-inspect-run-separation.md"
+    }
+  ]
+}

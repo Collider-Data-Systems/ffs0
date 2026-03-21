@@ -1,0 +1,39 @@
+{
+  "domain": "keeps",
+  "description": "Google Keep notes — Sam's S0 authored signals from mobile. Promoted through sessions.",
+  "entries": [
+    {
+      "id": "urn:moos:keep:20260319-cloverleaves-identity",
+      "type_id": "keep_note",
+      "stratum": "S0",
+      "label": "Keep: Cloverleaves + identity + governance",
+      "raw_text": "Cloverleaves, id of the properties? URN, wires, ports and interfaces, cooperads, others, design structures. TypeID identity is for AuthUser? How about agents? Is this the governance thing? Tied properties. Structures bound to identity.",
+      "date": "2026-03-19",
+      "status": "reviewed",
+      "promoted_to": ["urn:moos:prg:036-cloverleaf"],
+      "interpretation": "Identity in Cloverleaf topology: type identity is global (ontology.json at hub), instance identity (URNs) is scoped per leaf. AuthUser = type-level; agent = instance. Governance = which leaf owns which identity. Yoneda: structures ARE identity."
+    },
+    {
+      "id": "urn:moos:keep:20260319-funct-skills",
+      "type_id": "keep_note",
+      "stratum": "S0",
+      "label": "Keep: Skills as workflow managers",
+      "raw_text": "Use to produce skills. Skills are workflow managers. The skill isnt use and I produce workflow. Recursive mindmasher. Purpose?",
+      "date": "2026-03-19",
+      "status": "reviewed",
+      "promoted_to": [],
+      "interpretation": "Skills = composable morphism programs with declared purpose-state. A skill is a PortFunctor path (FUN12) through BindingCategory space. Recursive = meta-skills are NTs between PortFunctors."
+    },
+    {
+      "id": "urn:moos:keep:20260319-llm-state-transformer",
+      "type_id": "keep_note",
+      "stratum": "S0",
+      "label": "Keep: LLM as state transformer, not req/resp",
+      "raw_text": "LLM does not request response. It IS in a graph and is a state transforming thing. Node helps me in the user graph or admin graph.",
+      "date": "2026-03-19",
+      "status": "reviewed",
+      "promoted_to": ["urn:moos:prg:037-inspect-run"],
+      "interpretation": "LLM is a graph node (agnostic_model, S2). Output = proposed morphism sequence, not text. Text = S4 projection. Lives in Inspect (GPU) tier. Operates in user graph (KernelLeaf) or admin graph (KernelHub)."
+    }
+  ]
+}

@@ -430,6 +430,103 @@
       ],
       "source_connections": [],
       "target_connections": []
+    },
+    {
+      "id": "OBJ24",
+      "name": "AgentSession",
+      "type_id": "agent_session",
+      "broad_category": "identity",
+      "description": "Agent session state — records active Claude session with kernel state snapshot, PRG focus, and active sources. Written at session start, MUTATE'd at key decisions, closed at session end. Enables session recovery after context compaction.",
+      "mutable": true,
+      "allowed_strata": [
+        "S2",
+        "S3"
+      ],
+      "source_connections": [
+        "OWNS",
+        "LINK_NODES"
+      ],
+      "target_connections": [
+        "OWNS"
+      ]
+    },
+    {
+      "id": "OBJ25",
+      "name": "PRGTask",
+      "type_id": "prg_task",
+      "broad_category": "structure",
+      "description": "PRG progression task — graph node representing a unit of planned work. Dependencies as LINK_NODES wires to other prg_task nodes. Status in payload. Replaces markdown-based task tracking with graph-native PRG.",
+      "mutable": true,
+      "allowed_strata": [
+        "S1",
+        "S2"
+      ],
+      "source_connections": [
+        "LINK_NODES"
+      ],
+      "target_connections": [
+        "OWNS",
+        "LINK_NODES"
+      ]
+    },
+    {
+      "id": "OBJ26",
+      "name": "CalendarEvent",
+      "type_id": "calendar_event",
+      "broad_category": "structure",
+      "description": "Temporal anchor — hydrated from Google Calendar via GCal MCP. Maps IRL time to PRG tasks via LINK_NODES. Past events = completed morphisms. Future events = proposed morphisms. Enables time-aware PRG progression.",
+      "mutable": true,
+      "allowed_strata": [
+        "S0",
+        "S1",
+        "S2"
+      ],
+      "source_connections": [
+        "LINK_NODES"
+      ],
+      "target_connections": [
+        "OWNS",
+        "LINK_NODES"
+      ]
+    },
+    {
+      "id": "OBJ27",
+      "name": "KeepNote",
+      "type_id": "keep_note",
+      "broad_category": "structure",
+      "description": "S0 authored signal from Google Keep — Sam's mobile design notes, ideas, and IRL observations. Promoted to S1 when reviewed, S2 when committed to a PRG task or design doc. Captures IRL→graph bridge.",
+      "mutable": true,
+      "allowed_strata": [
+        "S0",
+        "S1"
+      ],
+      "source_connections": [
+        "CLASSIFIES",
+        "LINK_NODES"
+      ],
+      "target_connections": [
+        "OWNS",
+        "LINK_NODES"
+      ]
+    },
+    {
+      "id": "OBJ28",
+      "name": "ChannelMessage",
+      "type_id": "channel_message",
+      "broad_category": "structure",
+      "description": "Key decision from channel .md files promoted to graph — not all channel traffic, only decisions that change PRG direction. Preserves provenance of design choices. Channels remain S4 projections; this node captures the S2 ground truth.",
+      "mutable": false,
+      "allowed_strata": [
+        "S1",
+        "S2"
+      ],
+      "source_connections": [
+        "LINK_NODES"
+      ],
+      "target_connections": [
+        "OWNS",
+        "LINK_NODES"
+      ]
     }
   ],
   "morphisms": [

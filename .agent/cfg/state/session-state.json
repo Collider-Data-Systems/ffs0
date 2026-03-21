@@ -1,84 +1,71 @@
 {
-  "updated": "2026-03-20T12:00:00+01:00",
-  "cycle_position": "p2-design-session-complete — task ordering locked 1→2→3→4 — awaiting Task 034 start (naturality harness)",
-  "last_task_id": "033",
-  "last_task_status": "COMPLETE. Explorer 2.0 built. All 11 go test packages green. Antigraviti verified. Committed + pushed.",
-  "next_task_hint": "Task ordering is a PRG discussion (Sam + Claudes). Keep higher level until agreement. Candidates: Task 034 naturality harness (VSCodeAI), PortBinding OBJ24 + FUN10/11/12 (PTP session), Cloverleaf OBJ25/26, Inspect/Run separation (GPU lifecycle). No kernel running = fine. Claude Desktop joining via MCP when Sam connects laptop.",
-  "session_mode": "mobile-design — no running kernel — conversation IS KB hydration",
-  "leadoff_top": {
-    "timestamp": "2026-03-19 12:00",
-    "from": "Sam",
-    "type": "decide",
-    "subject": "PRG ordering confirmed — #1 → #2 → #3 first, #4 as capstone"
+  "updated": "2026-03-21T14:15:00+01:00",
+  "cycle_position": "KG-to-HG migration active — PRG in graph, session nodes live, Keep notes hydrated, MCP wired",
+  "last_task_id": "034",
+  "last_task_status": "PRG tasks 034-037 are now prg_task nodes in the kernel graph with dependency wires. Task 034 (naturality harness) is gate 1, status: planned.",
+  "session_mode": "runtime-programming — kernel running, MCP live, Google Workspace connected",
+  "kernel_state": {
+    "nodes": 292,
+    "wires": 168,
+    "log_depth": 470,
+    "types": 28,
+    "session_node": "urn:moos:session:20260321-lead",
+    "prg_nodes": [
+      "urn:moos:prg:034-naturality-harness",
+      "urn:moos:prg:035-ptp-portbinding",
+      "urn:moos:prg:036-cloverleaf",
+      "urn:moos:prg:037-inspect-run"
+    ],
+    "keep_notes": [
+      "urn:moos:keep:20260319-cloverleaves-identity",
+      "urn:moos:keep:20260319-funct-skills",
+      "urn:moos:keep:20260319-llm-state-transformer"
+    ]
   },
-  "handoff_top": {
-    "timestamp": "2026-03-18 22:38",
+  "leadoff_top": {
+    "timestamp": "2026-03-21 14:15",
     "from": "ClaudeCode",
     "type": "complete",
-    "subject": "Task 033 Explorer 2.0 — all phases done, one bug fixed, test plan posted"
+    "subject": "KG-to-HG migration — OBJ24-28 committed, PRG+keeps+session in graph, MDs rewritten"
   },
-  "testoff_top": {
-    "timestamp": "2026-03-18 22:38",
-    "from": "ClaudeCode",
-    "type": "test-plan",
-    "subject": "Explorer 2.0 (Task 033) — full verification request (16 checklist items)"
-  },
-  "kernel_state": {
-    "nodes": 275,
-    "wires": 151,
-    "log_depth": 436,
-    "note": "Last known state. Kernel not running this session (mobile). No conflict — single user, governance + topological state only."
+  "sources_active": {
+    "gmail": "maassenhochrath@gmail.com — 11k messages",
+    "gcal": "primary calendar — temporal anchors",
+    "gdrive": "Collider Research Plan, Manifesto",
+    "kernel_mcp": "localhost:8080 — 5 tools",
+    "github": "gh CLI via PAT"
   },
   "design_docs_this_session": [
-    "kb/design/20260319-ptp-binding-categories.md — PTP as first-class node, BindingCategories, PortFunctor, OBJ24 proposed",
-    "kb/design/20260319-cloverleaf-kernel-topology.md — multi-leaf kernel topology, non-interaction invariant, GPU memory hierarchy, Ricci rewiring",
-    "kb/design/20260319-inspect-run-separation.md — GPU=inspect, CPU=run, log=memory. get_eval/update/destroy lifecycle. Claude Desktop as inspect agent."
+    "kb/design/20260321-prg-in-graph.md — KG-to-HG migration, OBJ24-28, session protocol, branch strategy"
   ],
-  "sam_decisions_this_session": {
-    "governance_model": "Single user. No multi-user conflicts. Only governance and topological state matter.",
-    "task_ordering": "LOCKED 1→2→3→4: (1) naturality harness, (2) OBJ24 PortBinding + FUN10/11/12, (3) Cloverleaf OBJ25/26, (4) Inspect/Run separation. Sam confirmed 2026-03-19 12:00 via leadoff.md.",
-    "claude_desktop": "Will connect Claude Desktop later via MCP. Inspect-tier agent role confirmed. Claude Code stays leadoff.",
-    "copilot_pr_comments": "Triaged. 7 items fixed this session (get_rval→get_eval, URN fix, copilot instructions, session-state fields, COWORK_README). PR #6 (Copilot DRAFT) closed.",
-    "youtube_video": "Latest from channel VSCode follows. URL pending — Sam will share when laptop connected.",
-    "no_kernel": "No running kernel = no problem for design sessions."
-  },
-  "proposed_ontology_candidates": {
-    "OBJ24": "PortBinding — reifies PTP 4-tuple as S1 inventory node",
-    "OBJ25": "KernelLeaf — scoped kernel instance in cloverleaf topology",
-    "OBJ26": "KernelHub — governance node owning cooperad terminals",
-    "FUN10": "PortInventory: C → PTP_Space",
-    "FUN11": "BindingCat: 2^PTP → SubCat(C)",
-    "FUN12": "PortFunctor: SubCat_A × SubCat_B → Path?"
-  },
-  "agent_topology_proposed": {
-    "Sam": "Lead — leadoff.md rw",
-    "ClaudeCode": "Strategic leadoff — all channels rw, governs all tiers",
-    "ClaudeDesktop": "Inspect-tier agent — sources notes/YouTube/papers/PRs, surfaces GPU-tier structures. Channel TBD (inspect.md or leadoff.md). Joining via MCP.",
-    "VSCodeAI": "Execution agent — CPU-tier morphism sequences, handoff.md",
-    "Antigraviti": "UX test agent — testoff.md"
-  },
-  "open_items": [
-    "Task 034 = naturality harness (LOCKED). Next after that: OBJ24 PortBinding + FUN10/11/12.",
-    "Claude Desktop channel assignment — inspect.md or leadoff.md direct?",
-    "Copilot PR comments — triage when gh context available",
-    "YouTube video URL — ingest via ingest-youtube-url.ps1 once URL received",
-    "OBJ24-OBJ26 candidacy decisions from Sam",
-    "FUN10/11/12 candidacy decisions from Sam",
-    "Inspect/Run separation: GPU tier ownership question (separate process or goroutine fence?)",
-    "Ricci implementation variant: Ollivier vs Forman",
-    "Firestarter agent node ADD to graph (urn:moos:agent:firestarter)",
-    "FUN05 activation",
-    "Paper: tighten future work — multiway system mention, BindingCategories section candidate",
-    "arXiv email alerts setup",
-    "PAT rotation",
-    "broadCategory 3-way duplication — extract to shared source",
-    "HTTP handler test for GET /state/saturation"
-  ],
-  "paper_state": {
-    "pages": 14,
-    "compiles": true,
-    "new_content": "No paper changes this session. Cloverleaf topology + inspect/run separation + PTP/BindingCategories are all future-work candidates."
+  "files_changed_this_session": {
+    "ffs0": [
+      "kb/superset/ontology.json — +5 types (OBJ24-28)",
+      "kb/instances/prg.json — NEW: 4 PRG task nodes",
+      "kb/instances/keeps.json — NEW: 3 Keep note nodes",
+      "kb/design/20260321-prg-in-graph.md — NEW: migration design doc",
+      "CLAUDE.md — REWRITTEN: HG-is-SOT paradigm",
+      ".agent/CLAUDE.md — REWRITTEN: full protocol update",
+      "COWORK_README.md — REWRITTEN: inspect-tier onboarding",
+      "README.md — REWRITTEN: kernel-centric",
+      ".github/instructions/moos-copilot.instructions.md — REWRITTEN: OBJ24-28 vocabulary",
+      ".mcp.json — NEW: kernel MCP config",
+      ".vscode/tasks.json — existing, to be committed",
+      "cfg/state/session-state.json — UPDATED"
+    ],
+    "moos": [
+      "internal/hydration/batch.go — +prg.json, +keeps.json in InstanceOrder"
+    ]
   },
   "branch": "main",
-  "pr_status": "all PRs merged. PR #6 (Copilot DRAFT) closed."
+  "open_items": [
+    "Commit and push both repos",
+    "Task 034 naturality harness — gate 1 (status: planned)",
+    "Wire kernel MCP into Claude Code session (needs restart to activate .mcp.json)",
+    "Claude Desktop channel assignment (inspect.md or leadoff.md direct)",
+    "FUN05 activation (Kaggle AGI benchmark, deadline Apr 16)",
+    "PAT rotation after session",
+    "Paper: Cloverleaf + Inspect/Run as future-work candidates",
+    "Feature/instance branch setup for multi-workstation"
+  ]
 }

@@ -1,85 +1,67 @@
-# CLAUDE.md — FFS0_Factory Workspace Root
+# CLAUDE.md — FFS0_Factory Workspace
 
 **mo:os** — categorical graph kernel for local-first sovereign AI.
-Three-agent workspace: Claude Code (strategic), VS Code AI (execution), Antigraviti (UX testing).
+`state(t) = fold(log[0..t])`. The hypergraph IS the source of truth.
 
 ---
 
-## Workspace Layout
+## Ground Truth
 
-| Folder | Purpose |
-|--------|---------|
-| `.` | Workspace root |
-| `.agent/` | KB, channels, tasks, cfg — see `.agent/CLAUDE.md` |
-| `moos/` | Kernel source code (`platform/kernel/`) |
+The kernel graph (`:8000`) is SOT. Not this file, not KB files, not channels.
+Everything on disk is either a **seed** (S0/S1 authored input) or a **projection** (S4 view of graph state).
 
----
+| Layer | What | Where |
+|-------|------|-------|
+| **SOT** | Kernel graph | `GET /state` on `:8000` (HTTP) or `:8080` (MCP) |
+| **Type registry** | Ontology | `.agent/kb/superset/ontology.json` — 28 types (OBJ01-OBJ28) |
+| **Seeds** | Instance data | `.agent/kb/instances/*.json` — hydration envelopes |
+| **Design** | Architecture docs | `.agent/kb/design/*.md` — reference, not truth |
+| **Projections** | Channels, UI, files | `.agent/channels/*.md`, Explorer, file tree |
 
 ## Session Start
 
-1. Read this file
-2. Read `.agent/CLAUDE.md` — full operational protocol (channels, tasks, programs, paths)
-3. Read `.agent/channels/leadoff.md` — latest Program 2 decision from Sam
-4. Read `.agent/channels/handoff.md` — latest direction
-5. Read `.agent/channels/testoff.md` — latest test status
-6. Check `.agent/tasks/` — next task (highest priority, deps met)
-7. Check `.agent/cfg/agents/*.json` — agent states
+1. Boot kernel: `cd moos/platform/kernel && go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate`
+2. `curl localhost:8000/healthz` — verify graph state (nodes, wires, depth)
+3. Read `.agent/CLAUDE.md` — full operational protocol
+4. `POST /morphisms` — ADD `agent_session` node for this session
+5. Read `leadoff.md` top entry — Sam's latest direction
+6. Continue from graph state, not from memory
 
----
+## Kernel Endpoints
+
+| Port | Protocol | Tools |
+|------|----------|-------|
+| `:8000` | HTTP REST | 20 routes: `/state`, `/morphisms`, `/state/nodes/{urn}`, `/state/saturation`, `/explorer`, `/log/stream` (SSE) |
+| `:8080` | MCP (SSE) | 5 tools: `graph_state`, `node_lookup`, `apply_morphism`, `scoped_subgraph`, `benchmark_project` |
+
+## Four Invariant Morphisms
+
+All graph writes go through exactly these four. No exceptions.
+
+| Morphism | Signature | HDC analog |
+|----------|-----------|------------|
+| **ADD** | void -> Container | Introduce basis vector |
+| **LINK** | C x C -> Wire | Bind (tensor product) |
+| **MUTATE** | C -> C | Bundle update |
+| **UNLINK** | Wire -> void | Inverse bind |
 
 ## Key Paths
 
-| What | Where |
-|------|-------|
-| Kernel entrypoint | `moos/platform/kernel/cmd/moos/main.go` |
-| Ontology (SOT) | `.agent/kb/superset/ontology.json` |
-| Seed data | `.agent/kb/instances/*.json` |
-| Architectural specs | `.agent/kb/design/*.md` |
-| Channels | `.agent/channels/handoff.md`, `.agent/channels/testoff.md` |
-| Tasks | `.agent/tasks/` |
-| Agent config | `.agent/cfg/agents/` |
-| Workflows | `.agent/workflows/` |
-| ACT 2026 paper | `.agent/kb/reference/papers/act2026/main.tex` |
-
----
-
-## SOT Hierarchy
-
-1. **`kb/superset/`** — always wins
-2. **`kb/design/*.md`** — latest timestamp wins
-3. **`kb/instances/*.json`** — must conform to ontology
-4. **`kb/industry/*.json`** — independent landscape data
-5. **This file** — workspace policy
-6. **Task files** — reference SOTs, never restate
-
----
-
-## Kernel Quick Reference
-
-**HP laptop:** `cd moos/platform/kernel && go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate`
-**z440:** `cd D:\FFS0_Factory\moos\platform\kernel && go run ./cmd/moos --kb "D:\FFS0_Factory\.agent\kb" --hydrate`
-**Health:** `curl http://localhost:8000/healthz`
-**Explorer:** `http://localhost:8000/explorer`
-**MCP (SSE):** `:8080` | **MCP (stdio):** `moos --mcp-stdio`
-
----
-
-## Three-Agent Protocol
-
-| Role | Agent | Channel |
-|------|-------|---------|
-| Lead | Sam | `channels/leadoff.md` (rw) |
-| Strategic | Claude Code | `channels/leadoff.md` (rw), `channels/handoff.md` (rw), `channels/testoff.md` (rw) |
-| Execution | VS Code AI | `channels/handoff.md` (rw) |
-| UX Testing | Antigraviti | `channels/testoff.md` (rw) |
-
-Full protocol: `.agent/CLAUDE.md`
-
----
+| What | Path |
+|------|------|
+| Full protocol | `.agent/CLAUDE.md` |
+| Kernel source | `moos/platform/kernel/` |
+| Ontology (28 types) | `.agent/kb/superset/ontology.json` |
+| Instances (seeds) | `.agent/kb/instances/*.json` |
+| Design docs | `.agent/kb/design/*.md` |
+| Channels | `.agent/channels/{leadoff,handoff,testoff}.md` |
+| MCP config | `.mcp.json` (kernel MCP on :8080) |
 
 ## Rules
 
-- All graph writes through 4 invariant morphisms (ADD, LINK, MUTATE, UNLINK)
+- Graph is truth. Files are seeds or projections.
+- All writes through 4 invariant morphisms (ADD, LINK, MUTATE, UNLINK)
 - Do not modify `data/morphism-log.jsonl` directly
 - Do not duplicate SOT content — reference it
+- Real timestamps only
 - Auto-approve all tool uses within this workspace

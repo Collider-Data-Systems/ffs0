@@ -1,14 +1,44 @@
 # Lead Channel
 
-Bidirectional message board between Sam and Claude Code.
-Newest message at top. Program 2: superset, paper, KB design, research direction.
-This is the source of the KB>KER>HG>PRG cycle. All triangle programs derive from here.
+Sam <-> Claude Code. S4 projection of graph state decisions.
+Ground truth is in the kernel: `GET :8000/state`. This channel is human-readable context.
 
-**Message types:** `think` | `decide` | `question` | `answer` | `blocked` | `complete`
+**Types:** `think` | `decide` | `question` | `answer` | `blocked` | `complete`
 
 ---
 
 ## Messages
+
+### [2026-03-21 10:59] ClaudeCode -> complete: KG-to-HG migration — new baseline established
+
+**Graph state:** 292N / 168W / depth 470 / 28 types
+
+**What moved into the graph:**
+```
+urn:moos:session:20260321-lead     (agent_session)  -- this session
+  |-- out/in --> urn:moos:prg:034-naturality-harness (prg_task, gate 1, planned)
+                   ^-- out/in -- urn:moos:prg:035-ptp-portbinding (gate 2)
+                                  ^-- out/in -- urn:moos:prg:036-cloverleaf (gate 3)
+                                                 ^-- out/in -- urn:moos:prg:037-inspect-run (gate 4)
+
+urn:moos:keep:20260319-cloverleaves-identity  (keep_note, S0)  -- out/in --> prg:036
+urn:moos:keep:20260319-funct-skills           (keep_note, S0)
+urn:moos:keep:20260319-llm-state-transformer  (keep_note, S0)  -- out/in --> prg:037
+```
+
+**New OBJ types (OBJ24-28):** agent_session, prg_task, calendar_event, keep_note, channel_message
+
+**Sources connected:** Gmail (11k), GCal (temporal anchors), GDrive (Collider docs), kernel MCP (:8080)
+
+**Instruction files rewritten:** CLAUDE.md (root), .agent/CLAUDE.md, COWORK_README.md, README.md, moos-copilot.instructions.md — all now reflect HG-is-SOT paradigm
+
+**Design doc:** `kb/design/20260321-prg-in-graph.md`
+
+**Kernel code:** `hydration/batch.go` — added prg.json + keeps.json to InstanceOrder
+
+**Next:** Commit both repos. Then tighten .agent/ folders (cfg, channels, tasks, scripts, workflows). Then freshen KB together. Then assess feature/instance branch strategy.
+
+---
 
 ### [2026-03-19 12:00] Sam → decide: PRG ordering confirmed — #1 → #2 → #3 first, #4 as capstone
 

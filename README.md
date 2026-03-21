@@ -1,67 +1,50 @@
-# FFS0_Factory — mo:os Workspace
+# ffs0-factory-super
 
-Private workspace for triangle operations around the public `moos` kernel repo.
+Private workspace for the [mo:os](https://github.com/MSD21091969/moos) categorical graph kernel.
+
+## What This Repo Contains
+
+Knowledge base, agent configuration, channels, and operational tooling.
+The public kernel code lives at [MSD21091969/moos](https://github.com/MSD21091969/moos).
 
 ## Quick Start
 
-1. Open `FFS0_Factory.code-workspace` in VS Code.
-2. Start kernel from `moos/platform/kernel`:
+```bash
+# Clone both repos side by side
+git clone https://github.com/MSD21091969/ffs0-factory-super.git
+git clone https://github.com/MSD21091969/moos.git
 
-```powershell
+# Boot kernel with KB hydration
+cd moos/platform/kernel
 go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate
-```
 
-3. Verify:
-
-```powershell
+# Verify
 curl http://localhost:8000/healthz
-curl -N http://localhost:8000/log/stream
 ```
 
-4. Open Explorer: `http://localhost:8000/explorer`
+Kernel serves HTTP on `:8000` and MCP (SSE) on `:8080`.
 
-## Current Layout
+## Layout
 
-```text
-ffs0-factory-super/
-    .agent/
-        CLAUDE.md
-        channels/
-            handoff.md
-            testoff.md
-        cfg/
-            agents/
-            copilot-instructions.md
-            antigraviti-instructions.md
-        tasks/
-        kb/
-            superset/
-            instances/
-            design/
-            industry/
-            reference/
-            archive/
-    moos/ (sibling folder via workspace)
+```
+.agent/
+  kb/                  Knowledge base (ontology, instances, design docs)
+    superset/          Ontology (28 types) — single source of truth
+    instances/         Hydration seeds (18 JSON files)
+    design/            Architecture documents
+    reference/         Papers, YouTube, external sources
+  channels/            Agent communication logs (S4 projections)
+  cfg/                 Agent configs, session state, secrets policy
+  tasks/               Task files (legacy — PRG now in graph)
+  scripts/             PowerShell utilities
+  workflows/           Operational workflows
+  skills/              Claude Code skills (47 dirs)
+  secrets/             API keys (gitignored)
+moos/                  -> ../moos (public kernel repo)
+.mcp.json              Kernel MCP server config
 ```
 
-## Operating Model
+## The Kernel Graph Is Truth
 
-- Strategic: Claude Code + Sam
-- Execution: VS Code AI (GPT-5.3-Codex)
-- Testing: Antigraviti
-- Channels:
-  - `.agent/channels/handoff.md`
-  - `.agent/channels/testoff.md`
-
-## Key Paths
-
-- KB root for `--kb`: `.agent/kb`
-- Ontology: `.agent/kb/superset/ontology.json`
-- Tasks: `.agent/tasks/`
-- Agent config: `.agent/cfg/agents/`
-- Protocol and rules: `.agent/CLAUDE.md`
-
-## Notes
-
-- Legacy folders `.agent/knowledge_base/` and `.agent/configs/` are retired.
-- Use `.agent/kb/`, `.agent/cfg/`, `.agent/tasks/`, and `.agent/channels/` only.
+PRG tasks, sessions, calendar events, and Keep notes are graph nodes.
+Query `GET /state` for ground truth. Files on disk are seeds (input) or projections (output).
