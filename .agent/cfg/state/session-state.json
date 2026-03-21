@@ -1,8 +1,8 @@
 {
-  "updated": "2026-03-21T14:15:00+01:00",
-  "cycle_position": "KG-to-HG migration active — PRG in graph, session nodes live, Keep notes hydrated, MCP wired",
+  "updated": "2026-03-21T14:45:00+01:00",
+  "cycle_position": "agent-tightening-complete — instance branches live — KB current — gate-1-ready",
   "last_task_id": "034",
-  "last_task_status": "PRG tasks 034-037 are now prg_task nodes in the kernel graph with dependency wires. Task 034 (naturality harness) is gate 1, status: planned.",
+  "last_task_status": "PRG tasks 034-037 in graph. Task 034 (naturality harness) gate 1, status: planned. .agent/ cfg + workflows tightened. Instance branches created.",
   "session_mode": "runtime-programming — kernel running, MCP live, Google Workspace connected",
   "kernel_state": {
     "nodes": 292,
@@ -22,11 +22,9 @@
       "urn:moos:keep:20260319-llm-state-transformer"
     ]
   },
-  "leadoff_top": {
-    "timestamp": "2026-03-21 14:15",
-    "from": "ClaudeCode",
-    "type": "complete",
-    "subject": "KG-to-HG migration — OBJ24-28 committed, PRG+keeps+session in graph, MDs rewritten"
+  "instance_branches": {
+    "ffs0": ["instance/claude-code", "instance/vscode-ai", "instance/antigraviti"],
+    "moos": ["instance/vscode-ai"]
   },
   "sources_active": {
     "gmail": "maassenhochrath@gmail.com — 11k messages",
@@ -35,37 +33,24 @@
     "kernel_mcp": "localhost:8080 — 5 tools",
     "github": "gh CLI via PAT"
   },
-  "design_docs_this_session": [
-    "kb/design/20260321-prg-in-graph.md — KG-to-HG migration, OBJ24-28, session protocol, branch strategy"
+  "commits_this_session": [
+    "58ebbad — KG→HG migration: OBJ24-28, prg.json, keeps.json, 6 instruction files rewritten",
+    "1a45a28 — .agent/ tightened: cfg + workflows + tasks/README"
   ],
-  "files_changed_this_session": {
-    "ffs0": [
-      "kb/superset/ontology.json — +5 types (OBJ24-28)",
-      "kb/instances/prg.json — NEW: 4 PRG task nodes",
-      "kb/instances/keeps.json — NEW: 3 Keep note nodes",
-      "kb/design/20260321-prg-in-graph.md — NEW: migration design doc",
-      "CLAUDE.md — REWRITTEN: HG-is-SOT paradigm",
-      ".agent/CLAUDE.md — REWRITTEN: full protocol update",
-      "COWORK_README.md — REWRITTEN: inspect-tier onboarding",
-      "README.md — REWRITTEN: kernel-centric",
-      ".github/instructions/moos-copilot.instructions.md — REWRITTEN: OBJ24-28 vocabulary",
-      ".mcp.json — NEW: kernel MCP config",
-      ".vscode/tasks.json — existing, to be committed",
-      "cfg/state/session-state.json — UPDATED"
-    ],
-    "moos": [
-      "internal/hydration/batch.go — +prg.json, +keeps.json in InstanceOrder"
-    ]
-  },
-  "branch": "main",
+  "design_docs_read_this_session": [
+    "kb/design/20260321-prg-in-graph.md",
+    "kb/design/20260319-ptp-binding-categories.md",
+    "kb/design/20260319-cloverleaf-kernel-topology.md",
+    "kb/design/20260319-inspect-run-separation.md",
+    "kb/design/20260318-firestarter.md"
+  ],
   "open_items": [
-    "Commit and push both repos",
-    "Task 034 naturality harness — gate 1 (status: planned)",
-    "Wire kernel MCP into Claude Code session (needs restart to activate .mcp.json)",
-    "Claude Desktop channel assignment (inspect.md or leadoff.md direct)",
+    "Task 034 naturality harness — gate 1 (status: planned) — NEXT TASK",
+    "GCal integration: pull calendar events → ADD calendar_event nodes → LINK to prg_task",
     "FUN05 activation (Kaggle AGI benchmark, deadline Apr 16)",
-    "PAT rotation after session",
-    "Paper: Cloverleaf + Inspect/Run as future-work candidates",
-    "Feature/instance branch setup for multi-workstation"
+    "PAT rotation (ghp_2zP8r...) after session",
+    "Claude Desktop channel: inspect.md new channel vs direct leadoff.md",
+    "compass_artifact file in channels/ — move to kb/reference/ or delete (untracked)",
+    "Paper: Cloverleaf + Inspect/Run as future-work candidates in ACT 2026"
   ]
 }

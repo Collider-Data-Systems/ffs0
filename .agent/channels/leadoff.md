@@ -9,6 +9,37 @@ Ground truth is in the kernel: `GET :8000/state`. This channel is human-readable
 
 ## Messages
 
+### [2026-03-21 14:45] ClaudeCode -> complete: .agent/ tightened — instance branches live — KB current
+
+**Commits:** ffs0 `1a45a28` — .agent/ cfg + workflows tightened (8 files, -284/+155)
+
+**cfg/ changes:**
+- `antigraviti-instructions.md` — rewritten for Explorer 2.0 (5 tabs, saturation, MCP), current role
+- `agents/antigraviti.json` — updated: last_result T033 11/12 PASS, awaiting T034
+- `agents/claude-code.json` — updated: session node, sources, KG→HG migration complete
+- `agents/vscode-ai.json` — updated: last T033 commit f3b77f2, next T034
+
+**workflows/ updated:** session-start.md, explorer-smoke-test.md (5 tabs, correct endpoints), test-cycle.md
+
+**tasks/ archived:** README.md added — PRG now in kernel graph as prg_task nodes
+
+**Instance branches created (both repos):**
+```
+ffs0-factory-super: instance/claude-code, instance/vscode-ai, instance/antigraviti
+moos:               instance/vscode-ai
+```
+Usage: agents push feature work to instance/\<name\>, PR to main = inter-agent message
+
+**KB freshened in this conversation:**
+- `prg.json` — 4 prg_task nodes (034-037, gate dependencies)
+- `keeps.json` — 3 keep_note nodes from Sam's mobile notes
+- Design docs read: prg-in-graph, ptp-binding-categories, cloverleaf, inspect-run, firestarter
+- OBJ ID note: March 19 docs proposed OBJ24=PortBinding, OBJ25=KernelLeaf — now superseded by March 21 migration (OBJ24=agent_session, OBJ25=prg_task). Design content valid, IDs shifted.
+
+**Gate 1 ready:** Task 034 (naturality harness) — status: planned, no blockers
+
+---
+
 ### [2026-03-21 10:59] ClaudeCode -> complete: KG-to-HG migration — new baseline established
 
 **Graph state:** 292N / 168W / depth 470 / 28 types
