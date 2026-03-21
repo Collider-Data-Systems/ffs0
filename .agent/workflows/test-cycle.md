@@ -1,8 +1,8 @@
 ---
-description: Full CI/CD test cycle — git pull, health, HTTP endpoints, go test, browser, report
+description: Full test cycle — git pull, health check, HTTP endpoints, go test, browser, report
 ---
 
-# Full Test Cycle (Antigravity CI/CD)
+# Full Test Cycle (Antigraviti CI/CD)
 
 When a test plan arrives in testoff.md, run this complete cycle.
 
@@ -16,7 +16,7 @@ git -C ".\moos" pull origin main
 git -C ".\moos" log --oneline -3
 ```
 
-2. Verify kernel health (boot if needed via `/boot-kernel`):
+2. Verify kernel health (boot if needed via `workflows/boot-kernel.md`):
 ```powershell
 curl -s http://localhost:8000/healthz
 ```
@@ -26,32 +26,39 @@ curl -s http://localhost:8000/healthz
 # Health
 curl -s http://localhost:8000/healthz
 
-# Lens
-(Invoke-RestMethod "http://localhost:8000/state/lens?kind=agent_spec").nodes.PSObject.Properties.Count
+# Saturation (Explorer 2.0)
+curl -s http://localhost:8000/state/saturation
 
-# Scope
-(Invoke-RestMethod "http://localhost:8000/state/scope/urn:moos:agent:antigraviti").nodes.PSObject.Properties.Count
+# State
+$state = Invoke-RestMethod "http://localhost:8000/state"
+Write-Host "Nodes:" $state.nodes.Count "Wires:" $state.wires.Count
+
+# SSE
+curl -s -m 2 http://localhost:8000/log/stream
 ```
 
 4. **Phase B — Browser visual test** (UNLOCKED on HP laptop):
    - Navigate to `http://localhost:8000/explorer`
-   - Run visual checks per test plan
+   - Verify 5 tabs: Nodes | Wires | Slice | Schema | History
+   - Run visual checks per test plan in testoff.md
    - Take screenshots of any issues
 
 5. **Phase E — Go regression**:
 ```powershell
 Push-Location ".\moos\platform\kernel"; go test ./...; Pop-Location
 ```
+Expected: all packages pass (11+ packages as of Task 033).
 
 6. Prepend results to testoff.md (timestamp + table format).
 
-7. Update `antigraviti.json` — status, phases_completed, last_result.
+7. Update `cfg/agents/antigraviti.json` — status, last_result.
 
 **Report format:**
 ```
 | Phase | Result | Detail |
 |-------|--------|--------|
-| A1 health | PASS | nodes:119 wires:132 |
-| B browser | PASS | 4 tabs, data populated |
-| E go test | PASS | 9 packages green |
+| A health | PASS | nodes:NNN wires:NNN |
+| A saturation | PASS | data returned |
+| B browser | PASS | 5 tabs, data populated |
+| E go test | PASS | all packages green |
 ```

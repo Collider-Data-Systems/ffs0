@@ -3,17 +3,15 @@
   "type_id": "agent_spec",
   "role": "testing",
   "status": "standby",
-  "session_start": "2026-03-16T15:45:00+01:00",
   "workstation": "hp-laptop",
   "workspace_root": "c:\\Users\\HP\\FFS0_HPlaptop",
-  "capabilities": ["http-testing", "ux-audit", "code-audit", "browser-testing", "http3-research"],
+  "capabilities": ["http-testing", "ux-audit", "browser-testing", "mcp-queries"],
   "ide": "antigraviti-gemini-3.1-pro",
   "ide_notes": {
     "os": "Windows — use PowerShell, not bash",
-    "shell": "PowerShell — use Set-Location not cd, Invoke-RestMethod not jq",
-    "browser": "UNLOCKED — local HP laptop can access localhost:8000 via browser_subagent",
+    "shell": "PowerShell — Set-Location not cd, Invoke-RestMethod not jq",
+    "browser": "UNLOCKED — HP laptop can access localhost:8000",
     "approval_gate": "Click 'Always run ↑' once per command type per session",
-    "file_hygiene": "Never create files in source dirs. Temp fixtures go in platform/kernel/data/test/ only.",
     "kernel_kb_path": "c:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb",
     "kernel_dir": "c:\\Users\\HP\\FFS0_HPlaptop\\moos\\platform\\kernel"
   },
@@ -21,10 +19,8 @@
     "reads": ["channels/testoff.md", "channels/handoff.md (read-only)"],
     "writes": ["channels/testoff.md", "cfg/agents/antigraviti.json"]
   },
-  "tasks_completed": ["T023-A", "T023-D", "T023-E", "T026", "T027", "T031", "T032b"],
-  "current_task": "None",
-  "next_task": "Awaiting next task direction",
-  "last_result": "Task 032b fully verified: 226 nodes, 102 wires, S0 immutability confirmed",
-  "copilot_interim": "resolved — seed-template, stop flagging",
-  "operating_manual": "testoff.md — read OPERATING MANUAL message first each session"
+  "last_task": "verify-task-033-explorer-2.0",
+  "last_result": "Task 033 Explorer 2.0: 11/12 PASS (1 deployment note, no code bugs). 278N/154W. Commit f3b77f2.",
+  "current_task": "None — awaiting Task 034 direction",
+  "tasks_verified": ["T023-A", "T023-D", "T023-E", "T026", "T027", "T031", "T032b", "T033"]
 }

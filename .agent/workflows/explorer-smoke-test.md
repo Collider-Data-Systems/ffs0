@@ -1,8 +1,8 @@
 ---
-description: Quick Explorer smoke test — HTTP endpoints + browser visual verification
+description: Explorer 2.0 smoke test — HTTP endpoints + browser visual verification
 ---
 
-# Explorer Smoke Test (HP Laptop — Browser UNLOCKED)
+# Explorer 2.0 Smoke Test (HP Laptop — Browser UNLOCKED)
 
 // turbo-all
 
@@ -12,24 +12,19 @@ description: Quick Explorer smoke test — HTTP endpoints + browser visual verif
 ```powershell
 curl -s http://localhost:8000/healthz
 ```
-Expected: `nodes=119, wires=132, status=ok`
+Expected: `status:ok` with current node/wire counts (check against last known state).
 
-2. Lens endpoints:
+2. Saturation endpoint:
 ```powershell
-(Invoke-RestMethod "http://localhost:8000/state/lens?kind=agent_spec").nodes.PSObject.Properties.Count
+curl -s http://localhost:8000/state/saturation
 ```
-Expected: 4 agent nodes
+Expected: JSON with port saturation data.
 
+3. State endpoint:
 ```powershell
-(Invoke-RestMethod "http://localhost:8000/state/lens?kind=provider").nodes.PSObject.Properties.Count
+$state = Invoke-RestMethod "http://localhost:8000/state"
+Write-Host "Nodes:" $state.nodes.Count "Wires:" $state.wires.Count
 ```
-Expected: 6 provider nodes
-
-3. Scope endpoint:
-```powershell
-(Invoke-RestMethod "http://localhost:8000/state/scope/urn:moos:agent:antigraviti").nodes.PSObject.Properties.Count
-```
-Expected: 1 (self)
 
 4. SSE stream:
 ```powershell
@@ -37,11 +32,15 @@ curl -s -m 2 http://localhost:8000/log/stream
 ```
 Expected: `: connected`
 
-5. **Browser visual test** (HP laptop can access localhost!):
-   - Navigate to `http://localhost:8000/explorer` in browser
-   - Verify 4 tabs: Objects, Morphisms, Ontology, Log
-   - Verify filter strip: Kind, Stratum, Category, Scope, Search
-   - Verify data is populated (119 nodes, 132 wires)
+5. **Browser visual test** (HP laptop can access localhost):
+   - Navigate to `http://localhost:8000/explorer`
+   - Verify **5 tabs**: Nodes | Wires | Slice | Schema | History
+   - Verify **pipeline bar** top: S0→S4 segments with counts, clickable filters
+   - Verify **Nodes tab**: groups by type, expandable rows, port saturation badges (N/M)
+   - Verify **Schema tab**: 28 type cards with port signatures
+   - Verify **Slice tab**: URN input field + coslice/slice sections
+   - Verify **History tab**: live SSE morphism log
+   - Verify data is populated (current graph state)
    - Take screenshot on any anomaly
 
-6. Report results to testoff.md.
+6. Post results to testoff.md.

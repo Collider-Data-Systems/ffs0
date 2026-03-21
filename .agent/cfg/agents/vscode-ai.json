@@ -2,16 +2,20 @@
   "agent_urn": "urn:moos:agent:vscode-ai",
   "type_id": "agent_spec",
   "role": "execution",
-  "capabilities": ["golang", "testing", "git", "kernel-development", "arxiv-tools", "youtube-transcript"],
-  "ide": "vscode-codex-5.3",
+  "capabilities": ["golang", "testing", "git", "kernel-development"],
+  "ide": "vscode-copilot",
   "channels": {
-    "reads": ["channels/handoff.md", "tasks/*"],
+    "reads": ["channels/handoff.md"],
     "writes": ["channels/handoff.md"]
   },
-  "status": "active",
-  "last_task": "020-release-v010",
-  "last_commit": "0448110",
-  "completed_tasks": ["001", "002", "003", "004", "005", "006", "007", "008", "009", "011", "013", "014", "015", "016", "021", "017", "018", "019", "020"],
-  "next_tasks": ["022-scope-selector"],
-  "notes": "v0.1.0 shipped 2026-03-15. Product now in continuous development. Triangle workflow: Claude+Sam (lead) → VS Code (impl) → Antigraviti (test). Next: lens system starting with scope selector (022)."
+  "status": "standby",
+  "last_task": "033-explorer-2.0",
+  "last_commit": "f3b77f2",
+  "completed_tasks": [
+    "001","002","003","004","005","006","007","008","009","011",
+    "013","014","015","016","017","018","019","020","021","022",
+    "023","024","025","026","027","028","029","030","031","032","032b","033"
+  ],
+  "next_task": "034-naturality-harness",
+  "notes": "Task 033 Explorer 2.0 shipped. 5-tab explorer, saturation lens, SSE live updates, port saturation badges. All go tests green. Task 034 (naturality harness) is gate 1 of locked PRG sequence."
 }
