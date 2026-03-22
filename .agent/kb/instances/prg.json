@@ -57,6 +57,23 @@
       "depends_on": ["urn:moos:prg:036-cloverleaf"],
       "created": "2026-03-19",
       "design_doc": "kb/design/20260319-inspect-run-separation.md"
+    },
+    {
+      "id": "urn:moos:prg:038-moos-media",
+      "type_id": "prg_task",
+      "stratum": "S1",
+      "label": "PRG 038 — Moos Media Channel",
+      "task_id": "038",
+      "title": "Moos Media Channel — YouTube / Instagram / TikTok",
+      "description": "Moos the dachshund narrates mo:os progress. Smug commentary on Sam, snappy criticism of big data and industry. Calendar is the diary/timeline. Studio photos T=143 (Mar 24). Campaign after hackathon MVP (Apr 19).",
+      "status": "ideation",
+      "gate": 0,
+      "depends_on": [],
+      "created": "2026-03-22",
+      "milestones": [
+        "urn:moos:event:20260324-studio",
+        "urn:moos:event:20260419-hackathon"
+      ]
     }
   ]
 }
