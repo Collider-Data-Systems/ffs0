@@ -1,4 +1,8 @@
-# Lead Channel
+# Lead Channel — DEPRECATED 2026-03-22
+
+> **Replaced by:** Kernel graph (`GET /state`) + GCal (temporal scratchpad). Session context via `agent_session` nodes. PRG via `prg_task` nodes. Archive only — no new writes.
+
+---
 
 Sam <-> Claude Code. S4 projection of graph state decisions.
 Ground truth is in the kernel: `GET :8000/state`. This channel is human-readable context.

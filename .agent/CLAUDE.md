@@ -104,15 +104,23 @@ Claude Code posts `research-task` to handoff.md. VS Code harvests -> structured 
 | Kernel graph | `:8080` MCP (SSE) | Live — 5 tools |
 | GitHub | `gh` CLI + PAT | Live — PRs, issues |
 
-## Channels (S4 projections — not ground truth)
+## Communication (no more .md channels)
 
-- `channels/leadoff.md` — Sam <-> Claude Code. Prepend, newest top.
-- `channels/handoff.md` — Claude Code <-> VS Code AI.
-- `channels/testoff.md` — Claude Code <-> Antigraviti.
+Channel .md files (leadoff/handoff/testoff) are **deprecated as of 2026-03-22**. Archive only.
 
-**Format:** `### [YYYY-MM-DD HH:MM] Source -> type: subject`
-**Types:** `complete` | `blocked` | `question` | `answer` | `direction` | `think` | `decide`
-**Timestamps:** real wall-clock only — `date` or `Get-Date`
+| Need | Where |
+|------|-------|
+| Session context | `GET /state` → filter `agent_session` nodes |
+| PRG status | `GET /state` → filter `prg_task` nodes |
+| Planning / time | GCal MCP — `calendar_event` nodes + LINK to `prg_task` |
+| Inter-agent task | GitHub PR (`instance/<agent>` → `main`) |
+| Config/state | `cfg/agents/*.json`, `cfg/state/session-state.json` |
+
+**Session start replaces leadoff read with:**
+1. `GET /healthz` → graph state
+2. `GET /state` → filter `agent_session` (latest) + `prg_task` (gate N)
+3. GCal: pull upcoming events → surface `calendar_event` nodes for PRG
+4. Gmail: surface signals if needed
 
 ## Branch Strategy
 
