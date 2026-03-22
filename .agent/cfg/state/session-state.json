@@ -1,4 +1,5 @@
 {
+  "_DEPRECATED": "2026-03-22. Session state now lives in graph as agent_session nodes. Read via: GET /state → filter type_id=agent_session → latest by started_at. This file is archive only — no new writes.",
   "updated": "2026-03-21T14:45:00+01:00",
   "cycle_position": "agent-tightening-complete — instance branches live — KB current — gate-1-ready",
   "last_task_id": "034",

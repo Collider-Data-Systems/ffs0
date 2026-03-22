@@ -3,6 +3,36 @@
   "description": "PRG progression tasks — graph-native task tracking. Dependencies wired post-hydration via kernel HTTP API.",
   "entries": [
     {
+      "id": "urn:moos:prg:000-session-meta",
+      "type_id": "prg_task",
+      "stratum": "S2",
+      "label": "Session Meta-Program",
+      "task_id": "000",
+      "title": "Session Meta-Program — root PRG governing all sub-PRGs",
+      "description": "Always-active root PRG. Orchestrates all sub-PRGs, tracks session context, workspace state, and timeline. Any IDE/agent connects to kernel, reads this node's links to orient. The conversation IS this node's link history.",
+      "status": "active",
+      "gate": 0,
+      "is_meta": true,
+      "depends_on": [],
+      "created": "2026-03-22",
+      "sub_prgs": [
+        "urn:moos:prg:034-naturality-harness",
+        "urn:moos:prg:035-ptp-portbinding",
+        "urn:moos:prg:036-cloverleaf",
+        "urn:moos:prg:037-inspect-run",
+        "urn:moos:prg:038-moos-media"
+      ],
+      "timeline_anchors": [
+        "urn:moos:event:t0-moos-birthday",
+        "urn:moos:event:20260419-hackathon"
+      ],
+      "design_docs": [
+        "kb/design/20260322-session-graph.md",
+        "kb/design/20260322-categorical-space.md",
+        "kb/design/20260322-moos-diary.md"
+      ]
+    },
+    {
       "id": "urn:moos:prg:034-naturality-harness",
       "type_id": "prg_task",
       "stratum": "S1",

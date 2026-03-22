@@ -22,11 +22,12 @@ Every design decision lives inside this triangle. Never treat any corner in isol
 |-------|------|-------|
 | **KB** | Authored seeds (S0/S1) | `kb/instances/*.json`, `kb/superset/ontology.json` |
 | **KER** | Fold: `state = fold(log)` | Kernel replay on boot — morphism-log.jsonl |
-| **HG** | Live hypergraph (S2/S3) | `GET :8000/state` — 292+ nodes, 168+ wires |
+| **HG** | Live hypergraph (S2/S3) | `GET :8000/state` — 300+ nodes, 182+ wires |
 | **PRG** | Task progression | `prg_task` nodes in graph — wired by dependency |
 
-PRG is IN the graph. Tasks 034-037 are `prg_task` nodes with gate dependencies.
-Sessions are `agent_session` nodes. Keep notes are `keep_note` nodes. All queryable.
+PRG is IN the graph. `prg:000-session-meta` is the root PRG — always active, governs all sub-PRGs.
+Tasks 034-038 are `prg_task` nodes linked from meta. Sessions are `agent_session` nodes with
+workspace payload (workstation, branch, IDE, repos). All queryable. Graph IS session state.
 
 ## Agent Topology
 
@@ -52,35 +53,50 @@ Antigraviti (UX Testing)
 
 Star topology. No direct agent-to-agent. All routing through Claude Code + Sam.
 
-## Session Protocol
+## Session Protocol (Graph-Native)
 
-### Start (every session)
-1. Boot kernel: `go run ./cmd/moos --kb ... --hydrate`
-2. `GET /healthz` — read graph state
-3. Read `channels/leadoff.md` top entry — Sam's latest
-4. `POST /morphisms` — ADD `agent_session` node:
+### Start (every session, any IDE, any workstation)
+1. Connect to kernel MCP (`:8080`) or HTTP (`:8000`)
+   - If kernel not running: boot via `go run ./cmd/moos --kb ... --hydrate`
+2. `GET /healthz` — confirm kernel live
+3. `GET /state` → filter `agent_session` nodes → find latest by `started_at`
+   - Read its payload: workspace, PRG focus, session_work summary
+   - This IS the "leadoff" — no file needed
+4. `GET /state` → filter `prg_task` → find `prg:000-session-meta`
+   - Read its outgoing wires → active sub-PRGs + calendar anchors
+5. `POST /morphisms` — ADD `agent_session` node with workspace payload:
    ```json
    {"type":"ADD","actor":"urn:moos:agent:claude-code",
     "add":{"urn":"urn:moos:session:YYYYMMDD-role","type_id":"agent_session",
-    "payload":{"started_at":"...","agent":"...","kernel_state_at_start":{...}}}}
+    "payload":{
+      "agent":"urn:moos:agent:claude-code",
+      "started_at":"...",
+      "status":"active",
+      "workstation":"urn:moos:workstation:...",
+      "workspace":{"filesystem":"...","git_branch":"...","ide":"...","repos":{...}},
+      "kernel_state_at_start":{...},
+      "focus":"urn:moos:prg:000-session-meta"
+    }}}
    ```
-5. LINK session -> current PRG task via `out`/`in` ports
+6. LINK session → `prg:000-session-meta` via `out`/`in` ports
+7. LINK session → relevant sub-PRG via `out`/`in` if working on specific task
 
 ### During Session
-- Key decisions -> MUTATE relevant `prg_task` node
-- New Keep notes reviewed -> ADD `keep_note` nodes
-- Calendar events -> ADD `calendar_event` nodes + LINK to prg_task
+- Key decisions → MUTATE relevant `prg_task` node
+- New Keep notes → ADD `keep_note` nodes
+- Calendar events → ADD `calendar_event` nodes + LINK to prg_task
+- Milestone completions → MUTATE `prg_task` status
 
 ### End
-- MUTATE session node: status complete, add summary
-- Prepend summary to leadoff.md (S4 projection)
-- Update `cfg/state/session-state.json`
-- Push to remote
+- MUTATE session node: status=complete, add summary to payload
+  - Summary = what was done, what's next, open items
+  - This summary IS the "leadoff" for the next session
+- Push to remote (seeds updated for cross-workstation sync)
 
 ### Context Compaction Recovery
 1. `GET /state` — full graph truth
-2. Filter by `agent_session` type — find latest
-3. Filter by `prg_task` type — find current gate
+2. Filter `agent_session` → find latest (read summary = leadoff)
+3. Filter `prg_task` → find `prg:000-session-meta` → read its links
 4. Continue from graph, not from memory
 
 ## Programs
@@ -114,7 +130,7 @@ Channel .md files (leadoff/handoff/testoff) are **deprecated as of 2026-03-22**.
 | PRG status | `GET /state` → filter `prg_task` nodes |
 | Planning / time | GCal MCP — `calendar_event` nodes + LINK to `prg_task` |
 | Inter-agent task | GitHub PR (`instance/<agent>` → `main`) |
-| Config/state | `cfg/agents/*.json`, `cfg/state/session-state.json` |
+| Config/state | `cfg/agents/*.json` (moving to `agent_spec` nodes later) |
 
 **Session start replaces leadoff read with:**
 1. `GET /healthz` → graph state
@@ -164,7 +180,7 @@ Current as of 2026-03-21. Full definitions in `kb/superset/ontology.json`.
 | Design docs | `kb/design/*.md` |
 | Channels | `channels/{leadoff,handoff,testoff}.md` |
 | Agent configs | `cfg/agents/{claude-code,vscode-ai,antigraviti}.json` |
-| Session state | `cfg/state/session-state.json` |
+| Session state | Graph: `agent_session` nodes (was `cfg/state/session-state.json`) |
 | Scripts | `scripts/*.ps1` |
 | Workflows | `workflows/*.md` + `workflows/firestarter/` |
 | Skills | `skills/` (47 skill dirs) |

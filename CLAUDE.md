@@ -18,14 +18,15 @@ Everything on disk is either a **seed** (S0/S1 authored input) or a **projection
 | **Design** | Architecture docs | `.agent/kb/design/*.md` — reference, not truth |
 | **Projections** | Channels, UI, files | `.agent/channels/*.md`, Explorer, file tree |
 
-## Session Start
+## Session Start (Graph-Native)
 
-1. Boot kernel: `cd moos/platform/kernel && go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate`
-2. `curl localhost:8000/healthz` — verify graph state (nodes, wires, depth)
-3. Read `.agent/CLAUDE.md` — full operational protocol
-4. `POST /morphisms` — ADD `agent_session` node for this session
-5. Read `leadoff.md` top entry — Sam's latest direction
-6. Continue from graph state, not from memory
+1. Connect to kernel (`:8000` HTTP or `:8080` MCP)
+   - If kernel not running: `cd moos/platform/kernel && go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate`
+2. `GET /healthz` — verify graph state
+3. `GET /state` → filter `agent_session` → read latest session's payload (= leadoff)
+4. `GET /state` → filter `prg_task` → find `prg:000-session-meta` → read active sub-PRGs
+5. `POST /morphisms` — ADD `agent_session` with workspace payload + LINK to meta
+6. Continue from graph state, not from files or memory
 
 ## Kernel Endpoints
 
