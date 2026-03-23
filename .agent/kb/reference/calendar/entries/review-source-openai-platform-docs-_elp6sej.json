@@ -1,0 +1,13 @@
+{
+  "id": "cal:_elp6sejddtnn6ej3c5m6arj4c5p5upbmcln78ejjdtqn4or55lhmgpb3dcmmus35dpgmibb4dthn6",
+  "source_type": "google_calendar",
+  "retrieved_at": "2026-03-23T02:26:12.558762+00:00",
+  "summary": "Review Source: OpenAI Platform Docs",
+  "description": "Curation check for: https://platform.openai.com/docs\nNotes: GPT models, tools API, assistants, pricing.",
+  "location": "",
+  "start_time": "2026-03-23T14:00:00+01:00",
+  "end_time": "2026-03-23T15:00:00+01:00",
+  "status": "confirmed",
+  "organizer": "maassenhochrath@gmail.com",
+  "attendees": []
+}

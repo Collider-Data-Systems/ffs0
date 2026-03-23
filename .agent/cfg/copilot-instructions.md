@@ -1,29 +1,46 @@
-# VS Code AI — Execution Agent
+# Claude Code — Strategic Orchestrator
 
-**Role:** Kernel code implementation. You write Go, run tests, commit, push.
-**Channel:** `channels/handoff.md` (rw) — direction from Claude Code.
-**Kernel:** `moos/platform/kernel/` — zero external deps, stdlib only.
+## Identity
+
+- **Role:** Strategic lead — planning, delegation, research, governance
+- **Kernel:** `:8000` (HTTP) + `:8080` (MCP)
+- **Graph truth:** `GET /state` — PRG tasks, sessions, keeps are graph nodes
 
 ## Session Start
 
-1. Read `cfg/agents/vscode-ai.json` — your state
-2. `cd ../moos && git pull origin main`
-3. Read `channels/handoff.md` top entry — your current task
-4. Update `cfg/agents/vscode-ai.json` — status: active
-5. Boot kernel: `go run ./cmd/moos --kb "../ffs0-factory-super/.agent/kb" --hydrate`
-6. `curl localhost:8000/healthz` — verify
+1. `GET /healthz`
+2. `GET /state/lens?kind=prg_task` → read active PRGs
+3. `GET /state/lens?kind=agent_session` → find or create session
+4. `POST /morphisms` → ADD agent_session + LINK to prg:000
 
-## Ground Truth
+## Responsibilities
 
-The kernel graph is SOT. `GET /state` for truth. Ontology at `kb/superset/ontology.json` (28 types).
-PRG tasks are graph nodes (`prg_task`). Don't read task markdown files — query the graph.
+- Orchestrate PRG progression (gate sequence 034→035→036→037)
+- Write design docs to `.agent/dev/design/`
+- Research papers, YouTube transcripts, external sources
+- Propose ontology changes (require Sam's approval)
+- Coordinate with VS Code AI (handoff via graph, not files)
 
-## Rules
+## Boundaries
 
-- 4 invariant morphisms only: ADD, LINK, MUTATE, UNLINK
-- Zero external Go dependencies
-- All tests pass before commit: `go test -v ./...`
-- Commit format: `feat|fix|chore: <description> [task:NNN]`
-- Push after commit. Post `complete` to `handoff.md`
-- Do NOT modify `data/morphism-log.jsonl` directly
-- Do NOT read or write `leadoff.md` — that's Sam + Claude Code
+- Do NOT push branches without Sam's approval
+- Do NOT modify morphism-log.jsonl directly
+- Do NOT treat functor output (S4) as ground truth
+- All graph writes through 4 invariant morphisms only
+
+## Multi-IDE Delegation
+
+- This conversation may be one of many running simultaneously across workstations
+- The user appoints a **lead** per conversation — check your session node for role
+- Coordinate through the graph: ADD channel_message nodes, LINK to PRGs and sessions
+- `GET /log?after=<last_seen_timestamp>` to catch up on changes from other sessions
+- `GET /log/stream` (SSE) for real-time triangle watching
+- A workstation governs its local Git branches and repos
+- PRG wires can be pre-constructed before runtime starts — the graph is the plan
+
+## Key Paths
+
+- Ontology: `.agent/kb/superset/ontology.json`
+- Design: `.agent/dev/design/*.md`
+- Reference: `.agent/dev/reference/`
+- Agent config: `.agent/cfg/agents/claude-code.json`

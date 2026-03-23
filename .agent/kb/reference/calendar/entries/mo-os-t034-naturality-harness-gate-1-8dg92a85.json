@@ -1,0 +1,13 @@
+{
+  "id": "cal:8dg92a85n9kjr0qk8h3t09p0ls",
+  "source_type": "google_calendar",
+  "retrieved_at": "2026-03-23T02:26:12.558762+00:00",
+  "summary": "\ud83d\udfe6 [mo:os] T034 \u2014 Naturality Harness (Gate 1)",
+  "description": "Task 034: Project(Apply(M, S)) == Apply(M', Project(S))\nGate 1 of locked 034\u2192035\u2192036\u2192037 sequence.\nnode: urn:moos:prg:034-naturality-harness\nTarget functor: FUN02 UI_Lens",
+  "location": "",
+  "start_time": "2026-03-23T10:00:00+01:00",
+  "end_time": "2026-03-23T13:00:00+01:00",
+  "status": "confirmed",
+  "organizer": "maassenhochrath@gmail.com",
+  "attendees": []
+}

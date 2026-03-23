@@ -20,7 +20,8 @@
         "urn:moos:prg:035-ptp-portbinding",
         "urn:moos:prg:036-cloverleaf",
         "urn:moos:prg:037-inspect-run",
-        "urn:moos:prg:038-moos-media"
+        "urn:moos:prg:038-moos-media",
+        "urn:moos:prg:039-session-identity"
       ],
       "timeline_anchors": [
         "urn:moos:event:t0-moos-birthday",
@@ -56,7 +57,9 @@
       "description": "Reify 4-tuple (src_type, src_port, tgt_type, tgt_port) as S1 node. FUN10 PortInventory, FUN11 BindingCat, FUN12 PortFunctor.",
       "status": "planned",
       "gate": 2,
-      "depends_on": ["urn:moos:prg:034-naturality-harness"],
+      "depends_on": [
+        "urn:moos:prg:034-naturality-harness"
+      ],
       "created": "2026-03-19",
       "design_doc": "kb/design/20260319-ptp-binding-categories.md"
     },
@@ -70,7 +73,9 @@
       "description": "Non-interaction invariant — leaf graphs cannot interact except through formally typed cooperad ports.",
       "status": "planned",
       "gate": 3,
-      "depends_on": ["urn:moos:prg:035-ptp-portbinding"],
+      "depends_on": [
+        "urn:moos:prg:035-ptp-portbinding"
+      ],
       "created": "2026-03-19",
       "design_doc": "kb/design/20260319-cloverleaf-kernel-topology.md"
     },
@@ -84,7 +89,9 @@
       "description": "Capstone gate. GPU = inspect (fast, parallel, ephemeral, HDC). CPU = run (serial, deterministic, proven). Log = memory (append-only).",
       "status": "planned",
       "gate": 4,
-      "depends_on": ["urn:moos:prg:036-cloverleaf"],
+      "depends_on": [
+        "urn:moos:prg:036-cloverleaf"
+      ],
       "created": "2026-03-19",
       "design_doc": "kb/design/20260319-inspect-run-separation.md"
     },
@@ -104,6 +111,19 @@
         "urn:moos:event:20260324-studio",
         "urn:moos:event:20260419-hackathon"
       ]
+    },
+    {
+      "id": "urn:moos:prg:039-session-identity",
+      "type_id": "prg_task",
+      "stratum": "S1",
+      "label": "PRG 039 — Session Identity",
+      "task_id": "039",
+      "title": "Session Identity — Conversation as Graph Node",
+      "description": "Any IDE, any workstation, any agent: conversation = agent_session node wired to PRGs. Multi-kernel session identity via CI-3. Prevents drift: graph is SOT, hydration reconstructs.",
+      "status": "planned",
+      "gate": 0,
+      "depends_on": [],
+      "created": "2026-03-22"
     }
   ]
 }

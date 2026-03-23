@@ -741,6 +741,16 @@
       "description": "Classifying functor — maps providers to points in metric space via published benchmark values. Pre-image F⁻¹(threshold) yields equivalence classes of interchangeable providers. Multiple benchmark lenses (intelligence, speed, price) compose as product functor ∏_i F_i defining provider identity.",
       "domain": "CAT17",
       "codomain": "CAT18"
+    },
+    {
+      "id": "FUN06",
+      "name": "CalendarProjection",
+      "signature": "F_cal: C → GCal",
+      "direction": "graph → calendar projection",
+      "status": "active",
+      "description": "Temporal projection functor — maps prg_task, agent_session, and calendar_event nodes into calendar-shaped entries (JSON/iCal) for external scheduling surfaces.",
+      "domain": "CAT01",
+      "codomain": "CAT20"
     }
   ],
   "categories": {
@@ -1024,6 +1034,14 @@
         "objects": "CompletionRequest, CompletionResult",
         "morphisms": "Complete(), Stream()",
         "description": "Protocol adapter category — request/response transport."
+      },
+      {
+        "id": "CAT20",
+        "name": "GCal",
+        "latex": "\\mathcal{G}_{\\text{cal}}",
+        "objects": "CalendarEntry projections (summary, start/end, status, source)",
+        "morphisms": "Event updates preserving source URN identity",
+        "description": "Calendar projection category — codomain of FUN06 for schedule-aligned graph views."
       }
     ]
   }

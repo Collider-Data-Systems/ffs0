@@ -1,0 +1,13 @@
+{
+  "id": "cal:_elp6sejddtnn6ej3c5m6arj4c5p5upbmcln78ejjdtqn4or55lhmgpb3dcmm2cj15lpn0pb3",
+  "source_type": "google_calendar",
+  "retrieved_at": "2026-03-23T02:26:12.558762+00:00",
+  "summary": "Review Source: Agent-to-Agent Protocol",
+  "description": "Curation check for: https://github.com/google/A2A\nNotes: Google A2A. Task-oriented JSON-RPC. Federation candidate (MOR12).",
+  "location": "",
+  "start_time": "2026-03-23T16:00:00+01:00",
+  "end_time": "2026-03-23T17:00:00+01:00",
+  "status": "confirmed",
+  "organizer": "maassenhochrath@gmail.com",
+  "attendees": []
+}

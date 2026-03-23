@@ -1,0 +1,51 @@
+2026-03-23T00:09:41.4758818Z [INFO] started. session=urn:moos:session:20260322-antigraviti poll=5s after=2026-03-23T00:04:08.6329574Z
+2026-03-23T00:10:28.0726621Z [INFO] started. session=urn:moos:session:20260322-antigraviti poll=5s after=2026-03-23T00:04:09.4740372Z
+2026-03-23T00:10:43.6958412Z [INFO] started. session=urn:moos:session:20260322-antigraviti poll=5s after=2026-03-23T00:04:08.6329574Z
+2026-03-23T00:10:49.5480988Z [INFO] started. session=urn:moos:session:20260322-antigraviti poll=5s after=2026-03-23T00:04:09.4740372Z
+2026-03-23T00:11:15.3195274Z [INFO] acked delegation: urn:moos:message:20260323011113-delegate-antigraviti -> urn:moos:message:20260323001114867-5373-antigraviti-auto-ack
+2026-03-23T00:11:27.2171878Z [INFO] acked delegation: urn:moos:message:20260323011121-delegate-antigraviti -> urn:moos:message:20260323001125584-5121-antigraviti-auto-ack
+2026-03-23T00:11:32.4615722Z [INFO] acked delegation: urn:moos:message:20260323011127-delegate-antigraviti -> urn:moos:message:20260323001132252-3350-antigraviti-auto-ack
+2026-03-23T00:11:37.9503621Z [INFO] acked delegation: urn:moos:message:20260323011135-delegate-antigraviti -> urn:moos:message:20260323001137540-1739-antigraviti-auto-ack
+2026-03-23T00:18:13.9139459Z [INFO] started. session=urn:moos:session:20260322-antigraviti poll=2s after=2026-03-23T00:11:37.8072378Z
+2026-03-23T00:18:14.1478698Z [INFO] SSE connected: /log/stream
+2026-03-23T00:18:38.8132877Z [INFO] acked delegation: urn:moos:message:20260323011838-delegate-antigraviti -> urn:moos:message:20260323001838515-1433-antigraviti-auto-ack
+2026-03-23T00:36:44.8407117Z [INFO] acked delegation: urn:moos:message:20260323013644-delegate-antigraviti -> urn:moos:message:20260323003644483-6067-antigraviti-auto-ack
+2026-03-23T00:43:33.1835196Z [WARN] SSE disconnected; fallback to polling: Exception calling "ReadLine" with "0" argument(s): "Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host.."
+2026-03-23T00:43:39.4918872Z [WARN] loop failure: No connection could be made because the target machine actively refused it.
+2026-03-23T00:43:45.6238370Z [WARN] loop failure: No connection could be made because the target machine actively refused it.
+2026-03-23T00:43:48.7136880Z [INFO] SSE connected: /log/stream
+2026-03-23T00:44:12.7480276Z [INFO] acked delegation: urn:moos:message:20260323014412-delegate-antigraviti -> urn:moos:message:20260323004412429-2940-antigraviti-auto-ack
+2026-03-23T00:56:59.4637002Z [INFO] acked delegation: urn:moos:message:20260323015659-delegate-antigraviti -> urn:moos:message:20260323005659067-3230-antigraviti-auto-ack
+2026-03-23T01:13:18.3103881Z [INFO] started. session=urn:moos:session:20260322-antigraviti poll=2s after=2026-03-23T00:36:44.7150216Z
+2026-03-23T01:13:18.9930461Z [INFO] acked delegation: urn:moos:message:20260323014412-delegate-antigraviti -> urn:moos:message:20260323011318492-3924-antigraviti-auto-ack
+2026-03-23T01:13:19.2894168Z [INFO] acked delegation: urn:moos:message:20260323015659-delegate-antigraviti -> urn:moos:message:20260323011319020-8643-antigraviti-auto-ack
+2026-03-23T01:13:19.3627758Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:21.4633453Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:23.5201741Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:25.5515667Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:27.5727768Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:29.6007174Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:31.6513801Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:33.6791305Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:35.6916241Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:37.7409526Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:39.8018146Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:41.8218740Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:44.0529317Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:52.1355544Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:55.2711345Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:13:58.1868452Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:14:00.3398937Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:14:03.7505825Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:14:08.8496434Z [WARN] SSE disconnected; fallback to polling: Unable to find type [System.Net.Http.HttpClient].
+2026-03-23T01:14:23.2573670Z [INFO] started. session=urn:moos:session:20260322-antigraviti poll=2s after=2026-03-23T01:13:19.2163491Z
+2026-03-23T01:14:23.7432781Z [INFO] SSE connected: /log/stream
+2026-03-23T01:49:28.0177893Z [WARN] failed to ack urn:moos:message:prg039-ag-delegate: Unable to find type [Windows.Data.Xml.Dom.XmlDocument].
+2026-03-23T01:49:46.5509697Z [WARN] failed to ack urn:moos:message:prg040-ag-delegate: Unable to find type [Windows.Data.Xml.Dom.XmlDocument].
+2026-03-23T01:50:49.1865611Z [WARN] failed to ack urn:moos:message:prg040-moos-diary-entry-001: Unable to find type [Windows.Data.Xml.Dom.XmlDocument].
+2026-03-23T02:46:09.5704609Z [INFO] started. session=urn:moos:session:20260322-antigraviti poll=2s after=2026-03-23T01:13:19.2163491Z
+2026-03-23T02:46:09.7963195Z [WARN] failed to ack urn:moos:message:prg039-ag-delegate: Unable to find type [Windows.Data.Xml.Dom.XmlDocument].
+2026-03-23T02:46:09.8550491Z [WARN] failed to ack urn:moos:message:prg040-ag-delegate: Unable to find type [Windows.Data.Xml.Dom.XmlDocument].
+2026-03-23T02:46:09.8939332Z [WARN] failed to ack urn:moos:message:prg040-moos-diary-entry-001: Unable to find type [Windows.Data.Xml.Dom.XmlDocument].
+2026-03-23T02:46:09.9378268Z [WARN] failed to ack urn:moos:message:20260323033715-delegate-antigraviti: Unable to find type [Windows.Data.Xml.Dom.XmlDocument].
+2026-03-23T02:46:10.0373420Z [INFO] SSE connected: /log/stream

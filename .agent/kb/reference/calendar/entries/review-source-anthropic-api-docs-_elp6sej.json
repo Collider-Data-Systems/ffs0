@@ -1,0 +1,13 @@
+{
+  "id": "cal:_elp6sejddtnn6ej3c5m6arj4c5p5upbmcln78ejjdtqn4or55lhmgpb3dcmm2rjkd1p6us39ccmm8rr3ec",
+  "source_type": "google_calendar",
+  "retrieved_at": "2026-03-23T02:26:12.558762+00:00",
+  "summary": "Review Source: Anthropic API Docs",
+  "description": "Curation check for: https://docs.anthropic.com\nNotes: Claude models, pricing, capabilities, rate limits.",
+  "location": "",
+  "start_time": "2026-03-23T10:00:00+01:00",
+  "end_time": "2026-03-23T11:00:00+01:00",
+  "status": "confirmed",
+  "organizer": "maassenhochrath@gmail.com",
+  "attendees": []
+}

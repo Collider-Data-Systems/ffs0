@@ -1,0 +1,16 @@
+{
+  "last_after": "2026-03-23T02:42:24.5334583Z",
+  "processed": [
+    "urn:moos:message:20260323005254-vscode-ai-auto-pickup-test",
+    "urn:moos:message:20260323010057-vscode-ai-auto-pickup-test-3",
+    "urn:moos:message:20260323010407-vscode-ai-policy-pickup-test",
+    "urn:moos:message:20260323011113-delegate-antigraviti",
+    "urn:moos:message:20260323011121-delegate-antigraviti",
+    "urn:moos:message:20260323011127-delegate-antigraviti",
+    "urn:moos:message:20260323011135-delegate-antigraviti",
+    "urn:moos:message:20260323011838-delegate-antigraviti",
+    "urn:moos:message:20260323013644-delegate-antigraviti",
+    "urn:moos:message:20260323014412-delegate-antigraviti",
+    "urn:moos:message:20260323015659-delegate-antigraviti"
+  ]
+}

@@ -1,4 +1,4 @@
-# Triangle Watcher - Native Windows Toast Notifications for the mo:os Agent Triangle
+# Triangle Watcher (graph-only) - Native Windows toast notifications for mo:os
 
 function Initialize-ToastRuntime {
     [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
@@ -34,117 +34,81 @@ function Send-Toast {
     [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppId).Show($Toast)
 }
 
-function Invoke-ChannelChanged {
-    param (
-        [string]$FilePath,
-        [string]$FileName
-    )
+function Get-GraphSignal {
+    try {
+        # Use /healthz for counts (fast, no lock contention)
+        $health = Invoke-RestMethod "http://localhost:8000/healthz" -TimeoutSec 2 -ErrorAction Stop
 
-    Start-Sleep -Milliseconds 200
-    $content = Get-Content -Path $FilePath -TotalCount 10 -ErrorAction Stop
-    $latestMessage = $content | Where-Object { $_ -match "^### \[" } | Select-Object -First 1
+        # Use /state/lens for PRG + session status (filtered, not full state)
+        $prg = Invoke-RestMethod "http://localhost:8000/state/lens?kind=prg_task" -TimeoutSec 3 -ErrorAction Stop
+        $sess = Invoke-RestMethod "http://localhost:8000/state/lens?kind=agent_session" -TimeoutSec 3 -ErrorAction Stop
 
-    if ($latestMessage) {
-        if ($latestMessage -match "\] (.*?) (?:->|→) (?:.*?): (.*)") {
-            $agent = $Matches[1]
-            $msg = $Matches[2]
-            Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Update in $FileName from $agent"
-            Send-Toast -AgentName $agent -Channel $FileName -Message $msg
-        } else {
-            Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Update in $FileName (Unparseable format)"
-            Send-Toast -AgentName "Unknown Agent" -Channel $FileName -Message "Wrote to channel."
+        $prgStates = @(
+            $prg.nodes.PSObject.Properties |
+            Sort-Object Name |
+            ForEach-Object {
+                $status = $_.Value.payload.status
+                if (-not $status) { $status = "unknown" }
+                "{0}:{1}" -f $_.Name, $status
+            }
+        )
+
+        $sessionStates = @(
+            $sess.nodes.PSObject.Properties |
+            Sort-Object Name |
+            ForEach-Object {
+                $status = $_.Value.payload.status
+                if (-not $status) { $status = "unknown" }
+                "{0}:{1}" -f $_.Name, $status
+            }
+        )
+
+        $signature = "n={0}|w={1}|prg={2}|sess={3}" -f `
+            $health.nodes, `
+            $health.wires, `
+            ($prgStates -join ","), `
+            ($sessionStates -join ",")
+
+        [PSCustomObject]@{
+            Signature = $signature
+            NodeCount = $health.nodes
+            WireCount = $health.wires
+            PRGCount  = $prgStates.Count
         }
+    }
+    catch {
+        return $null
     }
 }
 
-function Invoke-ChannelAction {
+function Invoke-GraphChanged {
     param (
-        [string]$FilePath,
-        [string]$FileName
+        [object]$Signal
     )
 
-    # Execution is only allowed for ClaudeCode direction messages in testoff.
-    if ($FileName -ine "testoff.md") { return }
+    if (-not $Signal) { return }
 
-    Start-Sleep -Milliseconds 200
-    $content = Get-Content -Path $FilePath -TotalCount 15 -ErrorAction Stop
-    $topMessage = $content | Where-Object { $_ -match "^### \[" } | Select-Object -First 1
-
-    if (-not $topMessage) { return }
-
-    if ($topMessage -match "^### \[.*\]\s+(.*?)\s+(?:->|→)\s*([a-zA-Z-]+)\s*:") {
-        $agent = $Matches[1]
-        $messageType = $Matches[2]
-
-        if ($agent -ieq "ClaudeCode" -and $messageType -ieq "direction") {
-            Write-Host "[$(Get-Date -Format 'HH:mm:ss')] AUTO-TRIGGER: direction detected in testoff.md"
-            Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Executing go test + health check..."
-
-            # Pull latest repo state before test cycle.
-            git -C ".\moos" pull origin main 2>&1 | ForEach-Object { Write-Host "  $_" }
-
-            Push-Location ".\moos\platform\kernel"
-            try {
-                $testResult = go test ./... 2>&1
-                $testResult | ForEach-Object { Write-Host "  $_" }
-            } finally {
-                Pop-Location
-            }
-
-            try {
-                $health = Invoke-RestMethod "http://localhost:8000/healthz" -ErrorAction Stop
-                Write-Host "  healthz: status=$($health.status) nodes=$($health.nodes) wires=$($health.wires)"
-            } catch {
-                Write-Host "  healthz: kernel not running (start manually)"
-            }
-
-            Send-Toast -AgentName "AutoTrigger" -Channel "testoff.md" -Message "Test cycle complete - check terminal output"
-        }
-    }
-}
-
-function Start-ChannelWatcher {
-    param (
-        [string]$WatchFolder,
-        [string]$Filter = "*.md"
-    )
-
-    $Watcher = New-Object System.IO.FileSystemWatcher
-    $Watcher.Path = $WatchFolder
-    $Watcher.Filter = $Filter
-    $Watcher.IncludeSubdirectories = $false
-    $Watcher.EnableRaisingEvents = $true
-
-    $Action = {
-        $path = $Event.SourceEventArgs.FullPath
-        $name = $Event.SourceEventArgs.Name
-        $changeType = $Event.SourceEventArgs.ChangeType
-        if ($changeType -eq 'Changed') {
-            try {
-                Invoke-ChannelChanged -FilePath $path -FileName $name
-                Invoke-ChannelAction -FilePath $path -FileName $name
-            } catch {
-                Write-Host "Error reading file ${name}: $_"
-            }
-        }
-    }
-
-    Register-ObjectEvent $Watcher "Changed" -Action $Action | Out-Null
-    return $Watcher
+    Write-Host "[$(Get-Date -Format 'HH:mm:ss')] GRAPH update: nodes=$($Signal.NodeCount) wires=$($Signal.WireCount) prg=$($Signal.PRGCount)"
+    Send-Toast -AgentName "GraphState" -Channel "kernel:/state" -Message "nodes=$($Signal.NodeCount) wires=$($Signal.WireCount) prg=$($Signal.PRGCount)"
 }
 
 # --- Main ---
 
-$WatchFolder = Resolve-Path ".\ffs0-factory-super\.agent\channels"
-
 Write-Host "Starting Triangle Watcher..."
-Write-Host "Monitoring channels in: $($WatchFolder.Path)"
+Write-Host "Graph-only mode: polling /healthz + /state/lens (no full /state)"
 Write-Host "Keep this terminal open in the background to receive Toast Notifications."
 Write-Host "-------------------------------------------------------------------"
 
 Initialize-ToastRuntime
-Start-ChannelWatcher -WatchFolder $WatchFolder.Path | Out-Null
 
+$lastGraphSignature = $null
 while ($true) {
+    $signal = Get-GraphSignal
+    if ($signal -and $signal.Signature -ne $lastGraphSignature) {
+        if ($lastGraphSignature -ne $null) {
+            Invoke-GraphChanged -Signal $signal
+        }
+        $lastGraphSignature = $signal.Signature
+    }
     Start-Sleep -Seconds 5
 }

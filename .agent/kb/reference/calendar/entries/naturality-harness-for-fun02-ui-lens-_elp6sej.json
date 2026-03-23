@@ -1,0 +1,13 @@
+{
+  "id": "cal:_elp6sejddtnn6ejge9jjkc1j6gmmsobkelp62r39ehsiqq31e9n6asrj",
+  "source_type": "google_calendar",
+  "retrieved_at": "2026-03-23T02:26:12.558762+00:00",
+  "summary": "Naturality harness for FUN02 UI_Lens",
+  "description": "FUN02 naturality test: Project(Apply(M, S)) == Apply(M', Project(S)). Gate 1 of locked 1-2-3-4 sequence.",
+  "location": "",
+  "start_time": "2026-03-23T09:00:00+01:00",
+  "end_time": "2026-03-23T10:00:00+01:00",
+  "status": "confirmed",
+  "organizer": "maassenhochrath@gmail.com",
+  "attendees": []
+}

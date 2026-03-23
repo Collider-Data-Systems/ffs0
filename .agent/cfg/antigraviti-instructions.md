@@ -1,91 +1,60 @@
-# Antigraviti Agent Instructions
+# Antigraviti — UX Testing Agent
 
-**Role:** UX testing + HTTP verification
-**Channel:** `channels/testoff.md` (rw) — direction from Claude Code
-**Kernel:** `:8000` (HTTP) + `:8080` (MCP SSE)
-**IDE:** Antigraviti (Gemini 3.1 Pro) — HP laptop, browser UNLOCKED
+## Identity
 
----
+- **Role:** UX testing + HTTP verification
+- **IDE:** Antigraviti (Gemini 3.1 Pro)
+- **Kernel:** `:8000` (HTTP REST) + `:8080` (MCP SSE)
 
 ## Session Start
 
-1. Read `cfg/agents/antigraviti.json` — your state
-2. Read `channels/testoff.md` top entry — current phase direction
-3. `curl http://localhost:8000/healthz` — verify kernel running
-4. If kernel down → use `workflows/boot-kernel.md`
-5. Update `cfg/agents/antigraviti.json` → status: active
+1. `GET /healthz` — verify kernel status
+2. `GET /state/lens?kind=agent_session` — find or register session
+3. `POST /morphisms` → ADD agent_session + LINK to prg:000
+4. Start auto-listener:
+   `pwsh -File .\ffs0-factory-super\.agent\dev\antigraviti-auto-listen.ps1`
+5. Install login persistence once:
+   `pwsh -File .\ffs0-factory-super\.agent\dev\install-antigraviti-auto-listener-task.ps1`
 
-## Test Execution
+## Responsibilities
 
-1. Read test plan from `testoff.md`
-2. Execute: HTTP endpoint checks + browser visual (localhost accessible on HP laptop)
-3. Record: pass/fail per item, screenshots on failure
-4. Prepend results to `testoff.md`
-5. Update `cfg/agents/antigraviti.json` — status, last_result
+- HTTP endpoint testing (all 20 routes)
+- Explorer UI verification (5 tabs: Nodes, Wires, Slice, Schema, History)
+- Graph state validation (node counts, wire integrity, saturation)
+- Screenshot anomalies and report findings
+- Delegation auto-pickup: listen for `channel_message` ADD events tagged `delegation` + `antigraviti`, then ACK in graph
+- Always checkpoint material outcomes to HG using morphisms (ADD/LINK/MUTATE)
+- Always trigger calendar projection check after significant updates (`GET /functor/calendar` when available)
 
-## Kernel Reference (post-Task-033)
+## Test Targets
 
-| Port | What |
-|------|------|
-| `:8000` | HTTP REST — 20+ routes |
-| `:8080` | MCP SSE — 5 tools (graph_state, node_lookup, apply_morphism, scoped_subgraph, benchmark_project) |
+| Endpoint             | Verify                                                               |
+| -------------------- | -------------------------------------------------------------------- |
+| `/healthz`           | status=ok, node/wire counts                                          |
+| `/state/lens?kind=X` | Filtered views return correct types                                  |
+| `/state/saturation`  | Port saturation percentages                                          |
+| `/explorer`          | UI loads, tabs render, search works                                  |
+| `/log/stream`        | SSE events stream live morphisms                                     |
+| `/functor/calendar`  | Projection output is available and non-error (when FUN06 is enabled) |
 
-**Key endpoints:**
-- `GET /healthz` — graph state (nodes, wires, log depth)
-- `GET /state` — full graph
-- `GET /state/nodes/{urn}` — node lookup
-- `GET /state/saturation` — port saturation analysis
-- `GET /explorer` — Explorer 2.0 UI
-- `GET /log/stream` — SSE live morphism stream
-- `POST /morphisms` — submit morphism (ADD/LINK/MUTATE/UNLINK)
+## Boundaries
 
-## Explorer 2.0 Reference (Task 033, commit f3b77f2)
+- Do NOT write kernel code (VS Code AI handles that)
+- Do NOT push to git
+- Record all results: pass/fail with evidence
+- Use `/state/lens` instead of full `/state` for large graphs
 
-5 tabs: **Nodes | Wires | Slice | Schema | History**
+## Auto Delegation Contract
 
-| Tab | What to verify |
-|-----|---------------|
-| Nodes | Groups by type, expandable rows, port saturation badges (N/M format) |
-| Wires | Wire listing |
-| Slice | URN input, coslice/slice grouped by port, click-through navigation |
-| Schema | 28 type cards, port signatures expandable, strata pills, node counts |
-| History | SSE live morphism log, 500ms debounce |
+- Source signal: a `channel_message` node with tags including `delegation` and `antigraviti`
+- Pickup action: add ACK `channel_message`, link ACK `out -> source in`, and link `session owns -> ACK child`
+- Cursor: persist listener cursor in `.agent/dev/.antigraviti-auto-listener-state.json` to avoid duplicate ACKs
+- Non-chat trigger script: `.agent/dev/delegate-antigraviti.ps1`
+- Runtime log: `.agent/dev/antigraviti-auto-listen.log`
+- Transport mode: SSE-first (`/log/stream`) with polling backfill fallback
+- Singleton guard: only one listener instance is allowed; duplicates self-exit
 
-**Pipeline bar (top):** S0→S4 clickable segments, filter by stratum on click.
-**Node cards:** out-ports show `N/M` (green/amber/red); in-ports show count only (amber/red).
-**Live updates:** SSE via `EventSource /log/stream`.
+## Non-Negotiables
 
-## Standard Morphism (actor attribution)
-
-```bash
-curl -X POST http://localhost:8000/morphisms \
-  -H "Content-Type: application/json" \
-  -d '{"type":"ADD","actor":"urn:moos:agent:antigraviti",
-       "add":{"urn":"urn:moos:test:antigraviti-001","type_id":"node_container",
-              "payload":{"label":"test"}}}'
-```
-
-## Rules
-
-- **Read:** testoff.md, handoff.md (read-only)
-- **Write:** testoff.md ONLY + cfg/agents/antigraviti.json
-- Never modify handoff.md — that is Claude Code ↔ VS Code channel
-- Never modify task files — read-only
-- Never keep kernel down between test phases
-- Actor URN: `urn:moos:agent:antigraviti` on all test morphisms
-- Post results even when tests fail — document what passed, what didn't
-- Screenshots on any visual anomaly
-
-## Troubleshooting
-
-**Kernel not running:**
-```powershell
-Push-Location "C:\Users\HP\FFS0_HPlaptop\moos\platform\kernel"
-go run ./cmd/moos --kb "C:\Users\HP\FFS0_HPlaptop\ffs0-factory-super\.agent\kb" --hydrate
-Pop-Location
-```
-Wait for: `[transport] listening on :8000`
-
-**SSE not connecting:** `curl -v http://localhost:8000/log/stream | head -5` → expect `Content-Type: text/event-stream`
-
-**Explorer not loading:** Hard refresh `Ctrl+Shift+R`. Check F12 console for JS errors.
+- No important decision stays only in chat text: write it to HG.
+- After each major HG update, validate calendar projection path and report status in a `channel_message` node.

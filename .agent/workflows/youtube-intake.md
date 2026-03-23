@@ -4,6 +4,8 @@ description: Ingest YouTube transcripts into KB reference layer using VS Code ex
 
 # YouTube Intake Workflow
 
+// turbo-all
+
 Use this workflow to transcribe a YouTube video and store it under the KB reference layer.
 
 ## Approved Default (Current)

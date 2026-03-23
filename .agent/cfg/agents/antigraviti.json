@@ -5,22 +5,44 @@
   "status": "standby",
   "workstation": "hp-laptop",
   "workspace_root": "c:\\Users\\HP\\FFS0_HPlaptop",
-  "capabilities": ["http-testing", "ux-audit", "browser-testing", "mcp-queries"],
+  "capabilities": [
+    "http-testing",
+    "ux-audit",
+    "browser-testing",
+    "mcp-queries",
+    "hg-checkpointing",
+    "calendar-projection"
+  ],
   "ide": "antigraviti-gemini-3.1-pro",
   "ide_notes": {
     "os": "Windows — use PowerShell, not bash",
     "shell": "PowerShell — Set-Location not cd, Invoke-RestMethod not jq",
     "browser": "UNLOCKED — HP laptop can access localhost:8000",
-    "approval_gate": "Click 'Always run ↑' once per command type per session",
+    "approval_gate": "Auto-run enabled via // turbo-all in workflows; no manual toggle needed",
     "kernel_kb_path": "c:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb",
     "kernel_dir": "c:\\Users\\HP\\FFS0_HPlaptop\\moos\\platform\\kernel"
   },
   "channels": {
-    "reads": ["channels/testoff.md", "channels/handoff.md (read-only)"],
-    "writes": ["channels/testoff.md", "cfg/agents/antigraviti.json"]
+    "reads": [
+      "channels/testoff.md",
+      "channels/handoff.md (read-only)"
+    ],
+    "writes": [
+      "channels/testoff.md",
+      "cfg/agents/antigraviti.json"
+    ]
   },
   "last_task": "verify-task-033-explorer-2.0",
   "last_result": "Task 033 Explorer 2.0: 11/12 PASS (1 deployment note, no code bugs). 278N/154W. Commit f3b77f2.",
-  "current_task": "None — awaiting Task 034 direction",
-  "tasks_verified": ["T023-A", "T023-D", "T023-E", "T026", "T027", "T031", "T032b", "T033"]
+  "current_task": "Auto-listening delegated messages + HG checkpoint + calendar projection verification",
+  "tasks_verified": [
+    "T023-A",
+    "T023-D",
+    "T023-E",
+    "T026",
+    "T027",
+    "T031",
+    "T032b",
+    "T033"
+  ]
 }
