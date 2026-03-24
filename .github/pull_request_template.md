@@ -1,4 +1,4 @@
-## Summary
+# Summary
 
 Describe what changed and why.
 
@@ -7,10 +7,14 @@ Describe what changed and why.
 - PRG: <!-- e.g., PRG039 -->
 - Phase: <!-- e.g., 039.5 -->
 - HG URN(s): <!-- e.g., urn:moos:prg:039-session-identity -->
+- Agent ID: <!-- e.g., AGENT-KERNEL-01 -->
+- User/Admin/Group: <!-- e.g., user:alice, admin:ops, group:kernel-maintainers -->
+- Collider Category: <!-- e.g., delegation_task, channel_message, agent_session -->
 
 ## Branch
 
 - Branch name: <!-- should match feat/*, fix/*, chore/*, or release/* -->
+- Branch role: <!-- feature | hotfix | agent | admin | release -->
 
 ## Validation Evidence
 
@@ -44,3 +48,8 @@ How to revert safely if needed.
 
 - Risk level: low | medium | high
 - Notes:
+
+## Kickstart Signals
+
+- [ ] Auto-label ready (PRG/agent/category labels can be derived from this PR)
+- [ ] Backlog issue linkage included if this PR closes/advances an issue
