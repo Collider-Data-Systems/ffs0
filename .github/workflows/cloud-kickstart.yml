@@ -10,11 +10,13 @@ on:
         default: true
   issues:
     types: [opened, edited]
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
 
 permissions:
   contents: read
   issues: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   bootstrap-labels:
@@ -31,6 +33,7 @@ jobs:
               ["kind:shipping", "1d76db", "Shipping/go-live item"],
               ["role:user", "bfd4f2", "User-owned or user-requested"],
               ["role:admin", "d4c5f9", "Admin-owned action"],
+              ["role:agent", "7057ff", "Agent-owned or agent-executed"],
               ["role:group", "c2e0c6", "Group/team ownership"],
               ["status:needs-triage", "fbca04", "Needs triage"],
               ["status:blocked", "b60205", "Blocked by dependency"],
@@ -97,3 +100,64 @@ jobs:
               issue_number: issue.number,
               labels
             });
+
+  link-first-execution-pr:
+    # Fires on PRs, posts a comment linking the PR to the open kickstart issue.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Link execution PR to kickstart issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+
+            // Title of the seed kickstart issue to link against
+            const KICKSTART_TITLE = "Kickstart: PRG and agent mapping backlog";
+
+            // Find kickstart issue — search by exact title
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              per_page: 50
+            });
+            const kickstart = (issues.data || []).find(i =>
+              i.title === KICKSTART_TITLE
+            );
+            if (!kickstart) {
+              core.info("No open kickstart issue found — skipping.");
+              return;
+            }
+
+            // Only link once: skip if a comment already references this exact PR number.
+            // Use a regex that matches #<number> not followed by another digit to avoid
+            // false positives (e.g., #12 matching inside #123).
+            const prRef = new RegExp(`#${pr.number}(?![0-9])`);
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: kickstart.number,
+              per_page: 100
+            });
+            const alreadyLinked = (comments.data || []).some(c => c.body && prRef.test(c.body));
+            if (alreadyLinked) {
+              core.info(`PR #${pr.number} already linked to kickstart issue.`);
+              return;
+            }
+
+            // Post the link comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: kickstart.number,
+              body: [
+                `🔗 **First execution PR linked:** #${pr.number} — [${pr.title}](${pr.html_url})`,
+                "",
+                `Branch: \`${pr.head.ref}\``,
+                `Author: @${pr.user.login}`,
+                "",
+                "This PR advances the kickstart checklist. Merging this PR completes the _Link first execution PR_ item."
+              ].join("\n")
+            });
+            core.info(`Linked PR #${pr.number} to kickstart issue #${kickstart.number}.`);
