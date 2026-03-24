@@ -27,6 +27,7 @@ jobs:
               ["branch:agent", "5319e7", "Agent branch PR"],
               ["branch:admin", "6f42c1", "Admin branch PR"],
               ["branch:release", "1d76db", "Release branch PR"],
+              ["branch:copilot", "7057ff", "GitHub Copilot branch PR"],
               ["status:needs-triage", "fbca04", "Needs triage"]
             ];
 
@@ -50,6 +51,7 @@ jobs:
             if (/^agent\//.test(branch)) labels.push("branch:agent");
             if (/^admin\//.test(branch)) labels.push("branch:admin");
             if (/^release\//.test(branch)) labels.push("branch:release");
+            if (/^copilot\//.test(branch)) labels.push("branch:copilot");
 
             if (/\bPRG\d{3}\b/i.test(text)) labels.push("kind:prg");
             if (/\bAgent\s*ID\b/i.test(text) || /\bagent[_ -]?id\b/i.test(text)) labels.push("kind:agent-task");

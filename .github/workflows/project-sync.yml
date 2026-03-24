@@ -61,6 +61,7 @@ jobs:
               if (/^agent\//i.test(branch)) return "agent";
               if (/^admin\//i.test(branch)) return "admin";
               if (/^release\//i.test(branch)) return "release";
+              if (/^copilot\//i.test(branch)) return "copilot";
               return "";
             })();
 

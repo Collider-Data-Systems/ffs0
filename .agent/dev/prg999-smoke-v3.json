@@ -1,0 +1,72 @@
+{
+  "actor": "agent:copilot",
+  "envelopes": [
+    {
+      "type": "ADD",
+      "actor": "agent:copilot",
+      "add": {
+        "urn": "urn:moos:prg:999-smoke",
+        "type_id": "prg_task",
+        "stratum": "S2",
+        "payload": {
+          "label": "PRG999 - Project Sync Smoke v3",
+          "task_id": "999",
+          "title": "Project Sync Smoke v3",
+          "description": "Smoke test for the GitHub Projects ↔ HG project-sync pipeline. Verifies that issues and PRs opened with the prg-task template are correctly parsed, added to the mo:os project, and have all fields mapped — including copilot/ branch role detection.",
+          "status": "active",
+          "harness_pattern": "dynamic-plan-adaptive",
+          "created": "2026-03-24",
+          "phases": [
+            {
+              "id": "999.1",
+              "name": "Branch policy + project-sync copilot support",
+              "owner": "AGENT-SMOKE-01",
+              "status": "active",
+              "validation": "branch-name-guard allows copilot/ branches; pr-intake labels them branch:copilot; project-sync maps copilot/ to branch role copilot"
+            }
+          ],
+          "gate_output": "project-sync workflow correctly parses all prg-task template fields and syncs to GitHub Projects for issues and copilot/ PRs",
+          "tags": ["smoke", "project-sync", "copilot", "v3"]
+        }
+      }
+    },
+    {
+      "type": "ADD",
+      "actor": "agent:copilot",
+      "add": {
+        "urn": "urn:moos:task:prg999-smoke-v3-phase-999.1",
+        "type_id": "delegation_task",
+        "stratum": "S2",
+        "payload": {
+          "title": "Project Sync Smoke v3 — Phase 999.1",
+          "assigned_to": "urn:moos:agent:smoke-01",
+          "prg_urn": "urn:moos:prg:999-smoke",
+          "phase_id": "999.1",
+          "status": "in_progress",
+          "spec": "Add copilot/ branch support to branch-name-guard, pr-intake, and project-sync workflows. Create PRG999 graph batch file.",
+          "assigned_at": "2026-03-24T18:07:53Z"
+        }
+      }
+    },
+    {
+      "type": "LINK",
+      "actor": "agent:copilot",
+      "link": {
+        "source_urn": "urn:moos:task:prg999-smoke-v3-phase-999.1",
+        "source_port": "out",
+        "target_urn": "urn:moos:prg:999-smoke",
+        "target_port": "in"
+      }
+    },
+    {
+      "type": "LINK",
+      "actor": "agent:copilot",
+      "link": {
+        "source_urn": "urn:moos:prg:999-smoke",
+        "source_port": "out",
+        "target_urn": "urn:moos:prg:000-session-meta",
+        "target_port": "in"
+      }
+    }
+  ]
+}
