@@ -76,6 +76,19 @@ PRG tasks, calendar events, keep notes are graph-native — not in KB.
 - `SeedIfAbsent` is idempotent — safe to re-add existing nodes.
 - Do not treat S4 functor output as ground truth.
 
+## PRG Governance
+
+- Every PRG with phases MUST have a `validation` field per phase.
+- Phase status lifecycle: `planned → delegated → active → completed | blocked`.
+- Gated PRGs (034→035→036→037) use `fixed-plan-sequential` harness pattern.
+  Gate N+1 cannot begin execution until gate N's `gate_output` is satisfied.
+- Operational PRGs (038, 040) use `dynamic-plan-adaptive` harness pattern.
+  Phases can be reordered, added, or removed at runtime.
+- Sub-PRGs (034a, 038a, 040a) are wired `parent.out → sub.in`.
+- Delegation: ADD channel_message with from/to session URNs, LINK to target PRG.
+- Session roles: lead/active/listening. Lead coordinates, others execute assigned phases.
+- Auto-ack dedup: messages with tag `auto-ack` MUST NOT trigger further acks.
+
 ## Temporal Model
 
 Every Node carries `created_at` and `updated_at` (RFC3339Nano, UTC).

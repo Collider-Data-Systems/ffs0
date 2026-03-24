@@ -1,6 +1,7 @@
 param(
     [string]$KernelBaseUrl = "http://localhost:8000",
     [string]$AgentUrn = "urn:moos:agent:antigraviti",
+    [string]$AssignedTo = "antigraviti",
     [string]$SessionUrn = "urn:moos:session:20260322-antigraviti",
     [int]$PollSeconds = 2,
     [string]$StateFile = "",
@@ -53,6 +54,13 @@ function Send-Toast {
         [string]$Message
     )
 
+    # Check if WinRT types are available before attempting to Toast
+    $xmlType = [type]::GetType("Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType=WindowsRuntime", $false)
+    if ($null -eq $xmlType) {
+        Write-Log -Message "Skipping toast (WinRT XML type not found)"
+        return
+    }
+
     $AppId = '{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe'
 
     $XmlString = @"
@@ -67,15 +75,15 @@ function Send-Toast {
 </toast>
 "@
 
-    $XmlDocument = [Windows.Data.Xml.Dom.XmlDocument]::new()
-    $XmlDocument.LoadXml($XmlString)
-
     try {
+        $XmlDocument = [Windows.Data.Xml.Dom.XmlDocument]::new()
+        $XmlDocument.LoadXml($XmlString)
         $Toast = [Windows.UI.Notifications.ToastNotification]::new($XmlDocument)
-        [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppId).Show($Toast)
+        $notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppId)
+        $notifier.Show($Toast)
     }
     catch {
-        # Silent fail if notifications disabled
+        Write-Log -Level "WARN" -Message "Failed to show toast: $($_.Exception.Message)"
     }
 }
 
@@ -200,219 +208,178 @@ function Get-Node {
     return Invoke-RestMethod "$KernelBaseUrl/state/nodes/$Urn"
 }
 
-function Is-DelegationPayload {
+function Matches-Assignee {
+    param(
+        [object]$TaskPayload,
+        [string]$Expected
+    )
+
+    if ($null -eq $TaskPayload -or [string]::IsNullOrWhiteSpace($Expected)) {
+        return $false
+    }
+
+    $assigned = ""
+    if ($TaskPayload.PSObject.Properties.Name -contains "assigned_to" -and $null -ne $TaskPayload.assigned_to) {
+        $assigned = [string]$TaskPayload.assigned_to
+    }
+    if ([string]::IsNullOrWhiteSpace($assigned)) {
+        return $false
+    }
+
+    if ($assigned.Equals($Expected, [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $true
+    }
+    return $assigned.ToLowerInvariant().Contains($Expected.ToLowerInvariant())
+}
+
+function Get-DelegationTaskNodes {
+    $lens = Invoke-RestMethod "$KernelBaseUrl/state/lens?kind=delegation_task"
+    if ($null -eq $lens -or $null -eq $lens.nodes) {
+        return @()
+    }
+    return @($lens.nodes.PSObject.Properties.Value)
+}
+
+function Copy-Payload {
     param([object]$Payload)
 
-    if ($null -eq $Payload) { return $false }
-
-    $tags = @()
-    if ($Payload.PSObject.Properties.Name -contains "tags") { $tags = @($Payload.tags) }
-    $tagSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    foreach ($tag in $tags) {
-        if ($null -ne $tag) { [void]$tagSet.Add([string]$tag) }
+    $copy = @{}
+    if ($null -eq $Payload) {
+        return $copy
     }
-
-    $text = ""
-    if ($Payload.PSObject.Properties.Name -contains "text" -and $null -ne $Payload.text) { $text = [string]$Payload.text }
-    $type = ""
-    if ($Payload.PSObject.Properties.Name -contains "type" -and $null -ne $Payload.type) { $type = [string]$Payload.type }
-    $sender = ""
-    if ($Payload.PSObject.Properties.Name -contains "sender" -and $null -ne $Payload.sender) { $sender = [string]$Payload.sender }
-
-    $targetsAntigraviti = $tagSet.Contains("antigraviti") -or $text.ToLowerInvariant().Contains("antigraviti")
-    $looksLikeInstruction = $tagSet.Contains("delegation") -or ($type -imatch "delegate|instruction|policy|request") -or $text.ToLowerInvariant().Contains("delegat") -or $text.ToLowerInvariant().Contains("listen")
-    $isSelfAck = ($type -ieq "ack") -or $sender.ToLowerInvariant().Contains("antigraviti")
-
-    return $targetsAntigraviti -and $looksLikeInstruction -and (-not $isSelfAck)
+    foreach ($p in $Payload.PSObject.Properties) {
+        $copy[$p.Name] = $p.Value
+    }
+    return $copy
 }
 
-function Get-DelegationUrnFromEntry {
-    param([object]$Entry)
-
-    if ($null -eq $Entry.envelope) { return $null }
-    $env = $Entry.envelope
-
-    if ($env.type -eq "ADD" -and $null -ne $env.add -and $env.add.type_id -eq "channel_message") {
-        if (Is-DelegationPayload -Payload $env.add.payload) {
-            return [string]$env.add.urn
-        }
-    }
-
-    if ($env.type -eq "LINK" -and $null -ne $env.link) {
-        $link = $env.link
-        $looksLikeSessionOwnsMessage = ($link.source_urn -eq $SessionUrn -and $link.source_port -eq "owns" -and $link.target_port -eq "child")
-        if ($looksLikeSessionOwnsMessage) {
-            try {
-                $node = Get-Node -Urn ([string]$link.target_urn)
-                if ($node.type_id -eq "channel_message" -and (Is-DelegationPayload -Payload $node.payload)) {
-                    return [string]$node.urn
-                }
-            }
-            catch {
-                return $null
-            }
-        }
-    }
-
-    return $null
-}
-
-function Process-Entry {
+function Set-DelegationTaskStatus {
     param(
-        [object]$Entry,
-        [ref]$State,
+        [string]$TaskUrn,
+        [string]$Status,
+        [hashtable]$Extra
+    )
+
+    $task = Get-Node -Urn $TaskUrn
+    if ($null -eq $task) {
+        throw "task not found: $TaskUrn"
+    }
+
+    $payload = Copy-Payload -Payload $task.payload
+    $payload.status = $Status
+    foreach ($k in $Extra.Keys) {
+        $payload[$k] = $Extra[$k]
+    }
+
+    $mut = @{
+        type = "MUTATE"
+        actor = $AgentUrn
+        mutate = @{
+            urn = $TaskUrn
+            expected_version = [int]$task.version
+            payload = $payload
+        }
+    }
+    Post-Morphism -BaseUrl $KernelBaseUrl -Body $mut
+}
+
+function Process-DelegationTask {
+    param(
+        [object]$Task,
         [System.Collections.Generic.HashSet[string]]$Processed
     )
 
-    if ($null -eq $Entry) {
+    $taskUrn = [string]$Task.urn
+    if ([string]::IsNullOrWhiteSpace($taskUrn) -or $Processed.Contains($taskUrn)) {
         return
     }
 
-    if ($null -ne $Entry.issued_at) {
-        $State.Value.last_after = Normalize-AfterTimestamp -Value $Entry.issued_at
+    $payload = $Task.payload
+    $status = ""
+    if ($payload.PSObject.Properties.Name -contains "status" -and $null -ne $payload.status) {
+        $status = [string]$payload.status
     }
-
-    $sourceUrn = Get-DelegationUrnFromEntry -Entry $Entry
-    if ([string]::IsNullOrWhiteSpace($sourceUrn) -or $Processed.Contains($sourceUrn)) {
+    if (-not $status.Equals("pending", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return
+    }
+    if (-not (Matches-Assignee -TaskPayload $payload -Expected $AssignedTo)) {
         return
     }
 
     try {
-        $now = (Get-Date).ToUniversalTime().ToString("yyyyMMddHHmmssfff")
+        $now = (Get-Date).ToUniversalTime().ToString("o")
+        Set-DelegationTaskStatus -TaskUrn $taskUrn -Status "in_progress" -Extra @{ started_at = $now }
+
+        $msgStamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddHHmmssfff")
         $suffix = Get-Random -Minimum 1000 -Maximum 9999
-        $ackUrn = "urn:moos:message:${now}-${suffix}-antigraviti-auto-ack"
-        
-        $calStatus = "checking"
-        try {
-            $calTest = Invoke-RestMethod "$KernelBaseUrl/functor/calendar" -TimeoutSec 2 -ErrorAction Stop
-            $calStatus = "FUN06 responds ok"
+        $ackUrn = "urn:moos:message:${msgStamp}-${suffix}-antigraviti-auto-ack"
+        $title = "delegation task"
+        if ($payload.PSObject.Properties.Name -contains "title" -and $null -ne $payload.title) {
+            $title = [string]$payload.title
         }
-        catch {
-            $calStatus = "unavailable or error"
-        }
+        $ackText = "Auto-processed delegation_task $taskUrn ($title). Status moved pending -> in_progress -> completed."
 
-        $ackText = "Auto-picked delegation from $sourceUrn. Listening active for PRG000/FUN06 signals. Calendar check: $calStatus."
-
-        Send-Toast -AgentName "Antigraviti" -Channel "Delegation" -Message "Delegation $sourceUrn received. Calendar $calStatus."
-
+        Send-Toast -AgentName "Antigraviti" -Channel "DelegationTask" -Message "Picked $taskUrn"
 
         $addAck = @{
-            type  = "ADD"
+            type = "ADD"
             actor = $AgentUrn
-            add   = @{
-                urn     = $ackUrn
+            add = @{
+                urn = $ackUrn
                 type_id = "channel_message"
                 stratum = "S2"
                 payload = @{
                     sender = "Antigraviti"
-                    type   = "ack"
-                    tags   = @("delegation", "ack", "antigraviti", "auto-listener", "save-hg", "calendar-project")
-                    text   = $ackText
+                    type = "ack"
+                    tags = @("delegation_task", "ack", "antigraviti", "auto-listener")
+                    text = $ackText
                 }
             }
         }
         Post-Morphism -BaseUrl $KernelBaseUrl -Body $addAck
 
-        $linkAckToSource = @{
-            type  = "LINK"
+        $linkTaskToSession = @{
+            type = "LINK"
             actor = $AgentUrn
-            link  = @{
-                source_urn  = $ackUrn
+            link = @{
+                source_urn = $taskUrn
                 source_port = "out"
-                target_urn  = $sourceUrn
+                target_urn = $SessionUrn
+                target_port = "receives"
+            }
+        }
+        Post-Morphism -BaseUrl $KernelBaseUrl -Body $linkTaskToSession
+
+        $linkAckToTask = @{
+            type = "LINK"
+            actor = $AgentUrn
+            link = @{
+                source_urn = $ackUrn
+                source_port = "out"
+                target_urn = $taskUrn
                 target_port = "in"
             }
         }
-        Post-Morphism -BaseUrl $KernelBaseUrl -Body $linkAckToSource
+        Post-Morphism -BaseUrl $KernelBaseUrl -Body $linkAckToTask
 
-        $linkSessionOwnsAck = @{
-            type  = "LINK"
-            actor = $AgentUrn
-            link  = @{
-                source_urn  = $SessionUrn
-                source_port = "owns"
-                target_urn  = $ackUrn
-                target_port = "child"
-            }
-        }
-        Post-Morphism -BaseUrl $KernelBaseUrl -Body $linkSessionOwnsAck
+        $done = (Get-Date).ToUniversalTime().ToString("o")
+        Set-DelegationTaskStatus -TaskUrn $taskUrn -Status "completed" -Extra @{ completed_at = $done }
 
-        [void]$Processed.Add($sourceUrn)
-        Write-Log -Message ("acked delegation: {0} -> {1}" -f $sourceUrn, $ackUrn)
+        [void]$Processed.Add($taskUrn)
+        Write-Log -Message ("completed delegation_task: {0}" -f $taskUrn)
     }
     catch {
         $detail = Get-ErrorDetail -Err $_
-        Write-Log -Level "WARN" -Message ("failed to ack {0}: {1}" -f $sourceUrn, $detail)
+        Write-Log -Level "WARN" -Message ("failed delegation_task processing {0}: {1}" -f $taskUrn, $detail)
     }
 }
 
-function Run-BackfillPoll {
-    param(
-        [ref]$State,
-        [System.Collections.Generic.HashSet[string]]$Processed
-    )
+function Run-DelegationTaskPoll {
+    param([System.Collections.Generic.HashSet[string]]$Processed)
 
-    $encodedAfter = [uri]::EscapeDataString([string]$State.Value.last_after)
-    $url = "$KernelBaseUrl/log?after=$encodedAfter&limit=300"
-    $entries = Invoke-RestMethod $url
-    if ($null -eq $entries) {
-        $entries = @()
-    }
-    foreach ($entry in @($entries)) {
-        Process-Entry -Entry $entry -State ([ref]$State.Value) -Processed $Processed
-    }
-}
-
-function Run-SSELoop {
-    param(
-        [ref]$State,
-        [System.Collections.Generic.HashSet[string]]$Processed
-    )
-
-    $client = [System.Net.Http.HttpClient]::new()
-    $client.Timeout = [System.Threading.Timeout]::InfiniteTimeSpan
-    try {
-        $stream = $client.GetStreamAsync("$KernelBaseUrl/log/stream").GetAwaiter().GetResult()
-        $reader = New-Object System.IO.StreamReader($stream)
-        $eventData = ""
-        Write-Log -Message "SSE connected: /log/stream"
-
-        while (-not $reader.EndOfStream) {
-            $line = $reader.ReadLine()
-            if ($null -eq $line) {
-                continue
-            }
-
-            if ($line.StartsWith(":")) {
-                continue
-            }
-
-            if ($line.StartsWith("data:")) {
-                $chunk = $line.Substring(5).TrimStart()
-                if ($eventData.Length -gt 0) {
-                    $eventData += "`n"
-                }
-                $eventData += $chunk
-                continue
-            }
-
-            if ([string]::IsNullOrWhiteSpace($line)) {
-                if (-not [string]::IsNullOrWhiteSpace($eventData)) {
-                    try {
-                        $entry = $eventData | ConvertFrom-Json
-                        Process-Entry -Entry $entry -State ([ref]$State.Value) -Processed $Processed
-                    }
-                    catch {
-                        $detail = Get-ErrorDetail -Err $_
-                        Write-Log -Level "WARN" -Message ("SSE parse failure: {0}" -f $detail)
-                    }
-                    $eventData = ""
-                }
-            }
-        }
-    }
-    finally {
-        $client.Dispose()
+    $tasks = Get-DelegationTaskNodes
+    foreach ($task in $tasks) {
+        Process-DelegationTask -Task $task -Processed $Processed
     }
 }
 
@@ -423,27 +390,12 @@ foreach ($urn in @($state.processed)) {
 }
 
 Initialize-ToastRuntime
-Write-Log -Message ("started. session={0} poll={1}s after={2}" -f $SessionUrn, $PollSeconds, $state.last_after)
+Write-Log -Message ("started. session={0} assignee={1} poll={2}s" -f $SessionUrn, $AssignedTo, $PollSeconds)
 
 try {
     while ($true) {
         try {
-            Run-BackfillPoll -State ([ref]$state) -Processed $processed
-            Save-State -Path $StateFile -State $state -Processed $processed
-
-            if (-not $DisableSSE) {
-                try {
-                    Run-SSELoop -State ([ref]$state) -Processed $processed
-                }
-                catch {
-                    $detail = Get-ErrorDetail -Err $_
-                    Write-Log -Level "WARN" -Message ("SSE disconnected; fallback to polling: {0}" -f $detail)
-                }
-            }
-            else {
-                Start-Sleep -Seconds $PollSeconds
-            }
-
+            Run-DelegationTaskPoll -Processed $processed
             Save-State -Path $StateFile -State $state -Processed $processed
             Start-Sleep -Seconds $PollSeconds
         }

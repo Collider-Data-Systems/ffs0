@@ -16,7 +16,7 @@ if (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction Sile
 }
 
 $yt = "c:/Users/HP/FFS0_HPlaptop/.venv/Scripts/yt-dlp.exe"
-$tmp = "./.agent/kb/reference/youtube/tmp"
+$tmp = "./.agent/dev/reference/youtube/tmp"
 
 if (-not (Test-Path -LiteralPath $yt)) {
     throw "yt-dlp not found at $yt"
@@ -93,7 +93,7 @@ $saveParams = @{
     Keywords = $Keywords
 }
 
-$saveOut = (& ./.agent/scripts/save-youtube-transcript.ps1 @saveParams 2>&1 | Out-String)
+$saveOut = (& ./.agent/dev/save-youtube-transcript.ps1 @saveParams 2>&1 | Out-String)
 
 $savedPath = ""
 foreach ($line in ($saveOut -split "`r?`n")) {

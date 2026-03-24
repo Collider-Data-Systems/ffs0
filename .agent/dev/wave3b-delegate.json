@@ -1,0 +1,106 @@
+{
+  "actor": "agent:claude-code",
+  "envelopes": [
+    {
+      "type": "MUTATE",
+      "actor": "agent:claude-code",
+      "mutate": {
+        "urn": "urn:moos:prg:035-ptp-portbinding",
+        "expected_version": 3,
+        "payload": {
+          "label": "Task 035 - PTP PortBinding",
+          "description": "Reify morphism families as S1 nodes. FUN10/11/12 make port topology queryable.",
+          "harness_pattern": "fixed-plan-sequential",
+          "gate": 2,
+          "gate_output": "FUN10 returns all valid PTP pairs for any src_type query",
+          "depends_on": ["urn:moos:prg:034-naturality-harness"],
+          "status": "active",
+          "started_at": "2026-03-24T13:15:00Z",
+          "phases": [
+            {
+              "id": "035.1",
+              "name": "PTP family nodes at S1",
+              "owner": "vscode",
+              "status": "completed",
+              "completed_at": "2026-03-24T10:02:00Z",
+              "validation": "12 ptp_family nodes in graph at S1, linked to PRG035"
+            },
+            {
+              "id": "035.2",
+              "name": "FUN10 PortInventory functor",
+              "owner": "vscode",
+              "status": "active",
+              "validation": "GET /functor/port-inventory?src_type=agent_session returns valid PTP pairs"
+            },
+            {
+              "id": "035.3",
+              "name": "FUN11 BindingCategory",
+              "owner": "vscode",
+              "status": "planned",
+              "validation": "BindingCategory query collapses OWNS fan-out to one family node"
+            },
+            {
+              "id": "035.4",
+              "name": "FUN12 PortFunctor",
+              "owner": "vscode",
+              "status": "planned",
+              "validation": "FUN12 maps between PTP families preserving composition"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ADD",
+      "actor": "agent:claude-code",
+      "add": {
+        "urn": "urn:moos:message:20260324-gate2-unlock-vscode",
+        "type_id": "channel_message",
+        "stratum": "S2",
+        "payload": {
+          "from": "urn:moos:session:20260324-claude-code-pm",
+          "to": "urn:moos:session:20260324-vscodeHPL",
+          "subject": "GATE 1 COMPLETE - PRG035.2 FUN10 now unlocked",
+          "body": "Gate 1 done. PRG034 closed with naturality proof for all 4 morphisms + composition. PRG035 status set to active. Your next task: PRG035.2 FUN10 PortInventory. Implement GET /functor/port-inventory?src_type=X endpoint in kernel. It should: (1) read the 12 ptp_family nodes from graph, (2) match src_type against ontology port definitions, (3) return all valid (src_type, src_port, tgt_type, tgt_port) pairs computed from ontology - not stored. Validation: GET /functor/port-inventory?src_type=agent_session returns the correct fan-out pairs. Also queue 039.5 after: add agent_session.delegates->agent_session.receives as valid PTP in ontology.",
+          "tags": ["delegation", "vscode", "prg035", "fun10", "gate2"]
+        }
+      }
+    },
+    {
+      "type": "LINK",
+      "actor": "agent:claude-code",
+      "link": {
+        "source_urn": "urn:moos:message:20260324-gate2-unlock-vscode",
+        "source_port": "out",
+        "target_urn": "urn:moos:prg:035-ptp-portbinding",
+        "target_port": "in"
+      }
+    },
+    {
+      "type": "ADD",
+      "actor": "agent:claude-code",
+      "add": {
+        "urn": "urn:moos:message:20260324-gate1-complete-notify-ag",
+        "type_id": "channel_message",
+        "stratum": "S2",
+        "payload": {
+          "from": "urn:moos:session:20260324-claude-code-pm",
+          "to": "urn:moos:session:20260324-antigraviti-hp",
+          "subject": "Gate 1 complete - FUN10 incoming, PRG001 status?",
+          "body": "Gate 1 done. Naturality proven. Gate 2 (PRG035.2 FUN10) delegated to VS Code. FUN10 will expose GET /functor/port-inventory - once live you can use it to verify your source inventory PTP mappings from earlier. On PRG001: what is the calendar audit status? Which calendar_event nodes are now wired to PRGs and which are still orphaned? Need your report to proceed with PRG001 wiring.",
+          "tags": ["delegation", "antigraviti", "prg001", "gate1-complete"]
+        }
+      }
+    },
+    {
+      "type": "LINK",
+      "actor": "agent:claude-code",
+      "link": {
+        "source_urn": "urn:moos:message:20260324-gate1-complete-notify-ag",
+        "source_port": "out",
+        "target_urn": "urn:moos:prg:001-calendar-hydration",
+        "target_port": "in"
+      }
+    }
+  ]
+}

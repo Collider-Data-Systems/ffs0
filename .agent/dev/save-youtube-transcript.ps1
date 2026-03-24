@@ -33,7 +33,7 @@ param(
     [string]$Notes = "",
 
     [Parameter(Mandatory = $false)]
-    [string]$OutputDir = ".\\.agent\\kb\\reference\\youtube\\entries"
+    [string]$OutputDir = ".\\.agent\\dev\\reference\\youtube\\entries"
 )
 
 Set-StrictMode -Version Latest

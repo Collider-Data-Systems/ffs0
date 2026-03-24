@@ -1,0 +1,85 @@
+{
+  "actor": "agent:claude-code",
+  "envelopes": [
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:event:20260419-hackathon","source_port":"out","target_urn":"urn:moos:prg:035-ptp-portbinding","target_port":"in"}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:event:20260419-hackathon","source_port":"out","target_urn":"urn:moos:prg:036-cloverleaf","target_port":"in"}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:event:20260419-hackathon","source_port":"out","target_urn":"urn:moos:prg:037-inspect-run","target_port":"in"}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:event:20260419-hackathon","source_port":"out","target_urn":"urn:moos:prg:039-session-identity","target_port":"in"}},
+    {"type":"ADD","actor":"agent:claude-code","add":{"urn":"urn:moos:event:20260404-gate2-target","type_id":"calendar_event","stratum":"S2","payload":{"title":"Gate 2 Target: PRG035 FUN10 complete","start":"2026-04-04T00:00:00Z","description":"Target for PRG035 PTP PortBinding. FUN10/11/12 live.","moos_day":168}}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:event:20260404-gate2-target","source_port":"out","target_urn":"urn:moos:prg:035-ptp-portbinding","target_port":"in"}},
+    {"type":"ADD","actor":"agent:claude-code","add":{"urn":"urn:moos:event:20260412-gate3-target","type_id":"calendar_event","stratum":"S2","payload":{"title":"Gate 3 Target: PRG036 Cloverleaf complete","start":"2026-04-12T00:00:00Z","description":"Target for PRG036 Cloverleaf multi-kernel topology.","moos_day":176}}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:event:20260412-gate3-target","source_port":"out","target_urn":"urn:moos:prg:036-cloverleaf","target_port":"in"}},
+    {"type":"ADD","actor":"agent:claude-code","add":{"urn":"urn:moos:note:source-a2a-spec","type_id":"keep_note","stratum":"S0","payload":{"title":"Source: Agent-to-Agent Protocol Spec","body":"A2A protocol spec for agent HTTP communication. Relevant to delegation_task design and PRG039.5.","tags":["source","a2a","delegation","prg039"]}}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:note:source-a2a-spec","source_port":"out","target_urn":"urn:moos:prg:039-session-identity","target_port":"in"}},
+    {"type":"ADD","actor":"agent:claude-code","add":{"urn":"urn:moos:note:source-act-proceedings","type_id":"keep_note","stratum":"S0","payload":{"title":"Source: Applied Category Theory Conference Proceedings","body":"ACT proceedings - categorical foundations for ontology, functors, naturality. Core reference for gate PRGs 034-037.","tags":["source","category-theory","ACT","prg034"]}}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:note:source-act-proceedings","source_port":"out","target_urn":"urn:moos:prg:034-naturality-harness","target_port":"in"}},
+    {"type":"ADD","actor":"agent:claude-code","add":{"urn":"urn:moos:note:source-anthropic-docs","type_id":"keep_note","stratum":"S0","payload":{"title":"Source: Anthropic API Docs","body":"Claude API and Agent SDK docs. Harness engineering patterns, tool use, session management.","tags":["source","anthropic","claude","harness"]}}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:note:source-anthropic-docs","source_port":"out","target_urn":"urn:moos:prg:038-moos-media","target_port":"in"}},
+    {"type":"ADD","actor":"agent:claude-code","add":{"urn":"urn:moos:note:source-google-ai-docs","type_id":"keep_note","stratum":"S0","payload":{"title":"Source: Google AI Developer Docs","body":"Google AI/Gemini docs. Reference for AG capabilities and API patterns.","tags":["source","google","gemini","antigraviti"]}}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:note:source-google-ai-docs","source_port":"out","target_urn":"urn:moos:prg:039-session-identity","target_port":"in"}},
+    {"type":"ADD","actor":"agent:claude-code","add":{"urn":"urn:moos:note:source-openai-docs","type_id":"keep_note","stratum":"S0","payload":{"title":"Source: OpenAI Platform Docs","body":"OpenAI API docs. Reference for multi-model harness patterns.","tags":["source","openai","harness"]}}},
+    {"type":"ADD","actor":"agent:claude-code","add":{"urn":"urn:moos:note:source-youtube-system3","type_id":"keep_note","stratum":"S0","payload":{"title":"Source: YouTube System 3 AI Channel","body":"System 3 AI YouTube - reference for mo:os media content and agent system design.","tags":["source","youtube","system3","prg038"]}}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:note:source-youtube-system3","source_port":"out","target_urn":"urn:moos:prg:038-moos-media","target_port":"in"}},
+    {"type":"ADD","actor":"agent:claude-code","add":{"urn":"urn:moos:note:20260324-delegation-task-spec","type_id":"keep_note","stratum":"S1","payload":{"title":"delegation_task node spec","body":"New S2 type: delegation_task. Fields: assigned_to (agent urn), prg_urn, phase_id, status (pending|in_progress|completed|blocked), title, spec, assigned_at, started_at, completed_at. Wires: session.delegates->task.child (lead creates), task.out->session.receives (assigned to agent), task.out->prg.in (belongs to PRG). Query on session start: GET /state/lens?kind=delegation_task filter assigned_to+status=pending. No heuristic parsing. Type IS the signal. VS Code needs: ontology patch + session-start skill. AG listener: replace Is-DelegationPayload() with delegation_task poll. Fixes: VS Code no-listener, AG cascade, channel_message no-status.","tags":["prg039","delegation-task","vscode","antigraviti","prg001"]}}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:note:20260324-delegation-task-spec","source_port":"out","target_urn":"urn:moos:prg:039-session-identity","target_port":"in"}},
+    {"type":"LINK","actor":"agent:claude-code","link":{"source_urn":"urn:moos:note:20260324-delegation-task-spec","source_port":"out","target_urn":"urn:moos:prg:000-session-meta","target_port":"in"}}
+    {
+      "type": "MUTATE",
+      "actor": "agent:claude-code",
+      "mutate": {
+        "urn": "urn:moos:prg:001-calendar-hydration",
+        "expected_version": 1,
+        "payload": {
+          "label": "PRG001 - Calendar Hydration",
+          "description": "Bridge IRL time (GCal) to graph time (PRG wires). Calendar events become the temporal projection of the meta-program.",
+          "status": "in_progress",
+          "depends_on": [],
+          "phases": [
+            {"id": "001.1", "name": "Audit existing calendar_event nodes", "status": "active", "owner": "claude-code", "validation": "11 existing nodes checked against live GCal data"},
+            {"id": "001.2", "name": "Wire PRG-relevant events to PRGs", "status": "active", "owner": "claude-code", "validation": "hackathon wired to PRG000, studio wired to PRG038"},
+            {"id": "001.3", "name": "Identify orphaned events", "status": "active", "owner": "claude-code", "validation": "keep_note listing events not wired to any PRG"},
+            {"id": "001.4", "name": "GCal sync protocol", "status": "planned", "owner": "antigraviti", "validation": "FUN06 calendar functor produces correct projection"}
+          ],
+          "gate_output": "All IRL anchors wired to PRGs. Calendar = temporal projection of PRG000.",
+          "harness_pattern": "dynamic-plan-adaptive",
+          "gcal_audit": {
+            "total_events_next_37_days": 24,
+            "prg_relevant": ["PRG001 event (Mar 24)", "Studio Setup (Mar 24, PRG038)", "Hackathon MVP Demo (Apr 19, PRG000)", "Musa meeting (Mar 27)"],
+            "recurring_personal": ["MOEDERDAG (weekly)", "GT TIJDLIJN (weekly)", "MAKEL (weekly)", "Termijn ZT (monthly)", "ADHDCENTRAAL (medical)"],
+            "already_in_graph": ["event:20260324-studio", "event:20260419-hackathon", "event:20260322-session1", "event:20260323-t034", "event:t0-moos-birthday"]
+          }
+        }
+      }
+    },
+    {
+      "type": "LINK",
+      "actor": "agent:claude-code",
+      "link": {
+        "source_urn": "urn:moos:event:20260419-hackathon",
+        "source_port": "out",
+        "target_urn": "urn:moos:prg:000-session-meta",
+        "target_port": "in"
+      }
+    },
+    {
+      "type": "LINK",
+      "actor": "agent:claude-code",
+      "link": {
+        "source_urn": "urn:moos:event:t0-moos-birthday",
+        "source_port": "out",
+        "target_urn": "urn:moos:prg:000-session-meta",
+        "target_port": "in"
+      }
+    },
+    {
+      "type": "LINK",
+      "actor": "agent:claude-code",
+      "link": {
+        "source_urn": "urn:moos:event:20260322-session1",
+        "source_port": "out",
+        "target_urn": "urn:moos:prg:000-session-meta",
+        "target_port": "in"
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [[ "$branch" == "main" ]]; then
+  exit 0
+fi
+
+if [[ "$branch" =~ ^(feat|fix|chore)\/[a-z0-9._-]+$ ]]; then
+  exit 0
+fi
+
+if [[ "$branch" =~ ^release\/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  exit 0
+fi
+
+echo "[pre-push] Invalid branch name: $branch"
+echo "Use one of:"
+echo "  feat/<scope>-<name>"
+echo "  fix/<scope>-<name>"
+echo "  chore/<scope>-<name>"
+echo "  release/<major>.<minor>.<patch>"
+exit 1

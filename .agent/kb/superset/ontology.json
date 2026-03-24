@@ -429,7 +429,9 @@
         "S1"
       ],
       "source_connections": [],
-      "target_connections": []
+      "target_connections": [
+        "OWNS"
+      ]
     },
     {
       "id": "OBJ24",
@@ -444,10 +446,13 @@
       ],
       "source_connections": [
         "OWNS",
-        "LINK_NODES"
+        "LINK_NODES",
+        "DELEGATES"
       ],
       "target_connections": [
-        "OWNS"
+        "OWNS",
+        "LINK_NODES",
+        "RECEIVES"
       ]
     },
     {
@@ -526,6 +531,43 @@
       "target_connections": [
         "OWNS",
         "LINK_NODES"
+      ]
+    },
+    {
+      "id": "OBJ29",
+      "name": "PtpFamily",
+      "type_id": "ptp_family",
+      "broad_category": "ontology",
+      "description": "Morphism family node — reifies a LINK-type morphism as a first-class S1 object. Captures src_port/tgt_port pair. FUN10 computes type fan-out from ontology.",
+      "mutable": false,
+      "allowed_strata": [
+        "S1"
+      ],
+      "source_connections": [
+        "LINK_NODES"
+      ],
+      "target_connections": [
+        "OWNS"
+      ]
+    },
+    {
+      "id": "OBJ30",
+      "name": "DelegationTask",
+      "type_id": "delegation_task",
+      "broad_category": "structure",
+      "description": "Delegation unit of work assigned to an agent session. Lifecycle is tracked in payload.status with pending/in_progress/completed/blocked states.",
+      "mutable": true,
+      "allowed_strata": [
+        "S2"
+      ],
+      "source_connections": [
+        "LINK_NODES",
+        "RECEIVES"
+      ],
+      "target_connections": [
+        "LINK_NODES",
+        "OWNS",
+        "DELEGATES"
       ]
     }
   ],
@@ -665,6 +707,22 @@
       "source": "industry.*",
       "target": "any",
       "description": "Provenance morphism — links S0 industry entity to S2 instance node. The classifying functor from Industry to Superset, realized as a graph morphism."
+    },
+    {
+      "id": "MOR18",
+      "name": "DELEGATES",
+      "decomposition": "LINK(session, 'delegates', task, 'child')",
+      "source": "identity.AgentSession",
+      "target": "structure.DelegationTask",
+      "description": "Session delegates a typed task to a delegation_task node."
+    },
+    {
+      "id": "MOR19",
+      "name": "RECEIVES",
+      "decomposition": "LINK(task, 'out', session, 'receives')",
+      "source": "structure.DelegationTask",
+      "target": "identity.AgentSession",
+      "description": "delegation_task emits completion/result signal back to the assigned session."
     }
   ],
   "invariant_morphisms": {

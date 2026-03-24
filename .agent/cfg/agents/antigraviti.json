@@ -2,7 +2,7 @@
   "agent_urn": "urn:moos:agent:antigraviti",
   "type_id": "agent_spec",
   "role": "testing",
-  "status": "standby",
+  "status": "active",
   "workstation": "hp-laptop",
   "workspace_root": "c:\\Users\\HP\\FFS0_HPlaptop",
   "capabilities": [
@@ -34,7 +34,7 @@
   },
   "last_task": "verify-task-033-explorer-2.0",
   "last_result": "Task 033 Explorer 2.0: 11/12 PASS (1 deployment note, no code bugs). 278N/154W. Commit f3b77f2.",
-  "current_task": "Auto-listening delegated messages + HG checkpoint + calendar projection verification",
+  "current_task": "Running session urn:moos:session:20260324-antigraviti-hp; auto-listening delegated messages",
   "tasks_verified": [
     "T023-A",
     "T023-D",
