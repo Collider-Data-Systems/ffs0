@@ -23,6 +23,8 @@ jobs:
 
             const ensure = [
               ["branch:feature", "0e8a16", "Feature branch PR"],
+              ["branch:fix", "e4e669", "Fix branch PR"],
+              ["branch:chore", "c5def5", "Chore branch PR"],
               ["branch:hotfix", "b60205", "Hotfix branch PR"],
               ["branch:agent", "5319e7", "Agent branch PR"],
               ["branch:admin", "6f42c1", "Admin branch PR"],
@@ -46,6 +48,8 @@ jobs:
 
             const labels = ["status:needs-triage"];
             if (/^feat\//.test(branch)) labels.push("branch:feature");
+            if (/^fix\//.test(branch)) labels.push("branch:fix");
+            if (/^chore\//.test(branch)) labels.push("branch:chore");
             if (/^hotfix\//.test(branch)) labels.push("branch:hotfix");
             if (/^agent\//.test(branch)) labels.push("branch:agent");
             if (/^admin\//.test(branch)) labels.push("branch:admin");
