@@ -55,4 +55,4 @@ if ($null -ne $task) {
 }
 ```
 
-5. Execute the claimed task and checkpoint completion in graph with a channel_message linked to the task PRG.
+5. Execute the claimed task. On completion, MUTATE the delegation_task with `status: "completed"` and results in payload. Do NOT create channel_messages for status updates.

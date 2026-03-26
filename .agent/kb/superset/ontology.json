@@ -519,7 +519,7 @@
       "name": "ChannelMessage",
       "type_id": "channel_message",
       "broad_category": "structure",
-      "description": "Key decision from channel .md files promoted to graph — not all channel traffic, only decisions that change PRG direction. Preserves provenance of design choices. Channels remain S4 projections; this node captures the S2 ground truth.",
+      "description": "DEPRECATED for routing (Wave 4). Use delegation_task for all inter-agent coordination. channel_message retains only structural decisions that change PRG direction (phase transitions, gate closures). Human-readable summaries are functor output (FUN06/FUN07), never stored in graph. Legacy messages (pre-Wave4) remain for provenance.",
       "mutable": false,
       "allowed_strata": [
         "S1",
@@ -808,7 +808,17 @@
       "status": "active",
       "description": "Temporal projection functor — maps prg_task, agent_session, and calendar_event nodes into calendar-shaped entries (JSON/iCal) for external scheduling surfaces.",
       "domain": "CAT01",
-      "codomain": "CAT20"
+      "codomain": "CAT21"
+    },
+    {
+      "id": "FUN07",
+      "name": "CalendarIngestion",
+      "signature": "F_gcal_in: GCal → C",
+      "direction": "calendar → graph hydration",
+      "status": "planned",
+      "description": "Reverse temporal functor — ingests Google Calendar events as S0 authored artifacts (calendar_event or keep_note). PRG-tagged events wire to prg_task phases. Future events pre-wire planned phases. Past events hydrate retroactive context. Calendar is an S0 authoring surface, not just an S4 projection target.",
+      "domain": "CAT21",
+      "codomain": "CAT01"
     }
   ],
   "categories": {
@@ -1094,12 +1104,12 @@
         "description": "Protocol adapter category — request/response transport."
       },
       {
-        "id": "CAT20",
+        "id": "CAT21",
         "name": "GCal",
         "latex": "\\mathcal{G}_{\\text{cal}}",
         "objects": "CalendarEntry projections (summary, start/end, status, source)",
         "morphisms": "Event updates preserving source URN identity",
-        "description": "Calendar projection category — codomain of FUN06 for schedule-aligned graph views."
+        "description": "Calendar category — codomain of FUN06 (projection) and domain of FUN07 (ingestion). Bidirectional: graph ↔ calendar. Calendar is both S4 projection surface and S0 authoring surface."
       }
     ]
   }

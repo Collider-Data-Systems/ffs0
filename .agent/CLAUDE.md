@@ -85,41 +85,84 @@ PRG tasks, calendar events, keep notes are graph-native — not in KB.
 - Operational PRGs (038, 040) use `dynamic-plan-adaptive` harness pattern.
   Phases can be reordered, added, or removed at runtime.
 - Sub-PRGs (034a, 038a, 040a) are wired `parent.out → sub.in`.
-- Delegation: ADD channel_message with from/to session URNs, LINK to target PRG.
+- Delegation: ADD `delegation_task` with assigned_to, status, prg_urn, spec. Query: `GET /state/lens?kind=delegation_task`.
+  `channel_message` is DEPRECATED for routing (Wave 4). Use only for structural PRG decisions.
+  Human-readable summaries are functor output (FUN06/FUN07), never stored in graph.
 - Session roles: lead/active/listening. Lead coordinates, others execute assigned phases.
 - Auto-ack dedup: messages with tag `auto-ack` MUST NOT trigger further acks.
 
+### Validation Loop (Karpathy Gate Rule)
+
+Every phase transition MUST pass validation before promotion. No exceptions.
+
+```
+plan → implement → validate → promote (or block)
+```
+
+- **validation_condition**: Each phase declares what must be true for completion.
+  No empty validation fields. "It works" is not a validation condition.
+- **Gate check**: Before MUTATE status→completed, the lead (or delegated agent)
+  verifies the validation_condition against observable graph state or endpoint output.
+- **Block on fail**: If validation fails, MUTATE status→blocked with reason in payload.
+  Do not skip. Do not hand-wave. Fix → re-validate → promote.
+- **March of nines**: Each gate adds reliability. Gate 1 gets you from 0→0.9.
+  Gate 2 from 0.9→0.99. Gate 3 from 0.99→0.999. The last 1% takes as long as the first 90%.
+  Budget time accordingly — later gates are harder, not easier.
+
 ## Temporal Model
 
-Every Node carries `created_at` and `updated_at` (RFC3339Nano, UTC).
-Every Wire carries `created_at`. Set by the catamorphism, reconstructible by replay.
-The graph epoch (t=0) is the `issued_at` of the first morphism log entry.
-Exposed via `GET /healthz` → `epoch` field.
+Three layers of time. Never confuse them.
+
+| Layer | What | Source | Example |
+|-------|------|--------|---------|
+| **Log time** | Position in the morphism log | `issued_at` on each envelope | Morphism #742 issued at 2026-03-17T14:02:00Z |
+| **Runtime time** | Kernel-stamped creation/mutation | `created_at`, `updated_at` on nodes/wires | Node created when ADD processed |
+| **IRL time** | Real-world event time | Payload fields (`started_at`, `completed_at`, `scheduled_at`) | PRG phase started at 10am meeting |
+
+**Log time** is the total order. `state(t) = fold(log[0..t])`. Deterministic replay.
+**Runtime time** is set by the catamorphism — reconstructible from log replay.
+**IRL time** is authored by humans/agents in payloads — the kernel does not enforce it.
 
 ```
-Node.CreatedAt  = issuedAt of the ADD that created it
-Node.UpdatedAt  = issuedAt of the most recent MUTATE (or ADD if never mutated)
-Wire.CreatedAt  = issuedAt of the LINK that created it
+Node.CreatedAt  = issuedAt of the ADD that created it          (runtime)
+Node.UpdatedAt  = issuedAt of the most recent MUTATE           (runtime)
+Wire.CreatedAt  = issuedAt of the LINK that created it         (runtime)
+PRG.started_at  = when the phase actually began IRL             (IRL, payload)
+PRG.completed_at = when the phase actually finished IRL         (IRL, payload)
 ```
+
+The graph epoch (t=0) is the `issued_at` of the first morphism log entry.
+Exposed via `GET /healthz` → `epoch` field.
 
 PRG runtime lifecycle is tracked via payload fields set by MUTATE:
 `status` (planned/active/in_progress/completed/ideation), `started_at`, `completed_at`.
 The kernel doesn't enforce lifecycle semantics — programs define their own.
 
-## Multi-IDE Delegation
+**Invariant:** Log time never lies. If runtime/IRL timestamps conflict with log order, log order wins.
 
-Multiple IDE instances (VS Code, Claude Code, Antigraviti, etc.) can connect
-to the same kernel simultaneously. Each conversation = one `agent_session` node.
+## Multi-IDE Delegation (The Triangle)
+
+Multiple IDE instances connect to the same kernel simultaneously.
+Each conversation = one `agent_session` node.
+
+**Known agents** (from `cfg/users.yaml`):
+
+| Agent URN | IDE | Role | Branch Prefix |
+|-----------|-----|------|---------------|
+| `urn:moos:agent:claude-code` | Claude Desktop | lead | `agent/claude-code` |
+| `urn:moos:agent:vscode-ai` | VS Code (Sonnet 4.6) | execution | `agent/vscode-ai` |
+| `urn:moos:agent:antigraviti` | Antigraviti (Gemini 3.1 Pro) | testing | `agent/antigraviti` |
 
 **Protocol:**
 
-1. Each IDE/conversation ADDs its own `agent_session` node with `{agent, workstation, started_at}`
+1. Each IDE ADDs its own `agent_session` node with `{agent, workstation, started_at}`
 2. LINK session → `prg:000-session-meta` (out→in) for visibility
 3. LINK session → any PRGs it's working on (out→in)
-4. One session is designated **lead** per user appointment (in conversation, not in code)
-5. The lead coordinates PRG progression and delegates via graph wires, not files
-6. Non-lead sessions read the graph, do assigned work, write results back via morphisms
-7. Messages between sessions: ADD `channel_message` nodes, LINK from session and PRG
+4. One session is designated **lead** per user appointment
+5. Lead delegates work via `delegation_task` nodes (ADD + LINK to PRG + LINK to assignee)
+6. Non-lead sessions poll `GET /state/lens?kind=delegation_task&assigned_to=X&status=pending`
+7. Results flow back as MUTATE on the delegation_task (status→completed, output in payload)
+8. Real-time: `GET /log/stream` (SSE) — firestarter agents react to `firestarter-trigger` events
 
 **Invariants:**
 
@@ -128,5 +171,7 @@ to the same kernel simultaneously. Each conversation = one `agent_session` node.
 - The user can appoint any conversation as lead, from any workstation.
 - PRGs can exist in any lifecycle state: wires can be pre-constructed for programs
   whose IRL runtime hasn't started yet. The graph is the plan.
-- Time flows through the log. `GET /log?after=<RFC3339>` to catch up.
-  `GET /log/stream` (SSE) for real-time.
+- Human-readable summaries are NEVER stored in the graph. They are functor output
+  (FUN06/FUN07) projected to Google Workspace, Slack, calendar — S4 surfaces only.
+- Any session, from any workstation, by any agent, in any PRG, can be picked up anytime.
+  Cold-start: `GET /healthz` → `GET /state` → read graph → resume.

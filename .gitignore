@@ -1,5 +1,7 @@
-# Secrets — never commit
+# Secrets — never commit (entire directory)
 .agent/secrets/api_keys.env
+.agent/secrets/client_secret_*.json
+.agent/secrets/google_token.json
 
 # Subrepo — has its own git repo
 moos/
@@ -28,6 +30,14 @@ build/
 tmp/
 *.tmp
 lost\ converstation*.txt
+.agent/tempprg.json
+.agent/C:*
+
+# Ephemeral agent state (local to workstation, not portable)
+.agent/data/morphism-log.jsonl.bak*
+.agent/dev/.antigraviti-auto-listener-state.json
+.agent/dev/antigraviti-auto-listen.log
+.agent/dev/wave4-*.json
 
 # OS
 .DS_Store
