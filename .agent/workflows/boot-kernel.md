@@ -24,9 +24,18 @@ $p = Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select
 $p = Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess; if ($p) { Stop-Process -Id $p -Force; Write-Host "Killed $p on :8000" } else { Write-Host ":8000 free" }
 ```
 
-4. Start the kernel (opens in background — it blocks):
+4. Start the kernel in a dedicated PowerShell window (it blocks — keep the window open):
 ```powershell
-Push-Location ".\moos\platform\kernel"; go run ./cmd/moos --kb "..\..\..\ffs0-factory-super\.agent\kb" --hydrate; Pop-Location
+# moos/ is a sibling of ffs0-factory-super/, both under FFS0_HPlaptop/
+Push-Location "$env:USERPROFILE\FFS0_HPlaptop\moos\platform\kernel"
+.\moos.exe --kb "$env:USERPROFILE\FFS0_HPlaptop\ffs0-factory-super\.agent\kb" --hydrate
+Pop-Location
+```
+Or with go run (slower, recompiles):
+```powershell
+Push-Location "$env:USERPROFILE\FFS0_HPlaptop\moos\platform\kernel"
+go run ./cmd/moos --kb "$env:USERPROFILE\FFS0_HPlaptop\ffs0-factory-super\.agent\kb" --hydrate
+Pop-Location
 ```
 Wait for: `[transport] listening on :8000`
 

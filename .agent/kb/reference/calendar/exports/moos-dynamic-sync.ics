@@ -1,0 +1,241 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//moos//FUN06 Calendar//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:moos-calendar
+BEGIN:VEVENT
+UID:urn:moos:prg:035-ptp-portbinding
+DTSTAMP:20260323T012926Z
+DTSTART:20260321T090253Z
+DTEND:20260321T090253Z
+SUMMARY:PTP PortBinding type + BindingCategory functors
+DESCRIPTION:Reify 4-tuple (src_type\, src_port\, tgt_type\, tgt_port) as S1 node. FUN10 PortInventory\, FUN11 BindingCat\, FUN12 PortFunctor.
+STATUS:TENTATIVE
+CATEGORIES:prg_task
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:prg:036-cloverleaf
+DTSTAMP:20260323T012926Z
+DTSTART:20260321T090253Z
+DTEND:20260321T090253Z
+SUMMARY:Cloverleaf multi-kernel topology — KernelLeaf + KernelHub
+DESCRIPTION:Non-interaction invariant — leaf graphs cannot interact except through formally typed cooperad ports.
+STATUS:TENTATIVE
+CATEGORIES:prg_task
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:prg:037-inspect-run
+DTSTAMP:20260323T012926Z
+DTSTART:20260321T090253Z
+DTEND:20260321T090253Z
+SUMMARY:Inspect/Run separation — GPU inspect\, CPU run\, Log memory
+DESCRIPTION:Capstone gate. GPU = inspect (fast\, parallel\, ephemeral\, HDC). CPU = run (serial\, deterministic\, proven). Log = memory (append-only).
+STATUS:TENTATIVE
+CATEGORIES:prg_task
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:session:20260321-lead
+DTSTAMP:20260323T012926Z
+DTSTART:20260321T123000Z
+DTEND:20260321T092237Z
+SUMMARY:Session: Agent session
+DESCRIPTION:Agent session (claude-opus-4-6)
+STATUS:TENTATIVE
+CATEGORIES:agent_session
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:session:20260322-lead
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T092600Z
+DTEND:20260322T133053Z
+SUMMARY:Session: Agent session
+DESCRIPTION:Agent session (urn:moos:agent:claude-code)
+STATUS:CONFIRMED
+CATEGORIES:agent_session
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:event:t0-moos-birthday
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T095703Z
+DTEND:20260322T095703Z
+SUMMARY:T=0 Moos is born
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:event:20260322-session1
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T095703Z
+DTEND:20260322T095703Z
+SUMMARY:Session 1 � Calendar goes live
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:event:20260323-t034
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T095703Z
+DTEND:20260322T095703Z
+SUMMARY:T034 Naturality Harness Gate 1
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:event:20260324-studio
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T095703Z
+DTEND:20260322T095703Z
+SUMMARY:Studio Setup � Gear Ready First Photos
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:event:20260419-hackathon
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T095703Z
+DTEND:20260322T095703Z
+SUMMARY:Hackathon � mo:os MVP Demo
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:prg:038-moos-media
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T095703Z
+DTEND:20260322T095703Z
+SUMMARY:Moos Media Channel
+DESCRIPTION:YouTube/Instagram/TikTok channel. Moos the dachshund narrates. Smug commentary on Sam\, snappy criticism of big data and industry. Calendar is the diary/timeline. Studio photos Tue Mar 24. Campaign after MVP.
+STATUS:TENTATIVE
+CATEGORIES:prg_task
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:prg:000-session-meta
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T132746Z
+DTEND:20260323T002746Z
+SUMMARY:Session Meta-Program
+DESCRIPTION:Always-active root PRG. Orchestrates all sub-PRGs\, tracks session context\, workspace state\, and timeline.
+STATUS:CONFIRMED
+CATEGORIES:prg_task
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:session:20260322-2-vscodeHPL
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T204900Z
+DTEND:20260322T204900Z
+SUMMARY:Session: PRG000 lead. Phase 0 /state fix applied. Watcher on /healthz+lens.
+DESCRIPTION:PRG000 lead. Phase 0 /state fix applied. Watcher on /healthz+lens. (urn:moos:agent:vscode-ai)
+STATUS:CONFIRMED
+CATEGORIES:agent_session
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:session:20260322-antigraviti
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T210000Z
+DTEND:20260323T005521Z
+SUMMARY:Session: Actively monitoring /log/stream for PRG034 modifications\, PRG000 updates\, and auto-delegation tags. All HG messaging synced. Ready for FUN06 and temporal feature tests.
+DESCRIPTION:Actively monitoring /log/stream for PRG034 modifications\, PRG000 updates\, and auto-delegation tags. All HG messaging synced. Ready for FUN06 and temporal feature tests. (urn:moos:agent:antigraviti)
+STATUS:TENTATIVE
+CATEGORIES:agent_session
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:prg:039-session-identity
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T214802Z
+DTEND:20260322T214802Z
+SUMMARY:Session Identity - Conversation as Graph Node
+DESCRIPTION:Any IDE\, any workstation\, any agent: conversation = agent_session node wired to PRGs. Multi-kernel session identity via CI-3. Prevents drift: graph is SOT\, hydration reconstructs.
+STATUS:TENTATIVE
+CATEGORIES:prg_task
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:session:20260323-vscodeHPL
+DTSTAMP:20260323T012926Z
+DTSTART:20260322T232955Z
+DTEND:20260322T232955Z
+SUMMARY:Session: Lead. PRG034 naturality complete. Temporal primitives (CreatedAt/UpdatedAt) implemented across kernel.
+DESCRIPTION:Lead. PRG034 naturality complete. Temporal primitives (CreatedAt/UpdatedAt) implemented across kernel. (urn:moos:agent:vscode-ai)
+STATUS:CONFIRMED
+CATEGORIES:agent_session
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:prg:001-calendar-hydration
+DTSTAMP:20260323T012926Z
+DTSTART:20260323T010946Z
+DTEND:20260323T010946Z
+SUMMARY:Automated Calendar Hydration
+DESCRIPTION:Hydrate calendar with curated sources based on PRG000.
+STATUS:TENTATIVE
+CATEGORIES:prg_task
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:prg:034-naturality-harness
+DTSTAMP:20260323T012926Z
+DTSTART:20260323T080000Z
+DTEND:20260322T233018Z
+SUMMARY:Naturality harness for FUN02 UI_Lens
+DESCRIPTION:FUN02 naturality test: Project(Apply(M\, S)) == Apply(M'\, Project(S)). Gate 1 of locked 1-2-3-4 sequence.
+STATUS:CONFIRMED
+CATEGORIES:prg_task
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:calendar_event:source-check-anthropic-docs
+DTSTAMP:20260323T012926Z
+DTSTART:20260323T090000Z
+DTEND:20260323T100000Z
+SUMMARY:Review Source: Anthropic API Docs
+DESCRIPTION:Curation check for: https://docs.anthropic.com\nNotes: Claude models\, pricing\, capabilities\, rate limits.
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:calendar_event:source-check-google-ai-docs
+DTSTAMP:20260323T012926Z
+DTSTART:20260323T110000Z
+DTEND:20260323T120000Z
+SUMMARY:Review Source: Google AI Developer Docs
+DESCRIPTION:Curation check for: https://ai.google.dev\nNotes: Gemini models\, Vertex AI\, capabilities.
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:calendar_event:source-check-openai-docs
+DTSTAMP:20260323T012926Z
+DTSTART:20260323T130000Z
+DTEND:20260323T140000Z
+SUMMARY:Review Source: OpenAI Platform Docs
+DESCRIPTION:Curation check for: https://platform.openai.com/docs\nNotes: GPT models\, tools API\, assistants\, pricing.
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:calendar_event:source-check-a2a-spec
+DTSTAMP:20260323T012926Z
+DTSTART:20260323T150000Z
+DTEND:20260323T160000Z
+SUMMARY:Review Source: Agent-to-Agent Protocol
+DESCRIPTION:Curation check for: https://github.com/google/A2A\nNotes: Google A2A. Task-oriented JSON-RPC. Federation candidate (MOR12).
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:calendar_event:source-check-act-proceedings
+DTSTAMP:20260323T012926Z
+DTSTART:20260323T170000Z
+DTEND:20260323T180000Z
+SUMMARY:Review Source: Applied Category Theory Conference
+DESCRIPTION:Curation check for: https://act-school.com\nNotes: ACT 2026 is our target venue. EPTCS proceedings. Spivak\, Fong\, Yau.
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+BEGIN:VEVENT
+UID:urn:moos:calendar_event:source-check-youtube-system3
+DTSTAMP:20260323T012926Z
+DTSTART:20260323T190000Z
+DTEND:20260323T200000Z
+SUMMARY:MoOS Media Channel: Review YouTube Source
+DESCRIPTION:Curation check for: 'System 3 AI: No Humans Needed'\nURL: https://www.youtube.com/watch?v=K4yLplNrY24
+STATUS:CONFIRMED
+CATEGORIES:calendar_event
+END:VEVENT
+END:VCALENDAR

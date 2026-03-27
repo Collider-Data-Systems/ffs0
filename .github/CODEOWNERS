@@ -1,9 +1,12 @@
 # Default owner
-* @MSD21091969
+
+- @MSD21091969
 
 # Agent KB, workflows, and dev automation
+
 /.agent/ @MSD21091969
 /.github/ @MSD21091969
 
 # Root scripts
-/*.ps1 @MSD21091969
+
+/\*.ps1 @MSD21091969

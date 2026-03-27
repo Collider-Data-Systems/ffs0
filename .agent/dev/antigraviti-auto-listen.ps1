@@ -3,7 +3,8 @@ param(
     [string]$AgentUrn = "urn:moos:agent:antigraviti",
     [string]$AssignedTo = "antigraviti",
     [string]$SessionUrn = "urn:moos:session:20260322-antigraviti",
-    [int]$PollSeconds = 2,
+    [int]$PollSeconds = 10,
+    [int]$SseTimeoutSeconds = 300,
     [string]$StateFile = "",
     [string]$LogFile = "",
     [switch]$StartFromNow,
@@ -377,9 +378,64 @@ function Process-DelegationTask {
 function Run-DelegationTaskPoll {
     param([System.Collections.Generic.HashSet[string]]$Processed)
 
+    Write-Log "Polling for delegation tasks..."
     $tasks = Get-DelegationTaskNodes
+    if ($tasks.Count -gt 0) {
+        Write-Log ("Found {0} total tasks in lens." -f $tasks.Count)
+    }
     foreach ($task in $tasks) {
         Process-DelegationTask -Task $task -Processed $Processed
+    }
+}
+
+function Listen-ForFirestarterTrigger {
+    param(
+        [string]$BaseUrl,
+        [System.Collections.Generic.HashSet[string]]$Processed
+    )
+
+    $streamUrl = "$BaseUrl/log/stream"
+    Write-Log ("Subscribing to firestarter triggers at {0}..." -f $streamUrl)
+
+    try {
+        $request = [System.Net.HttpWebRequest]::Create($streamUrl)
+        $request.Timeout = -1 # Infinite
+        $request.ReadWriteTimeout = -1
+        $response = $request.GetResponse()
+        $stream = $response.GetResponseStream()
+        $reader = New-Object System.IO.StreamReader($stream)
+
+        $currentEvent = ""
+
+        while (-not $reader.EndOfStream) {
+            $line = $reader.ReadLine()
+            if ([string]::IsNullOrWhiteSpace($line)) {
+                continue
+            }
+
+            if ($line -match "^event:\s*(.*)") {
+                $currentEvent = $Matches[1].Trim()
+                continue
+            }
+
+            if ($line -match "^data:\s*(.*)") {
+                if ($currentEvent -eq "firestarter-trigger") {
+                    $data = $Matches[1].Trim()
+                    Write-Log ("Reactive trigger received: {0}" -f $data)
+                    
+                    # Whenever triggered, do a full poll to pick up all pending tasks
+                    Run-DelegationTaskPoll -Processed $Processed
+                }
+                $currentEvent = "" # Reset after data
+            }
+        }
+    }
+    catch {
+        throw $_ # Let the outer loop handle reconnection
+    }
+    finally {
+        if ($null -ne $reader) { $reader.Close() }
+        if ($null -ne $response) { $response.Close() }
     }
 }
 
@@ -393,15 +449,26 @@ Initialize-ToastRuntime
 Write-Log -Message ("started. session={0} assignee={1} poll={2}s" -f $SessionUrn, $AssignedTo, $PollSeconds)
 
 try {
+    # Initial poll to catch up on anything missed while offline
+    Run-DelegationTaskPoll -Processed $processed
+    Save-State -Path $StateFile -State $state -Processed $processed
+
     while ($true) {
         try {
-            Run-DelegationTaskPoll -Processed $processed
-            Save-State -Path $StateFile -State $state -Processed $processed
-            Start-Sleep -Seconds $PollSeconds
+            if ($DisableSSE) {
+                Run-DelegationTaskPoll -Processed $processed
+                Save-State -Path $StateFile -State $state -Processed $processed
+                Start-Sleep -Seconds $PollSeconds
+            }
+            else {
+                # This will block until the stream ends or is triggered
+                Listen-ForFirestarterTrigger -BaseUrl $KernelBaseUrl -Processed $processed
+                Save-State -Path $StateFile -State $state -Processed $processed
+            }
         }
         catch {
             $detail = Get-ErrorDetail -Err $_
-            Write-Log -Level "WARN" -Message ("loop failure: {0}" -f $detail)
+            Write-Log -Level "WARN" -Message ("listener loop failure: {0}. Retrying in {1}s..." -f $detail, $PollSeconds)
             Save-State -Path $StateFile -State $state -Processed $processed
             Start-Sleep -Seconds $PollSeconds
         }

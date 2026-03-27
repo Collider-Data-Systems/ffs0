@@ -80,7 +80,7 @@ identity_objects:
       - ontology_ref: OBJ25
         action: "Can ADD and MUTATE prg_task nodes within delegated scope."
       - ontology_ref: OBJ28
-        action: "Can ADD channel_message nodes for delegation and ACK."
+        action: "Can ADD channel_message nodes for structural PRG decisions only (deprecated for routing — Wave 4). Use delegation_task for all inter-agent coordination."
     known_agents:
       - urn: urn:moos:agent:claude-code
         ide: "Claude Desktop"

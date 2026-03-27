@@ -65,7 +65,7 @@ PRG tasks, calendar events, keep notes are graph-native — not in KB.
 | Seeds         | `.agent/kb/instances/*.json`       |
 | Design docs   | `.agent/dev/design/*.md`           |
 | Reference     | `.agent/dev/reference/`            |
-| Agent configs | `.agent/cfg/agents/*.json`         |
+| Agent configs | `.agent/cfg/instance/agents/*.json` |
 
 ## Rules
 
@@ -145,7 +145,7 @@ The kernel doesn't enforce lifecycle semantics — programs define their own.
 Multiple IDE instances connect to the same kernel simultaneously.
 Each conversation = one `agent_session` node.
 
-**Known agents** (from `cfg/users.yaml`):
+**Known agents** (from `cfg/instance/users.yaml`):
 
 | Agent URN | IDE | Role | Branch Prefix |
 |-----------|-----|------|---------------|

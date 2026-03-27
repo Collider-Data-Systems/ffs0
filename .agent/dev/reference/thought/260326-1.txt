@@ -11,3 +11,13 @@ JUST A THOUGHT BUT I SUSPECT WE MIGHT HAVE TO RESTRUCTURE COUPLE THINGS. iDEAS?
 DISTRIBUTED COMPUTE NEURAL NETWORK
 DISTRIBUTED STRATIFICATION HYDRATION KERNEL
 DISTRIBUTED PRESHEAF FIBER
+
+
+cd C:\Users\HP\FFS0_HPlaptop\moos\platform\kernel
+.\moos.exe --kb "C:\Users\HP\FFS0_HPlaptop\ffs0-factory-super\.agent\kb" --hydrate
+
+
+check kernel on localhost:8000. query GET /state/lens?kind=delegation_task for pending tasks assigned to vscode-ai. execute any you find. write results back via POST /morphisms MUTATE.
+
+
+check kernel on localhost:8000. query GET /state/lens?kind=delegation_task for pending tasks assigned to antigraviti. execute any you find. write results back via POST /morphisms MUTATE.

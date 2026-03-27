@@ -9,7 +9,7 @@ description: Start an Antigraviti testing session — firestarter-based, graph-n
 1. Read your agent config:
 
 ```powershell
-Get-Content ".\ffs0-factory-super\.agent\cfg\agents\antigraviti.json"
+Get-Content ".\ffs0-factory-super\.agent\cfg\instance\agents\antigraviti.json"
 ```
 
 Confirm `status` field. If `paused`, do not proceed without direction.
@@ -59,4 +59,4 @@ $s = Invoke-RestMethod http://localhost:8000/healthz
 
 7. Update your agent config to `active` with current timestamp.
 
-8. If no pending tasks and no firestarter trigger: standby. The graph will wake you.
+8. If no pending tasks and no firestarter trigger: run proactive testing suite per `workflows/antigraviti.md` (Proactive Testing section).

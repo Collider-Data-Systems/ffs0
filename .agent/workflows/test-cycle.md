@@ -51,7 +51,7 @@ Expected: all packages pass (11+ packages as of Task 033).
 
 6. Prepend results to testoff.md (timestamp + table format).
 
-7. Update `cfg/agents/antigraviti.json` — status, last_result.
+7. Record results in graph — MUTATE your agent_session node payload with status and last_result. (cfg/instance/agents/antigraviti.json is identity-only; state lives in graph.)
 
 **Report format:**
 ```

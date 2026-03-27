@@ -33,7 +33,15 @@ lost\ converstation*.txt
 .agent/tempprg.json
 .agent/C:*
 
+# Workspace root temp files — root-anchored (never commit loose files dumped here)
+/data/
+/*.ps1
+/*.json
+/*.ics
+/stream.txt
+
 # Ephemeral agent state (local to workstation, not portable)
+.agent/data/morphism-log.jsonl
 .agent/data/morphism-log.jsonl.bak*
 .agent/dev/.antigraviti-auto-listener-state.json
 .agent/dev/antigraviti-auto-listen.log

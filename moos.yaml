@@ -1,0 +1,22 @@
+# moos.yaml — workspace configuration
+# Kernel reads this at boot. No secrets here — those live in .env
+# Boot: moos (auto-discovers) or moos --config <path>
+
+# Identity
+user_urn:    "urn:moos:user:sam"
+role:        superadmin
+workstation: hp-laptop
+
+# Paths (relative to this file's directory)
+kb_path:   .agent/kb
+data_path: .agent/data
+secrets:   .env
+
+# Runtime
+http_port: 8000
+mcp_port:  8080
+
+# Federation
+federation:
+  self: urn:moos:kernel:hp-laptop
+  peers: []
