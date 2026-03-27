@@ -45,7 +45,11 @@ lost\ converstation*.txt
 .agent/data/morphism-log.jsonl.bak*
 .agent/dev/.antigraviti-auto-listener-state.json
 .agent/dev/antigraviti-auto-listen.log
+.agent/dev/.vscode-ai-auto-listener-state.json
+.agent/dev/vscode-ai-auto-listen.log
+.agent/dev/vscode-kernel-autostart.log
 .agent/dev/wave4-*.json
+robocopy_log*.txt
 
 # OS
 .DS_Store

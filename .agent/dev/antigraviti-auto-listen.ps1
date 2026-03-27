@@ -1,12 +1,16 @@
 param(
     [string]$KernelBaseUrl = "http://localhost:8000",
     [string]$AgentUrn = "urn:moos:agent:antigraviti",
+    [string]$AgentName = "Antigraviti",
+    [string]$AgentTag = "antigraviti",
     [string]$AssignedTo = "antigraviti",
     [string]$SessionUrn = "urn:moos:session:20260322-antigraviti",
     [int]$PollSeconds = 10,
     [int]$SseTimeoutSeconds = 300,
     [string]$StateFile = "",
     [string]$LogFile = "",
+    [switch]$ObserveOnly,
+    [switch]$NoStatusMessage,
     [switch]$StartFromNow,
     [switch]$DisableSSE,
     [string]$MutexName = "Local\FFS0_Antigraviti_AutoListen"
@@ -46,6 +50,15 @@ function Initialize-ToastRuntime {
     catch {
         # Silent fail if running under strict pwsh without WinRT bridging
     }
+}
+
+function Get-SafeTag {
+    param([string]$Tag)
+
+    if ([string]::IsNullOrWhiteSpace($Tag)) {
+        return "agent"
+    }
+    return ([regex]::Replace($Tag.ToLowerInvariant(), "[^a-z0-9-]", "-"))
 }
 
 function Send-Toast {
@@ -209,6 +222,22 @@ function Get-Node {
     return Invoke-RestMethod "$KernelBaseUrl/state/nodes/$Urn"
 }
 
+function Node-Exists {
+    param([string]$Urn)
+
+    if ([string]::IsNullOrWhiteSpace($Urn)) {
+        return $false
+    }
+
+    try {
+        $null = Get-Node -Urn $Urn
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
 function Matches-Assignee {
     param(
         [object]$TaskPayload,
@@ -307,61 +336,77 @@ function Process-DelegationTask {
         return
     }
 
+    if ($ObserveOnly) {
+        Send-Toast -AgentName $AgentName -Channel "DelegationTask" -Message "Pending $taskUrn"
+        Write-Log -Message ("observed pending delegation_task (no mutation): {0}" -f $taskUrn)
+        [void]$Processed.Add($taskUrn)
+        return
+    }
+
     try {
         $now = (Get-Date).ToUniversalTime().ToString("o")
         Set-DelegationTaskStatus -TaskUrn $taskUrn -Status "in_progress" -Extra @{ started_at = $now }
 
-        $msgStamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddHHmmssfff")
-        $suffix = Get-Random -Minimum 1000 -Maximum 9999
-        $ackUrn = "urn:moos:message:${msgStamp}-${suffix}-antigraviti-auto-ack"
-        $title = "delegation task"
-        if ($payload.PSObject.Properties.Name -contains "title" -and $null -ne $payload.title) {
-            $title = [string]$payload.title
-        }
-        $ackText = "Auto-processed delegation_task $taskUrn ($title). Status moved pending -> in_progress -> completed."
+        $safeTag = Get-SafeTag -Tag $AgentTag
+        $ackUrn = ""
+        if (-not $NoStatusMessage) {
+            $msgStamp = (Get-Date).ToUniversalTime().ToString("yyyyMMddHHmmssfff")
+            $suffix = Get-Random -Minimum 1000 -Maximum 9999
+            $ackUrn = "urn:moos:message:${msgStamp}-${suffix}-${safeTag}-auto-ack"
+            $title = "delegation task"
+            if ($payload.PSObject.Properties.Name -contains "title" -and $null -ne $payload.title) {
+                $title = [string]$payload.title
+            }
+            $ackText = "Auto-processed delegation_task $taskUrn ($title). Status moved pending -> in_progress -> completed."
 
-        Send-Toast -AgentName "Antigraviti" -Channel "DelegationTask" -Message "Picked $taskUrn"
+            Send-Toast -AgentName $AgentName -Channel "DelegationTask" -Message "Picked $taskUrn"
 
-        $addAck = @{
-            type = "ADD"
-            actor = $AgentUrn
-            add = @{
-                urn = $ackUrn
-                type_id = "channel_message"
-                stratum = "S2"
-                payload = @{
-                    sender = "Antigraviti"
-                    type = "ack"
-                    tags = @("delegation_task", "ack", "antigraviti", "auto-listener")
-                    text = $ackText
+            $addAck = @{
+                type = "ADD"
+                actor = $AgentUrn
+                add = @{
+                    urn = $ackUrn
+                    type_id = "channel_message"
+                    stratum = "S2"
+                    payload = @{
+                        sender = $AgentName
+                        type = "ack"
+                        tags = @("delegation_task", "ack", $safeTag, "auto-listener")
+                        text = $ackText
+                    }
                 }
             }
-        }
-        Post-Morphism -BaseUrl $KernelBaseUrl -Body $addAck
+            Post-Morphism -BaseUrl $KernelBaseUrl -Body $addAck
 
-        $linkTaskToSession = @{
-            type = "LINK"
-            actor = $AgentUrn
-            link = @{
-                source_urn = $taskUrn
-                source_port = "out"
-                target_urn = $SessionUrn
-                target_port = "receives"
+            $linkAckToTask = @{
+                type = "LINK"
+                actor = $AgentUrn
+                link = @{
+                    source_urn = $ackUrn
+                    source_port = "out"
+                    target_urn = $taskUrn
+                    target_port = "in"
+                }
             }
+            Post-Morphism -BaseUrl $KernelBaseUrl -Body $linkAckToTask
         }
-        Post-Morphism -BaseUrl $KernelBaseUrl -Body $linkTaskToSession
 
-        $linkAckToTask = @{
-            type = "LINK"
-            actor = $AgentUrn
-            link = @{
-                source_urn = $ackUrn
-                source_port = "out"
-                target_urn = $taskUrn
-                target_port = "in"
+        if (Node-Exists -Urn $SessionUrn) {
+            $linkTaskToSession = @{
+                type = "LINK"
+                actor = $AgentUrn
+                link = @{
+                    source_urn = $taskUrn
+                    source_port = "out"
+                    target_urn = $SessionUrn
+                    target_port = "receives"
+                }
             }
+            Post-Morphism -BaseUrl $KernelBaseUrl -Body $linkTaskToSession
         }
-        Post-Morphism -BaseUrl $KernelBaseUrl -Body $linkAckToTask
+        elseif (-not [string]::IsNullOrWhiteSpace($SessionUrn)) {
+            Write-Log -Level "WARN" -Message ("session node not found; skipping task->session link: {0}" -f $SessionUrn)
+        }
 
         $done = (Get-Date).ToUniversalTime().ToString("o")
         Set-DelegationTaskStatus -TaskUrn $taskUrn -Status "completed" -Extra @{ completed_at = $done }

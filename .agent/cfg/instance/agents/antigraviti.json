@@ -11,7 +11,8 @@
     "browser-testing",
     "mcp-queries",
     "hg-checkpointing",
-    "calendar-projection"
+    "calendar-projection",
+    "automated-protocol-execution"
   ],
   "ide": "antigraviti-gemini-3.1-pro",
   "ide_notes": {

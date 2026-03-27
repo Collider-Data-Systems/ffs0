@@ -14,6 +14,7 @@
     }
   ],
   "settings": {
+    "task.allowAutomaticTasks": "on",
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "golang.go",
     "[go]": {
@@ -45,7 +46,10 @@
     "python.interpreterPath": "${workspaceFolder:FFS0_Factory (root)}/.venv/Scripts/python.exe",
     "go.lintFlags": [
       "--fast"
-    ]
+    ],
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
   },
   "extensions": {
     "recommendations": [
@@ -186,28 +190,6 @@
         }
       },
       {
-        "label": "KB: open handoff.md",
-        "type": "shell",
-        "command": "code",
-        "args": [
-          "${workspaceFolder:Agent Workspace}/channels/handoff.md"
-        ],
-        "presentation": {
-          "reveal": "silent"
-        }
-      },
-      {
-        "label": "KB: open testoff.md",
-        "type": "shell",
-        "command": "code",
-        "args": [
-          "${workspaceFolder:Agent Workspace}/channels/testoff.md"
-        ],
-        "presentation": {
-          "reveal": "silent"
-        }
-      },
-      {
         "label": "KB: open CLAUDE.md",
         "type": "shell",
         "command": "code",
@@ -216,6 +198,56 @@
         ],
         "presentation": {
           "reveal": "silent"
+        }
+      },
+      {
+        "label": "Auto: ensure kernel running",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$h = $null; try { $h = Invoke-RestMethod 'http://localhost:8000/healthz' -TimeoutSec 2 } catch {}; if ($null -eq $h -or $h.status -ne 'ok') { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-Command','Set-Location ''${workspaceFolder:mo:os Kernel (code)}\\platform\\kernel''; go run ./cmd/moos --kb ''${workspaceFolder:Agent Workspace}\\kb'' --hydrate *>> ''${workspaceFolder:Agent Workspace}\\dev\\vscode-kernel-autostart.log''') | Out-Null; Write-Output 'Kernel start requested.' } else { Write-Output 'Kernel already healthy.' }"
+        ],
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "never",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Auto: ensure antigraviti listener",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen' -and $_.CommandLine -notmatch 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder:Agent Workspace}\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:antigraviti','-AgentTag','antigraviti','-AssignedTo','antigraviti','-MutexName','Local\\FFS0_Antigraviti_AutoListen','-StartFromNow') | Out-Null; Write-Output 'Antigraviti listener started.' } else { Write-Output 'Antigraviti listener already running.' }"
+        ],
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "never",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Auto: startup bootstrap",
+        "dependsOrder": "sequence",
+        "dependsOn": [
+          "Auto: ensure kernel running",
+          "Auto: ensure antigraviti listener"
+        ],
+        "runOptions": {
+          "runOn": "folderOpen"
+        },
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "never",
+          "panel": "dedicated"
         }
       }
     ]
