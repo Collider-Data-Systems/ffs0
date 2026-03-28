@@ -86,14 +86,14 @@
     },
     {
       "label": "Auto: ensure kernel running",
-      "type": "shell",
-      "command": "powershell",
+      "type": "process",
+      "command": "pwsh",
       "args": [
         "-NoProfile",
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$h = $null; try { $h = Invoke-RestMethod 'http://localhost:8000/healthz' -TimeoutSec 5 } catch {}; if ($null -eq $h -or $h.status -ne 'ok') { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-Command','Set-Location ''${workspaceFolder}\\..\\moos\\platform\\kernel''; go run ./cmd/moos --kb ''${workspaceFolder}\\.agent\\kb'' --hydrate *>> ''${workspaceFolder}\\.agent\\dev\\vscode-kernel-autostart.log''') | Out-Null; Write-Output 'Kernel start requested.' } else { Write-Output 'Kernel already healthy.' }"
+        "$h = $null; try { $h = Invoke-RestMethod \"http://localhost:8000/healthz\" -TimeoutSec 5 } catch {}; if ($null -eq $h -or $h.status -ne \"ok\") { Start-Process -FilePath \"go\" -WorkingDirectory \"${workspaceFolder}\\..\\moos\\platform\\kernel\" -WindowStyle Hidden -ArgumentList @(\"run\",\"./cmd/moos\",\"--kb\",\"${workspaceFolder}\\.agent\\kb\",\"--hydrate\") | Out-Null; Write-Output \"Kernel start requested.\" } else { Write-Output \"Kernel already healthy.\" }"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -110,7 +110,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder}\\.agent\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:vscode-ai','-AgentName','VS Code AI','-AgentTag','vscode-ai','-AssignedTo','vscode-ai','-SessionUrn','','-ObserveOnly','-NoStatusMessage','-StateFile','.vscode-ai-auto-listener-state.json','-LogFile','vscode-ai-auto-listen.log','-MutexName','Local\\FFS0_VSCodeAI_AutoListen','-StartFromNow') | Out-Null; Write-Output 'vscode-ai listener started.' } else { Write-Output 'vscode-ai listener already running.' }"
+        "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList '-NoLogo -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder}\\.agent\\dev\\antigraviti-auto-listen.ps1 -AgentUrn urn:moos:agent:vscode-ai -AgentName \"VS Code AI\" -AgentTag vscode-ai -AssignedTo vscode-ai -ObserveOnly -NoStatusMessage -StateFile .vscode-ai-auto-listener-state.json -LogFile vscode-ai-auto-listen.log -MutexName Local\\FFS0_VSCodeAI_AutoListen -StartFromNow' | Out-Null; Write-Output 'vscode-ai listener started.' } else { Write-Output 'vscode-ai listener already running.' }"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -120,14 +120,14 @@
     },
     {
       "label": "Auto: ensure antigraviti listener",
-      "type": "shell",
-      "command": "powershell",
+      "type": "process",
+      "command": "pwsh",
       "args": [
         "-NoProfile",
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'antigraviti' -and $_.CommandLine -notmatch 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder}\\.agent\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:antigraviti','-AgentName','Antigraviti','-AgentTag','antigraviti','-AssignedTo','antigraviti','-SessionUrn','urn:moos:session:antigraviti-autolistener','-StateFile','.antigraviti-auto-listener-state.json','-LogFile','antigraviti-auto-listen.log','-MutexName','Local\\FFS0_Antigraviti_AutoListen','-StartFromNow') | Out-Null; Write-Output 'antigraviti listener started.' } else { Write-Output 'antigraviti listener already running.' }"
+        "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'antigraviti' -and $_.CommandLine -notmatch 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder}\\.agent\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:antigraviti','-AgentName','Antigraviti','-AgentTag','antigraviti','-AssignedTo','antigraviti','-SessionUrn','urn:moos:session:antigraviti-autolistener','-StateFile','.antigraviti-auto-listener-state.json','-LogFile','antigraviti-auto-listen.log','-MutexName','Local\\FFS0_Antigraviti_AutoListen','-StartFromNow') | Out-Null; Write-Output 'antigraviti listener started.' } else { Write-Output 'antigraviti listener already running.' }"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -137,14 +137,14 @@
     },
     {
       "label": "Auto: ensure triangle watcher",
-      "type": "shell",
-      "command": "powershell",
+      "type": "process",
+      "command": "pwsh",
       "args": [
         "-NoProfile",
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'triangle-watcher' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList '-NoLogo -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder}\\.agent\\scripts\\triangle-watcher.ps1' | Out-Null; Write-Output 'triangle-watcher started.' } else { Write-Output 'triangle-watcher already running.' }"
+        "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'triangle-watcher' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList '-NoLogo -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder}\\.agent\\scripts\\triangle-watcher.ps1' | Out-Null; Write-Output 'triangle-watcher started.' } else { Write-Output 'triangle-watcher already running.' }"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -158,7 +158,6 @@
       "dependsOn": [
         "Auto: ensure kernel running",
         "Auto: ensure vscode-ai listener",
-        "Auto: ensure antigraviti listener",
         "Auto: ensure triangle watcher"
       ],
       "runOptions": {

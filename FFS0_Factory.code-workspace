@@ -43,11 +43,9 @@
     },
     "go.lintOnSave": "package",
     "go.lintTool": "golangci-lint",
-    "python.defaultInterpreterPath": "${workspaceFolder:FFS0_Factory (root)}/.venv/Scripts/python.exe",
-    "python.interpreterPath": "${workspaceFolder:FFS0_Factory (root)}/.venv/Scripts/python.exe",
-    "go.lintFlags": [
-      "--fast"
-    ],
+    "python.defaultInterpreterPath": "C:\\Users\\HP\\FFS0_HPlaptop\\.venv\\Scripts\\python.exe",
+    "python.interpreterPath": "C:\\Users\\HP\\FFS0_HPlaptop\\.venv\\Scripts\\python.exe",
+    "go.lintFlags": ["--fast"],
     "[jsonc]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
@@ -75,11 +73,7 @@
         "mode": "debug",
         "program": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel/cmd/moos",
         "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
-        "args": [
-          "--kb",
-          "${workspaceFolder:Agent Workspace}/kb",
-          "--hydrate"
-        ],
+        "args": ["--kb", "${workspaceFolder:Agent Workspace}/kb", "--hydrate"],
         "showLog": true
       },
       {
@@ -89,10 +83,7 @@
         "mode": "debug",
         "program": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel/cmd/moos",
         "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
-        "args": [
-          "--kb",
-          "${workspaceFolder:Agent Workspace}/kb"
-        ],
+        "args": ["--kb", "${workspaceFolder:Agent Workspace}/kb"],
         "showLog": true
       },
       {
@@ -119,18 +110,11 @@
         "label": "Kernel: build",
         "type": "shell",
         "command": "go",
-        "args": [
-          "build",
-          "-o",
-          "moos.exe",
-          "./cmd/moos"
-        ],
+        "args": ["build", "-o", "moos.exe", "./cmd/moos"],
         "options": {
           "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel"
         },
-        "problemMatcher": [
-          "$go"
-        ],
+        "problemMatcher": ["$go"],
         "presentation": {
           "echo": true,
           "reveal": "always",
@@ -141,16 +125,11 @@
         "label": "Kernel: test all",
         "type": "shell",
         "command": "go",
-        "args": [
-          "test",
-          "./..."
-        ],
+        "args": ["test", "./..."],
         "options": {
           "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel"
         },
-        "problemMatcher": [
-          "$go"
-        ],
+        "problemMatcher": ["$go"],
         "presentation": {
           "echo": true,
           "reveal": "always",
@@ -238,11 +217,7 @@
         "label": "Git: pull latest",
         "type": "shell",
         "command": "git",
-        "args": [
-          "pull",
-          "origin",
-          "main"
-        ],
+        "args": ["pull", "origin", "main"],
         "options": {
           "cwd": "${workspaceFolder:mo:os Kernel (code)}"
         },
@@ -255,23 +230,21 @@
         "label": "KB: open CLAUDE.md",
         "type": "shell",
         "command": "code",
-        "args": [
-          "${workspaceFolder:Agent Workspace}/CLAUDE.md"
-        ],
+        "args": ["${workspaceFolder:Agent Workspace}/CLAUDE.md"],
         "presentation": {
           "reveal": "silent"
         }
       },
       {
         "label": "Auto: ensure kernel running",
-        "type": "shell",
-        "command": "powershell",
+        "type": "process",
+        "command": "pwsh",
         "args": [
           "-NoProfile",
           "-ExecutionPolicy",
           "Bypass",
           "-Command",
-          "$h = $null; try { $h = Invoke-RestMethod 'http://localhost:8000/healthz' -TimeoutSec 5 } catch {}; if ($null -eq $h -or $h.status -ne 'ok') { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-Command','Set-Location ''${workspaceFolder:mo:os Kernel (code)}\\platform\\kernel''; go run ./cmd/moos --kb ''${workspaceFolder:Agent Workspace}\\kb'' --hydrate *>> ''${workspaceFolder:Agent Workspace}\\dev\\vscode-kernel-autostart.log''') | Out-Null; Write-Output 'Kernel start requested.' } else { Write-Output 'Kernel already healthy.' }"
+          "$h = $null; try { $h = Invoke-RestMethod \"http://localhost:8000/healthz\" -TimeoutSec 5 } catch {}; if ($null -eq $h -or $h.status -ne \"ok\") { Start-Process -FilePath \"go\" -WorkingDirectory \"${workspaceFolder:mo:os Kernel (code)}\\platform\\kernel\" -WindowStyle Hidden -ArgumentList @(\"run\",\"./cmd/moos\",\"--kb\",\"${workspaceFolder:Agent Workspace}\\kb\",\"--hydrate\") | Out-Null; Write-Output \"Kernel start requested.\" } else { Write-Output \"Kernel already healthy.\" }"
         ],
         "problemMatcher": [],
         "presentation": {
@@ -288,7 +261,7 @@
           "-ExecutionPolicy",
           "Bypass",
           "-Command",
-          "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder:Agent Workspace}\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:vscode-ai','-AgentName','VS Code AI','-AgentTag','vscode-ai','-AssignedTo','vscode-ai','-SessionUrn','','-ObserveOnly','-NoStatusMessage','-StateFile','.vscode-ai-auto-listener-state.json','-LogFile','vscode-ai-auto-listen.log','-MutexName','Local\\FFS0_VSCodeAI_AutoListen','-StartFromNow') | Out-Null; Write-Output 'vscode-ai listener started.' } else { Write-Output 'vscode-ai listener already running.' }"
+          "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList '-NoLogo -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder:Agent Workspace}\\dev\\antigraviti-auto-listen.ps1 -AgentUrn urn:moos:agent:vscode-ai -AgentName \"VS Code AI\" -AgentTag vscode-ai -AssignedTo vscode-ai -ObserveOnly -NoStatusMessage -StateFile .vscode-ai-auto-listener-state.json -LogFile vscode-ai-auto-listen.log -MutexName Local\\FFS0_VSCodeAI_AutoListen -StartFromNow' | Out-Null; Write-Output 'vscode-ai listener started.' } else { Write-Output 'vscode-ai listener already running.' }"
         ],
         "problemMatcher": [],
         "presentation": {
@@ -298,14 +271,14 @@
       },
       {
         "label": "Auto: ensure antigraviti listener",
-        "type": "shell",
-        "command": "powershell",
+        "type": "process",
+        "command": "pwsh",
         "args": [
           "-NoProfile",
           "-ExecutionPolicy",
           "Bypass",
           "-Command",
-          "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen' -and $_.CommandLine -notmatch 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder:Agent Workspace}\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:antigraviti','-AgentTag','antigraviti','-AssignedTo','antigraviti','-MutexName','Local\\FFS0_Antigraviti_AutoListen','-StartFromNow') | Out-Null; Write-Output 'Antigraviti listener started.' } else { Write-Output 'Antigraviti listener already running.' }"
+          "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen' -and $_.CommandLine -notmatch 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder:Agent Workspace}\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:antigraviti','-AgentTag','antigraviti','-AssignedTo','antigraviti','-MutexName','Local\\FFS0_Antigraviti_AutoListen','-StartFromNow') | Out-Null; Write-Output 'Antigraviti listener started.' } else { Write-Output 'Antigraviti listener already running.' }"
         ],
         "problemMatcher": [],
         "presentation": {
@@ -315,14 +288,14 @@
       },
       {
         "label": "Auto: ensure triangle watcher",
-        "type": "shell",
-        "command": "powershell",
+        "type": "process",
+        "command": "pwsh",
         "args": [
           "-NoProfile",
           "-ExecutionPolicy",
           "Bypass",
           "-Command",
-          "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'triangle-watcher' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList '-NoLogo -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder:Agent Workspace}\\scripts\\triangle-watcher.ps1' | Out-Null; Write-Output 'triangle-watcher started.' } else { Write-Output 'triangle-watcher already running.' }"
+          "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'triangle-watcher' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList '-NoLogo -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder:Agent Workspace}\\scripts\\triangle-watcher.ps1' | Out-Null; Write-Output 'triangle-watcher started.' } else { Write-Output 'triangle-watcher already running.' }"
         ],
         "problemMatcher": [],
         "presentation": {
@@ -336,7 +309,6 @@
         "dependsOn": [
           "Auto: ensure kernel running",
           "Auto: ensure vscode-ai listener",
-          "Auto: ensure antigraviti listener",
           "Auto: ensure triangle watcher"
         ],
         "runOptions": {
@@ -351,3 +323,4 @@
     ]
   }
 }
+
