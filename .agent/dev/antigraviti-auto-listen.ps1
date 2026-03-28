@@ -464,10 +464,10 @@ function Listen-ForFirestarterTrigger {
             }
 
             if ($line -match "^data:\s*(.*)") {
-                if ($currentEvent -eq "firestarter-trigger") {
+                if ($currentEvent -eq "firestarter-trigger" -or $currentEvent -eq "morphism") {
                     $data = $Matches[1].Trim()
-                    Write-Log ("Reactive trigger received: {0}" -f $data)
-                    
+                    Write-Log ("Reactive trigger received ({0}): {1}" -f $currentEvent, $data)
+
                     # Whenever triggered, do a full poll to pick up all pending tasks
                     Run-DelegationTaskPoll -Processed $Processed
                 }

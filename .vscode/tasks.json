@@ -103,14 +103,14 @@
     },
     {
       "label": "Auto: ensure vscode-ai listener",
-      "type": "shell",
-      "command": "powershell",
+      "type": "process",
+      "command": "powershell.exe",
       "args": [
         "-NoProfile",
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList '-NoLogo -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder}\\.agent\\dev\\antigraviti-auto-listen.ps1 -AgentUrn urn:moos:agent:vscode-ai -AgentName \"VS Code AI\" -AgentTag vscode-ai -AssignedTo vscode-ai -ObserveOnly -NoStatusMessage -StateFile .vscode-ai-auto-listener-state.json -LogFile vscode-ai-auto-listen.log -MutexName Local\\FFS0_VSCodeAI_AutoListen -StartFromNow' | Out-Null; Write-Output 'vscode-ai listener started.' } else { Write-Output 'vscode-ai listener already running.' }"
+        "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell.exe' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder}\\.agent\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:vscode-ai','-AgentName','VS Code AI','-AgentTag','vscode-ai','-AssignedTo','vscode-ai','-ObserveOnly','-NoStatusMessage','-StateFile','.vscode-ai-auto-listener-state.json','-LogFile','vscode-ai-auto-listen.log','-MutexName','Local\\FFS0_VSCodeAI_AutoListen','-StartFromNow') | Out-Null; Write-Output 'vscode-ai listener started.' } else { Write-Output 'vscode-ai listener already running.' }"
       ],
       "problemMatcher": [],
       "presentation": {
