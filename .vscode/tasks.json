@@ -6,8 +6,11 @@
       "type": "shell",
       "command": "powershell",
       "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
         "-Command",
-        "cd C:\\Users\\HP\\FFS0_HPlaptop\\moos\\platform\\kernel; go run ./cmd/moos --kb C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb --hydrate"
+        "Set-Location '${workspaceFolder}\\..\\moos\\platform\\kernel'; go run ./cmd/moos --kb '${workspaceFolder}\\.agent\\kb' --hydrate"
       ],
       "group": "test",
       "presentation": {
@@ -21,8 +24,11 @@
       "type": "shell",
       "command": "powershell",
       "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
         "-Command",
-        "cd C:\\Users\\HP\\FFS0_HPlaptop\\moos\\platform\\kernel; go test -v ./..."
+        "Set-Location '${workspaceFolder}\\..\\moos\\platform\\kernel'; go test -v ./..."
       ],
       "group": "test"
     },
@@ -31,18 +37,50 @@
       "type": "shell",
       "command": "powershell",
       "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
         "-Command",
-        "python C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb\\validate.py"
+        "python '${workspaceFolder}\\.agent\\kb\\validate.py'"
       ],
       "group": "test"
     },
     {
       "label": "Kernel: check health",
       "type": "shell",
-      "command": "curl",
+      "command": "powershell",
       "args": [
-        "-s",
-        "http://localhost:8000/healthz"
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$h = Invoke-RestMethod 'http://localhost:8000/healthz' -TimeoutSec 5; $h | ConvertTo-Json -Depth 6"
+      ],
+      "group": "test"
+    },
+    {
+      "label": "MCP: check health",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$h = Invoke-RestMethod 'http://localhost:8080/healthz' -TimeoutSec 5; $h | ConvertTo-Json -Depth 6"
+      ],
+      "group": "test"
+    },
+    {
+      "label": "MCP: SSE endpoint smoke",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$tmp = Join-Path $env:TEMP ('mcp-sse-' + [guid]::NewGuid().ToString('N') + '.txt'); $null = curl.exe -sN --max-time 2 http://localhost:8080/sse 2>$null | Tee-Object -FilePath $tmp; if (Select-String -Path $tmp -Pattern 'event: endpoint' -Quiet) { Get-Content $tmp } else { Write-Error 'MCP SSE endpoint event not observed' }"
       ],
       "group": "test"
     },
@@ -55,7 +93,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$h = $null; try { $h = Invoke-RestMethod 'http://localhost:8000/healthz' -TimeoutSec 2 } catch {}; if ($null -eq $h -or $h.status -ne 'ok') { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-Command','Set-Location ''C:\\Users\\HP\\FFS0_HPlaptop\\moos\\platform\\kernel''; go run ./cmd/moos --kb ''C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb'' --hydrate *>> ''C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\dev\\vscode-kernel-autostart.log''') | Out-Null; Write-Output 'Kernel start requested.' } else { Write-Output 'Kernel already healthy.' }"
+        "$h = $null; try { $h = Invoke-RestMethod 'http://localhost:8000/healthz' -TimeoutSec 5 } catch {}; if ($null -eq $h -or $h.status -ne 'ok') { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-Command','Set-Location ''${workspaceFolder}\\..\\moos\\platform\\kernel''; go run ./cmd/moos --kb ''${workspaceFolder}\\.agent\\kb'' --hydrate *>> ''${workspaceFolder}\\.agent\\dev\\vscode-kernel-autostart.log''') | Out-Null; Write-Output 'Kernel start requested.' } else { Write-Output 'Kernel already healthy.' }"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -72,7 +110,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:vscode-ai','-AgentName','VS Code AI','-AgentTag','vscode-ai','-AssignedTo','vscode-ai','-SessionUrn','','-ObserveOnly','-NoStatusMessage','-StateFile','.vscode-ai-auto-listener-state.json','-LogFile','vscode-ai-auto-listen.log','-MutexName','Local\\FFS0_VSCodeAI_AutoListen','-StartFromNow') | Out-Null; Write-Output 'vscode-ai listener started.' } else { Write-Output 'vscode-ai listener already running.' }"
+        "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder}\\.agent\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:vscode-ai','-AgentName','VS Code AI','-AgentTag','vscode-ai','-AssignedTo','vscode-ai','-SessionUrn','','-ObserveOnly','-NoStatusMessage','-StateFile','.vscode-ai-auto-listener-state.json','-LogFile','vscode-ai-auto-listen.log','-MutexName','Local\\FFS0_VSCodeAI_AutoListen','-StartFromNow') | Out-Null; Write-Output 'vscode-ai listener started.' } else { Write-Output 'vscode-ai listener already running.' }"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -89,7 +127,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-Command",
-        "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'antigraviti' -and $_.CommandLine -notmatch 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','C:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:antigraviti','-AgentName','Antigraviti','-AgentTag','antigraviti','-AssignedTo','antigraviti','-SessionUrn','urn:moos:session:antigraviti-autolistener','-StateFile','.antigraviti-auto-listener-state.json','-LogFile','antigraviti-auto-listen.log','-MutexName','Local\\FFS0_Antigraviti_AutoListen','-StartFromNow') | Out-Null; Write-Output 'antigraviti listener started.' } else { Write-Output 'antigraviti listener already running.' }"
+        "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'antigraviti' -and $_.CommandLine -notmatch 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder}\\.agent\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:antigraviti','-AgentName','Antigraviti','-AgentTag','antigraviti','-AssignedTo','antigraviti','-SessionUrn','urn:moos:session:antigraviti-autolistener','-StateFile','.antigraviti-auto-listener-state.json','-LogFile','antigraviti-auto-listen.log','-MutexName','Local\\FFS0_Antigraviti_AutoListen','-StartFromNow') | Out-Null; Write-Output 'antigraviti listener started.' } else { Write-Output 'antigraviti listener already running.' }"
       ],
       "problemMatcher": [],
       "presentation": {

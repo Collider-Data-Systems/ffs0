@@ -37,6 +37,7 @@ lost\ converstation*.txt
 /data/
 /*.ps1
 /*.json
+!/.mcp.json
 /*.ics
 /stream.txt
 
