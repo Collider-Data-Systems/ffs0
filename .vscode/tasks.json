@@ -136,12 +136,30 @@
       }
     },
     {
+      "label": "Auto: ensure triangle watcher",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$p = Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'triangle-watcher' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList '-NoLogo -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder}\\.agent\\scripts\\triangle-watcher.ps1' | Out-Null; Write-Output 'triangle-watcher started.' } else { Write-Output 'triangle-watcher already running.' }"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated"
+      }
+    },
+    {
       "label": "Auto: startup bootstrap",
       "dependsOrder": "sequence",
       "dependsOn": [
         "Auto: ensure kernel running",
         "Auto: ensure vscode-ai listener",
-        "Auto: ensure antigraviti listener"
+        "Auto: ensure antigraviti listener",
+        "Auto: ensure triangle watcher"
       ],
       "runOptions": {
         "runOn": "folderOpen"
