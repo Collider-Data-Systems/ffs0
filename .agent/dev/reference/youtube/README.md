@@ -20,7 +20,7 @@ This folder stores YouTube transcript artifacts in normalized JSON form.
 
 ```powershell
 Set-Location .\ffs0-factory-super
-powershell -ExecutionPolicy Bypass -File .\.agent\scripts\ingest-youtube-url.ps1 `
+powershell -ExecutionPolicy Bypass -File .\.agent\dev\ingest-youtube-url.ps1 `
   -Url "https://www.youtube.com/watch?v=VIDEO_ID" `
   -Summary "Short summary"
 ```
@@ -35,7 +35,7 @@ The script returns JSON with status fields suitable for list updates.
 
 ```powershell
 Set-Location .\ffs0-factory-super
-.\.agent\scripts\save-youtube-transcript.ps1 `
+.\.agent\dev\save-youtube-transcript.ps1 `
   -Url "https://www.youtube.com/watch?v=VIDEO_ID" `
   -Title "Video title" `
   -Channel "Channel name" `

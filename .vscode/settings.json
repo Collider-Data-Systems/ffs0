@@ -1,5 +1,9 @@
 {
   "task.allowAutomaticTasks": "on",
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
-  "python.interpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe"
+  "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+  "python.interpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+  "chat.instructionsFilesLocations": {
+    ".github/instructions": true,
+    ".agent": true
+  }
 }

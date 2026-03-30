@@ -1,12 +1,12 @@
 ---
-description: Ingest YouTube transcripts into KB reference layer using VS Code extension tools
+description: Ingest YouTube transcripts into the live reference corpus using VS Code extension tools
 ---
 
 # YouTube Intake Workflow
 
 // turbo-all
 
-Use this workflow to transcribe a YouTube video and store it under the KB reference layer.
+Use this workflow to transcribe a YouTube video and store it under the live reference corpus.
 
 ## Approved Default (Current)
 
@@ -24,11 +24,11 @@ No extra confirmation gate is required between these steps while this policy is 
 
 Store normalized entries in:
 
-- .agent/kb/reference/youtube/entries/
+- .agent/dev/reference/youtube/entries/
 
 Schema:
 
-- .agent/kb/reference/youtube/schema.json
+- .agent/dev/reference/youtube/schema.json
 
 ## Step 1: Configure the extension in VS Code
 
@@ -44,7 +44,7 @@ From workspace root run:
 
 ```powershell
 Set-Location .\ffs0-factory-super
-powershell -ExecutionPolicy Bypass -File .\.agent\scripts\ingest-youtube-url.ps1 `
+powershell -ExecutionPolicy Bypass -File .\.agent\dev\ingest-youtube-url.ps1 `
   -Url "https://www.youtube.com/watch?v=VIDEO_ID" `
   -Summary "Short summary"
 ```
@@ -60,22 +60,22 @@ The script:
 
 Output file:
 
-- .agent/kb/reference/youtube/entries/yt-<slug>-<timestamp>.json
+- .agent/dev/reference/youtube/entries/yt-<slug>-<timestamp>.json
 
 ## Step 3: Update list ledger
 
-Update the active list file under `.agent/kb/reference/youtube/lists/`:
+Update the active list file under `.agent/dev/reference/youtube/lists/`:
 
 - append new item numbers for new URLs
 - keep retry outcomes for failed/no-caption entries
-- keep `kb_entry_path` workspace-relative
+- keep `kb_entry_path` workspace-relative to the canonical entry path
 
 ## Step 4: Validate JSON shape quickly
 
 Use PowerShell parse check:
 
 ```powershell
-Get-ChildItem .\.agent\kb\reference\youtube\entries\*.json |
+Get-ChildItem .\.agent\dev\reference\youtube\entries\*.json |
   ForEach-Object { Get-Content $_.FullName | ConvertFrom-Json | Out-Null; $_.Name }
 ```
 
@@ -83,7 +83,7 @@ Get-ChildItem .\.agent\kb\reference\youtube\entries\*.json |
 
 ```powershell
 Set-Location .\ffs0-factory-super
-powershell -ExecutionPolicy Bypass -File .\.agent\scripts\build-youtube-dedupe-index.ps1
+powershell -ExecutionPolicy Bypass -File .\.agent\dev\build-youtube-dedupe-index.ps1
 ```
 
 If duplicates exist, remove alias files and rewrite list references to canonical paths.
@@ -92,7 +92,7 @@ If duplicates exist, remove alias files and rewrite list references to canonical
 
 Reference entries are SOT rank 4. Promotion to graph should be explicit and task-driven.
 
-1. Keep transcript artifacts in reference/.
+1. Keep transcript artifacts in `.agent/dev/reference/youtube/`.
 2. Create or update curated instance files only when directed by a task.
 3. Then boot kernel with:
 

@@ -93,4 +93,4 @@ $entry = [ordered]@{
 
 $outPath = Join-Path $OutputDir $fileName
 $entry | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $outPath -Encoding UTF8
-Write-Host "Saved:" $outPath
+Write-Output "Saved: $outPath"

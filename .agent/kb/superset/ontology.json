@@ -569,6 +569,63 @@
         "OWNS",
         "DELEGATES"
       ]
+    },
+    {
+      "id": "OBJ31",
+      "name": "FileSystemDirectory",
+      "type_id": "fs_directory",
+      "broad_category": "filesystem",
+      "description": "Observed filesystem directory projected from the host OS into graph state.",
+      "mutable": true,
+      "allowed_strata": [
+        "S0",
+        "S1",
+        "S2"
+      ],
+      "source_connections": [
+        "OWNS"
+      ],
+      "target_connections": [
+        "OWNS"
+      ]
+    },
+    {
+      "id": "OBJ32",
+      "name": "FileSystemFile",
+      "type_id": "fs_file",
+      "broad_category": "filesystem",
+      "description": "Observed filesystem file projected from the host OS into graph state.",
+      "mutable": true,
+      "allowed_strata": [
+        "S0",
+        "S1",
+        "S2"
+      ],
+      "source_connections": [],
+      "target_connections": [
+        "OWNS"
+      ]
+    },
+    {
+      "id": "OBJ33",
+      "name": "OSProcess",
+      "type_id": "os_process",
+      "broad_category": "process",
+      "description": "Observed operating system process projected from the host OS into graph state.",
+      "mutable": true,
+      "allowed_strata": [
+        "S0",
+        "S2",
+        "S3"
+      ],
+      "source_connections": [
+        "OWNS",
+        "LINK_NODES",
+        "CAN_SCHEDULE"
+      ],
+      "target_connections": [
+        "OWNS"
+      ]
     }
   ],
   "morphisms": [

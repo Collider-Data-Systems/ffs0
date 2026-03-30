@@ -15,19 +15,59 @@ if (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction Sile
     $PSNativeCommandUseErrorActionPreference = $false
 }
 
-$yt = "c:/Users/HP/FFS0_HPlaptop/.venv/Scripts/yt-dlp.exe"
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+
+function Resolve-YtDlpCommand {
+    $repoPython = Join-Path $repoRoot ".venv\Scripts\python.exe"
+    $candidates = @()
+
+    if (Test-Path -LiteralPath $repoPython) {
+        $candidates += ,@($repoPython, "-m", "yt_dlp")
+    }
+
+    $legacyYtDlp = "c:/Users/HP/FFS0_HPlaptop/.venv/Scripts/yt-dlp.exe"
+    if (Test-Path -LiteralPath $legacyYtDlp) {
+        $candidates += ,@($legacyYtDlp)
+    }
+
+    $pathYtDlp = Get-Command yt-dlp -ErrorAction SilentlyContinue
+    if ($pathYtDlp) {
+        $candidates += ,@($pathYtDlp.Source)
+    }
+
+    foreach ($candidate in $candidates) {
+        try {
+            & $candidate[0] @($candidate | Select-Object -Skip 1) --version *> $null
+            if ($LASTEXITCODE -eq 0) {
+                return $candidate
+            }
+        }
+        catch {
+        }
+    }
+
+    throw "yt-dlp is not available from the repo .venv or PATH."
+}
+
+function Invoke-YtDlp {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$Arguments
+    )
+
+    & $script:YtDlpCommand[0] @($script:YtDlpCommand | Select-Object -Skip 1) @Arguments
+}
+
+$script:YtDlpCommand = Resolve-YtDlpCommand
 $tmp = "./.agent/dev/reference/youtube/tmp"
 
-if (-not (Test-Path -LiteralPath $yt)) {
-    throw "yt-dlp not found at $yt"
-}
 if (-not (Test-Path -LiteralPath $tmp)) {
     New-Item -ItemType Directory -Path $tmp -Force | Out-Null
 }
 
-$id = (& $yt --no-warnings --print "%(id)s" $Url 2>$null | Select-Object -First 1)
-$title = (& $yt --no-warnings --print "%(title)s" $Url 2>$null | Select-Object -First 1)
-$channel = (& $yt --no-warnings --print "%(uploader)s" $Url 2>$null | Select-Object -First 1)
+$id = (Invoke-YtDlp --no-warnings --print "%(id)s" $Url 2>$null | Select-Object -First 1)
+$title = (Invoke-YtDlp --no-warnings --print "%(title)s" $Url 2>$null | Select-Object -First 1)
+$channel = (Invoke-YtDlp --no-warnings --print "%(uploader)s" $Url 2>$null | Select-Object -First 1)
 
 $id = [string]($id | ForEach-Object { $_.ToString().Trim() })
 $title = [string]($title | ForEach-Object { $_.ToString().Trim() })
@@ -40,11 +80,11 @@ if ([string]::IsNullOrWhiteSpace($channel)) { $channel = "unknown" }
 $base = Join-Path $tmp ("ingest-" + $id)
 Remove-Item "$base*" -Force -ErrorAction SilentlyContinue
 
-& $yt --no-warnings --write-sub --sub-lang en --skip-download --output $base $Url *> $null
+Invoke-YtDlp --no-warnings --write-sub --sub-lang en --skip-download --output $base $Url *> $null
 $vtt = Get-ChildItem "$base*.vtt" -ErrorAction SilentlyContinue | Select-Object -First 1
 
 if (-not $vtt) {
-    & $yt --no-warnings --write-auto-sub --sub-lang en --skip-download --output $base $Url *> $null
+    Invoke-YtDlp --no-warnings --write-auto-sub --sub-lang en --skip-download --output $base $Url *> $null
     $vtt = Get-ChildItem "$base*.vtt" -ErrorAction SilentlyContinue | Select-Object -First 1
 }
 
@@ -93,6 +133,10 @@ $saveParams = @{
     Keywords = $Keywords
 }
 
+$beforeLatest = Get-ChildItem "./.agent/dev/reference/youtube/entries" -Filter *.json -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1 -ExpandProperty FullName
+
 $saveOut = (& ./.agent/dev/save-youtube-transcript.ps1 @saveParams 2>&1 | Out-String)
 
 $savedPath = ""
@@ -100,6 +144,16 @@ foreach ($line in ($saveOut -split "`r?`n")) {
     if ($line -like "Saved:*") {
         $savedPath = $line.Substring(6).Trim()
         break
+    }
+}
+
+if ([string]::IsNullOrWhiteSpace($savedPath)) {
+    $afterLatest = Get-ChildItem "./.agent/dev/reference/youtube/entries" -Filter *.json -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending |
+        Select-Object -First 1 -ExpandProperty FullName
+
+    if ($afterLatest -and $afterLatest -ne $beforeLatest) {
+        $savedPath = $afterLatest
     }
 }
 

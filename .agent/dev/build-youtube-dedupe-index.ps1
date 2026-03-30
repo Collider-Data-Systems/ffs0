@@ -1,6 +1,6 @@
 param(
-    [string]$EntriesDir = ".\\.agent\\kb\\reference\\youtube\\entries",
-    [string]$OutputPath = ".\\.agent\\kb\\reference\\youtube\\dedupe-index.json"
+    [string]$EntriesDir = ".\\.agent\\dev\\reference\\youtube\\entries",
+    [string]$OutputPath = ".\\.agent\\dev\\reference\\youtube\\dedupe-index.json"
 )
 
 Set-StrictMode -Version Latest

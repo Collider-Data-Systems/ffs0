@@ -9,12 +9,54 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-Set-Location "c:/Users/HP/FFS0_HPlaptop/ffs0-factory-super"
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+Set-Location $repoRoot
 
-$ydlp = "c:/Users/HP/FFS0_HPlaptop/.venv/Scripts/yt-dlp.exe"
-$listDir = "./.agent/kb/reference/youtube/lists"
-$tmpDir = "./.agent/kb/reference/youtube/tmp"
-$entriesDir = "./.agent/kb/reference/youtube/entries"
+function Resolve-YtDlpCommand {
+    $repoPython = Join-Path $repoRoot ".venv\Scripts\python.exe"
+    $candidates = @()
+
+    if (Test-Path -LiteralPath $repoPython) {
+        $candidates += ,@($repoPython, "-m", "yt_dlp")
+    }
+
+    $legacyYtDlp = "c:/Users/HP/FFS0_HPlaptop/.venv/Scripts/yt-dlp.exe"
+    if (Test-Path -LiteralPath $legacyYtDlp) {
+        $candidates += ,@($legacyYtDlp)
+    }
+
+    $pathYtDlp = Get-Command yt-dlp -ErrorAction SilentlyContinue
+    if ($pathYtDlp) {
+        $candidates += ,@($pathYtDlp.Source)
+    }
+
+    foreach ($candidate in $candidates) {
+        try {
+            & $candidate[0] @($candidate | Select-Object -Skip 1) --version *> $null
+            if ($LASTEXITCODE -eq 0) {
+                return $candidate
+            }
+        }
+        catch {
+        }
+    }
+
+    throw "yt-dlp is not available from the repo .venv or PATH."
+}
+
+function Invoke-YtDlp {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$Arguments
+    )
+
+    & $script:YtDlpCommand[0] @($script:YtDlpCommand | Select-Object -Skip 1) @Arguments
+}
+
+$script:YtDlpCommand = Resolve-YtDlpCommand
+$listDir = "./.agent/dev/reference/youtube/lists"
+$tmpDir = "./.agent/dev/reference/youtube/tmp"
+$entriesDir = "./.agent/dev/reference/youtube/entries"
 
 New-Item -ItemType Directory -Path $listDir -Force | Out-Null
 New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
@@ -36,15 +78,15 @@ for ($i = 0; $i -lt $Urls.Count; $i++) {
     $errorText = ""
 
     try {
-        $title = & $ydlp --no-warnings --print "%(title)s" $url 2>$null
-        $channel = & $ydlp --no-warnings --print "%(uploader)s" $url 2>$null
+        $title = Invoke-YtDlp --no-warnings --print "%(title)s" $url 2>$null
+        $channel = Invoke-YtDlp --no-warnings --print "%(uploader)s" $url 2>$null
         if ([string]::IsNullOrWhiteSpace($title)) { $title = "Unknown title" }
         if ([string]::IsNullOrWhiteSpace($channel)) { $channel = "Unknown channel" }
 
         Push-Location $work
-        & $ydlp --no-warnings --write-sub --sub-lang en --skip-download --output "transcript" $url *> $null
+        Invoke-YtDlp --no-warnings --write-sub --sub-lang en --skip-download --output "transcript" $url *> $null
         if (-not (Get-ChildItem *.vtt -ErrorAction SilentlyContinue)) {
-            & $ydlp --no-warnings --write-auto-sub --sub-lang en --skip-download --output "transcript" $url *> $null
+            Invoke-YtDlp --no-warnings --write-auto-sub --sub-lang en --skip-download --output "transcript" $url *> $null
         }
         $vtt = Get-ChildItem *.vtt -ErrorAction SilentlyContinue | Select-Object -First 1
         Pop-Location
@@ -75,7 +117,7 @@ for ($i = 0; $i -lt $Urls.Count; $i++) {
                     Select-Object -First 1 -ExpandProperty FullName
             )
 
-            & ./.agent/scripts/save-youtube-transcript.ps1 -Url $url -Title $title -Channel $channel -Language "en" -TranscriptFile $transcriptTxt -Summary "$ListName item $n" -Keywords "youtube",$ListName,"kb-ingest" | Out-Null
+            & ./.agent/dev/save-youtube-transcript.ps1 -Url $url -Title $title -Channel $channel -Language "en" -TranscriptFile $transcriptTxt -Summary "$ListName item $n" -Keywords "youtube",$ListName,"kb-ingest" | Out-Null
 
             $latest = Get-ChildItem $entriesDir -Filter *.json -ErrorAction SilentlyContinue |
                 Sort-Object LastWriteTime -Descending |
