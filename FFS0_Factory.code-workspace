@@ -274,23 +274,6 @@
         },
       },
       {
-        "label": "Auto: ensure antigraviti listener",
-        "type": "process",
-        "command": "pwsh",
-        "args": [
-          "-NoProfile",
-          "-ExecutionPolicy",
-          "Bypass",
-          "-Command",
-          "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen' -and $_.CommandLine -notmatch 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'pwsh' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder:Agent Workspace}\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:antigraviti','-AgentTag','antigraviti','-AssignedTo','antigraviti','-MutexName','Local\\FFS0_Antigraviti_AutoListen','-StartFromNow') | Out-Null; Write-Output 'Antigraviti listener started.' } else { Write-Output 'Antigraviti listener already running.' }",
-        ],
-        "problemMatcher": [],
-        "presentation": {
-          "reveal": "never",
-          "panel": "dedicated",
-        },
-      },
-      {
         "label": "Auto: ensure triangle watcher",
         "type": "process",
         "command": "pwsh",
