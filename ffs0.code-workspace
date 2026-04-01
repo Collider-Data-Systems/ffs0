@@ -1,0 +1,311 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "FFS0_Factory (root)",
+    },
+    {
+      "path": ".agent",
+      "name": "Agent Workspace",
+    },
+    {
+      "path": "../moos",
+      "name": "mo:os Kernel (code)",
+    },
+  ],
+  "settings": {
+    "task.allowAutomaticTasks": "on",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "golang.go",
+    "[go]": {
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+      },
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "files.exclude": {
+      "**/.git": false,
+      "**/*.exe": true,
+      "**/*.exe~": true,
+      "**/moos.exe": true,
+      "**/__pycache__": true,
+      "**/.pytest_cache": true,
+      "**/node_modules": true,
+    },
+    "search.exclude": {
+      "**/.agent/archive_task/**": true,
+      "**/.agent/dev/reference/**": true,
+      "**/platform/kernel/data": true,
+      "**/platform/kernel/boot*.err": true,
+    },
+    "go.lintOnSave": "package",
+    "go.lintTool": "golangci-lint",
+    "python.defaultInterpreterPath": "${workspaceFolder:FFS0_Factory (root)}\\.venv\\Scripts\\python.exe",
+    "go.lintFlags": ["--fast"],
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[powershell]": {
+      "editor.defaultFormatter": "ms-vscode.powershell",
+    },
+    "powershell.cwd": "FFS0_Factory (root)",
+  },
+  "extensions": {
+    "recommendations": [
+      "golang.go",
+      "esbenp.prettier-vscode",
+      "ms-vscode.makefile-tools",
+      "redhat.vscode-yaml",
+      "DavidAnson.vscode-markdownlint",
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "ms-vscode.powershell",
+      "humao.rest-client",
+    ],
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Kernel (with --kb --hydrate)",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel/cmd/moos",
+        "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
+        "args": ["--kb", "${workspaceFolder:Agent Workspace}/kb", "--hydrate"],
+        "showLog": true,
+      },
+      {
+        "name": "Kernel (no hydrate)",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel/cmd/moos",
+        "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
+        "args": ["--kb", "${workspaceFolder:Agent Workspace}/kb"],
+        "showLog": true,
+      },
+      {
+        "name": "Kernel (--mcp-stdio)",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel/cmd/moos",
+        "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
+        "args": [
+          "--kb",
+          "${workspaceFolder:Agent Workspace}/kb",
+          "--hydrate",
+          "--mcp-stdio",
+        ],
+        "showLog": true,
+      },
+    ],
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Kernel: build",
+        "type": "shell",
+        "command": "go",
+        "args": ["build", "-o", "moos.exe", "./cmd/moos"],
+        "options": {
+          "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
+        },
+        "problemMatcher": ["$go"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+        },
+      },
+      {
+        "label": "Kernel: test all",
+        "type": "shell",
+        "command": "go",
+        "args": ["test", "./..."],
+        "options": {
+          "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
+        },
+        "problemMatcher": ["$go"],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+        },
+      },
+      {
+        "label": "Kernel: run (with --kb --hydrate)",
+        "type": "shell",
+        "command": "go",
+        "args": [
+          "run",
+          "./cmd/moos",
+          "--kb",
+          "${workspaceFolder:Agent Workspace}/kb",
+          "--hydrate",
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:mo:os Kernel (code)}/platform/kernel",
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": true,
+        },
+      },
+      {
+        "label": "Kernel: check health",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$h = Invoke-RestMethod 'http://localhost:8000/healthz' -TimeoutSec 5; $h | ConvertTo-Json -Depth 6",
+        ],
+        "group": "test",
+        "problemMatcher": [],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+        },
+      },
+      {
+        "label": "MCP: check health",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$h = Invoke-RestMethod 'http://localhost:8080/healthz' -TimeoutSec 5; $h | ConvertTo-Json -Depth 6",
+        ],
+        "group": "test",
+        "problemMatcher": [],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+        },
+      },
+      {
+        "label": "MCP: SSE endpoint smoke",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$tmp = Join-Path $env:TEMP ('mcp-sse-' + [guid]::NewGuid().ToString('N') + '.txt'); $null = curl.exe -sN --max-time 2 http://localhost:8080/sse 2>$null | Tee-Object -FilePath $tmp; if (Select-String -Path $tmp -Pattern 'event: endpoint' -Quiet) { Get-Content $tmp } else { Write-Error 'MCP SSE endpoint event not observed' }",
+        ],
+        "group": "test",
+        "problemMatcher": [],
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+        },
+      },
+      {
+        "label": "Git: pull latest",
+        "type": "shell",
+        "command": "git",
+        "args": ["pull", "origin", "main"],
+        "options": {
+          "cwd": "${workspaceFolder:mo:os Kernel (code)}",
+        },
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+        },
+      },
+      {
+        "label": "KB: open CLAUDE.md",
+        "type": "shell",
+        "command": "code",
+        "args": ["${workspaceFolder:Agent Workspace}/CLAUDE.md"],
+        "presentation": {
+          "reveal": "silent",
+        },
+      },
+      {
+        "label": "Auto: ensure kernel running",
+        "type": "process",
+        "command": "pwsh",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$h = $null; try { $h = Invoke-RestMethod \"http://localhost:8000/healthz\" -TimeoutSec 5 } catch {}; if ($null -eq $h -or $h.status -ne \"ok\") { Start-Process -FilePath \"go\" -WorkingDirectory \"${workspaceFolder:mo:os Kernel (code)}\\platform\\kernel\" -WindowStyle Hidden -ArgumentList @(\"run\",\"./cmd/moos\",\"--kb\",\"${workspaceFolder:Agent Workspace}\\kb\",\"--hydrate\") | Out-Null; Write-Output \"Kernel start requested.\" } else { Write-Output \"Kernel already healthy.\" }",
+        ],
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "never",
+          "panel": "dedicated",
+        },
+      },
+      {
+        "label": "Auto: ensure vscode-ai listener",
+        "type": "process",
+        "command": "powershell.exe",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'antigraviti-auto-listen.ps1' -and $_.CommandLine -match 'vscode-ai' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell.exe' -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File','${workspaceFolder:Agent Workspace}\\dev\\antigraviti-auto-listen.ps1','-AgentUrn','urn:moos:agent:vscode-ai','-AgentName','VS Code AI','-AgentTag','vscode-ai','-AssignedTo','vscode-ai','-ObserveOnly','-NoStatusMessage','-StateFile','.vscode-ai-auto-listener-state.json','-LogFile','vscode-ai-auto-listen.log','-MutexName','Local\\FFS0_VSCodeAI_AutoListen','-StartFromNow') | Out-Null; Write-Output 'vscode-ai listener started.' } else { Write-Output 'vscode-ai listener already running.' }",
+        ],
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "never",
+          "panel": "dedicated",
+        },
+      },
+      {
+        "label": "Auto: ensure triangle watcher",
+        "type": "process",
+        "command": "pwsh",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "$currentPid = $PID; $p = Get-CimInstance Win32_Process | Where-Object { $_.ProcessId -ne $currentPid -and $_.Name -match 'pwsh|powershell' -and $_.CommandLine -match 'triangle-watcher' } | Select-Object -First 1; if ($null -eq $p) { Start-Process -FilePath 'powershell' -WindowStyle Hidden -ArgumentList '-NoLogo -NoProfile -ExecutionPolicy Bypass -File ${workspaceFolder:Agent Workspace}\\scripts\\triangle-watcher.ps1' | Out-Null; Write-Output 'triangle-watcher started.' } else { Write-Output 'triangle-watcher already running.' }",
+        ],
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "never",
+          "panel": "dedicated",
+        },
+      },
+      {
+        "label": "Auto: startup bootstrap",
+        "dependsOrder": "sequence",
+        "dependsOn": [
+          "Auto: ensure kernel running",
+          "Auto: ensure vscode-ai listener",
+          "Auto: ensure triangle watcher",
+        ],
+        "runOptions": {
+          "runOn": "folderOpen",
+        },
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "never",
+          "panel": "dedicated",
+        },
+      },
+    ],
+  },
+}

@@ -1,4 +1,4 @@
-# ffs0-factory-super
+# ffs0
 
 Private workspace for [mo:os](https://github.com/MSD21091969/moos) — a categorical graph kernel for local-first sovereign AI.
 
@@ -33,36 +33,20 @@ Superset (𝓞)       — 28-type mo:os ontology (grammar)
 Kernel (𝓞_K)       — 5 compiled colors (minimal runtime dependency)
 ```
 
-## Current State — T=141 (March 22, 2026)
+## Current State — T=150 (March 31, 2026) — FULL REBUILD
 
-**Kernel:** Go 1.23, zero external dependencies, ~4K LOC, 10 test packages
+The prior kernel (undisciplined graph, 14K+ wires) is archived. The system is being
+rebuilt from scratch: categories redefined, kernel rewritten, new PRGs to be defined.
 
-| Endpoint     | What                                                                                             |
-| ------------ | ------------------------------------------------------------------------------------------------ |
-| `:8000` HTTP | 20 routes — `/state`, `/morphisms`, `/explorer`, `/log/stream` (SSE)                             |
-| `:8080` MCP  | 5 tools — `graph_state`, `node_lookup`, `apply_morphism`, `scoped_subgraph`, `benchmark_project` |
+The `moos` repo may be cloned as reference. New kernel code is being written.
 
-**Active Programs (PRG):**
-
-| PRG | Title                                         | Gate | Status                |
-| --- | --------------------------------------------- | ---- | --------------------- |
-| 000 | Session Meta-Program                          | —    | active (always)       |
-| 034 | Naturality harness for FUN02 UI_Lens          | 1    | planned → T=142       |
-| 035 | PTP PortBinding + FUN10/11/12                 | 2    | planned (depends 034) |
-| 036 | Cloverleaf multi-kernel topology              | 3    | planned (depends 035) |
-| 037 | Inspect/Run separation                        | 4    | planned (depends 036) |
-| 038 | Moos Media Channel                            | —    | ideation              |
-| 039 | Session Identity — conversation as graph node | —    | planned               |
-
-Gates 1–4 are a locked sequence. PRG034 starts Tuesday T=142 (act week).
-
-**Five Causal Invariancies:**
+**Five Causal Invariants (foundational — unchanged):**
 
 1. Church-Rosser commutativity — order-independent concurrent morphisms
 2. Functor naturality — `Project(Apply(M, S)) == Apply(M', Project(S))`
-3. Identity stability — self-referential port `urn(x) = x`
+3. Identity stability — `urn(x) = x`
 4. Log replay determinism — same log always produces same state
-5. PTP compatibility stability — valid port bindings compose
+5. Append-only log — never mutate or delete morphism history
 
 ## Timeline
 
@@ -78,31 +62,26 @@ Gates 1–4 are a locked sequence. PRG034 starts Tuesday T=142 (act week).
 | 114   | Mar 14   | FFS0_Factory established                        |
 | 135   | Mar 21   | HP laptop workstation (this workspace)          |
 | 141   | Mar 22   | Calendar goes live, Option B, kb/ purified      |
-| 142   | Mar 23   | **Act week starts** — PRG034 naturality harness |
-| 143   | Mar 24   | Studio photoshoot (PRG038 media)                |
-| 169   | Apr 19   | Hackathon demo target                           |
+| 142   | Mar 23   | Act week: PRG034–037 gate sequence              |
+| 150   | Mar 31   | **Full rebuild begins** — new categories, new kernel |
 
 ## Repository Layout
 
 ```
+CLAUDE.md              Claude Code context (you are here)
 .agent/
   kb/                  Pure categorical space (hydration sources only)
-    superset/          Ontology (28 types), schemas, sources
-    instances/         S0/S2 infrastructure seeds (15 JSON files)
-    industry/          S0 industry entities (providers, benchmarks, frameworks)
+    superset/          Ontology (being rebuilt)
+    reference/         Reference data (calendar, drive, tasks)
   dev/                 Development tooling, docs, reference
     design/            Architecture documents (carpet, firestarter, session-graph, ...)
-    reference/         Papers, YouTube transcripts, calendar schema, evaluations
-    archive/           Archived seeds (prg/calendar/keeps — now graph-native)
   cfg/                 Agent configs, provider registry, secrets policy
-    agents/            Per-agent state files (3 agents)
-  scripts/             Active PowerShell/Python utilities (6 scripts)
-  workflows/           Operational runbooks (8 workflows)
-  skills/              Claude Code skills (49 dirs)
+  scripts/             Active PowerShell/Python utilities
+  workflows/           Operational runbooks
+  skills/              Claude Code skills (9 packs)
   secrets/             API keys (gitignored)
-moos/                  -> ../moos (public kernel repo)
+moos/                  -> ../moos (kernel repo — reference during rebuild)
 .mcp.json              Kernel MCP server config (SSE on :8080)
-.github/workflows/     CI — Go vet + test + cross-platform build
 ```
 
 ## Key Design Documents
@@ -143,12 +122,12 @@ Sessions are graph nodes (`agent_session` type). PRG tasks are graph nodes (`prg
 
 ```powershell
 # Clone both repos side by side
-git clone https://github.com/MSD21091969/ffs0-factory-super.git
+git clone https://github.com/MSD21091969/ffs0.git
 git clone https://github.com/MSD21091969/moos.git
 
 # Boot kernel with KB hydration
 cd moos/platform/kernel
-go run ./cmd/moos --kb "../../ffs0-factory-super/.agent/kb" --hydrate
+go run ./cmd/moos --kb "../../ffs0/.agent/kb" --hydrate
 
 # Verify
 Invoke-RestMethod http://localhost:8000/healthz

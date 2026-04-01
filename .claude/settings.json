@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git branch*)",
+      "Bash(go test*)",
+      "Bash(go build*)",
+      "Bash(go vet*)",
+      "Bash(go run*)",
+      "Bash(golangci-lint*)",
+      "Bash(curl http://localhost*)",
+      "Bash(ls*)",
+      "Bash(cat*)",
+      "Bash(find*)",
+      "Bash(grep*)",
+      "Bash(pwsh -NoProfile*)",
+      "Bash(powershell -NoProfile*)",
+      "Bash(Invoke-RestMethod*)"
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "role": "testing",
   "status": "active",
   "workstation": "hp-laptop",
-  "workspace_root": "c:\\Users\\HP\\FFS0_HPlaptop",
+  "workspace_root": "c:\\Users\\maass\\HPlaptop",
   "capabilities": [
     "http-testing",
     "ux-audit",
@@ -19,8 +19,8 @@
     "os": "Windows — use PowerShell, not bash",
     "shell": "PowerShell — Set-Location not cd, Invoke-RestMethod not jq",
     "browser": "UNLOCKED — HP laptop can access localhost:8000",
-    "kernel_kb_path": "c:\\Users\\HP\\FFS0_HPlaptop\\ffs0-factory-super\\.agent\\kb",
-    "kernel_dir": "c:\\Users\\HP\\FFS0_HPlaptop\\moos\\platform\\kernel"
+    "kernel_kb_path": "c:\\Users\\maass\\HPlaptop\\ffs0\\.agent\\kb",
+    "kernel_dir": "c:\\Users\\maass\\HPlaptop\\moos\\platform\\kernel"
   },
   "coordination": "delegation_task — query GET /state/lens?kind=delegation_task&assigned_to=antigraviti&status=pending. Channel files deprecated (Wave 4).",
   "instructions": "workflows/antigraviti.md"

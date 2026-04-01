@@ -1,34 +1,439 @@
 {
-  "version": "1.0",
+  "$schema": "https://moos.local/ontology.schema.json",
+  "version": "2.0",
+  "t_day": 150,
+  "description": "mo:os ontology — rebuild from T=150. Grammar, not encyclopedia.",
+  "invariants": [
+    "state(t) = fold(log[0..t])",
+    "ADD · LINK · MUTATE · UNLINK are the only four morphisms",
+    "urn(M(x)) = urn(x)  — identity stability",
+    "fold(log) is deterministic  — replay determinism",
+    "P(agent) ⊆ P(user)  — permission inheritance, enforced at morphism time"
+  ],
+
   "types": {
-    "user": {
-      "id": "user",
-      "description": "Authenticated actor",
-      "broad_category": "identity"
-    },
-    "agent": {
-      "id": "agent",
-      "description": "Acts on behalf of user, has model binding",
-      "broad_category": "identity"
-    },
-    "kernel": {
-      "id": "kernel",
-      "description": "Running moos instance, self-seeds",
-      "broad_category": "infra"
-    },
-    "node": {
-      "id": "node",
-      "description": "Generic container (everything else)",
-      "broad_category": "structure"
-    }
+    "s2_operational": [
+      {
+        "id": "user",
+        "description": "The human principal. Exactly one user per kernel. Superadmin of their own graph.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:user:<name>",
+        "urn_example": "urn:moos:user:sam",
+        "ports": {
+          "out": ["owns", "governs"],
+          "self": ["identity"]
+        },
+        "payload_fields": ["name", "display_name", "role", "workstation"]
+      },
+      {
+        "id": "kernel",
+        "description": "A running mo:os process. Sovereign — bound to one workstation, owned by one user.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:kernel:<workstation>.<name>",
+        "urn_example": "urn:moos:kernel:hp-laptop.primary",
+        "ports": {
+          "out": ["exposes", "computes-on", "persisted-in"],
+          "in": ["hosted-on", "kb-source"]
+        },
+        "payload_fields": ["version", "http_port", "mcp_port", "status"]
+      },
+      {
+        "id": "workstation",
+        "description": "A physical or virtual machine. Hosts kernels, contains compute and storage.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:workstation:<name>",
+        "urn_example": "urn:moos:workstation:hp-laptop",
+        "ports": {
+          "out": ["hosts", "contains"],
+          "in": ["child"]
+        },
+        "payload_fields": ["hostname", "os", "arch", "location"]
+      },
+      {
+        "id": "agent",
+        "description": "An AI agent. Defined by role and capabilities — not by IDE surface. Owned by one user.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:agent:<user>.<name>",
+        "urn_example": "urn:moos:agent:sam.claude-code",
+        "ports": {
+          "out": ["connects-to", "participates"],
+          "in": ["governed-by"]
+        },
+        "payload_fields": [
+          "name",
+          "kind",
+          "transport",
+          "persistence",
+          "capabilities",
+          "write_scope",
+          "model"
+        ],
+        "payload_schema": {
+          "kind": ["ide", "process", "api", "service"],
+          "transport": ["http", "mcp-sse", "mcp-stdio", "scheduled", "webhook"],
+          "persistence": ["ephemeral", "bounded", "persistent"]
+        }
+      },
+      {
+        "id": "session",
+        "description": "A working context: agent × kernel × time interval. Persistent memory across context windows.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:session:<user>.<agent>.<T-day>",
+        "urn_example": "urn:moos:session:sam.claude-code.T150",
+        "ports": {
+          "out": ["focus", "on"],
+          "in": ["participated-by"]
+        },
+        "payload_fields": [
+          "started_at",
+          "ended_at",
+          "status",
+          "role",
+          "workstation",
+          "git_branch",
+          "kernel_state_at_start",
+          "summary"
+        ],
+        "payload_schema": {
+          "status": ["active", "complete", "abandoned"]
+        }
+      },
+      {
+        "id": "endpoint",
+        "description": "A network interface: port + transport. Exposed by kernel, connected-to by agents.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:endpoint:<workstation>.<kernel>.<port>",
+        "urn_example": "urn:moos:endpoint:hp-laptop.primary.8000",
+        "ports": {
+          "out": ["implements"],
+          "in": ["exposed-by", "connected-to"]
+        },
+        "payload_fields": ["port", "transport", "path", "status"]
+      },
+      {
+        "id": "compute",
+        "description": "A computation substrate. CPU runs the sequential kernel spine (fold, evaluate, morphism validation). GPU runs concurrent subgraph partitions as hypervector operations.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:compute:<workstation>.<kind>",
+        "urn_example": "urn:moos:compute:hp-laptop.cpu",
+        "ports": {
+          "out": ["bound-to"],
+          "in": ["contained-in", "computed-by"]
+        },
+        "payload_fields": [
+          "kind",
+          "execution_model",
+          "model",
+          "cores_or_cuda_cores",
+          "memory_gb"
+        ],
+        "payload_schema": {
+          "kind": ["cpu", "gpu", "cloud", "docker"],
+          "execution_model": ["sequential", "concurrent", "distributed"]
+        }
+      },
+      {
+        "id": "storage",
+        "description": "A persistent storage resource. Three kinds: git_repo (remote), local_fs, morphism_log.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:storage:<workstation>.<name>  |  urn:moos:storage:<user>.<name>",
+        "urn_example": "urn:moos:storage:hp-laptop.moos-log",
+        "ports": {
+          "out": ["synced-via", "provides-kb", "bound-to"],
+          "in": ["contained-in", "persists", "sync-target"]
+        },
+        "payload_fields": ["kind", "path_or_url", "status"],
+        "payload_schema": {
+          "kind": ["git_repo", "local_fs", "morphism_log"]
+        }
+      },
+      {
+        "id": "governance_proposal",
+        "description": "A request to promote a local contingent pattern to canonical. Human approval required.",
+        "stratum": "S0-S2",
+        "urn_pattern": "urn:moos:proposal:<user>.<slug>",
+        "urn_example": "urn:moos:proposal:sam.add-gpu-stratum",
+        "ports": {
+          "out": ["promotes-to"],
+          "in": []
+        },
+        "payload_fields": [
+          "title",
+          "status",
+          "origin_kernel",
+          "proposed_artifact",
+          "reason",
+          "evidence_urns"
+        ],
+        "payload_schema": {
+          "status": ["pending", "approved", "rejected"],
+          "proposed_artifact": ["ontology", "instance", "kernel_behavior"]
+        }
+      },
+      {
+        "id": "role",
+        "description": "A named bundle of permissions. Delegatable from user to agent. P(agent) ⊆ P(user) always.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:role:<name>",
+        "urn_example": "urn:moos:role:lead",
+        "ports": {
+          "out": [],
+          "in": ["granted-by"]
+        },
+        "payload_fields": ["name", "permissions", "description"],
+        "builtin_roles": {
+          "superadmin": "all permissions — only users hold this",
+          "lead": "read all, write session/proposal/delegation",
+          "executor": "read all, write code nodes and own session",
+          "observer": "read all, write own session and ack messages only",
+          "hydrator": "read kb, write S0-S2 nodes (ADD only)",
+          "monitor": "read all, write nothing"
+        }
+      }
+    ],
+
+    "s1_grammar": [
+      {
+        "id": "protocol",
+        "description": "A communication protocol class. S0 instances are specific protocols.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:protocol:<name>",
+        "examples": [
+          "http2",
+          "http3",
+          "mcp-sse",
+          "mcp-stdio",
+          "grpc",
+          "websocket",
+          "quic"
+        ]
+      },
+      {
+        "id": "language",
+        "description": "A programming language. S0 instances are specific languages.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:language:<name>",
+        "examples": ["go", "python", "rust", "typescript"]
+      },
+      {
+        "id": "runtime",
+        "description": "An execution environment. S0 instances are specific runtimes.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:runtime:<name>",
+        "examples": [
+          "go-process",
+          "python-process",
+          "rust-binary",
+          "node-process"
+        ]
+      },
+      {
+        "id": "package",
+        "description": "A software dependency or library. S0 instances are specific packages.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:package:<name>",
+        "examples": ["stdlib", "quic-go", "anthropic-sdk", "fastapi", "tokio"]
+      },
+      {
+        "id": "capability",
+        "description": "A named ability. Used in governs wire payload to scope what an agent can do.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:capability:<name>",
+        "examples": [
+          "golang",
+          "testing",
+          "git",
+          "http-client",
+          "hydration",
+          "planning",
+          "kernel-dev"
+        ]
+      },
+      {
+        "id": "stratum",
+        "description": "An S0-S4 classification layer. First-class so the graph can reason about its own strata.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:stratum:<name>",
+        "instances": [
+          {
+            "urn": "urn:moos:stratum:s0",
+            "name": "authored",
+            "description": "Human-written seeds, design docs, industry data"
+          },
+          {
+            "urn": "urn:moos:stratum:s1",
+            "name": "validated",
+            "description": "Schema-checked, operad-approved"
+          },
+          {
+            "urn": "urn:moos:stratum:s2",
+            "name": "materialized",
+            "description": "Hydrated into kernel graph, operational"
+          },
+          {
+            "urn": "urn:moos:stratum:s3",
+            "name": "evaluated",
+            "description": "Concurrent subgraph evaluation: hypervector encoding, Ricci curvature, and ranking"
+          },
+          {
+            "urn": "urn:moos:stratum:s4",
+            "name": "projected",
+            "description": "UI, filesystem, API — NEVER ground truth"
+          }
+        ]
+      }
+    ]
   },
-  "morphisms": {},
-  "categories": {
-    "C":  {"description": "Universal graph"},
-    "S0": {"description": "Authored"},
-    "S1": {"description": "Validated"},
-    "S2": {"description": "Materialized"},
-    "S3": {"description": "Evaluated"},
-    "S4": {"description": "Projected"}
+
+  "wire_families": [
+    {
+      "id": "WF01",
+      "name": "owns",
+      "description": "User owns a workstation, kernel, or storage resource.",
+      "src_types": ["user"],
+      "tgt_types": ["workstation", "kernel", "storage"],
+      "src_port": "owns",
+      "tgt_port": "child"
+    },
+    {
+      "id": "WF02",
+      "name": "governs",
+      "description": "User governs an agent with delegated role. P(agent) ⊆ P(user) enforced at morphism time.",
+      "src_types": ["user"],
+      "tgt_types": ["agent"],
+      "src_port": "governs",
+      "tgt_port": "governed-by",
+      "payload": {
+        "delegated_role": "urn:moos:role:<name>",
+        "capabilities": [],
+        "write_scope": []
+      }
+    },
+    {
+      "id": "WF03",
+      "name": "hosts",
+      "description": "Workstation hosts a kernel.",
+      "src_types": ["workstation"],
+      "tgt_types": ["kernel"],
+      "src_port": "hosts",
+      "tgt_port": "hosted-on"
+    },
+    {
+      "id": "WF04",
+      "name": "contains",
+      "description": "Workstation contains a compute or storage resource.",
+      "src_types": ["workstation"],
+      "tgt_types": ["compute", "storage"],
+      "src_port": "contains",
+      "tgt_port": "contained-in"
+    },
+    {
+      "id": "WF05",
+      "name": "exposes",
+      "description": "Kernel exposes a network endpoint.",
+      "src_types": ["kernel"],
+      "tgt_types": ["endpoint"],
+      "src_port": "exposes",
+      "tgt_port": "exposed-by"
+    },
+    {
+      "id": "WF06",
+      "name": "connects-to",
+      "description": "Agent connects to a kernel endpoint.",
+      "src_types": ["agent"],
+      "tgt_types": ["endpoint"],
+      "src_port": "connects-to",
+      "tgt_port": "connected-to"
+    },
+    {
+      "id": "WF07",
+      "name": "participates",
+      "description": "Agent participates in a session.",
+      "src_types": ["agent"],
+      "tgt_types": ["session"],
+      "src_port": "participates",
+      "tgt_port": "participated-by"
+    },
+    {
+      "id": "WF08",
+      "name": "bound-to",
+      "description": "Compute or storage is physically bound to a workstation.",
+      "src_types": ["compute", "storage"],
+      "tgt_types": ["workstation"],
+      "src_port": "bound-to",
+      "tgt_port": "binds"
+    },
+    {
+      "id": "WF09",
+      "name": "computes-on",
+      "description": "Kernel routes operations to compute substrates by execution model. CI1-independent subgraph partitions may execute concurrently.",
+      "src_types": ["kernel"],
+      "tgt_types": ["compute"],
+      "src_port": "computes-on",
+      "tgt_port": "computed-by",
+      "payload": { "execution_model": "sequential | concurrent | distributed" }
+    },
+    {
+      "id": "WF10",
+      "name": "persisted-in",
+      "description": "Kernel's morphism log persists in a storage resource.",
+      "src_types": ["kernel"],
+      "tgt_types": ["storage"],
+      "src_port": "persisted-in",
+      "tgt_port": "persists"
+    },
+    {
+      "id": "WF11",
+      "name": "synced-via",
+      "description": "Local storage syncs to/from a remote git repo.",
+      "src_types": ["storage"],
+      "tgt_types": ["storage"],
+      "src_port": "synced-via",
+      "tgt_port": "sync-target"
+    },
+    {
+      "id": "WF12",
+      "name": "provides-kb",
+      "description": "Storage provides the hydration source (KB files) to a kernel on boot.",
+      "src_types": ["storage"],
+      "tgt_types": ["kernel"],
+      "src_port": "provides-kb",
+      "tgt_port": "kb-source"
+    },
+    {
+      "id": "WF13",
+      "name": "promotes-to",
+      "description": "Governance proposal targets a storage for canonicalization. Human approval required.",
+      "src_types": ["governance_proposal"],
+      "tgt_types": ["storage", "kernel"],
+      "src_port": "promotes-to",
+      "tgt_port": "promotion-target"
+    },
+    {
+      "id": "WF14",
+      "name": "implements",
+      "description": "Agent, kernel, or endpoint implements a protocol, language, capability, runtime, or package.",
+      "src_types": ["agent", "kernel", "endpoint"],
+      "tgt_types": ["protocol", "language", "capability", "runtime", "package"],
+      "src_port": "implements",
+      "tgt_port": "implemented-by"
+    },
+    {
+      "id": "WF15",
+      "name": "link",
+      "description": "Open-ended semantic wire between any two nodes. Port names are author-chosen. Use when WF01-WF14 don't apply.",
+      "src_types": ["*"],
+      "tgt_types": ["*"],
+      "src_port": "{semantic}",
+      "tgt_port": "{semantic}"
+    }
+  ],
+
+  "five_causal_invariants": {
+    "CI1": "Church-Rosser: M_a;M_b = M_b;M_a  when affected_urns(M_a) ∩ affected_urns(M_b) = ∅",
+    "CI2": "Functor naturality: Project(Apply(M,S)) = Apply(M', Project(S))  for all projection functors",
+    "CI3": "Identity stability: ∀M ∀x: urn(M(x)) = urn(x)",
+    "CI4": "Log replay determinism: fold(log[0..t]) is deterministic — same log → same state",
+    "CI5": "Wire family stability: permitted wire families do not change under HG morphisms — only governance changes CS"
   }
 }
