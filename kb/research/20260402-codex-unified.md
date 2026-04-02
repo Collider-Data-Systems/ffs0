@@ -525,12 +525,210 @@ All relations (participation, message links) remain — they are history. Nothin
 
 Implementation starts only when ALL hold:
 
-1. Every glossary term has exactly one definition and one relation locus.
-2. Every node type has URN pattern, required properties (with mutability + authority_scope + validation_urn), and common ports.
-3. Every rewrite category (WF01-WF15) has explicit source/target types, ports, allowed rewrites, authority, AND exhaustive MUTATE scope.
-4. Every mutable property has authority_scope + validation_urn.
-5. Port color compatibility matrix exists for all active colors.
-6. Every interaction node type (message, tool, event, stream, auth, resource) has a complete interaction contract or is explicitly rejected.
-7. Federation scope statement assigns every active WF to strict, eventual, or local-only.
-8. MUTATE boundary contracts cover every mutable field on every active node type.
-9. Topology-property boundary is respected: no property duplicates what a relation expresses.
+1. Every glossary term has exactly one definition and one relation locus. ✓ §2
+2. Every node type has URN pattern, required properties (with mutability + authority_scope + validation_urn), and common ports. ✓ §4
+3. Every rewrite category (WF01-WF15) has explicit source/target types, ports, allowed rewrites, authority, AND exhaustive MUTATE scope. ✓ §5
+4. Every mutable property has authority_scope + validation_urn. ✓ §6
+5. Port color compatibility matrix exists for all active colors. ✓ §12
+6. Every interaction node type (message, tool, event, stream, auth, resource) has a complete interaction contract or is explicitly rejected. ✓ §8 (contracts declared) / §4.3 (interaction nodes)
+7. Federation scope statement assigns every active WF to strict, eventual, or local-only. ✓ §8.2
+8. MUTATE boundary contracts cover every mutable field on every active node type. ✓ §6.3
+9. Topology-property boundary is respected: no property duplicates what a relation expresses. ✓ §4.0, §6.4
+
+**Gate status: ALL ITEMS CLOSED. Kernel scaffolding may begin.**
+
+---
+
+## 12. Port Color Compatibility Matrix
+
+### 12.1 Port Color Assignments
+
+Every port belongs to exactly one color. The color governs which source→target color pairs produce valid relations.
+
+| Port name | Color | Example node type |
+|-----------|-------|-------------------|
+| governs | auth | user |
+| governed-by | auth | agent, role |
+| granted-by | auth | role |
+| identity | auth | user |
+| promotes-to | auth | governance_proposal |
+| promotion-target | auth | storage, kernel |
+| owns | topology | user |
+| child | topology | workstation, kernel, storage |
+| hosts | topology | workstation |
+| hosted-on | topology | kernel |
+| contains | topology | workstation |
+| contained-in | topology | compute, storage |
+| binds | topology | workstation |
+| exposes | transport | kernel |
+| exposed-by | transport | endpoint |
+| connects-to | transport | agent |
+| connected-to | transport | endpoint |
+| implements | transport | agent, kernel, endpoint |
+| implemented-by | transport | protocol, language, capability, runtime, package |
+| computes-on | compute | kernel |
+| computed-by | compute | compute |
+| bound-to (compute) | compute | compute |
+| bound-to (storage) | storage | storage |
+| persisted-in | storage | kernel |
+| persists | storage | storage |
+| synced-via | storage | storage |
+| sync-target | storage | storage |
+| provides-kb | storage | storage |
+| kb-source | storage | kernel |
+| participates | workflow | agent, user |
+| participated-by | workflow | session |
+| focus | workflow | session |
+| on | workflow | session |
+| {semantic} | semantic | any (WF15 only) |
+| projected-to | projection | any (S4 output, never truth) |
+| rendered-as | projection | any (S4 output, never truth) |
+
+### 12.2 Compatibility Matrix
+
+✓ = compatible (truth-carrying relation allowed) · WF15 = semantic allowed with contract_urn · R = read-only sink · — = incompatible / rejected at validation time
+
+| src color \ tgt color | auth | topology | transport | compute | storage | workflow | semantic | projection |
+|-----------------------|------|----------|-----------|---------|---------|----------|----------|------------|
+| **auth** | ✓ | ✓ | — | — | — | — | ✓ WF15 | R |
+| **topology** | — | ✓ | — | — | — | — | ✓ WF15 | R |
+| **transport** | — | — | ✓ | — | — | — | ✓ WF15 | R |
+| **compute** | — | ✓ | — | ✓ | — | — | ✓ WF15 | R |
+| **storage** | — | ✓ | — | — | ✓ | — | ✓ WF15 | R |
+| **workflow** | — | — | — | — | — | ✓ | ✓ WF15 | R |
+| **semantic** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | R |
+| **projection** | — | — | — | — | — | — | — | — |
+
+**Column R** (projection): projection-color ports may receive from any color (kernel writes S4 views out), but no projection-color relation may become source of ontology truth. Projection columns carry no causal authority.
+
+### 12.3 Declared Compatible Pairs by WF
+
+| WF | src port color | tgt port color | Notes |
+|----|---------------|---------------|-------|
+| WF01 | topology (owns) | topology (child) | |
+| WF02 | auth (governs) | auth (governed-by) | |
+| WF03 | topology (hosts) | topology (hosted-on) | |
+| WF04 | topology (contains) | topology (contained-in) | |
+| WF05 | transport (exposes) | transport (exposed-by) | |
+| WF06 | transport (connects-to) | transport (connected-to) | |
+| WF07 | workflow (participates) | workflow (participated-by) | |
+| WF08 | compute (bound-to) | topology (binds) | compute→topology cross |
+| WF08 | storage (bound-to) | topology (binds) | storage→topology cross |
+| WF09 | compute (computes-on) | compute (computed-by) | |
+| WF10 | storage (persisted-in) | storage (persists) | |
+| WF11 | storage (synced-via) | storage (sync-target) | |
+| WF12 | storage (provides-kb) | storage (kb-source) | kb-source treated as storage color |
+| WF13 | auth (promotes-to) | auth (promotion-target) | |
+| WF14 | transport (implements) | transport (implemented-by) | |
+| WF15 | semantic | any | contract_urn required |
+
+**Rule**: Any (src color, tgt color) pair not listed in §12.3 is **rejected at validation time** — no exception, no silent success.
+
+---
+
+## 13. CI-2 Projection Registry
+
+### 13.1 What CI-2 Requires
+
+CI-2 holds for projection P if there exists a rewrite correspondence M' such that:
+
+```
+Project(Apply(M, S)) = Apply(M', Project(S))
+```
+
+This means: applying a rewrite M to the full graph then projecting gives the same result as projecting first then applying the corresponding M' to the projected view. Only structure-preserving projections can satisfy this.
+
+A projection NOT in this registry is **lossy** — valid for display, invalid as source of truth, does not satisfy CI-2.
+
+### 13.2 CI-2–Compliant Projections
+
+| Projection ID | Definition | Source WF(s) | Corresponding M' | Notes |
+|---------------|-----------|-------------|-----------------|-------|
+| P_node(urn) | All properties of one specific node | Any MUTATE on that node | M' = MUTATE same field on projected record | Single-node, deterministic |
+| P_agent(urn) | Agent node + all mutable property values | WF02 MUTATE | M' = MUTATE corresponding projected field | Compliant only for MUTATE — not for ADD/UNLINK of unrelated nodes |
+| P_session_participants(urn) | Set of all WF07 relations incident to a session | WF07 LINK, UNLINK | M' = add/remove entry from projected set | Set-valued, but structurally faithful |
+| P_capabilities(agent_urn) | Set of all WF02 relations from agent to capability nodes | WF02 LINK, UNLINK | M' = add/remove capability entry | Replaces the forbidden `capability_urns` property pattern |
+| P_kernel_endpoints(kernel_urn) | Set of all WF05 relations from kernel to endpoint nodes | WF05 LINK, UNLINK | M' = add/remove endpoint entry | Replaces the forbidden `port_urns` property pattern |
+| P_rewrite_log(kernel_urn) | Ordered list of all logged rewrites for a kernel | Any rewrite | M' = append to log | Append-only; trivially CI-2 compliant |
+
+### 13.3 Lossy Projections (Valid for Display, NOT CI-2)
+
+These projections have no defined M'. They may be used in S4 views but must never be used as authority for determining graph state.
+
+| Projection | Why lossy | Notes |
+|-----------|-----------|-------|
+| P_dashboard_counts | Aggregate counts (active sessions, idle agents, etc.) | No M' — many rewrites can produce the same delta or cancel |
+| P_message_feed | Time-ordered display stream of message_packet nodes | Ordering is derived; insertion doesn't commute with ranking |
+| P_ui_card(urn) | Rendered summary card composed from multiple node properties | Many-to-one: same display from different graph states |
+| P_search_rank | HDC/VSA similarity ranking of nodes | S3 evaluation artifact; ranking is non-invertible |
+| P_file_tree | Filesystem rendering of storage nodes and relations | Filesystem layout != graph topology; multiple S4 views possible |
+| P_api_snapshot | REST/GraphQL response containing a computed view | Joins and computed fields have no natural M' |
+
+**Rule**: Lossy projections must be marked `"stratum": "S4"` in all representations. They MUST NOT be compared, diffed, or merged to produce causal decisions.
+
+---
+
+## 14. S4 Cache Denormalization Contract
+
+### 14.1 When an S4 Cache is Justified
+
+An S4 denormalization cache is permitted only when ALL of:
+1. The corresponding CI-2–compliant query (§13.2) exists and is the definitive source.
+2. The query is proven expensive enough to warrant caching (latency budget exceeded).
+3. The cache is **explicitly labeled** `"stratum": "S4"` everywhere it appears.
+4. The cache rebuild procedure is documented and automated.
+5. The cache is **never read for authority** — only for display/perf.
+
+### 14.2 Allowed Cache Fields
+
+Only denormalize what can be derived from a CI-2–compliant projection. Allowed S4 cache patterns:
+
+| Cache name | Backing CI-2 projection | Cached fields | Invalidation trigger |
+|------------|------------------------|---------------|----------------------|
+| agent_capabilities_cache | P_capabilities(agent_urn) | `[{capability_urn, scope, max_rewrites}]` | Any WF02 LINK or UNLINK on that agent |
+| session_participants_cache | P_session_participants(session_urn) | `[{participant_urn, role}]` | Any WF07 LINK or UNLINK on that session |
+| kernel_endpoints_cache | P_kernel_endpoints(kernel_urn) | `[{endpoint_urn, transport_type, status}]` | Any WF05 LINK or UNLINK on that kernel |
+| agent_properties_cache | P_agent(agent_urn) | Full mutable property set | Any WF02 MUTATE on that agent |
+
+### 14.3 Forbidden Cache Patterns
+
+The following are explicitly forbidden — they violate topology-property boundary or CI-2:
+
+| Forbidden cache | Why |
+|----------------|-----|
+| `capability_urns` property on agent node | Topology stored as property — violates §4.0 rule |
+| `participant_urns` property on session node | Topology stored as property — violates §4.0 rule |
+| `port_urns` property on kernel node | Topology stored as property — violates §4.0 rule |
+| Any S4 cache read by rewrite validator | Cache used for authority — forbidden |
+| Any S4 cache used to initialize ADD/LINK source | Bootstrapping truth from projection — forbidden |
+
+### 14.4 Cache Lifecycle Contract
+
+```
+BUILD:      query = run CI-2 projection against current graph state
+            write result with stratum="S4", cache_ts=now, source_urn=[origin node]
+
+INVALIDATE: trigger = any rewrite in the backing WF category touching the source node
+            action  = mark cache stale OR delete and rebuild before next read
+
+READ:       if stale → rebuild before returning
+            always label response: stratum="S4", authoritative=false
+
+AUDIT:      log every cache rebuild with: timestamp, trigger_rewrite_urn, duration_ms
+```
+
+### 14.5 S4 Stratum Rule
+
+All S4 cache data must carry:
+
+```json
+{
+  "stratum": "S4",
+  "authoritative": false,
+  "backing_projection": "<projection-id from §13.2>",
+  "cache_ts": "<ISO-8601>",
+  "invalidated_by_wf": ["WF02"]
+}
+```
+
+**No field in S4 stratum data may be promoted to S1 or S2 without explicit governance promotion (WF13).**

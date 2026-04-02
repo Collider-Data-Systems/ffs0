@@ -1,7 +1,7 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
   "version": "3.0",
-  "t_day": 152,
+  "t_day": 153,
   "description": "mo:os ontology — aligned with codex-unified.md (2026-04-02). Grammar, not encyclopedia.",
   "canonical_reference": "kb/research/20260402-codex-unified.md",
 
@@ -325,6 +325,143 @@
         }
       }
     ]
+  },
+
+  "port_color_compatibility": {
+    "description": "Which source→target port color pairs produce valid relations. Any pair not listed is rejected at validation time.",
+    "port_colors": ["auth", "topology", "transport", "compute", "storage", "workflow", "semantic", "projection"],
+    "projection_rule": "projection ports are read-only S4 sinks — never source of truth, never form causal relations",
+    "semantic_rule": "semantic ports (WF15) may compose with any color only when contract_urn is provided",
+    "matrix": {
+      "auth":       { "auth": true,  "topology": true,  "transport": false, "compute": false, "storage": false, "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
+      "topology":   { "auth": false, "topology": true,  "transport": false, "compute": false, "storage": false, "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
+      "transport":  { "auth": false, "topology": false, "transport": true,  "compute": false, "storage": false, "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
+      "compute":    { "auth": false, "topology": true,  "transport": false, "compute": true,  "storage": false, "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
+      "storage":    { "auth": false, "topology": true,  "transport": false, "compute": false, "storage": true,  "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
+      "workflow":   { "auth": false, "topology": false, "transport": false, "compute": false, "storage": false, "workflow": true,  "semantic": "wf15_only", "projection": "sink_only" },
+      "semantic":   { "auth": true,  "topology": true,  "transport": true,  "compute": true,  "storage": true,  "workflow": true,  "semantic": true,         "projection": "sink_only" },
+      "projection": { "auth": false, "topology": false, "transport": false, "compute": false, "storage": false, "workflow": false, "semantic": false,         "projection": false }
+    },
+    "declared_pairs_by_wf": [
+      { "wf": "WF01", "src_color": "topology", "tgt_color": "topology", "src_port": "owns", "tgt_port": "child" },
+      { "wf": "WF02", "src_color": "auth",     "tgt_color": "auth",     "src_port": "governs", "tgt_port": "governed-by" },
+      { "wf": "WF03", "src_color": "topology", "tgt_color": "topology", "src_port": "hosts", "tgt_port": "hosted-on" },
+      { "wf": "WF04", "src_color": "topology", "tgt_color": "topology", "src_port": "contains", "tgt_port": "contained-in" },
+      { "wf": "WF05", "src_color": "transport","tgt_color": "transport","src_port": "exposes", "tgt_port": "exposed-by" },
+      { "wf": "WF06", "src_color": "transport","tgt_color": "transport","src_port": "connects-to", "tgt_port": "connected-to" },
+      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "participates", "tgt_port": "participated-by" },
+      { "wf": "WF08", "src_color": "compute",  "tgt_color": "topology", "src_port": "bound-to", "tgt_port": "binds", "note": "compute->topology cross" },
+      { "wf": "WF08", "src_color": "storage",  "tgt_color": "topology", "src_port": "bound-to", "tgt_port": "binds", "note": "storage->topology cross" },
+      { "wf": "WF09", "src_color": "compute",  "tgt_color": "compute",  "src_port": "computes-on", "tgt_port": "computed-by" },
+      { "wf": "WF10", "src_color": "storage",  "tgt_color": "storage",  "src_port": "persisted-in", "tgt_port": "persists" },
+      { "wf": "WF11", "src_color": "storage",  "tgt_color": "storage",  "src_port": "synced-via", "tgt_port": "sync-target" },
+      { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "provides-kb", "tgt_port": "kb-source" },
+      { "wf": "WF13", "src_color": "auth",     "tgt_color": "auth",     "src_port": "promotes-to", "tgt_port": "promotion-target" },
+      { "wf": "WF14", "src_color": "transport","tgt_color": "transport","src_port": "implements", "tgt_port": "implemented-by" },
+      { "wf": "WF15", "src_color": "semantic", "tgt_color": "*",        "src_port": "{semantic}", "tgt_port": "{semantic}", "constraint": "contract_urn required" }
+    ]
+  },
+
+  "ci2_projection_registry": {
+    "description": "Registry of CI-2 compliant structure-preserving projections. Projections not listed here are lossy — valid for S4 display only, not for authority.",
+    "ci2_compliant": [
+      {
+        "id": "P_node",
+        "definition": "All properties of one specific node",
+        "source_wf": ["any MUTATE on that node"],
+        "corresponding_M_prime": "MUTATE same field on projected record",
+        "authoritative": true
+      },
+      {
+        "id": "P_agent",
+        "definition": "Agent node + all mutable property values",
+        "source_wf": ["WF02"],
+        "corresponding_M_prime": "MUTATE corresponding projected field",
+        "authoritative": true,
+        "note": "Compliant only for MUTATE — not for ADD/UNLINK of unrelated nodes"
+      },
+      {
+        "id": "P_session_participants",
+        "definition": "Set of all WF07 relations incident to a session",
+        "source_wf": ["WF07"],
+        "corresponding_M_prime": "add/remove entry from projected set",
+        "authoritative": true
+      },
+      {
+        "id": "P_capabilities",
+        "definition": "Set of all WF02 relations from agent to capability nodes",
+        "source_wf": ["WF02"],
+        "corresponding_M_prime": "add/remove capability entry",
+        "authoritative": true,
+        "note": "Replaces forbidden capability_urns property pattern"
+      },
+      {
+        "id": "P_kernel_endpoints",
+        "definition": "Set of all WF05 relations from kernel to endpoint nodes",
+        "source_wf": ["WF05"],
+        "corresponding_M_prime": "add/remove endpoint entry",
+        "authoritative": true,
+        "note": "Replaces forbidden port_urns property pattern"
+      },
+      {
+        "id": "P_rewrite_log",
+        "definition": "Ordered list of all logged rewrites for a kernel",
+        "source_wf": ["any"],
+        "corresponding_M_prime": "append to log",
+        "authoritative": true,
+        "note": "Append-only; trivially CI-2 compliant"
+      }
+    ],
+    "lossy": [
+      { "id": "P_dashboard_counts", "reason": "Aggregate; no M' — many rewrites can produce same delta or cancel" },
+      { "id": "P_message_feed",     "reason": "Time-ordered display; insertion doesn't commute with ranking" },
+      { "id": "P_ui_card",          "reason": "Many-to-one: same display from different graph states" },
+      { "id": "P_search_rank",      "reason": "S3 HDC/VSA evaluation artifact; non-invertible" },
+      { "id": "P_file_tree",        "reason": "Filesystem layout != graph topology; multiple S4 views possible" },
+      { "id": "P_api_snapshot",     "reason": "Joins and computed fields have no natural M'" }
+    ]
+  },
+
+  "s4_cache_contract": {
+    "description": "Rules governing when and how S4 denormalization caches may exist.",
+    "allowed_caches": [
+      {
+        "name": "agent_capabilities_cache",
+        "backing_projection": "P_capabilities",
+        "cached_fields": ["capability_urn", "scope", "max_rewrites"],
+        "invalidation_trigger": "any WF02 LINK or UNLINK on that agent"
+      },
+      {
+        "name": "session_participants_cache",
+        "backing_projection": "P_session_participants",
+        "cached_fields": ["participant_urn", "role"],
+        "invalidation_trigger": "any WF07 LINK or UNLINK on that session"
+      },
+      {
+        "name": "kernel_endpoints_cache",
+        "backing_projection": "P_kernel_endpoints",
+        "cached_fields": ["endpoint_urn", "transport_type", "status"],
+        "invalidation_trigger": "any WF05 LINK or UNLINK on that kernel"
+      },
+      {
+        "name": "agent_properties_cache",
+        "backing_projection": "P_agent",
+        "cached_fields": "all mutable property set",
+        "invalidation_trigger": "any WF02 MUTATE on that agent"
+      }
+    ],
+    "forbidden_patterns": [
+      "capability_urns property on agent node — topology stored as property",
+      "participant_urns property on session node — topology stored as property",
+      "port_urns property on kernel node — topology stored as property",
+      "any S4 cache read by rewrite validator",
+      "any S4 cache used to initialize ADD/LINK source"
+    ],
+    "required_stratum_marker": {
+      "stratum": "S4",
+      "authoritative": false,
+      "fields_required": ["stratum", "authoritative", "backing_projection", "cache_ts", "invalidated_by_wf"]
+    }
   },
 
   "rewrite_categories": [
