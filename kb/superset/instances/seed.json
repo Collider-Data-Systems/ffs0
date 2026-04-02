@@ -1,112 +1,125 @@
 {
   "actor": "urn:moos:user:sam",
+  "t_day": 152,
+  "description": "Bootstrap seed — minimal sovereign graph for hp-laptop. Aligned with codex-unified.md (2026-04-02).",
+
   "nodes": [
     {
       "urn": "urn:moos:user:sam",
       "type_id": "user",
       "stratum": "S2",
-      "payload": {
-        "name": "sam",
-        "display_name": "Sam",
-        "role": "superadmin"
+      "properties": {
+        "name":       "sam",
+        "created_at": "2025-11-01T00:00:00Z"
       }
     },
     {
       "urn": "urn:moos:workstation:hp-laptop",
       "type_id": "workstation",
       "stratum": "S2",
-      "payload": {
+      "properties": {
         "hostname": "hp-laptop",
-        "os": "windows"
+        "os":       "windows",
+        "arch":     "x86_64"
       }
     },
     {
       "urn": "urn:moos:kernel:hp-laptop.primary",
       "type_id": "kernel",
       "stratum": "S2",
-      "payload": {
-        "version": "2.0",
-        "http_port": 8000,
-        "mcp_port": 8080,
-        "status": "active"
+      "properties": {
+        "version": "3.0",
+        "status":  "active"
       }
     },
     {
       "urn": "urn:moos:agent:sam.claude-code",
       "type_id": "agent",
       "stratum": "S2",
-      "payload": {
-        "name": "claude-code",
-        "kind": "ide",
-        "transport": "http",
-        "persistence": "bounded",
-        "capabilities": ["kernel-dev"],
-        "write_scope": ["session", "governance_proposal"],
-        "model": "claude-sonnet"
+      "properties": {
+        "name":           "claude-code",
+        "delegate_type":  "ide",
+        "owner_urn":      "urn:moos:user:sam",
+        "transport_type": "http",
+        "model":          "claude-sonnet",
+        "status":         "idle",
+        "created_at":     "2025-11-01T00:00:00Z"
       }
     },
     {
-      "urn": "urn:moos:session:sam.claude-code.T150",
-      "type_id": "session",
+      "urn": "urn:moos:agent:sam.vscode-copilot",
+      "type_id": "agent",
       "stratum": "S2",
-      "payload": {
-        "status": "active",
-        "role": "lead",
-        "workstation": "hp-laptop"
+      "properties": {
+        "name":           "vscode-copilot",
+        "delegate_type":  "ide",
+        "owner_urn":      "urn:moos:user:sam",
+        "transport_type": "http",
+        "model":          "gpt-4o",
+        "status":         "idle",
+        "created_at":     "2025-11-01T00:00:00Z"
+      }
+    },
+    {
+      "urn": "urn:moos:agent:sam.antigraviti",
+      "type_id": "agent",
+      "stratum": "S2",
+      "properties": {
+        "name":           "antigraviti",
+        "delegate_type":  "ide",
+        "owner_urn":      "urn:moos:user:sam",
+        "transport_type": "http",
+        "model":          "gemini",
+        "status":         "idle",
+        "created_at":     "2026-03-01T00:00:00Z"
       }
     },
     {
       "urn": "urn:moos:endpoint:hp-laptop.primary.8000",
       "type_id": "endpoint",
       "stratum": "S2",
-      "payload": {
-        "port": 8000,
-        "transport": "http",
-        "path": "/",
-        "status": "active"
+      "properties": {
+        "transport_type": "http",
+        "status":         "active"
       }
     },
     {
       "urn": "urn:moos:compute:hp-laptop.cpu",
       "type_id": "compute",
       "stratum": "S2",
-      "payload": {
-        "kind": "cpu",
+      "properties": {
+        "compute_type":    "cpu",
         "execution_model": "sequential",
-        "model": "ryzen",
-        "cores_or_cuda_cores": 6,
-        "memory_gb": 16
+        "capacity":        { "cores": 6, "memory_gb": 16 }
       }
     },
     {
       "urn": "urn:moos:storage:hp-laptop.local-fs",
       "type_id": "storage",
       "stratum": "S2",
-      "payload": {
-        "kind": "local_fs",
-        "path_or_url": "C:/Users/maass/HPlaptop",
-        "status": "mounted"
-      }
-    },
-    {
-      "urn": "urn:moos:proposal:sam.bootstrap-foundation",
-      "type_id": "governance_proposal",
-      "stratum": "S1",
-      "payload": {
-        "title": "Bootstrap foundational topology",
-        "status": "pending",
-        "origin_kernel": "urn:moos:kernel:hp-laptop.primary",
-        "proposed_artifact": "instance",
-        "reason": "Initialize minimal sovereign graph"
+      "properties": {
+        "storage_type": "local_fs",
+        "path_or_url":  "C:/Users/maass/HPlaptop",
+        "status":       "mounted"
       }
     },
     {
       "urn": "urn:moos:role:lead",
       "type_id": "role",
       "stratum": "S1",
-      "payload": {
-        "name": "lead",
-        "permissions": ["read_all", "write_session", "write_proposal"]
+      "properties": {
+        "name": "lead"
+      }
+    },
+    {
+      "urn": "urn:moos:capability:sam.claude-code.session-messaging",
+      "type_id": "capability",
+      "stratum": "S1",
+      "properties": {
+        "scope":          ["WF07", "WF15"],
+        "granted_by_urn": "urn:moos:user:sam",
+        "max_rewrites":   10000,
+        "created_at":     "2025-11-01T00:00:00Z"
       }
     },
     {
@@ -130,145 +143,159 @@
       "stratum": "S1"
     },
     {
-      "urn": "urn:moos:capability:kernel-dev",
-      "type_id": "capability",
-      "stratum": "S1"
-    },
-    {
       "urn": "urn:moos:stratum:s2",
       "type_id": "stratum",
       "stratum": "S1"
     }
   ],
-  "wires": [
+
+  "relations": [
     {
-      "source_urn": "urn:moos:user:sam",
+      "rewrite_category": "WF01",
+      "source_urn":  "urn:moos:user:sam",
       "source_port": "owns",
-      "target_urn": "urn:moos:workstation:hp-laptop",
+      "target_urn":  "urn:moos:workstation:hp-laptop",
       "target_port": "child"
     },
     {
-      "source_urn": "urn:moos:user:sam",
+      "rewrite_category": "WF01",
+      "source_urn":  "urn:moos:user:sam",
       "source_port": "owns",
-      "target_urn": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn":  "urn:moos:kernel:hp-laptop.primary",
       "target_port": "child"
     },
     {
-      "source_urn": "urn:moos:user:sam",
+      "rewrite_category": "WF01",
+      "source_urn":  "urn:moos:user:sam",
       "source_port": "owns",
-      "target_urn": "urn:moos:storage:hp-laptop.local-fs",
+      "target_urn":  "urn:moos:storage:hp-laptop.local-fs",
       "target_port": "child"
     },
     {
-      "source_urn": "urn:moos:user:sam",
+      "rewrite_category": "WF02",
+      "source_urn":  "urn:moos:user:sam",
       "source_port": "governs",
-      "target_urn": "urn:moos:agent:sam.claude-code",
-      "target_port": "governed-by",
-      "config": {
-        "delegated_role": "urn:moos:role:lead",
-        "write_scope": ["session", "governance_proposal"]
-      }
+      "target_urn":  "urn:moos:agent:sam.claude-code",
+      "target_port": "governed-by"
     },
     {
-      "source_urn": "urn:moos:workstation:hp-laptop",
+      "rewrite_category": "WF02",
+      "source_urn":  "urn:moos:user:sam",
+      "source_port": "governs",
+      "target_urn":  "urn:moos:agent:sam.vscode-copilot",
+      "target_port": "governed-by"
+    },
+    {
+      "rewrite_category": "WF02",
+      "source_urn":  "urn:moos:user:sam",
+      "source_port": "governs",
+      "target_urn":  "urn:moos:agent:sam.antigraviti",
+      "target_port": "governed-by"
+    },
+    {
+      "rewrite_category": "WF02",
+      "note": "Capability attached to delegate via governance relation",
+      "source_urn":  "urn:moos:agent:sam.claude-code",
+      "source_port": "governed-by",
+      "target_urn":  "urn:moos:capability:sam.claude-code.session-messaging",
+      "target_port": "attached-to"
+    },
+    {
+      "rewrite_category": "WF03",
+      "source_urn":  "urn:moos:workstation:hp-laptop",
       "source_port": "hosts",
-      "target_urn": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn":  "urn:moos:kernel:hp-laptop.primary",
       "target_port": "hosted-on"
     },
     {
-      "source_urn": "urn:moos:workstation:hp-laptop",
+      "rewrite_category": "WF04",
+      "source_urn":  "urn:moos:workstation:hp-laptop",
       "source_port": "contains",
-      "target_urn": "urn:moos:compute:hp-laptop.cpu",
+      "target_urn":  "urn:moos:compute:hp-laptop.cpu",
       "target_port": "contained-in"
     },
     {
-      "source_urn": "urn:moos:workstation:hp-laptop",
+      "rewrite_category": "WF04",
+      "source_urn":  "urn:moos:workstation:hp-laptop",
       "source_port": "contains",
-      "target_urn": "urn:moos:storage:hp-laptop.local-fs",
+      "target_urn":  "urn:moos:storage:hp-laptop.local-fs",
       "target_port": "contained-in"
     },
     {
-      "source_urn": "urn:moos:kernel:hp-laptop.primary",
+      "rewrite_category": "WF05",
+      "source_urn":  "urn:moos:kernel:hp-laptop.primary",
       "source_port": "exposes",
-      "target_urn": "urn:moos:endpoint:hp-laptop.primary.8000",
+      "target_urn":  "urn:moos:endpoint:hp-laptop.primary.8000",
       "target_port": "exposed-by"
     },
     {
-      "source_urn": "urn:moos:agent:sam.claude-code",
+      "rewrite_category": "WF06",
+      "source_urn":  "urn:moos:agent:sam.claude-code",
       "source_port": "connects-to",
-      "target_urn": "urn:moos:endpoint:hp-laptop.primary.8000",
+      "target_urn":  "urn:moos:endpoint:hp-laptop.primary.8000",
       "target_port": "connected-to"
     },
     {
-      "source_urn": "urn:moos:agent:sam.claude-code",
-      "source_port": "participates",
-      "target_urn": "urn:moos:session:sam.claude-code.T150",
-      "target_port": "participated-by"
-    },
-    {
-      "source_urn": "urn:moos:compute:hp-laptop.cpu",
+      "rewrite_category": "WF08",
+      "source_urn":  "urn:moos:compute:hp-laptop.cpu",
       "source_port": "bound-to",
-      "target_urn": "urn:moos:workstation:hp-laptop",
+      "target_urn":  "urn:moos:workstation:hp-laptop",
       "target_port": "binds"
     },
     {
-      "source_urn": "urn:moos:storage:hp-laptop.local-fs",
+      "rewrite_category": "WF08",
+      "source_urn":  "urn:moos:storage:hp-laptop.local-fs",
       "source_port": "bound-to",
-      "target_urn": "urn:moos:workstation:hp-laptop",
+      "target_urn":  "urn:moos:workstation:hp-laptop",
       "target_port": "binds"
     },
     {
-      "source_urn": "urn:moos:kernel:hp-laptop.primary",
+      "rewrite_category": "WF09",
+      "source_urn":  "urn:moos:kernel:hp-laptop.primary",
       "source_port": "computes-on",
-      "target_urn": "urn:moos:compute:hp-laptop.cpu",
+      "target_urn":  "urn:moos:compute:hp-laptop.cpu",
       "target_port": "computed-by"
     },
     {
-      "source_urn": "urn:moos:kernel:hp-laptop.primary",
+      "rewrite_category": "WF10",
+      "source_urn":  "urn:moos:kernel:hp-laptop.primary",
       "source_port": "persisted-in",
-      "target_urn": "urn:moos:storage:hp-laptop.local-fs",
+      "target_urn":  "urn:moos:storage:hp-laptop.local-fs",
       "target_port": "persists"
     },
     {
-      "source_urn": "urn:moos:storage:hp-laptop.local-fs",
+      "rewrite_category": "WF12",
+      "source_urn":  "urn:moos:storage:hp-laptop.local-fs",
       "source_port": "provides-kb",
-      "target_urn": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn":  "urn:moos:kernel:hp-laptop.primary",
       "target_port": "kb-source"
     },
     {
-      "source_urn": "urn:moos:proposal:sam.bootstrap-foundation",
-      "source_port": "promotes-to",
-      "target_urn": "urn:moos:storage:hp-laptop.local-fs",
-      "target_port": "promotion-target"
-    },
-    {
-      "source_urn": "urn:moos:endpoint:hp-laptop.primary.8000",
+      "rewrite_category": "WF14",
+      "source_urn":  "urn:moos:endpoint:hp-laptop.primary.8000",
       "source_port": "implements",
-      "target_urn": "urn:moos:protocol:http2",
+      "target_urn":  "urn:moos:protocol:http2",
       "target_port": "implemented-by"
     },
     {
-      "source_urn": "urn:moos:kernel:hp-laptop.primary",
+      "rewrite_category": "WF14",
+      "source_urn":  "urn:moos:kernel:hp-laptop.primary",
       "source_port": "implements",
-      "target_urn": "urn:moos:language:go",
+      "target_urn":  "urn:moos:language:go",
       "target_port": "implemented-by"
     },
     {
-      "source_urn": "urn:moos:kernel:hp-laptop.primary",
+      "rewrite_category": "WF14",
+      "source_urn":  "urn:moos:kernel:hp-laptop.primary",
       "source_port": "implements",
-      "target_urn": "urn:moos:runtime:go-process",
+      "target_urn":  "urn:moos:runtime:go-process",
       "target_port": "implemented-by"
     },
     {
-      "source_urn": "urn:moos:kernel:hp-laptop.primary",
+      "rewrite_category": "WF14",
+      "source_urn":  "urn:moos:kernel:hp-laptop.primary",
       "source_port": "implements",
-      "target_urn": "urn:moos:package:stdlib",
-      "target_port": "implemented-by"
-    },
-    {
-      "source_urn": "urn:moos:agent:sam.claude-code",
-      "source_port": "implements",
-      "target_urn": "urn:moos:capability:kernel-dev",
+      "target_urn":  "urn:moos:package:stdlib",
       "target_port": "implemented-by"
     }
   ]

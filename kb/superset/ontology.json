@@ -1,18 +1,50 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "2.0",
-  "t_day": 150,
-  "description": "mo:os ontology — rebuild from T=150. Grammar, not encyclopedia.",
+  "version": "3.0",
+  "t_day": 152,
+  "description": "mo:os ontology — aligned with codex-unified.md (2026-04-02). Grammar, not encyclopedia.",
+  "canonical_reference": "kb/research/20260402-codex-unified.md",
+
   "invariants": [
     "state(t) = fold(log[0..t])",
-    "ADD · LINK · MUTATE · UNLINK are the only four morphisms",
-    "urn(M(x)) = urn(x)  — identity stability",
-    "fold(log) is deterministic  — replay determinism",
-    "P(agent) ⊆ P(user)  — permission inheritance, enforced at morphism time"
+    "ADD, LINK, MUTATE, UNLINK are the only four rewrites",
+    "urn(M(x)) = urn(x) — identity stability (CI-3)",
+    "fold(log) is deterministic — replay determinism (CI-4)",
+    "P(delegate) <= P(principal) — permission inheritance, enforced at rewrite validation time (CI-5)"
   ],
 
+  "five_causal_invariants": {
+    "CI1": "Church-Rosser: M_a;M_b = M_b;M_a when affected(M_a) intersect affected(M_b) = empty",
+    "CI2": "Projection naturality (structure-preserving only): Project(Apply(M,S)) = Apply(M', Project(S)) for projections with declared rewrite correspondence",
+    "CI3": "Identity stability: forall M forall x: urn(M(x)) = urn(x)",
+    "CI4": "Log replay determinism: fold(log[0..t]) is deterministic — same log -> same state",
+    "CI5": "Rewrite category stability: permitted rewrite categories do not change under rewrites — only governance changes the operad"
+  },
+
+  "nomenclature_rules": {
+    "use": {
+      "node": "identity point in graph (not: object, element, vertex)",
+      "relation": "typed connection between nodes (not: binding, edge, wire, association)",
+      "rewrite": "graph transformation operation (not: morphism for the op, update, mutation)",
+      "rewrite_category": "family of allowed rewrites WF01-WF15 (not: named relation, UML association)",
+      "port": "interface point on a node type (not: slot, endpoint)",
+      "operad": "valid composition rules / type registry (not: schema, grammar)",
+      "property": "typed key-value on a node (not: field, payload, attribute)",
+      "interaction_node": "discrete interaction artifact node (not: transition, event, message)",
+      "_urn_suffix": "single node reference property (not: _ref)",
+      "_urns_suffix": "plural node reference property (not: _refs)"
+    },
+    "forbidden": ["binding (for graph)", "edge", "morphism (for the wire)", "kind", "object", "schema (for operad)", "transition (for interaction nodes)", "_ref/_refs (as property suffix)", "payload"]
+  },
+
+  "topology_property_boundary": {
+    "rule": "Relations are truth. Properties never duplicate topology.",
+    "test": "If the information involves two or more nodes, it is a relation (LINK/UNLINK). If it involves only one node's internal state, it is a property (MUTATE).",
+    "exception": "owner_urn and sender_urn are immutable provenance stamps set at ADD time. They reference another node but are NOT topology."
+  },
+
   "types": {
-    "s2_operational": [
+    "s2_infrastructure": [
       {
         "id": "user",
         "description": "The human principal. Exactly one user per kernel. Superadmin of their own graph.",
@@ -23,7 +55,10 @@
           "out": ["owns", "governs"],
           "self": ["identity"]
         },
-        "payload_fields": ["name", "display_name", "role", "workstation"]
+        "properties": {
+          "name":       { "mutability": "immutable", "type": "string" },
+          "created_at": { "mutability": "immutable", "type": "datetime" }
+        }
       },
       {
         "id": "kernel",
@@ -35,7 +70,10 @@
           "out": ["exposes", "computes-on", "persisted-in"],
           "in": ["hosted-on", "kb-source"]
         },
-        "payload_fields": ["version", "http_port", "mcp_port", "status"]
+        "properties": {
+          "version":    { "mutability": "immutable", "type": "string" },
+          "status":     { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "stopped", "error"] }
+        }
       },
       {
         "id": "workstation",
@@ -47,11 +85,15 @@
           "out": ["hosts", "contains"],
           "in": ["child"]
         },
-        "payload_fields": ["hostname", "os", "arch", "location"]
+        "properties": {
+          "hostname":   { "mutability": "immutable", "type": "string" },
+          "os":         { "mutability": "immutable", "type": "string" },
+          "arch":       { "mutability": "immutable", "type": "string" }
+        }
       },
       {
         "id": "agent",
-        "description": "An AI agent. Defined by role and capabilities — not by IDE surface. Owned by one user.",
+        "description": "An AI delegate. Defined by properties and capabilities — not by IDE surface. Owned by one user.",
         "stratum": "S2",
         "urn_pattern": "urn:moos:agent:<user>.<name>",
         "urn_example": "urn:moos:agent:sam.claude-code",
@@ -59,44 +101,35 @@
           "out": ["connects-to", "participates"],
           "in": ["governed-by"]
         },
-        "payload_fields": [
-          "name",
-          "kind",
-          "transport",
-          "persistence",
-          "capabilities",
-          "write_scope",
-          "model"
-        ],
-        "payload_schema": {
-          "kind": ["ide", "process", "api", "service"],
-          "transport": ["http", "mcp-sse", "mcp-stdio", "scheduled", "webhook"],
-          "persistence": ["ephemeral", "bounded", "persistent"]
-        }
+        "properties": {
+          "name":            { "mutability": "immutable", "type": "string" },
+          "delegate_type":   { "mutability": "immutable", "type": "enum", "values": ["ide", "process", "api", "service"] },
+          "owner_urn":       { "mutability": "immutable", "type": "urn", "note": "provenance stamp, not topology" },
+          "transport_type":  { "mutability": "mutable", "authority_scope": "owner", "type": "enum", "values": ["http", "mcp-sse", "mcp-stdio", "scheduled", "webhook"] },
+          "model":           { "mutability": "mutable", "authority_scope": "owner", "type": "string" },
+          "system_prompt":   { "mutability": "mutable", "authority_scope": "owner", "type": "string" },
+          "temperature":     { "mutability": "mutable", "authority_scope": "owner", "type": "number" },
+          "status":          { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["idle", "busy", "error"] },
+          "created_at":      { "mutability": "immutable", "type": "datetime" }
+        },
+        "note": "Capabilities are discovered via WF02 relations to capability nodes — NOT stored as a property on this node (topology-property boundary rule)."
       },
       {
         "id": "session",
-        "description": "A working context: agent × kernel × time interval. Persistent memory across context windows.",
+        "description": "A bounded interaction context: participants x time interval.",
         "stratum": "S2",
         "urn_pattern": "urn:moos:session:<user>.<agent>.<T-day>",
-        "urn_example": "urn:moos:session:sam.claude-code.T150",
+        "urn_example": "urn:moos:session:sam.claude-code.T152",
         "ports": {
           "out": ["focus", "on"],
           "in": ["participated-by"]
         },
-        "payload_fields": [
-          "started_at",
-          "ended_at",
-          "status",
-          "role",
-          "workstation",
-          "git_branch",
-          "kernel_state_at_start",
-          "summary"
-        ],
-        "payload_schema": {
-          "status": ["active", "complete", "abandoned"]
-        }
+        "properties": {
+          "status":      { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "closed", "abandoned"] },
+          "started_at":  { "mutability": "immutable", "type": "datetime" },
+          "turn_count":  { "mutability": "mutable", "authority_scope": "kernel", "type": "integer" }
+        },
+        "note": "Participants are discovered via WF07 relations — NOT stored as a property."
       },
       {
         "id": "endpoint",
@@ -108,43 +141,41 @@
           "out": ["implements"],
           "in": ["exposed-by", "connected-to"]
         },
-        "payload_fields": ["port", "transport", "path", "status"]
+        "properties": {
+          "transport_type": { "mutability": "immutable", "type": "string" },
+          "status":         { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "stopped"] }
+        }
       },
       {
         "id": "compute",
-        "description": "A computation substrate. CPU runs the sequential kernel spine (fold, evaluate, morphism validation). GPU runs concurrent subgraph partitions as hypervector operations.",
+        "description": "A computation substrate. CPU: sequential kernel spine. GPU: concurrent subgraph partitions as hypervector operations.",
         "stratum": "S2",
-        "urn_pattern": "urn:moos:compute:<workstation>.<kind>",
+        "urn_pattern": "urn:moos:compute:<workstation>.<type>",
         "urn_example": "urn:moos:compute:hp-laptop.cpu",
         "ports": {
           "out": ["bound-to"],
           "in": ["contained-in", "computed-by"]
         },
-        "payload_fields": [
-          "kind",
-          "execution_model",
-          "model",
-          "cores_or_cuda_cores",
-          "memory_gb"
-        ],
-        "payload_schema": {
-          "kind": ["cpu", "gpu", "cloud", "docker"],
-          "execution_model": ["sequential", "concurrent", "distributed"]
+        "properties": {
+          "compute_type":    { "mutability": "immutable", "type": "enum", "values": ["cpu", "gpu", "cloud", "docker"] },
+          "execution_model": { "mutability": "immutable", "type": "enum", "values": ["sequential", "concurrent", "distributed"] },
+          "capacity":        { "mutability": "mutable", "authority_scope": "substrate", "type": "object" }
         }
       },
       {
         "id": "storage",
-        "description": "A persistent storage resource. Three kinds: git_repo (remote), local_fs, morphism_log.",
+        "description": "A persistent storage resource.",
         "stratum": "S2",
-        "urn_pattern": "urn:moos:storage:<workstation>.<name>  |  urn:moos:storage:<user>.<name>",
-        "urn_example": "urn:moos:storage:hp-laptop.moos-log",
+        "urn_pattern": "urn:moos:storage:<workstation>.<name>",
+        "urn_example": "urn:moos:storage:hp-laptop.local-fs",
         "ports": {
           "out": ["synced-via", "provides-kb", "bound-to"],
           "in": ["contained-in", "persists", "sync-target"]
         },
-        "payload_fields": ["kind", "path_or_url", "status"],
-        "payload_schema": {
-          "kind": ["git_repo", "local_fs", "morphism_log"]
+        "properties": {
+          "storage_type": { "mutability": "immutable", "type": "enum", "values": ["git_repo", "local_fs", "rewrite_log"] },
+          "path_or_url":  { "mutability": "immutable", "type": "string" },
+          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["mounted", "unmounted", "error"] }
         }
       },
       {
@@ -157,22 +188,15 @@
           "out": ["promotes-to"],
           "in": []
         },
-        "payload_fields": [
-          "title",
-          "status",
-          "origin_kernel",
-          "proposed_artifact",
-          "reason",
-          "evidence_urns"
-        ],
-        "payload_schema": {
-          "status": ["pending", "approved", "rejected"],
-          "proposed_artifact": ["ontology", "instance", "kernel_behavior"]
+        "properties": {
+          "title":          { "mutability": "immutable", "type": "string" },
+          "status":         { "mutability": "mutable", "authority_scope": "principal", "type": "enum", "values": ["pending", "approved", "rejected"] },
+          "evidence_urns":  { "mutability": "mutable", "authority_scope": "principal", "type": "array" }
         }
       },
       {
         "id": "role",
-        "description": "A named bundle of permissions. Delegatable from user to agent. P(agent) ⊆ P(user) always.",
+        "description": "A named bundle of permissions. Attached to delegates via WF02 relations.",
         "stratum": "S1",
         "urn_pattern": "urn:moos:role:<name>",
         "urn_example": "urn:moos:role:lead",
@@ -180,14 +204,33 @@
           "out": [],
           "in": ["granted-by"]
         },
-        "payload_fields": ["name", "permissions", "description"],
+        "properties": {
+          "name": { "mutability": "immutable", "type": "string" }
+        },
         "builtin_roles": {
-          "superadmin": "all permissions — only users hold this",
-          "lead": "read all, write session/proposal/delegation",
-          "executor": "read all, write code nodes and own session",
-          "observer": "read all, write own session and ack messages only",
-          "hydrator": "read kb, write S0-S2 nodes (ADD only)",
-          "monitor": "read all, write nothing"
+          "superadmin": "all permissions — only principals hold this",
+          "lead":       "read all, write session/proposal/delegation",
+          "executor":   "read all, write code nodes and own session",
+          "observer":   "read all, write own session and ack messages only",
+          "hydrator":   "read kb, write S0-S2 nodes (ADD only)",
+          "monitor":    "read all, write nothing"
+        }
+      },
+      {
+        "id": "capability",
+        "description": "Scoped permission token. Attached to delegate via WF02 relation. Constrains which rewrite categories the holder can request.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:capability:<principal>.<name>",
+        "urn_example": "urn:moos:capability:sam.writer.messaging",
+        "ports": {
+          "out": [],
+          "in": ["attached-to"]
+        },
+        "properties": {
+          "scope":          { "mutability": "immutable", "type": "array", "note": "list of WF categories this capability grants" },
+          "granted_by_urn": { "mutability": "immutable", "type": "urn" },
+          "max_rewrites":   { "mutability": "mutable", "authority_scope": "owner", "type": "integer" },
+          "created_at":     { "mutability": "immutable", "type": "datetime" }
         }
       }
     ],
@@ -195,59 +238,31 @@
     "s1_grammar": [
       {
         "id": "protocol",
-        "description": "A communication protocol class. S0 instances are specific protocols.",
+        "description": "A communication protocol type.",
         "stratum": "S1",
         "urn_pattern": "urn:moos:protocol:<name>",
-        "examples": [
-          "http2",
-          "http3",
-          "mcp-sse",
-          "mcp-stdio",
-          "grpc",
-          "websocket",
-          "quic"
-        ]
+        "examples": ["http2", "http3", "mcp-sse", "mcp-stdio", "grpc", "websocket", "quic"]
       },
       {
         "id": "language",
-        "description": "A programming language. S0 instances are specific languages.",
+        "description": "A programming language.",
         "stratum": "S1",
         "urn_pattern": "urn:moos:language:<name>",
         "examples": ["go", "python", "rust", "typescript"]
       },
       {
         "id": "runtime",
-        "description": "An execution environment. S0 instances are specific runtimes.",
+        "description": "An execution environment.",
         "stratum": "S1",
         "urn_pattern": "urn:moos:runtime:<name>",
-        "examples": [
-          "go-process",
-          "python-process",
-          "rust-binary",
-          "node-process"
-        ]
+        "examples": ["go-process", "python-process", "rust-binary", "node-process"]
       },
       {
         "id": "package",
-        "description": "A software dependency or library. S0 instances are specific packages.",
+        "description": "A software dependency or library.",
         "stratum": "S1",
         "urn_pattern": "urn:moos:package:<name>",
         "examples": ["stdlib", "quic-go", "anthropic-sdk", "fastapi", "tokio"]
-      },
-      {
-        "id": "capability",
-        "description": "A named ability. Used in governs wire payload to scope what an agent can do.",
-        "stratum": "S1",
-        "urn_pattern": "urn:moos:capability:<name>",
-        "examples": [
-          "golang",
-          "testing",
-          "git",
-          "http-client",
-          "hydration",
-          "planning",
-          "kernel-dev"
-        ]
       },
       {
         "id": "stratum",
@@ -255,185 +270,259 @@
         "stratum": "S1",
         "urn_pattern": "urn:moos:stratum:<name>",
         "instances": [
-          {
-            "urn": "urn:moos:stratum:s0",
-            "name": "authored",
-            "description": "Human-written seeds, design docs, industry data"
-          },
-          {
-            "urn": "urn:moos:stratum:s1",
-            "name": "validated",
-            "description": "Schema-checked, operad-approved"
-          },
-          {
-            "urn": "urn:moos:stratum:s2",
-            "name": "materialized",
-            "description": "Hydrated into kernel graph, operational"
-          },
-          {
-            "urn": "urn:moos:stratum:s3",
-            "name": "evaluated",
-            "description": "Concurrent subgraph evaluation: hypervector encoding, Ricci curvature, and ranking"
-          },
-          {
-            "urn": "urn:moos:stratum:s4",
-            "name": "projected",
-            "description": "UI, filesystem, API — NEVER ground truth"
-          }
+          { "urn": "urn:moos:stratum:s0", "name": "authored",      "description": "Human-written seeds, design docs, industry data" },
+          { "urn": "urn:moos:stratum:s1", "name": "validated",     "description": "Operad-checked, type-approved" },
+          { "urn": "urn:moos:stratum:s2", "name": "materialized",  "description": "Hydrated into kernel graph, operational" },
+          { "urn": "urn:moos:stratum:s3", "name": "evaluated",     "description": "Concurrent subgraph eval: hypervector encoding, ranking" },
+          { "urn": "urn:moos:stratum:s4", "name": "projected",     "description": "UI, filesystem, API — NEVER ground truth" }
         ]
+      }
+    ],
+
+    "interaction_nodes": [
+      {
+        "id": "message_packet",
+        "description": "First-class message identity in sessions.",
+        "urn_pattern": "urn:moos:message:<user>.<session>.<id>",
+        "properties": {
+          "content":       { "mutability": "immutable", "type": "string" },
+          "sender_urn":    { "mutability": "immutable", "type": "urn" },
+          "content_type":  { "mutability": "immutable", "type": "string" },
+          "created_at":    { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "tool_call",
+        "description": "Separate tool invocation identity.",
+        "urn_pattern": "urn:moos:tool_call:<user>.<session>.<id>",
+        "properties": {
+          "tool_name":      { "mutability": "immutable", "type": "string" },
+          "arguments":      { "mutability": "immutable", "type": "object" },
+          "requester_urn":  { "mutability": "immutable", "type": "urn" },
+          "status":         { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["pending", "completed", "rejected"] },
+          "created_at":     { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "tool_result",
+        "description": "Result identity with provenance chain.",
+        "urn_pattern": "urn:moos:tool_result:<user>.<session>.<id>",
+        "properties": {
+          "status":        { "mutability": "immutable", "type": "string" },
+          "output":        { "mutability": "immutable", "type": "object" },
+          "for_call_urn":  { "mutability": "immutable", "type": "urn" },
+          "created_at":    { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "event_notice",
+        "description": "Async event identity.",
+        "urn_pattern": "urn:moos:event:<source>.<id>",
+        "properties": {
+          "event_type":  { "mutability": "immutable", "type": "string" },
+          "source_urn":  { "mutability": "immutable", "type": "urn" },
+          "timestamp":   { "mutability": "immutable", "type": "datetime" }
+        }
       }
     ]
   },
 
-  "wire_families": [
+  "rewrite_categories": [
     {
       "id": "WF01",
-      "name": "owns",
-      "description": "User owns a workstation, kernel, or storage resource.",
+      "name": "Ownership",
+      "description": "Principal owns workstation, kernel, or storage.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["user"],
       "tgt_types": ["workstation", "kernel", "storage"],
       "src_port": "owns",
-      "tgt_port": "child"
+      "tgt_port": "child",
+      "authority": "principal only",
+      "mutate_scope": null,
+      "sync_mode": "strict"
     },
     {
       "id": "WF02",
-      "name": "governs",
-      "description": "User governs an agent with delegated role. P(agent) ⊆ P(user) enforced at morphism time.",
+      "name": "Governance",
+      "description": "Principal governs delegate with delegated role and capabilities.",
+      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
       "src_types": ["user"],
-      "tgt_types": ["agent"],
+      "tgt_types": ["agent", "role", "capability"],
       "src_port": "governs",
       "tgt_port": "governed-by",
-      "payload": {
-        "delegated_role": "urn:moos:role:<name>",
-        "capabilities": [],
-        "write_scope": []
-      }
+      "authority": "principal only",
+      "mutate_scope": ["delegate_type", "transport_type", "model", "system_prompt", "temperature"],
+      "sync_mode": "strict"
     },
     {
       "id": "WF03",
-      "name": "hosts",
+      "name": "Hosting",
       "description": "Workstation hosts a kernel.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["workstation"],
       "tgt_types": ["kernel"],
       "src_port": "hosts",
-      "tgt_port": "hosted-on"
+      "tgt_port": "hosted-on",
+      "authority": "substrate",
+      "mutate_scope": null,
+      "sync_mode": "local-only"
     },
     {
       "id": "WF04",
-      "name": "contains",
-      "description": "Workstation contains a compute or storage resource.",
+      "name": "Containment",
+      "description": "Workstation contains compute or storage.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["workstation"],
       "tgt_types": ["compute", "storage"],
       "src_port": "contains",
-      "tgt_port": "contained-in"
+      "tgt_port": "contained-in",
+      "authority": "substrate",
+      "mutate_scope": null,
+      "sync_mode": "local-only"
     },
     {
       "id": "WF05",
-      "name": "exposes",
+      "name": "Exposure",
       "description": "Kernel exposes a network endpoint.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["kernel"],
       "tgt_types": ["endpoint"],
       "src_port": "exposes",
-      "tgt_port": "exposed-by"
+      "tgt_port": "exposed-by",
+      "authority": "kernel",
+      "mutate_scope": null,
+      "sync_mode": "eventual"
     },
     {
       "id": "WF06",
-      "name": "connects-to",
-      "description": "Agent connects to a kernel endpoint.",
+      "name": "Connection",
+      "description": "Delegate connects to a kernel endpoint.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["agent"],
       "tgt_types": ["endpoint"],
       "src_port": "connects-to",
-      "tgt_port": "connected-to"
+      "tgt_port": "connected-to",
+      "authority": "delegate with capability",
+      "mutate_scope": null,
+      "sync_mode": "eventual"
     },
     {
       "id": "WF07",
-      "name": "participates",
-      "description": "Agent participates in a session.",
-      "src_types": ["agent"],
+      "name": "Session",
+      "description": "Participation in a session. Links user/agent to session and session to interaction nodes.",
+      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
+      "src_types": ["agent", "user"],
       "tgt_types": ["session"],
       "src_port": "participates",
-      "tgt_port": "participated-by"
+      "tgt_port": "participated-by",
+      "authority": "principal or delegate",
+      "mutate_scope": ["status", "turn_count"],
+      "sync_mode": "eventual"
     },
     {
       "id": "WF08",
-      "name": "bound-to",
-      "description": "Compute or storage is physically bound to a workstation.",
+      "name": "Substrate binding",
+      "description": "Compute or storage is physically bound to workstation.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["compute", "storage"],
       "tgt_types": ["workstation"],
       "src_port": "bound-to",
-      "tgt_port": "binds"
+      "tgt_port": "binds",
+      "authority": "substrate",
+      "mutate_scope": null,
+      "sync_mode": "local-only"
     },
     {
       "id": "WF09",
-      "name": "computes-on",
-      "description": "Kernel routes operations to compute substrates by execution model. CI1-independent subgraph partitions may execute concurrently.",
+      "name": "Compute attachment",
+      "description": "Kernel routes operations to compute substrates.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["kernel"],
       "tgt_types": ["compute"],
       "src_port": "computes-on",
       "tgt_port": "computed-by",
-      "payload": { "execution_model": "sequential | concurrent | distributed" }
+      "authority": "kernel",
+      "mutate_scope": null,
+      "sync_mode": "local-only"
     },
     {
       "id": "WF10",
-      "name": "persisted-in",
-      "description": "Kernel's morphism log persists in a storage resource.",
+      "name": "Persistence",
+      "description": "Kernel's rewrite log persists in a storage resource.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["kernel"],
       "tgt_types": ["storage"],
       "src_port": "persisted-in",
-      "tgt_port": "persists"
+      "tgt_port": "persists",
+      "authority": "kernel",
+      "mutate_scope": null,
+      "sync_mode": "local-only"
     },
     {
       "id": "WF11",
-      "name": "synced-via",
-      "description": "Local storage syncs to/from a remote git repo.",
+      "name": "Sync",
+      "description": "Local storage syncs to/from a remote storage.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["storage"],
       "tgt_types": ["storage"],
       "src_port": "synced-via",
-      "tgt_port": "sync-target"
+      "tgt_port": "sync-target",
+      "authority": "kernel",
+      "mutate_scope": null,
+      "sync_mode": "eventual"
     },
     {
       "id": "WF12",
-      "name": "provides-kb",
-      "description": "Storage provides the hydration source (KB files) to a kernel on boot.",
+      "name": "KB provision",
+      "description": "Storage provides hydration source (KB files) to kernel on boot.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["storage"],
       "tgt_types": ["kernel"],
       "src_port": "provides-kb",
-      "tgt_port": "kb-source"
+      "tgt_port": "kb-source",
+      "authority": "kernel",
+      "mutate_scope": null,
+      "sync_mode": "eventual"
     },
     {
       "id": "WF13",
-      "name": "promotes-to",
-      "description": "Governance proposal targets a storage for canonicalization. Human approval required.",
+      "name": "Promotion",
+      "description": "Governance proposal targets storage/kernel for canonicalization.",
+      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
       "src_types": ["governance_proposal"],
       "tgt_types": ["storage", "kernel"],
       "src_port": "promotes-to",
-      "tgt_port": "promotion-target"
+      "tgt_port": "promotion-target",
+      "authority": "principal + governance approval",
+      "mutate_scope": ["status", "evidence_urns"],
+      "sync_mode": "strict"
     },
     {
       "id": "WF14",
-      "name": "implements",
+      "name": "Implementation",
       "description": "Agent, kernel, or endpoint implements a protocol, language, capability, runtime, or package.",
+      "allowed_rewrites": ["LINK", "UNLINK"],
       "src_types": ["agent", "kernel", "endpoint"],
       "tgt_types": ["protocol", "language", "capability", "runtime", "package"],
       "src_port": "implements",
-      "tgt_port": "implemented-by"
+      "tgt_port": "implemented-by",
+      "authority": "kernel",
+      "mutate_scope": null,
+      "sync_mode": "eventual"
     },
     {
       "id": "WF15",
-      "name": "link",
-      "description": "Open-ended semantic wire between any two nodes. Port names are author-chosen. Use when WF01-WF14 don't apply.",
+      "name": "Semantic (open)",
+      "description": "Open semantic relation. Allowed only with explicit port names AND a contract_schema reference.",
+      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
       "src_types": ["*"],
       "tgt_types": ["*"],
       "src_port": "{semantic}",
-      "tgt_port": "{semantic}"
+      "tgt_port": "{semantic}",
+      "authority": "per contract_urn",
+      "mutate_scope": "per contract_schema declaration",
+      "sync_mode": "eventual",
+      "constraint": "No untyped semantic relations — contract_schema required"
     }
-  ],
-
-  "five_causal_invariants": {
-    "CI1": "Church-Rosser: M_a;M_b = M_b;M_a  when affected_urns(M_a) ∩ affected_urns(M_b) = ∅",
-    "CI2": "Functor naturality: Project(Apply(M,S)) = Apply(M', Project(S))  for all projection functors",
-    "CI3": "Identity stability: ∀M ∀x: urn(M(x)) = urn(x)",
-    "CI4": "Log replay determinism: fold(log[0..t]) is deterministic — same log → same state",
-    "CI5": "Wire family stability: permitted wire families do not change under HG morphisms — only governance changes CS"
-  }
+  ]
 }
