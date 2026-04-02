@@ -1,6 +1,6 @@
 ---
 description: "Use when working in design docs to reason about model semantics before implementation."
-applyTo: "ffs0/.agent/dev/design/**/*.md"
+applyTo: "dev/design/**/*.md"
 ---
 
 # Design Research Rules

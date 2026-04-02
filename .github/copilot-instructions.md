@@ -1,25 +1,24 @@
-# mo:os Workspace Instructions
+# ffs0 Repository Instructions
 
-## Current Kernel Baseline
+## Scope
 
-- The active kernel is a rebuild focused on incidence-first graph semantics.
-- Core primitives: node, port, binding, incidence, property, rewrite plan, fiber.
-- Avoid reintroducing generic payload-bag modeling.
+- This repository is a personal portable private workspace (`ffs0`).
+- The public `moos` repository holds runtime/kernel code and may not be cloned locally.
+- Keep instructions repository-local and avoid assuming kernel source is present in this repo.
 
-## Ground Truth
+## Working Style
 
-- Categorical Space (CS) defines admissible node/binding grammar.
-- Hypergraph Instance (HG) holds realized nodes, bindings, and properties.
-- Explorer is a proof surface, not the source of truth.
+- Prefer small, safe, focused edits.
+- Preserve existing folder structure and naming unless a change is requested.
+- Avoid process-heavy documents unless explicitly requested.
 
-## Implementation Guardrails
+## Safety
 
-- Go stdlib only in kernel internals.
-- Keep clone-apply-replace behavior in rewrite flow.
-- Prefer minimal, test-backed edits.
-- Run `go test ./internal/...` from `moos/platform/kernel` after edits.
+- Never commit secret values.
+- Treat `secrets/` as sensitive and local-first.
+- Keep destructive actions explicit and intentional.
 
 ## Instruction Routing
 
-- Use file-scoped rules under `.github/instructions/` for detailed behavior.
-- Keep this file short and stable; put specific conventions in scoped instruction files.
+- Keep broad defaults in this file.
+- Keep topic-specific guidance in `.github/instructions/` and `.github/prompts/`.

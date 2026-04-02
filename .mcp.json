@@ -1,8 +1,3 @@
 {
-  "mcpServers": {
-    "moos-kernel": {
-      "type": "sse",
-      "url": "http://localhost:8080/sse"
-    }
-  }
+  "mcpServers": {}
 }

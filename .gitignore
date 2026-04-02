@@ -1,7 +1,7 @@
-# Secrets — never commit (entire directory)
-.agent/secrets/api_keys.env
-.agent/secrets/client_secret_*.json
-.agent/secrets/google_token.json
+# Secrets — never commit secret values
+secrets/api_keys.env
+secrets/client_secret_*.json
+secrets/google_token.json
 
 # Subrepo — has its own git repo
 moos/
@@ -16,22 +16,22 @@ dist/
 build/
 
 # LaTeX build artifacts
-.agent/.papers/**/*.aux
-.agent/.papers/**/*.log
-.agent/.papers/**/*.out
-.agent/.papers/**/*.pag
-.agent/.papers/**/*.bbl
-.agent/.papers/**/*.blg
-.agent/.papers/**/*.fls
-.agent/.papers/**/*.fdb_latexmk
-.agent/.papers/**/*.synctex.gz
+dev/.papers/**/*.aux
+dev/.papers/**/*.log
+dev/.papers/**/*.out
+dev/.papers/**/*.pag
+dev/.papers/**/*.bbl
+dev/.papers/**/*.blg
+dev/.papers/**/*.fls
+dev/.papers/**/*.fdb_latexmk
+dev/.papers/**/*.synctex.gz
 
 # Temp and scratch
 tmp/
 *.tmp
 lost\ converstation*.txt
-.agent/tempprg.json
-.agent/C:*
+tempprg.json
+C:*
 
 # Workspace root temp files — root-anchored (never commit loose files dumped here)
 /data/
@@ -41,17 +41,20 @@ lost\ converstation*.txt
 /*.ics
 /stream.txt
 
-# Ephemeral agent state (local to workstation, not portable)
-.agent/data/morphism-log.jsonl
-.agent/data/morphism-log.jsonl.bak*
-.agent/dev/.antigraviti-auto-listener-state.json
-.agent/dev/antigraviti-auto-listen.log
-.agent/dev/.vscode-ai-auto-listener-state.json
-.agent/dev/vscode-ai-auto-listen.log
-.agent/dev/vscode-kernel-autostart.log
-.agent/dev/wave*.json
-.agent/dev/prg*-program.json
+# Ephemeral local state (not portable)
+data/morphism-log.jsonl
+data/morphism-log.jsonl.bak*
+dev/.antigraviti-auto-listener-state.json
+dev/antigraviti-auto-listen.log
+dev/.vscode-ai-auto-listener-state.json
+dev/vscode-ai-auto-listen.log
+dev/vscode-kernel-autostart.log
+dev/wave*.json
+dev/prg*-program.json
 robocopy_log*.txt
+
+# Local workstation customizations (not portable)
+.github/skills/
 
 # OS
 .DS_Store
