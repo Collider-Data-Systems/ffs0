@@ -232,6 +232,137 @@
           "max_rewrites":   { "mutability": "mutable", "authority_scope": "owner", "type": "integer" },
           "created_at":     { "mutability": "immutable", "type": "datetime" }
         }
+      },
+      {
+        "id": "prg_task",
+        "description": "Program (PRG) — unit of work in mo:os. A branch of the multiway graph that receives runtime. Status lifecycle: planned → active → in_progress → completed | blocked.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:prg:<id>",
+        "ports": {
+          "out": ["depends-on", "summarizes"],
+          "in":  ["anchor", "participant", "child", "daily-summary", "depended-by"]
+        },
+        "properties": {
+          "title":            { "mutability": "immutable", "type": "string" },
+          "status":           { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["planned", "active", "in_progress", "completed", "blocked"] },
+          "harness_pattern":  { "mutability": "immutable", "type": "enum", "values": ["fixed-plan-sequential", "dynamic-plan-adaptive"] },
+          "t_start":          { "mutability": "immutable", "type": "integer", "note": "Moos-time T-day when PRG runtime began or is scheduled" },
+          "t_target":         { "mutability": "immutable", "type": "integer", "note": "Moos-time T-day target completion" },
+          "color_label":      { "mutability": "immutable", "type": "string", "note": "Google Calendar color label (e.g. purple)" },
+          "created_at":       { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "calendar_event",
+        "description": "Temporal anchor from Google Calendar. Bridges IRL time to Moos-time. Color-labeled events (purple = PRG-tracked) become graph nodes.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:cal:<date>.<slug>",
+        "ports": {
+          "out": ["causes", "anchors"],
+          "in":  ["daily-summary"]
+        },
+        "properties": {
+          "summary":      { "mutability": "immutable", "type": "string" },
+          "date":         { "mutability": "immutable", "type": "string", "note": "ISO date YYYY-MM-DD" },
+          "t_day":        { "mutability": "immutable", "type": "integer", "note": "Moos-time T-day" },
+          "gcal_id":      { "mutability": "immutable", "type": "string" },
+          "color_label":  { "mutability": "immutable", "type": "string" },
+          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["confirmed", "tentative", "cancelled"] },
+          "created_at":   { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "source_feed",
+        "description": "A persistent external source that produces knowledge items. YouTube channel, arxiv category, website RSS, API endpoint. Polled or pushed.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:feed:<slug>",
+        "urn_example": "urn:moos:feed:yt.mlst",
+        "ports": {
+          "out": ["produces", "implements"],
+          "in":  ["child"]
+        },
+        "properties": {
+          "name":            { "mutability": "immutable", "type": "string" },
+          "url":             { "mutability": "immutable", "type": "string" },
+          "source_type":     { "mutability": "immutable", "type": "enum", "values": ["youtube_channel", "arxiv_category", "website", "rss", "api", "github_repo"] },
+          "protocol":        { "mutability": "immutable", "type": "string", "note": "simple label; promote to protocol node via WF14 when capabilities matter" },
+          "poll_interval":   { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["hourly", "daily", "weekly", "manual"] },
+          "filter_keywords": { "mutability": "mutable", "authority_scope": "owner", "type": "array" },
+          "status":          { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "paused", "error"] },
+          "created_at":      { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "knowledge_item",
+        "description": "A specific piece of content from a source feed. Video, paper, article, email thread. Extracted claims link to domain tags.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:ki:<source-type>.<slug>",
+        "urn_example": "urn:moos:ki:yt.we-must-add-structure-to-deep-learning",
+        "ports": {
+          "out": ["asserts", "tagged"],
+          "in":  ["produced-by"]
+        },
+        "properties": {
+          "title":        { "mutability": "immutable", "type": "string" },
+          "source_url":   { "mutability": "immutable", "type": "string" },
+          "source_type":  { "mutability": "immutable", "type": "enum", "values": ["youtube", "arxiv", "website", "rss", "email", "gdrive"] },
+          "language":     { "mutability": "immutable", "type": "string" },
+          "retrieved_at": { "mutability": "immutable", "type": "datetime" },
+          "summary":      { "mutability": "mutable", "authority_scope": "kernel", "type": "string" },
+          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["raw", "summarized", "extracted", "stale"] },
+          "created_at":   { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "claim",
+        "description": "An atomic assertion extracted from a knowledge item. The smallest unit of knowledge in the graph.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:claim:<ki-slug>.<index>",
+        "urn_example": "urn:moos:claim:yt.we-must-add-structure.01",
+        "ports": {
+          "out": ["tagged"],
+          "in":  ["asserted-in"]
+        },
+        "properties": {
+          "text":           { "mutability": "immutable", "type": "string" },
+          "confidence":     { "mutability": "mutable", "authority_scope": "kernel", "type": "number", "note": "0.0 to 1.0" },
+          "source_ki_urn":  { "mutability": "immutable", "type": "urn", "note": "provenance stamp, not topology" },
+          "created_at":     { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "domain_tag",
+        "description": "Classification concept node. Linked to knowledge items and claims. Taxonomy source: arxiv, lcsh, or custom.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:tag:<taxonomy>.<slug>",
+        "urn_example": "urn:moos:tag:arxiv.math-ct",
+        "ports": {
+          "out": [],
+          "in":  ["tagged-in"]
+        },
+        "properties": {
+          "label":      { "mutability": "immutable", "type": "string" },
+          "taxonomy":   { "mutability": "immutable", "type": "enum", "values": ["arxiv", "custom", "lcsh"] },
+          "parent_urn": { "mutability": "mutable", "authority_scope": "owner", "type": "urn", "note": "optional hierarchy; provenance stamp" },
+          "created_at": { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "agent_session",
+        "description": "Claude or agent session state — kernel snapshot, PRG focus, active connectors. Created at session start, mutated at end.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:session:<date>.<agent>",
+        "ports": {
+          "out": ["focus", "reads"],
+          "in":  ["participant"]
+        },
+        "properties": {
+          "agent_urn":    { "mutability": "immutable", "type": "urn" },
+          "role":         { "mutability": "mutable", "authority_scope": "owner", "type": "enum", "values": ["lead", "active", "listening"] },
+          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["open", "closed"] },
+          "t_day":        { "mutability": "immutable", "type": "integer" },
+          "created_at":   { "mutability": "immutable", "type": "datetime" }
+        }
       }
     ],
 
@@ -350,12 +481,19 @@
       { "wf": "WF05", "src_color": "transport","tgt_color": "transport","src_port": "exposes", "tgt_port": "exposed-by" },
       { "wf": "WF06", "src_color": "transport","tgt_color": "transport","src_port": "connects-to", "tgt_port": "connected-to" },
       { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "participates", "tgt_port": "participated-by" },
+      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "focus", "tgt_port": "participant" },
+      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "anchors", "tgt_port": "anchor" },
+      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "causes", "tgt_port": "anchor" },
+      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "depends-on", "tgt_port": "depended-by" },
       { "wf": "WF08", "src_color": "compute",  "tgt_color": "topology", "src_port": "bound-to", "tgt_port": "binds", "note": "compute->topology cross" },
       { "wf": "WF08", "src_color": "storage",  "tgt_color": "topology", "src_port": "bound-to", "tgt_port": "binds", "note": "storage->topology cross" },
       { "wf": "WF09", "src_color": "compute",  "tgt_color": "compute",  "src_port": "computes-on", "tgt_port": "computed-by" },
       { "wf": "WF10", "src_color": "storage",  "tgt_color": "storage",  "src_port": "persisted-in", "tgt_port": "persists" },
       { "wf": "WF11", "src_color": "storage",  "tgt_color": "storage",  "src_port": "synced-via", "tgt_port": "sync-target" },
       { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "provides-kb", "tgt_port": "kb-source" },
+      { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "produces", "tgt_port": "produced-by" },
+      { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "asserts", "tgt_port": "asserted-in" },
+      { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "tagged", "tgt_port": "tagged-in" },
       { "wf": "WF13", "src_color": "auth",     "tgt_color": "auth",     "src_port": "promotes-to", "tgt_port": "promotion-target" },
       { "wf": "WF14", "src_color": "transport","tgt_color": "transport","src_port": "implements", "tgt_port": "implemented-by" },
       { "wf": "WF15", "src_color": "semantic", "tgt_color": "*",        "src_port": "{semantic}", "tgt_port": "{semantic}", "constraint": "contract_urn required" }
@@ -545,15 +683,15 @@
     },
     {
       "id": "WF07",
-      "name": "Session",
-      "description": "Participation in a session. Links user/agent to session and session to interaction nodes.",
+      "name": "Workflow lifecycle",
+      "description": "Participation, focus, anchoring, and status changes across sessions, PRGs, and calendar events. The workflow-colored WF.",
       "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
-      "src_types": ["agent", "user"],
-      "tgt_types": ["session"],
+      "src_types": ["agent", "user", "agent_session", "calendar_event", "prg_task"],
+      "tgt_types": ["session", "agent_session", "prg_task", "calendar_event"],
       "src_port": "participates",
       "tgt_port": "participated-by",
       "authority": "principal or delegate",
-      "mutate_scope": ["status", "turn_count"],
+      "mutate_scope": ["status", "turn_count", "role"],
       "sync_mode": "eventual"
     },
     {
@@ -610,11 +748,11 @@
     },
     {
       "id": "WF12",
-      "name": "KB provision",
-      "description": "Storage provides hydration source (KB files) to kernel on boot.",
+      "name": "KB provision and hydration",
+      "description": "Knowledge base provision: storage→kernel boot hydration, source_feed→knowledge_item production, knowledge_item→claim extraction, and tagging to domain_tags.",
       "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["storage"],
-      "tgt_types": ["kernel"],
+      "src_types": ["storage", "source_feed", "knowledge_item", "claim"],
+      "tgt_types": ["kernel", "knowledge_item", "claim", "domain_tag"],
       "src_port": "provides-kb",
       "tgt_port": "kb-source",
       "authority": "kernel",

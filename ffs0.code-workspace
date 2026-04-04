@@ -4,9 +4,16 @@
       "path": ".",
       "name": "ffs0-private-workspace",
     },
+    {
+      "path": "../moos-kernel",
+    },
   ],
   "settings": {
     "task.allowAutomaticTasks": "off",
+    "editor.scrollbar.vertical": "visible",
+    "editor.scrollbar.horizontal": "visible",
+    "editor.scrollbar.verticalScrollbarSize": 18,
+    "editor.scrollbar.horizontalScrollbarSize": 18,
     "[markdown]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
     },
@@ -32,6 +39,8 @@
       "redhat.vscode-yaml",
       "DavidAnson.vscode-markdownlint",
       "ms-vscode.powershell",
-    ],
-  },
+      "thedangander.jsonl-lab",
+      "mechatroner.rainbow-csv"
+    ]
+  }
 }
