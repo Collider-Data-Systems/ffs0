@@ -2,11 +2,17 @@
   "folders": [
     {
       "path": ".",
-      "name": "ffs0-private-workspace",
+      "name": "ffs0-private-workspace"
     },
     {
-      "path": "../moos-kernel",
+      "path": "../moos-kernel"
     },
+    {
+      "path": "../moos-config"
+    },
+    {
+      "path": "../moos-router"
+    }
   ],
   "settings": {
     "task.allowAutomaticTasks": "off",
