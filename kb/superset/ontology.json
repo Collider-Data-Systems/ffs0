@@ -4,7 +4,6 @@
   "t_day": 153,
   "description": "mo:os ontology — aligned with codex-unified.md (2026-04-02). Grammar, not encyclopedia.",
   "canonical_reference": "kb/research/20260402-codex-unified.md",
-
   "invariants": [
     "state(t) = fold(log[0..t])",
     "ADD, LINK, MUTATE, UNLINK are the only four rewrites",
@@ -12,7 +11,6 @@
     "fold(log) is deterministic — replay determinism (CI-4)",
     "P(delegate) <= P(principal) — permission inheritance, enforced at rewrite validation time (CI-5)"
   ],
-
   "five_causal_invariants": {
     "CI1": "Church-Rosser: M_a;M_b = M_b;M_a when affected(M_a) intersect affected(M_b) = empty",
     "CI2": "Projection naturality (structure-preserving only): Project(Apply(M,S)) = Apply(M', Project(S)) for projections with declared rewrite correspondence",
@@ -20,7 +18,6 @@
     "CI4": "Log replay determinism: fold(log[0..t]) is deterministic — same log -> same state",
     "CI5": "Rewrite category stability: permitted rewrite categories do not change under rewrites — only governance changes the operad"
   },
-
   "nomenclature_rules": {
     "use": {
       "node": "identity point in graph (not: object, element, vertex)",
@@ -34,15 +31,23 @@
       "_urn_suffix": "single node reference property (not: _ref)",
       "_urns_suffix": "plural node reference property (not: _refs)"
     },
-    "forbidden": ["binding (for graph)", "edge", "morphism (for the wire)", "kind", "object", "schema (for operad)", "transition (for interaction nodes)", "_ref/_refs (as property suffix)", "payload"]
+    "forbidden": [
+      "binding (for graph)",
+      "edge",
+      "morphism (for the wire)",
+      "kind",
+      "object",
+      "schema (for operad)",
+      "transition (for interaction nodes)",
+      "_ref/_refs (as property suffix)",
+      "payload"
+    ]
   },
-
   "topology_property_boundary": {
     "rule": "Relations are truth. Properties never duplicate topology.",
     "test": "If the information involves two or more nodes, it is a relation (LINK/UNLINK). If it involves only one node's internal state, it is a property (MUTATE).",
     "exception": "owner_urn and sender_urn are immutable provenance stamps set at ADD time. They reference another node but are NOT topology."
   },
-
   "types": {
     "s2_infrastructure": [
       {
@@ -52,12 +57,23 @@
         "urn_pattern": "urn:moos:user:<name>",
         "urn_example": "urn:moos:user:sam",
         "ports": {
-          "out": ["owns", "governs"],
-          "self": ["identity"]
+          "out": [
+            "owns",
+            "governs"
+          ],
+          "self": [
+            "identity"
+          ]
         },
         "properties": {
-          "name":       { "mutability": "immutable", "type": "string" },
-          "created_at": { "mutability": "immutable", "type": "datetime" }
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -67,12 +83,31 @@
         "urn_pattern": "urn:moos:kernel:<workstation>.<name>",
         "urn_example": "urn:moos:kernel:hp-laptop.primary",
         "ports": {
-          "out": ["exposes", "computes-on", "persisted-in"],
-          "in": ["hosted-on", "kb-source"]
+          "out": [
+            "exposes",
+            "computes-on",
+            "persisted-in"
+          ],
+          "in": [
+            "hosted-on",
+            "kb-source"
+          ]
         },
         "properties": {
-          "version":    { "mutability": "immutable", "type": "string" },
-          "status":     { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "stopped", "error"] }
+          "version": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "stopped",
+              "error"
+            ]
+          }
         }
       },
       {
@@ -82,13 +117,27 @@
         "urn_pattern": "urn:moos:workstation:<name>",
         "urn_example": "urn:moos:workstation:hp-laptop",
         "ports": {
-          "out": ["hosts", "contains"],
-          "in": ["child"]
+          "out": [
+            "hosts",
+            "contains"
+          ],
+          "in": [
+            "child"
+          ]
         },
         "properties": {
-          "hostname":   { "mutability": "immutable", "type": "string" },
-          "os":         { "mutability": "immutable", "type": "string" },
-          "arch":       { "mutability": "immutable", "type": "string" }
+          "hostname": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "os": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "arch": {
+            "mutability": "immutable",
+            "type": "string"
+          }
         }
       },
       {
@@ -98,19 +147,75 @@
         "urn_pattern": "urn:moos:agent:<user>.<name>",
         "urn_example": "urn:moos:agent:sam.claude-code",
         "ports": {
-          "out": ["connects-to", "participates"],
-          "in": ["governed-by"]
+          "out": [
+            "connects-to",
+            "participates"
+          ],
+          "in": [
+            "governed-by"
+          ]
         },
         "properties": {
-          "name":            { "mutability": "immutable", "type": "string" },
-          "delegate_type":   { "mutability": "immutable", "type": "enum", "values": ["ide", "process", "api", "service"] },
-          "owner_urn":       { "mutability": "immutable", "type": "urn", "note": "provenance stamp, not topology" },
-          "transport_type":  { "mutability": "mutable", "authority_scope": "owner", "type": "enum", "values": ["http", "mcp-sse", "mcp-stdio", "scheduled", "webhook"] },
-          "model":           { "mutability": "mutable", "authority_scope": "owner", "type": "string" },
-          "system_prompt":   { "mutability": "mutable", "authority_scope": "owner", "type": "string" },
-          "temperature":     { "mutability": "mutable", "authority_scope": "owner", "type": "number" },
-          "status":          { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["idle", "busy", "error"] },
-          "created_at":      { "mutability": "immutable", "type": "datetime" }
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "delegate_type": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "ide",
+              "process",
+              "api",
+              "service"
+            ]
+          },
+          "owner_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "provenance stamp, not topology"
+          },
+          "transport_type": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "http",
+              "mcp-sse",
+              "mcp-stdio",
+              "scheduled",
+              "webhook"
+            ]
+          },
+          "model": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "system_prompt": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "temperature": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "number"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "idle",
+              "busy",
+              "error"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         },
         "note": "Capabilities are discovered via WF02 relations to capability nodes — NOT stored as a property on this node (topology-property boundary rule)."
       },
@@ -121,13 +226,34 @@
         "urn_pattern": "urn:moos:session:<user>.<agent>.<T-day>",
         "urn_example": "urn:moos:session:sam.claude-code.T152",
         "ports": {
-          "out": ["focus", "on"],
-          "in": ["participated-by"]
+          "out": [
+            "focus",
+            "on"
+          ],
+          "in": [
+            "participated-by"
+          ]
         },
         "properties": {
-          "status":      { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "closed", "abandoned"] },
-          "started_at":  { "mutability": "immutable", "type": "datetime" },
-          "turn_count":  { "mutability": "mutable", "authority_scope": "kernel", "type": "integer" }
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "closed",
+              "abandoned"
+            ]
+          },
+          "started_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          },
+          "turn_count": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "integer"
+          }
         },
         "note": "Participants are discovered via WF07 relations — NOT stored as a property."
       },
@@ -138,12 +264,28 @@
         "urn_pattern": "urn:moos:endpoint:<workstation>.<kernel>.<port>",
         "urn_example": "urn:moos:endpoint:hp-laptop.primary.8000",
         "ports": {
-          "out": ["implements"],
-          "in": ["exposed-by", "connected-to"]
+          "out": [
+            "implements"
+          ],
+          "in": [
+            "exposed-by",
+            "connected-to"
+          ]
         },
         "properties": {
-          "transport_type": { "mutability": "immutable", "type": "string" },
-          "status":         { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "stopped"] }
+          "transport_type": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "stopped"
+            ]
+          }
         }
       },
       {
@@ -153,13 +295,39 @@
         "urn_pattern": "urn:moos:compute:<workstation>.<type>",
         "urn_example": "urn:moos:compute:hp-laptop.cpu",
         "ports": {
-          "out": ["bound-to"],
-          "in": ["contained-in", "computed-by"]
+          "out": [
+            "bound-to"
+          ],
+          "in": [
+            "contained-in",
+            "computed-by"
+          ]
         },
         "properties": {
-          "compute_type":    { "mutability": "immutable", "type": "enum", "values": ["cpu", "gpu", "cloud", "docker"] },
-          "execution_model": { "mutability": "immutable", "type": "enum", "values": ["sequential", "concurrent", "distributed"] },
-          "capacity":        { "mutability": "mutable", "authority_scope": "substrate", "type": "object" }
+          "compute_type": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "cpu",
+              "gpu",
+              "cloud",
+              "docker"
+            ]
+          },
+          "execution_model": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "sequential",
+              "concurrent",
+              "distributed"
+            ]
+          },
+          "capacity": {
+            "mutability": "mutable",
+            "authority_scope": "substrate",
+            "type": "object"
+          }
         }
       },
       {
@@ -169,13 +337,41 @@
         "urn_pattern": "urn:moos:storage:<workstation>.<name>",
         "urn_example": "urn:moos:storage:hp-laptop.local-fs",
         "ports": {
-          "out": ["synced-via", "provides-kb", "bound-to"],
-          "in": ["contained-in", "persists", "sync-target"]
+          "out": [
+            "synced-via",
+            "provides-kb",
+            "bound-to"
+          ],
+          "in": [
+            "contained-in",
+            "persists",
+            "sync-target"
+          ]
         },
         "properties": {
-          "storage_type": { "mutability": "immutable", "type": "enum", "values": ["git_repo", "local_fs", "rewrite_log"] },
-          "path_or_url":  { "mutability": "immutable", "type": "string" },
-          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["mounted", "unmounted", "error"] }
+          "storage_type": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "git_repo",
+              "local_fs",
+              "rewrite_log"
+            ]
+          },
+          "path_or_url": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "mounted",
+              "unmounted",
+              "error"
+            ]
+          }
         }
       },
       {
@@ -185,13 +381,31 @@
         "urn_pattern": "urn:moos:proposal:<user>.<slug>",
         "urn_example": "urn:moos:proposal:sam.add-gpu-stratum",
         "ports": {
-          "out": ["promotes-to"],
+          "out": [
+            "promotes-to"
+          ],
           "in": []
         },
         "properties": {
-          "title":          { "mutability": "immutable", "type": "string" },
-          "status":         { "mutability": "mutable", "authority_scope": "principal", "type": "enum", "values": ["pending", "approved", "rejected"] },
-          "evidence_urns":  { "mutability": "mutable", "authority_scope": "principal", "type": "array" }
+          "title": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "principal",
+            "type": "enum",
+            "values": [
+              "pending",
+              "approved",
+              "rejected"
+            ]
+          },
+          "evidence_urns": {
+            "mutability": "mutable",
+            "authority_scope": "principal",
+            "type": "array"
+          }
         }
       },
       {
@@ -202,18 +416,23 @@
         "urn_example": "urn:moos:role:lead",
         "ports": {
           "out": [],
-          "in": ["granted-by"]
+          "in": [
+            "granted-by"
+          ]
         },
         "properties": {
-          "name": { "mutability": "immutable", "type": "string" }
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          }
         },
         "builtin_roles": {
           "superadmin": "all permissions — only principals hold this",
-          "lead":       "read all, write session/proposal/delegation",
-          "executor":   "read all, write code nodes and own session",
-          "observer":   "read all, write own session and ack messages only",
-          "hydrator":   "read kb, write S0-S2 nodes (ADD only)",
-          "monitor":    "read all, write nothing"
+          "lead": "read all, write session/proposal/delegation",
+          "executor": "read all, write code nodes and own session",
+          "observer": "read all, write own session and ack messages only",
+          "hydrator": "read kb, write S0-S2 nodes (ADD only)",
+          "monitor": "read all, write nothing"
         }
       },
       {
@@ -224,13 +443,29 @@
         "urn_example": "urn:moos:capability:sam.writer.messaging",
         "ports": {
           "out": [],
-          "in": ["attached-to"]
+          "in": [
+            "attached-to"
+          ]
         },
         "properties": {
-          "scope":          { "mutability": "immutable", "type": "array", "note": "list of WF categories this capability grants" },
-          "granted_by_urn": { "mutability": "immutable", "type": "urn" },
-          "max_rewrites":   { "mutability": "mutable", "authority_scope": "owner", "type": "integer" },
-          "created_at":     { "mutability": "immutable", "type": "datetime" }
+          "scope": {
+            "mutability": "immutable",
+            "type": "array",
+            "note": "list of WF categories this capability grants"
+          },
+          "granted_by_urn": {
+            "mutability": "immutable",
+            "type": "urn"
+          },
+          "max_rewrites": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "integer"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -239,17 +474,62 @@
         "stratum": "S2",
         "urn_pattern": "urn:moos:prg:<id>",
         "ports": {
-          "out": ["depends-on", "summarizes"],
-          "in":  ["anchor", "participant", "child", "daily-summary", "depended-by"]
+          "out": [
+            "depends-on",
+            "summarizes"
+          ],
+          "in": [
+            "anchor",
+            "participant",
+            "child",
+            "daily-summary",
+            "depended-by"
+          ]
         },
         "properties": {
-          "title":            { "mutability": "immutable", "type": "string" },
-          "status":           { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["planned", "active", "in_progress", "completed", "blocked"] },
-          "harness_pattern":  { "mutability": "immutable", "type": "enum", "values": ["fixed-plan-sequential", "dynamic-plan-adaptive"] },
-          "t_start":          { "mutability": "immutable", "type": "integer", "note": "Moos-time T-day when PRG runtime began or is scheduled" },
-          "t_target":         { "mutability": "immutable", "type": "integer", "note": "Moos-time T-day target completion" },
-          "color_label":      { "mutability": "immutable", "type": "string", "note": "Google Calendar color label (e.g. purple)" },
-          "created_at":       { "mutability": "immutable", "type": "datetime" }
+          "title": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "planned",
+              "active",
+              "in_progress",
+              "completed",
+              "blocked"
+            ]
+          },
+          "harness_pattern": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "fixed-plan-sequential",
+              "dynamic-plan-adaptive"
+            ]
+          },
+          "t_start": {
+            "mutability": "immutable",
+            "type": "integer",
+            "note": "Moos-time T-day when PRG runtime began or is scheduled"
+          },
+          "t_target": {
+            "mutability": "immutable",
+            "type": "integer",
+            "note": "Moos-time T-day target completion"
+          },
+          "color_label": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "Google Calendar color label (e.g. purple)"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -258,17 +538,51 @@
         "stratum": "S2",
         "urn_pattern": "urn:moos:cal:<date>.<slug>",
         "ports": {
-          "out": ["causes", "anchors"],
-          "in":  ["daily-summary"]
+          "out": [
+            "causes",
+            "anchors"
+          ],
+          "in": [
+            "daily-summary"
+          ]
         },
         "properties": {
-          "summary":      { "mutability": "immutable", "type": "string" },
-          "date":         { "mutability": "immutable", "type": "string", "note": "ISO date YYYY-MM-DD" },
-          "t_day":        { "mutability": "immutable", "type": "integer", "note": "Moos-time T-day" },
-          "gcal_id":      { "mutability": "immutable", "type": "string" },
-          "color_label":  { "mutability": "immutable", "type": "string" },
-          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["confirmed", "tentative", "cancelled"] },
-          "created_at":   { "mutability": "immutable", "type": "datetime" }
+          "summary": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "date": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "ISO date YYYY-MM-DD"
+          },
+          "t_day": {
+            "mutability": "immutable",
+            "type": "integer",
+            "note": "Moos-time T-day"
+          },
+          "gcal_id": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "color_label": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "confirmed",
+              "tentative",
+              "cancelled"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -278,18 +592,70 @@
         "urn_pattern": "urn:moos:feed:<slug>",
         "urn_example": "urn:moos:feed:yt.mlst",
         "ports": {
-          "out": ["produces", "implements"],
-          "in":  ["child"]
+          "out": [
+            "produces",
+            "implements"
+          ],
+          "in": [
+            "child"
+          ]
         },
         "properties": {
-          "name":            { "mutability": "immutable", "type": "string" },
-          "url":             { "mutability": "immutable", "type": "string" },
-          "source_type":     { "mutability": "immutable", "type": "enum", "values": ["youtube_channel", "arxiv_category", "website", "rss", "api", "github_repo"] },
-          "protocol":        { "mutability": "immutable", "type": "string", "note": "simple label; promote to protocol node via WF14 when capabilities matter" },
-          "poll_interval":   { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["hourly", "daily", "weekly", "manual"] },
-          "filter_keywords": { "mutability": "mutable", "authority_scope": "owner", "type": "array" },
-          "status":          { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "paused", "error"] },
-          "created_at":      { "mutability": "immutable", "type": "datetime" }
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "url": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "source_type": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "youtube_channel",
+              "arxiv_category",
+              "website",
+              "rss",
+              "api",
+              "github_repo"
+            ]
+          },
+          "protocol": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "simple label; promote to protocol node via WF14 when capabilities matter"
+          },
+          "poll_interval": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "hourly",
+              "daily",
+              "weekly",
+              "manual"
+            ]
+          },
+          "filter_keywords": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "array"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "paused",
+              "error"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -299,18 +665,63 @@
         "urn_pattern": "urn:moos:ki:<source-type>.<slug>",
         "urn_example": "urn:moos:ki:yt.we-must-add-structure-to-deep-learning",
         "ports": {
-          "out": ["asserts", "tagged"],
-          "in":  ["produced-by"]
+          "out": [
+            "asserts",
+            "tagged"
+          ],
+          "in": [
+            "produced-by"
+          ]
         },
         "properties": {
-          "title":        { "mutability": "immutable", "type": "string" },
-          "source_url":   { "mutability": "immutable", "type": "string" },
-          "source_type":  { "mutability": "immutable", "type": "enum", "values": ["youtube", "arxiv", "website", "rss", "email", "gdrive"] },
-          "language":     { "mutability": "immutable", "type": "string" },
-          "retrieved_at": { "mutability": "immutable", "type": "datetime" },
-          "summary":      { "mutability": "mutable", "authority_scope": "kernel", "type": "string" },
-          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["raw", "summarized", "extracted", "stale"] },
-          "created_at":   { "mutability": "immutable", "type": "datetime" }
+          "title": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "source_url": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "source_type": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "youtube",
+              "arxiv",
+              "website",
+              "rss",
+              "email",
+              "gdrive"
+            ]
+          },
+          "language": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "retrieved_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          },
+          "summary": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "raw",
+              "summarized",
+              "extracted",
+              "stale"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -320,14 +731,33 @@
         "urn_pattern": "urn:moos:claim:<ki-slug>.<index>",
         "urn_example": "urn:moos:claim:yt.we-must-add-structure.01",
         "ports": {
-          "out": ["tagged"],
-          "in":  ["asserted-in"]
+          "out": [
+            "tagged"
+          ],
+          "in": [
+            "asserted-in"
+          ]
         },
         "properties": {
-          "text":           { "mutability": "immutable", "type": "string" },
-          "confidence":     { "mutability": "mutable", "authority_scope": "kernel", "type": "number", "note": "0.0 to 1.0" },
-          "source_ki_urn":  { "mutability": "immutable", "type": "urn", "note": "provenance stamp, not topology" },
-          "created_at":     { "mutability": "immutable", "type": "datetime" }
+          "text": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "confidence": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "number",
+            "note": "0.0 to 1.0"
+          },
+          "source_ki_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "provenance stamp, not topology"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -338,13 +768,34 @@
         "urn_example": "urn:moos:tag:arxiv.math-ct",
         "ports": {
           "out": [],
-          "in":  ["tagged-in"]
+          "in": [
+            "tagged-in"
+          ]
         },
         "properties": {
-          "label":      { "mutability": "immutable", "type": "string" },
-          "taxonomy":   { "mutability": "immutable", "type": "enum", "values": ["arxiv", "custom", "lcsh"] },
-          "parent_urn": { "mutability": "mutable", "authority_scope": "owner", "type": "urn", "note": "optional hierarchy; provenance stamp" },
-          "created_at": { "mutability": "immutable", "type": "datetime" }
+          "label": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "taxonomy": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "arxiv",
+              "custom",
+              "lcsh"
+            ]
+          },
+          "parent_urn": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "urn",
+            "note": "optional hierarchy; provenance stamp"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -353,15 +804,46 @@
         "stratum": "S2",
         "urn_pattern": "urn:moos:session:<date>.<agent>",
         "ports": {
-          "out": ["focus", "reads"],
-          "in":  ["participant"]
+          "out": [
+            "focus",
+            "reads"
+          ],
+          "in": [
+            "participant"
+          ]
         },
         "properties": {
-          "agent_urn":    { "mutability": "immutable", "type": "urn" },
-          "role":         { "mutability": "mutable", "authority_scope": "owner", "type": "enum", "values": ["lead", "active", "listening"] },
-          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["open", "closed"] },
-          "t_day":        { "mutability": "immutable", "type": "integer" },
-          "created_at":   { "mutability": "immutable", "type": "datetime" }
+          "agent_urn": {
+            "mutability": "immutable",
+            "type": "urn"
+          },
+          "role": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "lead",
+              "active",
+              "listening"
+            ]
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "open",
+              "closed"
+            ]
+          },
+          "t_day": {
+            "mutability": "immutable",
+            "type": "integer"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -371,17 +853,63 @@
         "urn_pattern": "urn:moos:watcher:<slug>",
         "urn_example": "urn:moos:watcher:raw-ki-detector",
         "ports": {
-          "out": ["triggers"],
-          "in":  ["watches", "guarded-by"]
+          "out": [
+            "triggers"
+          ],
+          "in": [
+            "watches",
+            "guarded-by"
+          ]
         },
         "properties": {
-          "name":              { "mutability": "immutable", "type": "string" },
-          "match_rewrite_type": { "mutability": "mutable", "authority_scope": "owner", "type": "enum", "values": ["ADD", "LINK", "MUTATE", "UNLINK", "*"] },
-          "match_type_id":     { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "node type_id to match, or * for any" },
-          "match_urn_prefix":  { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "URN prefix filter, e.g. urn:moos:ki:" },
-          "match_port":        { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "port name to match on LINK/UNLINK, or empty" },
-          "status":            { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "paused", "error"] },
-          "created_at":        { "mutability": "immutable", "type": "datetime" }
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "match_rewrite_type": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "ADD",
+              "LINK",
+              "MUTATE",
+              "UNLINK",
+              "*"
+            ]
+          },
+          "match_type_id": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "node type_id to match, or * for any"
+          },
+          "match_urn_prefix": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "URN prefix filter, e.g. urn:moos:ki:"
+          },
+          "match_port": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "port name to match on LINK/UNLINK, or empty"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "paused",
+              "error"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -391,15 +919,47 @@
         "urn_pattern": "urn:moos:reactor:<slug>",
         "urn_example": "urn:moos:reactor:extract-claims",
         "ports": {
-          "out": ["emits"],
-          "in":  ["triggered-by"]
+          "out": [
+            "emits"
+          ],
+          "in": [
+            "triggered-by"
+          ]
         },
         "properties": {
-          "name":           { "mutability": "immutable", "type": "string" },
-          "action_type":    { "mutability": "immutable", "type": "enum", "values": ["rewrite", "tool_call", "notify"] },
-          "template":       { "mutability": "mutable", "authority_scope": "owner", "type": "object", "note": "rewrite envelope template with {{placeholders}} filled from observation" },
-          "status":         { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "paused", "error"] },
-          "created_at":     { "mutability": "immutable", "type": "datetime" }
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "action_type": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "rewrite",
+              "tool_call",
+              "notify"
+            ]
+          },
+          "template": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "rewrite envelope template with {{placeholders}} filled from observation"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "paused",
+              "error"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -409,49 +969,109 @@
         "urn_pattern": "urn:moos:guard:<slug>",
         "urn_example": "urn:moos:guard:feed-is-active",
         "ports": {
-          "out": ["guards"],
-          "in":  []
+          "out": [
+            "guards"
+          ],
+          "in": []
         },
         "properties": {
-          "name":            { "mutability": "immutable", "type": "string" },
-          "predicate_type":  { "mutability": "immutable", "type": "enum", "values": ["node_property", "relation_exists", "node_exists", "custom"] },
-          "target_urn":      { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "URN or {{placeholder}} to evaluate against" },
-          "field":           { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "property field for node_property predicate" },
-          "expected_value":  { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "value the field must equal" },
-          "negate":          { "mutability": "mutable", "authority_scope": "owner", "type": "boolean", "note": "if true, guard passes when predicate is FALSE" },
-          "created_at":      { "mutability": "immutable", "type": "datetime" }
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "predicate_type": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "node_property",
+              "relation_exists",
+              "node_exists",
+              "custom"
+            ]
+          },
+          "target_urn": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "URN or {{placeholder}} to evaluate against"
+          },
+          "field": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "property field for node_property predicate"
+          },
+          "expected_value": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "value the field must equal"
+          },
+          "negate": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "boolean",
+            "note": "if true, guard passes when predicate is FALSE"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       }
     ],
-
     "s1_grammar": [
       {
         "id": "protocol",
         "description": "A communication protocol type.",
         "stratum": "S1",
         "urn_pattern": "urn:moos:protocol:<name>",
-        "examples": ["http2", "http3", "mcp-sse", "mcp-stdio", "grpc", "websocket", "quic"]
+        "examples": [
+          "http2",
+          "http3",
+          "mcp-sse",
+          "mcp-stdio",
+          "grpc",
+          "websocket",
+          "quic"
+        ]
       },
       {
         "id": "language",
         "description": "A programming language.",
         "stratum": "S1",
         "urn_pattern": "urn:moos:language:<name>",
-        "examples": ["go", "python", "rust", "typescript"]
+        "examples": [
+          "go",
+          "python",
+          "rust",
+          "typescript"
+        ]
       },
       {
         "id": "runtime",
         "description": "An execution environment.",
         "stratum": "S1",
         "urn_pattern": "urn:moos:runtime:<name>",
-        "examples": ["go-process", "python-process", "rust-binary", "node-process"]
+        "examples": [
+          "go-process",
+          "python-process",
+          "rust-binary",
+          "node-process"
+        ]
       },
       {
         "id": "package",
         "description": "A software dependency or library.",
         "stratum": "S1",
         "urn_pattern": "urn:moos:package:<name>",
-        "examples": ["stdlib", "quic-go", "anthropic-sdk", "fastapi", "tokio"]
+        "examples": [
+          "stdlib",
+          "quic-go",
+          "anthropic-sdk",
+          "fastapi",
+          "tokio"
+        ]
       },
       {
         "id": "endpoint",
@@ -460,12 +1080,48 @@
         "urn_pattern": "urn:moos:ep:<host>.<port>",
         "urn_example": "urn:moos:ep:hp-laptop.8000",
         "properties": {
-          "host":       { "mutability": "mutable", "authority_scope": "owner", "type": "string" },
-          "port":       { "mutability": "mutable", "authority_scope": "owner", "type": "integer" },
-          "protocol":   { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "http, https, http3, grpc, mcp-stdio" },
-          "tls":        { "mutability": "mutable", "authority_scope": "owner", "type": "boolean" },
-          "auth_method": { "mutability": "mutable", "authority_scope": "owner", "type": "enum", "values": ["none", "token", "mtls", "oauth"] },
-          "status":     { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["up", "down", "unknown"] }
+          "host": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "port": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "integer"
+          },
+          "protocol": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "http, https, http3, grpc, mcp-stdio"
+          },
+          "tls": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "boolean"
+          },
+          "auth_method": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "none",
+              "token",
+              "mtls",
+              "oauth"
+            ]
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "up",
+              "down",
+              "unknown"
+            ]
+          }
         }
       },
       {
@@ -475,9 +1131,27 @@
         "urn_pattern": "urn:moos:shard:<name>",
         "urn_example": "urn:moos:shard:feeds-to-hp-laptop",
         "properties": {
-          "urn_prefix":   { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "e.g. urn:moos:feed: or urn:moos:ws:hp-z440" },
-          "priority":     { "mutability": "mutable", "authority_scope": "owner", "type": "integer", "note": "higher wins on overlap; 0 = default" },
-          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "disabled"] }
+          "urn_prefix": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "e.g. urn:moos:feed: or urn:moos:ws:hp-z440"
+          },
+          "priority": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "integer",
+            "note": "higher wins on overlap; 0 = default"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "disabled"
+            ]
+          }
         }
       },
       {
@@ -487,9 +1161,26 @@
         "urn_pattern": "urn:moos:router:<name>",
         "urn_example": "urn:moos:router:collider-gateway",
         "properties": {
-          "name":       { "mutability": "immutable", "type": "string" },
-          "domain":     { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "e.g. my-tiny-data-collider.nl" },
-          "status":     { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "standby", "down"] }
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "domain": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "e.g. my-tiny-data-collider.nl"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "standby",
+              "down"
+            ]
+          }
         }
       },
       {
@@ -498,25 +1189,56 @@
         "stratum": "S1",
         "urn_pattern": "urn:moos:stratum:<name>",
         "instances": [
-          { "urn": "urn:moos:stratum:s0", "name": "authored",      "description": "Human-written seeds, design docs, industry data" },
-          { "urn": "urn:moos:stratum:s1", "name": "validated",     "description": "Operad-checked, type-approved" },
-          { "urn": "urn:moos:stratum:s2", "name": "materialized",  "description": "Hydrated into kernel graph, operational" },
-          { "urn": "urn:moos:stratum:s3", "name": "evaluated",     "description": "Concurrent subgraph eval: hypervector encoding, ranking" },
-          { "urn": "urn:moos:stratum:s4", "name": "projected",     "description": "UI, filesystem, API — NEVER ground truth" }
+          {
+            "urn": "urn:moos:stratum:s0",
+            "name": "authored",
+            "description": "Human-written seeds, design docs, industry data"
+          },
+          {
+            "urn": "urn:moos:stratum:s1",
+            "name": "validated",
+            "description": "Operad-checked, type-approved"
+          },
+          {
+            "urn": "urn:moos:stratum:s2",
+            "name": "materialized",
+            "description": "Hydrated into kernel graph, operational"
+          },
+          {
+            "urn": "urn:moos:stratum:s3",
+            "name": "evaluated",
+            "description": "Concurrent subgraph eval: hypervector encoding, ranking"
+          },
+          {
+            "urn": "urn:moos:stratum:s4",
+            "name": "projected",
+            "description": "UI, filesystem, API — NEVER ground truth"
+          }
         ]
       }
     ],
-
     "interaction_nodes": [
       {
         "id": "message_packet",
         "description": "First-class message identity in sessions.",
         "urn_pattern": "urn:moos:message:<user>.<session>.<id>",
         "properties": {
-          "content":       { "mutability": "immutable", "type": "string" },
-          "sender_urn":    { "mutability": "immutable", "type": "urn" },
-          "content_type":  { "mutability": "immutable", "type": "string" },
-          "created_at":    { "mutability": "immutable", "type": "datetime" }
+          "content": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "sender_urn": {
+            "mutability": "immutable",
+            "type": "urn"
+          },
+          "content_type": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -524,11 +1246,32 @@
         "description": "Separate tool invocation identity.",
         "urn_pattern": "urn:moos:tool_call:<user>.<session>.<id>",
         "properties": {
-          "tool_name":      { "mutability": "immutable", "type": "string" },
-          "arguments":      { "mutability": "immutable", "type": "object" },
-          "requester_urn":  { "mutability": "immutable", "type": "urn" },
-          "status":         { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["pending", "completed", "rejected"] },
-          "created_at":     { "mutability": "immutable", "type": "datetime" }
+          "tool_name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "arguments": {
+            "mutability": "immutable",
+            "type": "object"
+          },
+          "requester_urn": {
+            "mutability": "immutable",
+            "type": "urn"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "pending",
+              "completed",
+              "rejected"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -536,10 +1279,22 @@
         "description": "Result identity with provenance chain.",
         "urn_pattern": "urn:moos:tool_result:<user>.<session>.<id>",
         "properties": {
-          "status":        { "mutability": "immutable", "type": "string" },
-          "output":        { "mutability": "immutable", "type": "object" },
-          "for_call_urn":  { "mutability": "immutable", "type": "urn" },
-          "created_at":    { "mutability": "immutable", "type": "datetime" }
+          "status": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "output": {
+            "mutability": "immutable",
+            "type": "object"
+          },
+          "for_call_urn": {
+            "mutability": "immutable",
+            "type": "urn"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       },
       {
@@ -547,75 +1302,338 @@
         "description": "Async event identity.",
         "urn_pattern": "urn:moos:event:<source>.<id>",
         "properties": {
-          "event_type":  { "mutability": "immutable", "type": "string" },
-          "source_urn":  { "mutability": "immutable", "type": "urn" },
-          "timestamp":   { "mutability": "immutable", "type": "datetime" }
+          "event_type": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "source_urn": {
+            "mutability": "immutable",
+            "type": "urn"
+          },
+          "timestamp": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
         }
       }
     ]
   },
-
   "port_color_compatibility": {
     "description": "Which source→target port color pairs produce valid relations. Any pair not listed is rejected at validation time.",
-    "port_colors": ["auth", "topology", "transport", "compute", "storage", "workflow", "semantic", "projection"],
+    "port_colors": [
+      "auth",
+      "topology",
+      "transport",
+      "compute",
+      "storage",
+      "workflow",
+      "semantic",
+      "projection"
+    ],
     "projection_rule": "projection ports are read-only S4 sinks — never source of truth, never form causal relations",
     "semantic_rule": "semantic ports (WF15) may compose with any color only when contract_urn is provided",
     "matrix": {
-      "auth":       { "auth": true,  "topology": true,  "transport": false, "compute": false, "storage": false, "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
-      "topology":   { "auth": false, "topology": true,  "transport": false, "compute": false, "storage": false, "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
-      "transport":  { "auth": false, "topology": false, "transport": true,  "compute": false, "storage": false, "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
-      "compute":    { "auth": false, "topology": true,  "transport": false, "compute": true,  "storage": false, "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
-      "storage":    { "auth": false, "topology": true,  "transport": false, "compute": false, "storage": true,  "workflow": false, "semantic": "wf15_only", "projection": "sink_only" },
-      "workflow":   { "auth": false, "topology": false, "transport": false, "compute": false, "storage": false, "workflow": true,  "semantic": "wf15_only", "projection": "sink_only" },
-      "semantic":   { "auth": true,  "topology": true,  "transport": true,  "compute": true,  "storage": true,  "workflow": true,  "semantic": true,         "projection": "sink_only" },
-      "projection": { "auth": false, "topology": false, "transport": false, "compute": false, "storage": false, "workflow": false, "semantic": false,         "projection": false }
+      "auth": {
+        "auth": true,
+        "topology": true,
+        "transport": false,
+        "compute": false,
+        "storage": false,
+        "workflow": false,
+        "semantic": "wf15_only",
+        "projection": "sink_only"
+      },
+      "topology": {
+        "auth": false,
+        "topology": true,
+        "transport": false,
+        "compute": false,
+        "storage": false,
+        "workflow": false,
+        "semantic": "wf15_only",
+        "projection": "sink_only"
+      },
+      "transport": {
+        "auth": false,
+        "topology": false,
+        "transport": true,
+        "compute": false,
+        "storage": false,
+        "workflow": false,
+        "semantic": "wf15_only",
+        "projection": "sink_only"
+      },
+      "compute": {
+        "auth": false,
+        "topology": true,
+        "transport": false,
+        "compute": true,
+        "storage": false,
+        "workflow": false,
+        "semantic": "wf15_only",
+        "projection": "sink_only"
+      },
+      "storage": {
+        "auth": false,
+        "topology": true,
+        "transport": false,
+        "compute": false,
+        "storage": true,
+        "workflow": false,
+        "semantic": "wf15_only",
+        "projection": "sink_only"
+      },
+      "workflow": {
+        "auth": false,
+        "topology": false,
+        "transport": false,
+        "compute": false,
+        "storage": false,
+        "workflow": true,
+        "semantic": "wf15_only",
+        "projection": "sink_only"
+      },
+      "semantic": {
+        "auth": true,
+        "topology": true,
+        "transport": true,
+        "compute": true,
+        "storage": true,
+        "workflow": true,
+        "semantic": true,
+        "projection": "sink_only"
+      },
+      "projection": {
+        "auth": false,
+        "topology": false,
+        "transport": false,
+        "compute": false,
+        "storage": false,
+        "workflow": false,
+        "semantic": false,
+        "projection": false
+      }
     },
     "declared_pairs_by_wf": [
-      { "wf": "WF01", "src_color": "topology", "tgt_color": "topology", "src_port": "owns", "tgt_port": "child" },
-      { "wf": "WF02", "src_color": "auth",     "tgt_color": "auth",     "src_port": "governs", "tgt_port": "governed-by" },
-      { "wf": "WF03", "src_color": "topology", "tgt_color": "topology", "src_port": "hosts", "tgt_port": "hosted-on" },
-      { "wf": "WF04", "src_color": "topology", "tgt_color": "topology", "src_port": "contains", "tgt_port": "contained-in" },
-      { "wf": "WF05", "src_color": "transport","tgt_color": "transport","src_port": "exposes", "tgt_port": "exposed-by" },
-      { "wf": "WF06", "src_color": "transport","tgt_color": "transport","src_port": "connects-to", "tgt_port": "connected-to" },
-      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "participates", "tgt_port": "participated-by" },
-      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "focus", "tgt_port": "participant" },
-      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "anchors", "tgt_port": "anchor" },
-      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "causes", "tgt_port": "anchor" },
-      { "wf": "WF07", "src_color": "workflow", "tgt_color": "workflow", "src_port": "depends-on", "tgt_port": "depended-by" },
-      { "wf": "WF08", "src_color": "compute",  "tgt_color": "topology", "src_port": "bound-to", "tgt_port": "binds", "note": "compute->topology cross" },
-      { "wf": "WF08", "src_color": "storage",  "tgt_color": "topology", "src_port": "bound-to", "tgt_port": "binds", "note": "storage->topology cross" },
-      { "wf": "WF09", "src_color": "compute",  "tgt_color": "compute",  "src_port": "computes-on", "tgt_port": "computed-by" },
-      { "wf": "WF10", "src_color": "storage",  "tgt_color": "storage",  "src_port": "persisted-in", "tgt_port": "persists" },
-      { "wf": "WF11", "src_color": "storage",  "tgt_color": "storage",  "src_port": "synced-via", "tgt_port": "sync-target" },
-      { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "provides-kb", "tgt_port": "kb-source" },
-      { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "produces", "tgt_port": "produced-by" },
-      { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "asserts", "tgt_port": "asserted-in" },
-      { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "tagged", "tgt_port": "tagged-in" },
-      { "wf": "WF13", "src_color": "auth",     "tgt_color": "auth",     "src_port": "promotes-to", "tgt_port": "promotion-target" },
-      { "wf": "WF14", "src_color": "transport","tgt_color": "transport","src_port": "implements", "tgt_port": "implemented-by" },
-      { "wf": "WF15", "src_color": "semantic", "tgt_color": "*",        "src_port": "{semantic}", "tgt_port": "{semantic}", "constraint": "contract_urn required" },
-      { "wf": "WF16", "src_color": "transport","tgt_color": "transport","src_port": "routes-to", "tgt_port": "routed-from" },
-      { "wf": "WF16", "src_color": "transport","tgt_color": "transport","src_port": "shard-of", "tgt_port": "sharded-by" },
-      { "wf": "WF17", "src_color": "workflow", "tgt_color": "workflow", "src_port": "triggers", "tgt_port": "triggered-by" },
-      { "wf": "WF17", "src_color": "workflow", "tgt_color": "workflow", "src_port": "guards", "tgt_port": "guarded-by" },
-      { "wf": "WF17", "src_color": "workflow", "tgt_color": "workflow", "src_port": "emits", "tgt_port": "emitted-by" }
+      {
+        "wf": "WF01",
+        "src_color": "topology",
+        "tgt_color": "topology",
+        "src_port": "owns",
+        "tgt_port": "child"
+      },
+      {
+        "wf": "WF02",
+        "src_color": "auth",
+        "tgt_color": "auth",
+        "src_port": "governs",
+        "tgt_port": "governed-by"
+      },
+      {
+        "wf": "WF03",
+        "src_color": "topology",
+        "tgt_color": "topology",
+        "src_port": "hosts",
+        "tgt_port": "hosted-on"
+      },
+      {
+        "wf": "WF04",
+        "src_color": "topology",
+        "tgt_color": "topology",
+        "src_port": "contains",
+        "tgt_port": "contained-in"
+      },
+      {
+        "wf": "WF05",
+        "src_color": "transport",
+        "tgt_color": "transport",
+        "src_port": "exposes",
+        "tgt_port": "exposed-by"
+      },
+      {
+        "wf": "WF06",
+        "src_color": "transport",
+        "tgt_color": "transport",
+        "src_port": "connects-to",
+        "tgt_port": "connected-to"
+      },
+      {
+        "wf": "WF07",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "participates",
+        "tgt_port": "participated-by"
+      },
+      {
+        "wf": "WF07",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "focus",
+        "tgt_port": "participant"
+      },
+      {
+        "wf": "WF07",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "anchors",
+        "tgt_port": "anchor"
+      },
+      {
+        "wf": "WF07",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "causes",
+        "tgt_port": "anchor"
+      },
+      {
+        "wf": "WF07",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "depends-on",
+        "tgt_port": "depended-by"
+      },
+      {
+        "wf": "WF08",
+        "src_color": "compute",
+        "tgt_color": "topology",
+        "src_port": "bound-to",
+        "tgt_port": "binds",
+        "note": "compute->topology cross"
+      },
+      {
+        "wf": "WF08",
+        "src_color": "storage",
+        "tgt_color": "topology",
+        "src_port": "bound-to",
+        "tgt_port": "binds",
+        "note": "storage->topology cross"
+      },
+      {
+        "wf": "WF09",
+        "src_color": "compute",
+        "tgt_color": "compute",
+        "src_port": "computes-on",
+        "tgt_port": "computed-by"
+      },
+      {
+        "wf": "WF10",
+        "src_color": "storage",
+        "tgt_color": "storage",
+        "src_port": "persisted-in",
+        "tgt_port": "persists"
+      },
+      {
+        "wf": "WF11",
+        "src_color": "storage",
+        "tgt_color": "storage",
+        "src_port": "synced-via",
+        "tgt_port": "sync-target"
+      },
+      {
+        "wf": "WF12",
+        "src_color": "storage",
+        "tgt_color": "storage",
+        "src_port": "provides-kb",
+        "tgt_port": "kb-source"
+      },
+      {
+        "wf": "WF12",
+        "src_color": "storage",
+        "tgt_color": "storage",
+        "src_port": "produces",
+        "tgt_port": "produced-by"
+      },
+      {
+        "wf": "WF12",
+        "src_color": "storage",
+        "tgt_color": "storage",
+        "src_port": "asserts",
+        "tgt_port": "asserted-in"
+      },
+      {
+        "wf": "WF12",
+        "src_color": "storage",
+        "tgt_color": "storage",
+        "src_port": "tagged",
+        "tgt_port": "tagged-in"
+      },
+      {
+        "wf": "WF13",
+        "src_color": "auth",
+        "tgt_color": "auth",
+        "src_port": "promotes-to",
+        "tgt_port": "promotion-target"
+      },
+      {
+        "wf": "WF14",
+        "src_color": "transport",
+        "tgt_color": "transport",
+        "src_port": "implements",
+        "tgt_port": "implemented-by"
+      },
+      {
+        "wf": "WF15",
+        "src_color": "semantic",
+        "tgt_color": "*",
+        "src_port": "{semantic}",
+        "tgt_port": "{semantic}",
+        "constraint": "contract_urn required"
+      },
+      {
+        "wf": "WF16",
+        "src_color": "transport",
+        "tgt_color": "transport",
+        "src_port": "routes-to",
+        "tgt_port": "routed-from"
+      },
+      {
+        "wf": "WF16",
+        "src_color": "transport",
+        "tgt_color": "transport",
+        "src_port": "shard-of",
+        "tgt_port": "sharded-by"
+      },
+      {
+        "wf": "WF17",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "triggers",
+        "tgt_port": "triggered-by"
+      },
+      {
+        "wf": "WF17",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "guards",
+        "tgt_port": "guarded-by"
+      },
+      {
+        "wf": "WF17",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "emits",
+        "tgt_port": "emitted-by"
+      }
     ]
   },
-
   "ci2_projection_registry": {
     "description": "Registry of CI-2 compliant structure-preserving projections. Projections not listed here are lossy — valid for S4 display only, not for authority.",
     "ci2_compliant": [
       {
         "id": "P_node",
         "definition": "All properties of one specific node",
-        "source_wf": ["any MUTATE on that node"],
+        "source_wf": [
+          "any MUTATE on that node"
+        ],
         "corresponding_M_prime": "MUTATE same field on projected record",
         "authoritative": true
       },
       {
         "id": "P_agent",
         "definition": "Agent node + all mutable property values",
-        "source_wf": ["WF02"],
+        "source_wf": [
+          "WF02"
+        ],
         "corresponding_M_prime": "MUTATE corresponding projected field",
         "authoritative": true,
         "note": "Compliant only for MUTATE — not for ADD/UNLINK of unrelated nodes"
@@ -623,14 +1641,18 @@
       {
         "id": "P_session_participants",
         "definition": "Set of all WF07 relations incident to a session",
-        "source_wf": ["WF07"],
+        "source_wf": [
+          "WF07"
+        ],
         "corresponding_M_prime": "add/remove entry from projected set",
         "authoritative": true
       },
       {
         "id": "P_capabilities",
         "definition": "Set of all WF02 relations from agent to capability nodes",
-        "source_wf": ["WF02"],
+        "source_wf": [
+          "WF02"
+        ],
         "corresponding_M_prime": "add/remove capability entry",
         "authoritative": true,
         "note": "Replaces forbidden capability_urns property pattern"
@@ -638,7 +1660,9 @@
       {
         "id": "P_kernel_endpoints",
         "definition": "Set of all WF05 relations from kernel to endpoint nodes",
-        "source_wf": ["WF05"],
+        "source_wf": [
+          "WF05"
+        ],
         "corresponding_M_prime": "add/remove endpoint entry",
         "authoritative": true,
         "note": "Replaces forbidden port_urns property pattern"
@@ -646,41 +1670,71 @@
       {
         "id": "P_rewrite_log",
         "definition": "Ordered list of all logged rewrites for a kernel",
-        "source_wf": ["any"],
+        "source_wf": [
+          "any"
+        ],
         "corresponding_M_prime": "append to log",
         "authoritative": true,
         "note": "Append-only; trivially CI-2 compliant"
       }
     ],
     "lossy": [
-      { "id": "P_dashboard_counts", "reason": "Aggregate; no M' — many rewrites can produce same delta or cancel" },
-      { "id": "P_message_feed",     "reason": "Time-ordered display; insertion doesn't commute with ranking" },
-      { "id": "P_ui_card",          "reason": "Many-to-one: same display from different graph states" },
-      { "id": "P_search_rank",      "reason": "S3 HDC/VSA evaluation artifact; non-invertible" },
-      { "id": "P_file_tree",        "reason": "Filesystem layout != graph topology; multiple S4 views possible" },
-      { "id": "P_api_snapshot",     "reason": "Joins and computed fields have no natural M'" }
+      {
+        "id": "P_dashboard_counts",
+        "reason": "Aggregate; no M' — many rewrites can produce same delta or cancel"
+      },
+      {
+        "id": "P_message_feed",
+        "reason": "Time-ordered display; insertion doesn't commute with ranking"
+      },
+      {
+        "id": "P_ui_card",
+        "reason": "Many-to-one: same display from different graph states"
+      },
+      {
+        "id": "P_search_rank",
+        "reason": "S3 HDC/VSA evaluation artifact; non-invertible"
+      },
+      {
+        "id": "P_file_tree",
+        "reason": "Filesystem layout != graph topology; multiple S4 views possible"
+      },
+      {
+        "id": "P_api_snapshot",
+        "reason": "Joins and computed fields have no natural M'"
+      }
     ]
   },
-
   "s4_cache_contract": {
     "description": "Rules governing when and how S4 denormalization caches may exist.",
     "allowed_caches": [
       {
         "name": "agent_capabilities_cache",
         "backing_projection": "P_capabilities",
-        "cached_fields": ["capability_urn", "scope", "max_rewrites"],
+        "cached_fields": [
+          "capability_urn",
+          "scope",
+          "max_rewrites"
+        ],
         "invalidation_trigger": "any WF02 LINK or UNLINK on that agent"
       },
       {
         "name": "session_participants_cache",
         "backing_projection": "P_session_participants",
-        "cached_fields": ["participant_urn", "role"],
+        "cached_fields": [
+          "participant_urn",
+          "role"
+        ],
         "invalidation_trigger": "any WF07 LINK or UNLINK on that session"
       },
       {
         "name": "kernel_endpoints_cache",
         "backing_projection": "P_kernel_endpoints",
-        "cached_fields": ["endpoint_urn", "transport_type", "status"],
+        "cached_fields": [
+          "endpoint_urn",
+          "transport_type",
+          "status"
+        ],
         "invalidation_trigger": "any WF05 LINK or UNLINK on that kernel"
       },
       {
@@ -700,18 +1754,32 @@
     "required_stratum_marker": {
       "stratum": "S4",
       "authoritative": false,
-      "fields_required": ["stratum", "authoritative", "backing_projection", "cache_ts", "invalidated_by_wf"]
+      "fields_required": [
+        "stratum",
+        "authoritative",
+        "backing_projection",
+        "cache_ts",
+        "invalidated_by_wf"
+      ]
     }
   },
-
   "rewrite_categories": [
     {
       "id": "WF01",
       "name": "Ownership",
       "description": "Principal owns workstation, kernel, or storage.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["user"],
-      "tgt_types": ["workstation", "kernel", "storage"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "user"
+      ],
+      "tgt_types": [
+        "workstation",
+        "kernel",
+        "storage"
+      ],
       "src_port": "owns",
       "tgt_port": "child",
       "authority": "principal only",
@@ -722,22 +1790,45 @@
       "id": "WF02",
       "name": "Governance",
       "description": "Principal governs delegate with delegated role and capabilities.",
-      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
-      "src_types": ["user"],
-      "tgt_types": ["agent", "role", "capability"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "user"
+      ],
+      "tgt_types": [
+        "agent",
+        "role",
+        "capability"
+      ],
       "src_port": "governs",
       "tgt_port": "governed-by",
       "authority": "principal only",
-      "mutate_scope": ["delegate_type", "transport_type", "model", "system_prompt", "temperature"],
+      "mutate_scope": [
+        "delegate_type",
+        "transport_type",
+        "model",
+        "system_prompt",
+        "temperature"
+      ],
       "sync_mode": "strict"
     },
     {
       "id": "WF03",
       "name": "Hosting",
       "description": "Workstation hosts a kernel.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["workstation"],
-      "tgt_types": ["kernel"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "workstation"
+      ],
+      "tgt_types": [
+        "kernel"
+      ],
       "src_port": "hosts",
       "tgt_port": "hosted-on",
       "authority": "substrate",
@@ -748,9 +1839,17 @@
       "id": "WF04",
       "name": "Containment",
       "description": "Workstation contains compute or storage.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["workstation"],
-      "tgt_types": ["compute", "storage"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "workstation"
+      ],
+      "tgt_types": [
+        "compute",
+        "storage"
+      ],
       "src_port": "contains",
       "tgt_port": "contained-in",
       "authority": "substrate",
@@ -761,9 +1860,16 @@
       "id": "WF05",
       "name": "Exposure",
       "description": "Kernel exposes a network endpoint.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["kernel"],
-      "tgt_types": ["endpoint"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "kernel"
+      ],
+      "tgt_types": [
+        "endpoint"
+      ],
       "src_port": "exposes",
       "tgt_port": "exposed-by",
       "authority": "kernel",
@@ -774,9 +1880,16 @@
       "id": "WF06",
       "name": "Connection",
       "description": "Delegate connects to a kernel endpoint.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["agent"],
-      "tgt_types": ["endpoint"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "agent"
+      ],
+      "tgt_types": [
+        "endpoint"
+      ],
       "src_port": "connects-to",
       "tgt_port": "connected-to",
       "authority": "delegate with capability",
@@ -787,22 +1900,49 @@
       "id": "WF07",
       "name": "Workflow lifecycle",
       "description": "Participation, focus, anchoring, and status changes across sessions, PRGs, and calendar events. The workflow-colored WF.",
-      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
-      "src_types": ["agent", "user", "agent_session", "calendar_event", "prg_task"],
-      "tgt_types": ["session", "agent_session", "prg_task", "calendar_event"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "agent",
+        "user",
+        "agent_session",
+        "calendar_event",
+        "prg_task"
+      ],
+      "tgt_types": [
+        "session",
+        "agent_session",
+        "prg_task",
+        "calendar_event"
+      ],
       "src_port": "participates",
       "tgt_port": "participated-by",
       "authority": "principal or delegate",
-      "mutate_scope": ["status", "turn_count", "role"],
+      "mutate_scope": [
+        "status",
+        "turn_count",
+        "role"
+      ],
       "sync_mode": "eventual"
     },
     {
       "id": "WF08",
       "name": "Substrate binding",
       "description": "Compute or storage is physically bound to workstation.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["compute", "storage"],
-      "tgt_types": ["workstation"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "compute",
+        "storage"
+      ],
+      "tgt_types": [
+        "workstation"
+      ],
       "src_port": "bound-to",
       "tgt_port": "binds",
       "authority": "substrate",
@@ -813,9 +1953,16 @@
       "id": "WF09",
       "name": "Compute attachment",
       "description": "Kernel routes operations to compute substrates.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["kernel"],
-      "tgt_types": ["compute"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "kernel"
+      ],
+      "tgt_types": [
+        "compute"
+      ],
       "src_port": "computes-on",
       "tgt_port": "computed-by",
       "authority": "kernel",
@@ -826,9 +1973,16 @@
       "id": "WF10",
       "name": "Persistence",
       "description": "Kernel's rewrite log persists in a storage resource.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["kernel"],
-      "tgt_types": ["storage"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "kernel"
+      ],
+      "tgt_types": [
+        "storage"
+      ],
       "src_port": "persisted-in",
       "tgt_port": "persists",
       "authority": "kernel",
@@ -839,9 +1993,16 @@
       "id": "WF11",
       "name": "Sync",
       "description": "Local storage syncs to/from a remote storage.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["storage"],
-      "tgt_types": ["storage"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "storage"
+      ],
+      "tgt_types": [
+        "storage"
+      ],
       "src_port": "synced-via",
       "tgt_port": "sync-target",
       "authority": "kernel",
@@ -852,35 +2013,81 @@
       "id": "WF12",
       "name": "KB provision and hydration",
       "description": "Knowledge base provision: storage→kernel boot hydration, source_feed→knowledge_item production, knowledge_item→claim extraction, and tagging to domain_tags.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["storage", "source_feed", "knowledge_item", "claim"],
-      "tgt_types": ["kernel", "knowledge_item", "claim", "domain_tag"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "storage",
+        "source_feed",
+        "knowledge_item",
+        "claim"
+      ],
+      "tgt_types": [
+        "kernel",
+        "knowledge_item",
+        "claim",
+        "domain_tag"
+      ],
       "src_port": "provides-kb",
       "tgt_port": "kb-source",
       "authority": "kernel",
-      "mutate_scope": null,
+      "mutate_scope": [
+        "status",
+        "title",
+        "url",
+        "summary",
+        "published_at",
+        "tags"
+      ],
       "sync_mode": "eventual"
     },
     {
       "id": "WF13",
       "name": "Promotion",
       "description": "Governance proposal targets storage/kernel for canonicalization.",
-      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
-      "src_types": ["governance_proposal"],
-      "tgt_types": ["storage", "kernel"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "governance_proposal"
+      ],
+      "tgt_types": [
+        "storage",
+        "kernel"
+      ],
       "src_port": "promotes-to",
       "tgt_port": "promotion-target",
       "authority": "principal + governance approval",
-      "mutate_scope": ["status", "evidence_urns"],
+      "mutate_scope": [
+        "status",
+        "evidence_urns"
+      ],
       "sync_mode": "strict"
     },
     {
       "id": "WF14",
       "name": "Implementation",
       "description": "Agent, kernel, or endpoint implements a protocol, language, capability, runtime, or package.",
-      "allowed_rewrites": ["LINK", "UNLINK"],
-      "src_types": ["agent", "kernel", "endpoint"],
-      "tgt_types": ["protocol", "language", "capability", "runtime", "package"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "agent",
+        "kernel",
+        "endpoint"
+      ],
+      "tgt_types": [
+        "protocol",
+        "language",
+        "capability",
+        "runtime",
+        "package"
+      ],
       "src_port": "implements",
       "tgt_port": "implemented-by",
       "authority": "kernel",
@@ -891,9 +2098,17 @@
       "id": "WF15",
       "name": "Semantic (open)",
       "description": "Open semantic relation. Allowed only with explicit port names AND a contract_schema reference.",
-      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
-      "src_types": ["*"],
-      "tgt_types": ["*"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "*"
+      ],
+      "tgt_types": [
+        "*"
+      ],
       "src_port": "{semantic}",
       "tgt_port": "{semantic}",
       "authority": "per contract_urn",
@@ -905,26 +2120,70 @@
       "id": "WF16",
       "name": "Federation",
       "description": "Routing and connectivity for distributed kernel instances. Router reads shard_rules to route rewrites. Kernels expose endpoints. Shard_rules map URN prefixes to kernel instances.",
-      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
-      "src_types": ["router", "kernel", "shard_rule"],
-      "tgt_types": ["kernel", "endpoint", "shard_rule", "router"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "router",
+        "kernel",
+        "shard_rule"
+      ],
+      "tgt_types": [
+        "kernel",
+        "endpoint",
+        "shard_rule",
+        "router"
+      ],
       "src_port": "routes-to",
       "tgt_port": "routed-from",
       "authority": "kernel or principal",
-      "mutate_scope": ["status", "host", "port", "protocol", "urn_prefix", "priority", "domain"],
+      "mutate_scope": [
+        "status",
+        "host",
+        "port",
+        "protocol",
+        "urn_prefix",
+        "priority",
+        "domain"
+      ],
       "sync_mode": "eventual"
     },
     {
       "id": "WF17",
       "name": "Reactive",
       "description": "Watch/React/Guard pipeline. Watchers observe the rewrite log, trigger reactors when patterns match. Guards gate reactors with state predicates. The firestarter on the carpet.",
-      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
-      "src_types": ["watcher", "reactor", "guard"],
-      "tgt_types": ["reactor", "watcher", "guard"],
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "watcher",
+        "reactor",
+        "guard"
+      ],
+      "tgt_types": [
+        "reactor",
+        "watcher",
+        "guard"
+      ],
       "src_port": "triggers",
       "tgt_port": "triggered-by",
       "authority": "kernel",
-      "mutate_scope": ["status", "match_rewrite_type", "match_type_id", "match_urn_prefix", "match_port", "template", "target_urn", "field", "expected_value", "negate"],
+      "mutate_scope": [
+        "status",
+        "match_rewrite_type",
+        "match_type_id",
+        "match_urn_prefix",
+        "match_port",
+        "template",
+        "target_urn",
+        "field",
+        "expected_value",
+        "negate"
+      ],
       "sync_mode": "local-only",
       "note": "Reactive rules are per-kernel — they observe the local log, not remote kernels"
     }
