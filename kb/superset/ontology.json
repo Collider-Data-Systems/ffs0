@@ -363,6 +363,64 @@
           "t_day":        { "mutability": "immutable", "type": "integer" },
           "created_at":   { "mutability": "immutable", "type": "datetime" }
         }
+      },
+      {
+        "id": "watcher",
+        "description": "Presheaf on the rewrite log. Observes rewrites matching a pattern (type, port, URN prefix) and emits observations. Does NOT write — only watches.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:watcher:<slug>",
+        "urn_example": "urn:moos:watcher:raw-ki-detector",
+        "ports": {
+          "out": ["triggers"],
+          "in":  ["watches", "guarded-by"]
+        },
+        "properties": {
+          "name":              { "mutability": "immutable", "type": "string" },
+          "match_rewrite_type": { "mutability": "mutable", "authority_scope": "owner", "type": "enum", "values": ["ADD", "LINK", "MUTATE", "UNLINK", "*"] },
+          "match_type_id":     { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "node type_id to match, or * for any" },
+          "match_urn_prefix":  { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "URN prefix filter, e.g. urn:moos:ki:" },
+          "match_port":        { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "port name to match on LINK/UNLINK, or empty" },
+          "status":            { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "paused", "error"] },
+          "created_at":        { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "reactor",
+        "description": "Natural transformation: observation → proposed rewrite(s). Triggered by a watcher, emits rewrite envelopes for the kernel to validate and apply.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:reactor:<slug>",
+        "urn_example": "urn:moos:reactor:extract-claims",
+        "ports": {
+          "out": ["emits"],
+          "in":  ["triggered-by"]
+        },
+        "properties": {
+          "name":           { "mutability": "immutable", "type": "string" },
+          "action_type":    { "mutability": "immutable", "type": "enum", "values": ["rewrite", "tool_call", "notify"] },
+          "template":       { "mutability": "mutable", "authority_scope": "owner", "type": "object", "note": "rewrite envelope template with {{placeholders}} filled from observation" },
+          "status":         { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "paused", "error"] },
+          "created_at":     { "mutability": "immutable", "type": "datetime" }
+        }
+      },
+      {
+        "id": "guard",
+        "description": "Subobject classifier: state predicate that gates a reactor. The reactor only fires if the guard evaluates true against current graph state.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:guard:<slug>",
+        "urn_example": "urn:moos:guard:feed-is-active",
+        "ports": {
+          "out": ["guards"],
+          "in":  []
+        },
+        "properties": {
+          "name":            { "mutability": "immutable", "type": "string" },
+          "predicate_type":  { "mutability": "immutable", "type": "enum", "values": ["node_property", "relation_exists", "node_exists", "custom"] },
+          "target_urn":      { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "URN or {{placeholder}} to evaluate against" },
+          "field":           { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "property field for node_property predicate" },
+          "expected_value":  { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "value the field must equal" },
+          "negate":          { "mutability": "mutable", "authority_scope": "owner", "type": "boolean", "note": "if true, guard passes when predicate is FALSE" },
+          "created_at":      { "mutability": "immutable", "type": "datetime" }
+        }
       }
     ],
 
@@ -394,6 +452,45 @@
         "stratum": "S1",
         "urn_pattern": "urn:moos:package:<name>",
         "examples": ["stdlib", "quic-go", "anthropic-sdk", "fastapi", "tokio"]
+      },
+      {
+        "id": "endpoint",
+        "description": "Network endpoint for a kernel or router. Carries connection details. Linked to kernel via WF05 (exposes).",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:ep:<host>.<port>",
+        "urn_example": "urn:moos:ep:hp-laptop.8000",
+        "properties": {
+          "host":       { "mutability": "mutable", "authority_scope": "owner", "type": "string" },
+          "port":       { "mutability": "mutable", "authority_scope": "owner", "type": "integer" },
+          "protocol":   { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "http, https, http3, grpc, mcp-stdio" },
+          "tls":        { "mutability": "mutable", "authority_scope": "owner", "type": "boolean" },
+          "auth_method": { "mutability": "mutable", "authority_scope": "owner", "type": "enum", "values": ["none", "token", "mtls", "oauth"] },
+          "status":     { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["up", "down", "unknown"] }
+        }
+      },
+      {
+        "id": "shard_rule",
+        "description": "URN prefix routing rule: maps a URN prefix to a kernel_instance. The router reads these to decide where to forward rewrites.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:shard:<name>",
+        "urn_example": "urn:moos:shard:feeds-to-hp-laptop",
+        "properties": {
+          "urn_prefix":   { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "e.g. urn:moos:feed: or urn:moos:ws:hp-z440" },
+          "priority":     { "mutability": "mutable", "authority_scope": "owner", "type": "integer", "note": "higher wins on overlap; 0 = default" },
+          "status":       { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "disabled"] }
+        }
+      },
+      {
+        "id": "router",
+        "description": "The cocone/gateway that routes rewrites and queries to kernel instances based on shard_rules. One router can serve multiple kernels.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:router:<name>",
+        "urn_example": "urn:moos:router:collider-gateway",
+        "properties": {
+          "name":       { "mutability": "immutable", "type": "string" },
+          "domain":     { "mutability": "mutable", "authority_scope": "owner", "type": "string", "note": "e.g. my-tiny-data-collider.nl" },
+          "status":     { "mutability": "mutable", "authority_scope": "kernel", "type": "enum", "values": ["active", "standby", "down"] }
+        }
       },
       {
         "id": "stratum",
@@ -496,7 +593,12 @@
       { "wf": "WF12", "src_color": "storage",  "tgt_color": "storage",  "src_port": "tagged", "tgt_port": "tagged-in" },
       { "wf": "WF13", "src_color": "auth",     "tgt_color": "auth",     "src_port": "promotes-to", "tgt_port": "promotion-target" },
       { "wf": "WF14", "src_color": "transport","tgt_color": "transport","src_port": "implements", "tgt_port": "implemented-by" },
-      { "wf": "WF15", "src_color": "semantic", "tgt_color": "*",        "src_port": "{semantic}", "tgt_port": "{semantic}", "constraint": "contract_urn required" }
+      { "wf": "WF15", "src_color": "semantic", "tgt_color": "*",        "src_port": "{semantic}", "tgt_port": "{semantic}", "constraint": "contract_urn required" },
+      { "wf": "WF16", "src_color": "transport","tgt_color": "transport","src_port": "routes-to", "tgt_port": "routed-from" },
+      { "wf": "WF16", "src_color": "transport","tgt_color": "transport","src_port": "shard-of", "tgt_port": "sharded-by" },
+      { "wf": "WF17", "src_color": "workflow", "tgt_color": "workflow", "src_port": "triggers", "tgt_port": "triggered-by" },
+      { "wf": "WF17", "src_color": "workflow", "tgt_color": "workflow", "src_port": "guards", "tgt_port": "guarded-by" },
+      { "wf": "WF17", "src_color": "workflow", "tgt_color": "workflow", "src_port": "emits", "tgt_port": "emitted-by" }
     ]
   },
 
@@ -798,6 +900,33 @@
       "mutate_scope": "per contract_schema declaration",
       "sync_mode": "eventual",
       "constraint": "No untyped semantic relations — contract_schema required"
+    },
+    {
+      "id": "WF16",
+      "name": "Federation",
+      "description": "Routing and connectivity for distributed kernel instances. Router reads shard_rules to route rewrites. Kernels expose endpoints. Shard_rules map URN prefixes to kernel instances.",
+      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
+      "src_types": ["router", "kernel", "shard_rule"],
+      "tgt_types": ["kernel", "endpoint", "shard_rule", "router"],
+      "src_port": "routes-to",
+      "tgt_port": "routed-from",
+      "authority": "kernel or principal",
+      "mutate_scope": ["status", "host", "port", "protocol", "urn_prefix", "priority", "domain"],
+      "sync_mode": "eventual"
+    },
+    {
+      "id": "WF17",
+      "name": "Reactive",
+      "description": "Watch/React/Guard pipeline. Watchers observe the rewrite log, trigger reactors when patterns match. Guards gate reactors with state predicates. The firestarter on the carpet.",
+      "allowed_rewrites": ["LINK", "UNLINK", "MUTATE"],
+      "src_types": ["watcher", "reactor", "guard"],
+      "tgt_types": ["reactor", "watcher", "guard"],
+      "src_port": "triggers",
+      "tgt_port": "triggered-by",
+      "authority": "kernel",
+      "mutate_scope": ["status", "match_rewrite_type", "match_type_id", "match_urn_prefix", "match_port", "template", "target_urn", "field", "expected_value", "negate"],
+      "sync_mode": "local-only",
+      "note": "Reactive rules are per-kernel — they observe the local log, not remote kernels"
     }
   ]
 }
