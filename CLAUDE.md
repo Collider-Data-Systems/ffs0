@@ -4,11 +4,11 @@ Personal portable private workspace (`ffs0`). Owner: sam (`urn:moos:user:sam`).
 
 ## Canonical reference
 
-`kb/research/20260402-codex-unified.md` is the single authoritative pre-code reference for mo:os nomenclature, node types, rewrite categories, and property model.
+`kb/research/20260408-foundation-t158.md` is the single authoritative reference for mo:os foundations, nomenclature, node types, rewrite categories, property model, two-presheaf model, functorial semantics, and federation architecture.
 
 ## The rule
 
-Nothing happens except rewrites. Four operations: ADD, LINK, MUTATE, UNLINK. Edges do not do things. Nodes do not call things. The kernel validates and applies rewrites. The log is truth. State is derived.
+Nothing happens except rewrites. Operationally four (ADD, LINK, MUTATE, UNLINK); theoretically two (MUTATE + LINK). Nodes do not call things. Relations do not carry messages. The kernel validates and applies rewrites. The log is truth. State is derived.
 
 ## Nomenclature (enforced)
 
@@ -16,7 +16,7 @@ Use ONLY sanctioned terms from codex section 2:
 - **node** (not object, element, vertex)
 - **relation** (not binding, edge, wire, association)
 - **rewrite** (not morphism for the operation, update, mutation)
-- **rewrite category** WF01-WF15 (not named static relationship, not UML association)
+- **rewrite category** WF01-WF17 (not named static relationship, not UML association)
 - **property** (not field, payload, attribute)
 - **operad** (not schema, grammar)
 - **interaction node** (not transition, event, message)
