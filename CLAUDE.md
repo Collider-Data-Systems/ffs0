@@ -16,7 +16,7 @@ Use ONLY sanctioned terms from codex section 2:
 - **node** (not object, element, vertex)
 - **relation** (not binding, edge, wire, association)
 - **rewrite** (not morphism for the operation, update, mutation)
-- **rewrite category** WF01-WF17 (not named static relationship, not UML association)
+- **rewrite category** WF01-WF18 (not named static relationship, not UML association)
 - **property** (not field, payload, attribute)
 - **operad** (not schema, grammar)
 - **interaction node** (not transition, event, message)
