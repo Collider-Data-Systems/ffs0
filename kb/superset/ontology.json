@@ -1038,7 +1038,7 @@
       },
       {
         "id": "crosswalk",
-        "description": "A mapping between two classification schemes. The graph-native witness of a natural transformation between classification functors. Crosswalk nodes enable federation across kernels using different taxonomies.",
+        "description": "A mapping between two classification schemes OR between two crosswalks (higher-order). The graph-native witness of a natural transformation. Recursive: crosswalk-of-crosswalks encodes maps-between-maps (n-category depth). HDC-encodable at every level via binding.",
         "stratum": "S2",
         "urn_pattern": "urn:moos:crosswalk:<source>-<target>",
         "urn_example": "urn:moos:crosswalk:lcc-dewey",
@@ -2367,7 +2367,9 @@
         "source_feed",
         "knowledge_item",
         "claim",
-        "domain_tag"
+        "domain_tag",
+        "classification_scheme",
+        "crosswalk"
       ],
       "tgt_types": [
         "kernel",

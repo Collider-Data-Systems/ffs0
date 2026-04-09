@@ -192,6 +192,6 @@ Tools     = Watcher+Reactor pairs on EXISTING nodes
 Value     = Causal attribution through provenance topology
 ```
 
-The operad is reverse-engineered from real-world classification systems. The manifold is already defined by conventions. The HDC encoding maps the manifold to computable coordinates. The Bayesian extension weights matches by prior confidence.
+The operad is seeded by reverse-engineering real-world classification systems. But the manifold extends far beyond existing conventions — there is room at the bottom (Feynman) and between: sentences, stories, skills, purpose, and n-ary semantic junctions. Conventions are level-2 landmarks; the manifold has recursive depth. Crosswalks connect to crosswalks (maps between maps, n-category structure). HDC binding is closed — every level encodes at the same dimensionality. The Bayesian extension weights matches by prior confidence.
 
 Everything is the same pattern at different scales. The graph is self-similar.
