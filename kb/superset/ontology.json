@@ -1639,6 +1639,14 @@
         "tgt_port": "connected-to"
       },
       {
+        "wf": "WF06",
+        "src_color": "topology",
+        "tgt_color": "topology",
+        "src_port": "connects-to",
+        "tgt_port": "connected-to",
+        "note": "agent->repository: agent works in this repo"
+      },
+      {
         "wf": "WF07",
         "src_color": "workflow",
         "tgt_color": "workflow",
@@ -2097,7 +2105,7 @@
     {
       "id": "WF06",
       "name": "Connection",
-      "description": "Delegate connects to a kernel endpoint.",
+      "description": "Agent connects to a kernel endpoint or repository. For repositories: expresses that this agent works in / has access to that repo.",
       "allowed_rewrites": [
         "LINK",
         "UNLINK"
@@ -2106,7 +2114,8 @@
         "agent"
       ],
       "tgt_types": [
-        "endpoint"
+        "endpoint",
+        "repository"
       ],
       "src_port": "connects-to",
       "tgt_port": "connected-to",

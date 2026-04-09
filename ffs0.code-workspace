@@ -5,20 +5,29 @@
       "name": "ffs0-private-workspace"
     },
     {
-      "path": "../moos-kernel"
+      "path": "../moos-kernel",
+      "name": "moos-kernel"
     },
     {
-      "path": "../moos-config"
+      "path": "../moos-config",
+      "name": "moos-config"
     },
     {
-      "path": "../moos-router"
+      "path": "../moos-router",
+      "name": "moos-router"
     },
     {
-      "path": ".."
+      "path": "..",
+      "name": "hpz440-root"
     }
   ],
   "settings": {
     "task.allowAutomaticTasks": "off",
+    "git.autofetch": true,
+    "git.pruneOnFetch": true,
+    "git.openRepositoryInParentFolders": "never",
+    "scm.alwaysShowRepositories": true,
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
     "editor.scrollbar.vertical": "visible",
     "editor.scrollbar.horizontal": "visible",
     "editor.scrollbar.verticalScrollbarSize": 18,
@@ -48,8 +57,49 @@
       "redhat.vscode-yaml",
       "DavidAnson.vscode-markdownlint",
       "ms-vscode.powershell",
+      "GitHub.vscode-pull-request-github",
+      "eamodio.gitlens",
       "thedangander.jsonl-lab",
       "mechatroner.rainbow-csv"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Ops: Snapshot (Local Z440)",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder:moos-config}/ide/vscode/ops-snapshot.ps1"
+        ],
+        "group": "build"
+      },
+      {
+        "label": "Ops: Local Federation Health",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-Command",
+          "Invoke-RestMethod http://localhost:8000/healthz | ConvertTo-Json -Depth 8; Invoke-RestMethod http://localhost:9000/healthz | ConvertTo-Json -Depth 8"
+        ],
+        "group": "build"
+      },
+      {
+        "label": "Ops: Multi-Repo Git Snapshot",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-Command",
+          "git -C ${workspaceFolder:ffs0-private-workspace} status --short --branch; git -C ${workspaceFolder:moos-kernel} status --short --branch; git -C ${workspaceFolder:moos-config} status --short --branch; git -C ${workspaceFolder:moos-router} status --short --branch"
+        ],
+        "group": "build"
+      }
     ]
   }
 }
