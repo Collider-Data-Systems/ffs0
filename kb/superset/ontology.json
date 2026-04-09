@@ -1,9 +1,9 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.0",
-  "t_day": 153,
-  "description": "mo:os ontology — aligned with codex-unified.md (2026-04-02). Grammar, not encyclopedia.",
-  "canonical_reference": "kb/research/20260402-codex-unified.md",
+  "version": "3.3",
+  "t_day": 159,
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 34 node types, 18 rewrite categories (WF01-WF18).",
+  "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "invariants": [
     "state(t) = fold(log[0..t])",
     "ADD, LINK, MUTATE, UNLINK are the only four rewrites",
@@ -525,6 +525,86 @@
             "mutability": "immutable",
             "type": "string",
             "note": "Google Calendar color label (e.g. purple)"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        }
+      },
+      {
+        "id": "program",
+        "description": "Program node — unit of purposeful work with temporal semantics. Replaces legacy prg_task for new work items. Temporal properties are forward-looking and mutable (plans shift). Dependencies can be known-node (LINK to specific URN) or property-pattern (watcher filter matching ANY node meeting conditions).",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:program:<owner>.<slug>",
+        "urn_example": "urn:moos:program:sam.t162-presentation",
+        "ports": {
+          "out": [
+            "depends-on",
+            "blocks",
+            "produces",
+            "scheduled-after"
+          ],
+          "in": [
+            "child",
+            "depended-by",
+            "blocked-by",
+            "produced-by",
+            "scheduled-before",
+            "participant"
+          ]
+        },
+        "properties": {
+          "title": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "owner_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "Provenance stamp — who created this program"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "draft",
+              "active",
+              "completed",
+              "archived",
+              "blocked"
+            ]
+          },
+          "scope": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "What this program delivers — mutable because scope evolves"
+          },
+          "target_t": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "integer",
+            "note": "Moos-time T-day target for completion. Mutable: plans shift."
+          },
+          "starts_t": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "integer",
+            "note": "Moos-time T-day when work begins or is expected to begin"
+          },
+          "deadline_t": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "integer",
+            "note": "Hard deadline in Moos-time. Distinct from target_t (soft target)."
+          },
+          "completed_t": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "integer",
+            "note": "Moos-time T-day when status became completed. Set by MUTATE, not log timestamp."
           },
           "created_at": {
             "mutability": "immutable",
@@ -1613,6 +1693,41 @@
         "tgt_color": "workflow",
         "src_port": "emits",
         "tgt_port": "emitted-by"
+      },
+      {
+        "wf": "WF18",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "composes",
+        "tgt_port": "composed-by"
+      },
+      {
+        "wf": "WF18",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "depends-on",
+        "tgt_port": "depended-by"
+      },
+      {
+        "wf": "WF18",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "blocks",
+        "tgt_port": "blocked-by"
+      },
+      {
+        "wf": "WF18",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "produces",
+        "tgt_port": "produced-by"
+      },
+      {
+        "wf": "WF18",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "scheduled-after",
+        "tgt_port": "scheduled-before"
       }
     ]
   },
@@ -1778,7 +1893,8 @@
       "tgt_types": [
         "workstation",
         "kernel",
-        "storage"
+        "storage",
+        "program"
       ],
       "src_port": "owns",
       "tgt_port": "child",
@@ -1910,13 +2026,15 @@
         "user",
         "agent_session",
         "calendar_event",
-        "prg_task"
+        "prg_task",
+        "program"
       ],
       "tgt_types": [
         "session",
         "agent_session",
         "prg_task",
-        "calendar_event"
+        "calendar_event",
+        "program"
       ],
       "src_port": "participates",
       "tgt_port": "participated-by",
@@ -2186,6 +2304,37 @@
       ],
       "sync_mode": "local-only",
       "note": "Reactive rules are per-kernel — they observe the local log, not remote kernels"
+    },
+    {
+      "id": "WF18",
+      "name": "Program composition",
+      "description": "Wires program nodes to their constituent tasks, outputs, sessions, and sub-programs. Temporal dependency DAG. Known-node dependencies use LINK directly; property-pattern dependencies use WF17 watchers that fire when ANY node matching a filter achieves required properties.",
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "program"
+      ],
+      "tgt_types": [
+        "prg_task",
+        "knowledge_item",
+        "agent_session",
+        "program"
+      ],
+      "src_port": "composes",
+      "tgt_port": "composed-by",
+      "authority": "owner",
+      "mutate_scope": [
+        "status",
+        "scope",
+        "target_t",
+        "starts_t",
+        "deadline_t",
+        "completed_t"
+      ],
+      "sync_mode": "eventual"
     }
   ]
 }
