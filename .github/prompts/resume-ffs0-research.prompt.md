@@ -8,12 +8,12 @@ Context:
 
 - ffs0 is a private portable workspace.
 - moos is the future public code repo and may not be cloned locally.
-- Current canonical reference is `kb/research/20260402-codex-unified.md`.
+- Current canonical reference is `kb/research/20260408-foundation-t158.md`.
 - Supporting context in `kb/research/` (nomenclature foundations, session transcripts).
 
 Do this first:
 
-1. Read `kb/research/20260402-codex-unified.md` (the single authoritative pre-code reference).
+1. Read `kb/research/20260408-foundation-t158.md` (the single authoritative pre-code reference).
 2. Read the newest file in `kb/research/` by date (if different from above).
 3. Check `kb/superset/ontology.json` for the formal type system.
 
