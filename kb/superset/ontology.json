@@ -2,7 +2,7 @@
   "$schema": "https://moos.local/ontology.schema.json",
   "version": "3.3",
   "t_day": 159,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 34 node types, 18 rewrite categories (WF01-WF18).",
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 36 node types, 18 rewrite categories (WF01-WF18).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "invariants": [
     "state(t) = fold(log[0..t])",
@@ -285,6 +285,107 @@
               "active",
               "stopped"
             ]
+          }
+        }
+      },
+      {
+        "id": "repository",
+        "description": "A git repository. Part of the development infrastructure. Hosted on GitHub or local. Contains source code, ontology, or configuration.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:repo:<owner>.<name>",
+        "urn_example": "urn:moos:repo:msd21091969.moos-kernel",
+        "ports": {
+          "out": [
+            "contains",
+            "produces"
+          ],
+          "in": [
+            "child",
+            "hosted-on"
+          ]
+        },
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "github_url": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "default_branch": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "active",
+              "archived",
+              "deprecated"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        }
+      },
+      {
+        "id": "git_issue",
+        "description": "A GitHub issue or task. Used as coordination unit between agents. Issues on the project board are the shared task queue. Status syncs with GitHub.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:issue:<repo>.<number>",
+        "urn_example": "urn:moos:issue:moos-config.1",
+        "ports": {
+          "out": [
+            "tracks",
+            "depends-on"
+          ],
+          "in": [
+            "produced-by",
+            "depended-by",
+            "composed-by"
+          ]
+        },
+        "properties": {
+          "title": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "open",
+              "in_progress",
+              "done",
+              "closed"
+            ]
+          },
+          "assignee_urn": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "urn",
+            "note": "Agent or user assigned. Provenance, not topology."
+          },
+          "github_number": {
+            "mutability": "immutable",
+            "type": "integer"
+          },
+          "repo_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "Which repository this issue belongs to. Provenance stamp."
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
           }
         }
       },
@@ -1902,7 +2003,8 @@
         "workstation",
         "kernel",
         "storage",
-        "program"
+        "program",
+        "repository"
       ],
       "src_port": "owns",
       "tgt_port": "child",
@@ -2036,14 +2138,16 @@
         "agent_session",
         "calendar_event",
         "prg_task",
-        "program"
+        "program",
+        "git_issue"
       ],
       "tgt_types": [
         "session",
         "agent_session",
         "prg_task",
         "calendar_event",
-        "program"
+        "program",
+        "git_issue"
       ],
       "src_port": "participates",
       "tgt_port": "participated-by",
@@ -2330,7 +2434,9 @@
         "prg_task",
         "knowledge_item",
         "agent_session",
-        "program"
+        "program",
+        "git_issue",
+        "repository"
       ],
       "src_port": "composes",
       "tgt_port": "composed-by",
