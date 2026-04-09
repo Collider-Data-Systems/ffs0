@@ -1,8 +1,8 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.3",
+  "version": "3.4",
   "t_day": 159,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 36 node types, 18 rewrite categories (WF01-WF18).",
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 37 node types, 18 rewrite categories (WF01-WF18).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "invariants": [
     "state(t) = fold(log[0..t])",
@@ -972,6 +972,119 @@
             "authority_scope": "owner",
             "type": "urn",
             "note": "optional hierarchy; provenance stamp"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        }
+      },
+      {
+        "id": "classification_scheme",
+        "description": "A formal classification system. Industry conventions, library standards, regulatory frameworks. The operad's alignment with real-world categories is checked through these nodes.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:scheme:<taxonomy-id>",
+        "urn_example": "urn:moos:scheme:lcc",
+        "ports": {
+          "out": [
+            "classifies"
+          ],
+          "in": [
+            "mapped-from",
+            "mapped-to"
+          ]
+        },
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "taxonomy_source": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "lcc",
+              "dewey",
+              "ifrs",
+              "gaap",
+              "arxiv",
+              "npm",
+              "cargo",
+              "iso",
+              "rfc",
+              "custom"
+            ]
+          },
+          "version": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "active",
+              "deprecated",
+              "draft"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        }
+      },
+      {
+        "id": "crosswalk",
+        "description": "A mapping between two classification schemes. The graph-native witness of a natural transformation between classification functors. Crosswalk nodes enable federation across kernels using different taxonomies.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:crosswalk:<source>-<target>",
+        "urn_example": "urn:moos:crosswalk:lcc-dewey",
+        "ports": {
+          "out": [
+            "maps-from",
+            "maps-to"
+          ],
+          "in": []
+        },
+        "properties": {
+          "source_scheme_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "provenance stamp, not topology"
+          },
+          "target_scheme_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "provenance stamp, not topology"
+          },
+          "mapping_type": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "equivalence",
+              "broader",
+              "narrower",
+              "related"
+            ]
+          },
+          "confidence": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "number",
+            "note": "0.0 to 1.0 — quality of the mapping"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "active",
+              "draft",
+              "disputed"
+            ]
           },
           "created_at": {
             "mutability": "immutable",
@@ -2243,7 +2356,7 @@
     {
       "id": "WF12",
       "name": "KB provision and hydration",
-      "description": "Knowledge base provision: storage→kernel boot hydration, source_feed→knowledge_item production, knowledge_item→claim extraction, and tagging to domain_tags.",
+      "description": "Knowledge base provision: storage→kernel boot hydration, source_feed→knowledge_item production, knowledge_item→claim extraction, tagging to domain_tags, and classification via scheme/crosswalk nodes.",
       "allowed_rewrites": [
         "LINK",
         "UNLINK",
@@ -2253,13 +2366,16 @@
         "storage",
         "source_feed",
         "knowledge_item",
-        "claim"
+        "claim",
+        "domain_tag"
       ],
       "tgt_types": [
         "kernel",
         "knowledge_item",
         "claim",
-        "domain_tag"
+        "domain_tag",
+        "classification_scheme",
+        "crosswalk"
       ],
       "src_port": "provides-kb",
       "tgt_port": "kb-source",
