@@ -1,7 +1,7 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.4",
-  "t_day": 159,
+  "version": "3.5",
+  "t_day": 160,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 37 node types, 18 rewrite categories (WF01-WF18).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "invariants": [
@@ -215,6 +215,12 @@
           "created_at": {
             "mutability": "immutable",
             "type": "datetime"
+          },
+          "board_id": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "Short identifier used in GitHub project board Agent ID field. Convention: AGENT-<TOOL>-<WORKSTATION>. Bridges HG URN to external task-queue identity."
           }
         },
         "note": "Capabilities are discovered via WF02 relations to capability nodes — NOT stored as a property on this node (topology-property boundary rule)."
