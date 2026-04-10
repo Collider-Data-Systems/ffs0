@@ -2,24 +2,24 @@
   "folders": [
     {
       "path": ".",
-      "name": "ffs0-private-workspace"
+      "name": "ffs0-private-workspace",
     },
     {
       "path": "../moos-kernel",
-      "name": "moos-kernel"
+      "name": "moos-kernel",
     },
     {
       "path": "../moos-config",
-      "name": "moos-config"
+      "name": "moos-config",
     },
     {
       "path": "../moos-router",
-      "name": "moos-router"
+      "name": "moos-router",
     },
     {
       "path": "..",
-      "name": "hpz440-root"
-    }
+      "name": "hpz440-root",
+    },
   ],
   "settings": {
     "task.allowAutomaticTasks": "off",
@@ -50,6 +50,7 @@
     "search.exclude": {
       "**/dev/reference/**": true,
     },
+    "powershell.cwd": "ffs0-private-workspace",
   },
   "extensions": {
     "recommendations": [
@@ -60,8 +61,8 @@
       "GitHub.vscode-pull-request-github",
       "eamodio.gitlens",
       "thedangander.jsonl-lab",
-      "mechatroner.rainbow-csv"
-    ]
+      "mechatroner.rainbow-csv",
+    ],
   },
   "tasks": {
     "version": "2.0.0",
@@ -74,9 +75,9 @@
           "-ExecutionPolicy",
           "Bypass",
           "-File",
-          "${workspaceFolder:moos-config}/ide/vscode/ops-snapshot.ps1"
+          "${workspaceFolder:moos-config}/ide/vscode/ops-snapshot.ps1",
         ],
-        "group": "build"
+        "group": "build",
       },
       {
         "label": "Ops: Local Federation Health",
@@ -85,9 +86,9 @@
         "args": [
           "-NoProfile",
           "-Command",
-          "Invoke-RestMethod http://localhost:8000/healthz | ConvertTo-Json -Depth 8; Invoke-RestMethod http://localhost:9000/healthz | ConvertTo-Json -Depth 8"
+          "Invoke-RestMethod http://localhost:8000/healthz | ConvertTo-Json -Depth 8; Invoke-RestMethod http://localhost:9000/healthz | ConvertTo-Json -Depth 8",
         ],
-        "group": "build"
+        "group": "build",
       },
       {
         "label": "Ops: Multi-Repo Git Snapshot",
@@ -96,10 +97,10 @@
         "args": [
           "-NoProfile",
           "-Command",
-          "git -C ${workspaceFolder:ffs0-private-workspace} status --short --branch; git -C ${workspaceFolder:moos-kernel} status --short --branch; git -C ${workspaceFolder:moos-config} status --short --branch; git -C ${workspaceFolder:moos-router} status --short --branch"
+          "git -C ${workspaceFolder:ffs0-private-workspace} status --short --branch; git -C ${workspaceFolder:moos-kernel} status --short --branch; git -C ${workspaceFolder:moos-config} status --short --branch; git -C ${workspaceFolder:moos-router} status --short --branch",
         ],
-        "group": "build"
-      }
-    ]
-  }
+        "group": "build",
+      },
+    ],
+  },
 }
