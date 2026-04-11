@@ -55,6 +55,8 @@ robocopy_log*.txt
 
 # Local workstation customizations (not portable)
 .github/skills/
+.agents/mcp-bridge.js
+.agents/*.js
 
 # OS
 .DS_Store
