@@ -367,5 +367,9 @@ def _http_json(method: str, url: str, body: Any | None = None) -> Any:
         data = json.dumps(body).encode("utf-8")
 
     req = request.Request(url=url, method=method, headers=headers, data=data)
-    with request.urlopen(req, timeout=10) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    try:
+        with request.urlopen(req, timeout=10) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except request.HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace") if e.fp else ""
+        raise RuntimeError(f"HTTP {e.code} {e.reason}: {body}") from e
