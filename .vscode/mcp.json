@@ -6,15 +6,15 @@
 		},
 		"moos-menno": {
 			"type": "sse",
-			"url": "http://localhost:8081/sse"
+			"url": "http://localhost:9001/sse"
 		},
 		"moos-lola": {
 			"type": "sse",
-			"url": "http://localhost:8082/sse"
+			"url": "http://localhost:9002/sse"
 		},
 		"moos-moos": {
 			"type": "sse",
-			"url": "http://localhost:8083/sse"
+			"url": "http://localhost:9003/sse"
 		}
 	}
 }
