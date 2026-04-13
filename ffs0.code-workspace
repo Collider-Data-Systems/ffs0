@@ -2,24 +2,24 @@
   "folders": [
     {
       "path": ".",
-      "name": "ffs0-private-workspace",
+      "name": "ffs0-private-workspace"
     },
     {
       "path": "../moos-kernel",
-      "name": "moos-kernel",
+      "name": "moos-kernel"
     },
     {
-      "path": "../moos-config",
-      "name": "moos-config",
-    },
-    {
+
       "path": "../moos-router",
-      "name": "moos-router",
+      "name": "moos-router"
     },
     {
       "path": "..",
-      "name": "hpz440-root",
+      "name": "hpz440-root"
     },
+    {
+      "path": "C:/Users/hp"
+    }
   ],
   "settings": {
     "task.allowAutomaticTasks": "off",
@@ -70,12 +70,11 @@
       {
         "label": "Ops: Snapshot (Local Z440)",
         "type": "shell",
-        "command": "powershell",
+        "command": "pwsh",
         "args": [
-          "-ExecutionPolicy",
-          "Bypass",
+          "-NoProfile",
           "-File",
-          "${workspaceFolder:moos-config}/ide/vscode/ops-snapshot.ps1",
+          "${workspaceFolder:ffs0-private-workspace}/dev/scripts/ops/ops-snapshot.ps1",
         ],
         "group": "build",
       },
@@ -97,7 +96,7 @@
         "args": [
           "-NoProfile",
           "-Command",
-          "git -C ${workspaceFolder:ffs0-private-workspace} status --short --branch; git -C ${workspaceFolder:moos-kernel} status --short --branch; git -C ${workspaceFolder:moos-config} status --short --branch; git -C ${workspaceFolder:moos-router} status --short --branch",
+          "git -C ${workspaceFolder:ffs0-private-workspace} status --short --branch; git -C ${workspaceFolder:moos-kernel} status --short --branch; git -C ${workspaceFolder:moos-router} status --short --branch",
         ],
         "group": "build",
       },
