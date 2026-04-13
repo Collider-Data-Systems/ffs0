@@ -3,6 +3,18 @@
 		"moos-primary": {
 			"type": "sse",
 			"url": "http://localhost:8080/sse"
+		},
+		"moos-menno": {
+			"type": "sse",
+			"url": "http://localhost:8081/sse"
+		},
+		"moos-lola": {
+			"type": "sse",
+			"url": "http://localhost:8082/sse"
+		},
+		"moos-moos": {
+			"type": "sse",
+			"url": "http://localhost:8083/sse"
 		}
 	}
 }
