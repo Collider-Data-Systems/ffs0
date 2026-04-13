@@ -1,17 +1,70 @@
 # ANTIGRAVITY.md
 
-This is the primary directive file for Google Antigravity IDE when operating in the `ffs0` repository.
+Primary directive for Google Gemini / Antigravity IDE operating in the `ffs0` workspace.  
+Owner: `urn:moos:user:sam` — pulled on every workstation.  
+Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.json.example` → `.vscode/mcp.json` on first checkout.
 
-## 1. Repository Purpose: `ffs0` (The Factory)
-This is a **Personal portable private workspace**. It acts as the intellectual and configurational base across multiple workstations (e.g. Z440, HP Laptop).
-- **This is NOT the kernel code repository.** The main application runtime (`mo:os`) resides elsewhere (typically ignored under the `moos/` subdirectory). 
-- Do not make kernel-code assumptions. This repo contains ideas, knowledge (KB), design notes (`dev/design`), environment setups, and secrets.
+---
 
-## 2. Core Operational Rules
-1. **Lightweight Filesystem Modding:** Keep `ffs0` lightweight. We write docs, specifications, and configurations here. Heavy compute logic or binary builds belong in `moos/`.
-2. **Domain Expertise is Mandatory:** `mo:os` utilizes a highly strict mathematical nomenclature (Wolfram Hypergraphs, Spivak Operads, HDC). The canonical reference is `kb/research/20260408-foundation-t158.md`. For domain reasoning, consult the moos-domain-expert SKILL.md on the active workstation's Claude Desktop config.
-3. **Rewrite-First Semantics:** The architecture operates via an append-only causal graph: `state(t) = fold(log[0..t])`. Four operations only: ADD, LINK, MUTATE, UNLINK. Do not default to typical "bag-of-fields" JSON modeling. Look for `node`, `relation`, `port`, and `operad` types. Use only sanctioned nomenclature from foundation §2. Rewrite categories: WF01-WF18.
-4. **Secret Binding Surface:** The `secrets/` directory (`api_keys.env`, `gmail_credentials.json`, etc.) manages authoritative secrets and config-drifts.
+## Canonical reference
 
-## 3. Recommended Workflows
-If you must interact with the runtime `mo:os`, always check if `./moos` exists. Workflows to fetch, sync, or validate state should respect this boundary.
+`kb/research/20260408-foundation-t158.md` — single authoritative source for foundations, nomenclature, node types, rewrite categories, property model, two-presheaf model, functorial semantics, and federation architecture.
+
+`kb/superset/ontology.json` — formal ontology v3.5, 38 node types, 18 rewrite categories. Do not edit without reading the codex first.
+
+---
+
+## The rule
+
+Nothing happens except rewrites. Four operations: ADD, LINK, MUTATE, UNLINK.  
+Nodes do not call things. Relations do not carry messages.  
+The kernel validates and applies rewrites. The log is truth. State is derived.
+
+---
+
+## Nomenclature (enforced)
+
+| Use | Never use |
+|-----|-----------|
+| node | object, element, vertex |
+| relation | binding, edge, wire, association |
+| rewrite | morphism, update, mutation |
+| rewrite category WF01-WF18 | named relation, UML association |
+| property | field, payload, attribute |
+| operad | schema, grammar |
+| interaction node | transition, event, message |
+| `_urn` / `_urns` | `_ref` / `_refs` |
+
+Relations are truth. Properties never duplicate topology.
+
+---
+
+## Workspace structure
+
+```
+kb/
+  research/       — codex + design research
+  superset/       — ontology.json + seed data
+  reference/      — papers, external references
+dev/
+  design/         — historical notes (pre-rebuild)
+  reference/      — digests, evaluations
+  scripts/        — ops and utility scripts
+secrets/          — GITIGNORED — never committed
+```
+
+---
+
+## Runtime repos (siblings — not inside ffs0)
+
+- `moos-kernel/` — Go kernel, branch `agent/z440-claude/hdc-engine`
+- `moos-router/` — federation router, branch `master`
+- `moos-config/` — **LEGACY**, do not use
+
+---
+
+## Safety
+
+- Never commit `secrets/` values or API keys.
+- Never commit `.vscode/mcp.json` (machine-specific).
+- Keep destructive actions explicit and intentional.
