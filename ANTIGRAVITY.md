@@ -65,7 +65,9 @@ secrets/          — GITIGNORED — never committed
 
 ## Domain knowledge
 
-There is no external skills mechanism for Antigravity. This file and `kb/research/20260408-foundation-t158.md` are your complete domain context. Read the codex before any design or modelling work.
+- For mo:os categorical/mathematical reasoning, invoke the `category-master` skill if available.
+- Skills are machine-local (Z440: `~/.agents/skills/`, laptop: `HPlaptop/.github/skills/`) — availability varies per workstation. If a skill is not present, use `kb/research/20260408-foundation-t158.md` as the complete fallback.
+- Canonical domain reference: `kb/research/20260408-foundation-t158.md`.
 
 ---
 
