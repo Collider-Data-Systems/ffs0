@@ -1,46 +1,86 @@
 # CLAUDE.md
 
-Personal portable private workspace (`ffs0`). Owner: sam (`urn:moos:user:sam`).
+Personal portable private workspace for mo:os research and operations.  
+Owner: `urn:moos:user:sam` — pulled on every workstation.  
+Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.json.example` → `.vscode/mcp.json` on first checkout.
+
+---
 
 ## Canonical reference
 
-`kb/research/20260408-foundation-t158.md` is the single authoritative reference for mo:os foundations, nomenclature, node types, rewrite categories, property model, two-presheaf model, functorial semantics, and federation architecture.
+`kb/research/20260408-foundation-t158.md` — single authoritative source for foundations, nomenclature, node types, rewrite categories, property model, two-presheaf model, functorial semantics, and federation architecture.
+
+`kb/superset/ontology.json` — formal ontology v3.5, 38 node types, 18 rewrite categories. Do not edit without reading the codex first.
+
+---
 
 ## The rule
 
-Nothing happens except rewrites. Operationally four (ADD, LINK, MUTATE, UNLINK); theoretically two (MUTATE + LINK). Nodes do not call things. Relations do not carry messages. The kernel validates and applies rewrites. The log is truth. State is derived.
+Nothing happens except rewrites. Four operations: ADD, LINK, MUTATE, UNLINK.  
+Nodes do not call things. Relations do not carry messages.  
+The kernel validates and applies rewrites. The log is truth. State is derived.
+
+---
 
 ## Nomenclature (enforced)
 
-Use ONLY sanctioned terms from codex section 2:
-- **node** (not object, element, vertex)
-- **relation** (not binding, edge, wire, association)
-- **rewrite** (not morphism for the operation, update, mutation)
-- **rewrite category** WF01-WF18 (not named static relationship, not UML association)
-- **property** (not field, payload, attribute)
-- **operad** (not schema, grammar)
-- **interaction node** (not transition, event, message)
-- **`_urn` / `_urns`** for node references (not `_ref` / `_refs`)
+| Use | Never use |
+|-----|-----------|
+| node | object, element, vertex |
+| relation | binding, edge, wire, association |
+| rewrite | morphism, update, mutation |
+| rewrite category WF01-WF18 | named relation, UML association |
+| property | field, payload, attribute |
+| operad | schema, grammar |
+| interaction node | transition, event, message |
+| `_urn` / `_urns` | `_ref` / `_refs` |
 
 Relations are truth. Properties never duplicate topology.
 
+---
+
 ## Workspace structure
 
-- `kb/research/` — design research and the canonical codex
-- `kb/superset/` — formal ontology.json + seed instance data
-- `dev/design/` — historical design notes (pre-rebuild, for reference)
-- `dev/reference/` — papers, thought notes, youtube digests
-- `.github/instructions/` — IDE agent instructions (topic-specific)
-- `.github/prompts/` — reusable prompt templates
-- `.github/hooks/` — documented agent hooks
-- `secrets/` — local-only, never committed
+```
+kb/
+  research/       — codex + design research
+  superset/       — ontology.json + seed data
+  reference/      — papers, external references
+dev/
+  design/         — historical notes (pre-rebuild)
+  reference/      — digests, evaluations
+  scripts/        — ops and utility scripts
+.github/
+  instructions/   — IDE agent instructions (topic-specific)
+  prompts/        — reusable prompt templates
+  hooks/          — documented agent hooks
+.vscode/
+  mcp.json        — GITIGNORED — machine-local MCP wiring
+  mcp.json.example — committed template
+.claude/
+  settings.json   — Claude Code bash allowlist (committed)
+.agents/
+  workflows/      — Copilot custom workflows (committed)
+secrets/          — GITIGNORED — never committed
+```
+
+---
+
+## Runtime repos (siblings — not inside ffs0)
+
+- `moos-kernel/` — Go kernel, branch `agent/z440-claude/hdc-engine`
+- `moos-router/` — federation router, branch `master`
+- `moos-config/` — **LEGACY**, do not use
+
+---
 
 ## Safety
 
-- Never commit secret values.
-- `secrets/` is sensitive and local-first.
-- Public runtime repo `moos` is separate — may not be cloned locally.
+- Never commit `secrets/` values or API keys.
+- Never commit `.vscode/mcp.json` (machine-specific).
 - Keep destructive actions explicit and intentional.
+
+---
 
 ## Instruction routing
 
