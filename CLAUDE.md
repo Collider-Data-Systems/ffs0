@@ -86,5 +86,8 @@ secrets/          — GITIGNORED — never committed
 
 - Broad defaults: this file
 - Design work: `.github/instructions/design-research.instructions.md`
-- Session resume: `.github/prompts/resume-ffs0-research.prompt.md`
 - Git flow: `.github/prompts/multi-workstation-git-flow.prompt.md`
+
+## Domain knowledge
+
+There is no external skills mechanism for Claude Code. This file and `kb/research/20260408-foundation-t158.md` are your complete domain context. Read the codex before any design or modelling work.

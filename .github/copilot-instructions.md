@@ -23,3 +23,9 @@
 
 - Keep broad defaults in this file.
 - Keep topic-specific guidance in `.github/instructions/` and `.github/prompts/`.
+
+## Domain Knowledge
+
+- For mo:os categorical/mathematical reasoning, invoke the `category-master` skill.
+- `design-research.instructions.md` fires automatically for `dev/design/**/*.md` files.
+- Canonical domain reference: `kb/research/20260408-foundation-t158.md`.

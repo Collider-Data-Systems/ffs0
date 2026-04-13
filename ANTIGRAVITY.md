@@ -63,6 +63,12 @@ secrets/          — GITIGNORED — never committed
 
 ---
 
+## Domain knowledge
+
+There is no external skills mechanism for Antigravity. This file and `kb/research/20260408-foundation-t158.md` are your complete domain context. Read the codex before any design or modelling work.
+
+---
+
 ## Safety
 
 - Never commit `secrets/` values or API keys.
