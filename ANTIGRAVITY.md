@@ -65,8 +65,9 @@ secrets/          — GITIGNORED — never committed
 
 ## Domain knowledge
 
-- For mo:os categorical/mathematical reasoning, invoke the `category-master` skill if available.
-- Skills are machine-local (Z440: `~/.agents/skills/`, laptop: `HPlaptop/.github/skills/`) — availability varies per workstation. If a skill is not present, use `kb/research/20260408-foundation-t158.md` as the complete fallback.
+- For mo:os categorical/mathematical reasoning, read and follow `~/.agents/skills/category-master/SKILL.md` (Z440) or `HPlaptop/.github/skills/category-master/SKILL.md` (laptop).
+- Skills are machine-local — read the file directly; do not assume it is auto-loaded.
+- If the skill file is not present, use `kb/research/20260408-foundation-t158.md` as the complete fallback.
 - Canonical domain reference: `kb/research/20260408-foundation-t158.md`.
 
 ---
