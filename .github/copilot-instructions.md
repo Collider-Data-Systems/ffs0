@@ -3,7 +3,8 @@
 ## Scope
 
 - This repository is a personal portable private workspace (`ffs0`).
-- The public `moos` repository holds runtime/kernel code and may not be cloned locally.
+- Runtime kernel code lives in sibling repos (`moos-kernel`, `moos-router`) — not inside ffs0.
+- `moos-config` is legacy — do not reference it.
 - Keep instructions repository-local and avoid assuming kernel source is present in this repo.
 
 ## Working Style

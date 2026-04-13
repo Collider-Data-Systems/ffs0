@@ -19,7 +19,7 @@ Keep machine-specific customization local.
 - `.github/instructions/`
 - `.github/hooks/`
 - `.github/prompts/`
-- `.mcp.json`
+- `.vscode/mcp.json.example`
 - source and docs
 
 ## Local Only
