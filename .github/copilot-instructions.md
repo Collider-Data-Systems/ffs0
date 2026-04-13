@@ -26,6 +26,7 @@
 
 ## Domain Knowledge
 
-- For mo:os categorical/mathematical reasoning, invoke the `category-master` skill.
+- For mo:os categorical/mathematical reasoning, invoke the `category-master` skill if available.
+- Skills are machine-local (Z440: `~/.agents/skills/`, laptop: `HPlaptop/.github/skills/`) — availability varies per workstation. If a skill is not present, use `kb/research/20260408-foundation-t158.md` as the complete fallback.
 - `design-research.instructions.md` fires automatically for `dev/design/**/*.md` files.
 - Canonical domain reference: `kb/research/20260408-foundation-t158.md`.
