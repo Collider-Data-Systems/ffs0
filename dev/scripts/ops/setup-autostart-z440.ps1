@@ -4,8 +4,8 @@
 
 $ErrorActionPreference = 'Stop'
 
-$trigger   = New-ScheduledTaskTrigger -AtLogOn -User 'hp-z440\hp'
-$principal = New-ScheduledTaskPrincipal -UserId 'hp-z440\hp' -LogonType Interactive
+$trigger   = New-ScheduledTaskTrigger -AtLogOn -User 'desktop-42d00rd\hp'
+$principal = New-ScheduledTaskPrincipal -UserId 'desktop-42d00rd\hp' -LogonType Interactive
 $settings  = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0 -MultipleInstances IgnoreNew
 
 # Helper to upsert a task
