@@ -1,9 +1,10 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.5",
-  "t_day": 160,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 37 node types, 18 rewrite categories (WF01-WF18).",
+  "version": "3.6",
+  "t_day": 164,
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 40 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
+  "t164_delta_reference": "kb/research/20260414-t164-session-channel-purpose.md",
   "invariants": [
     "state(t) = fold(log[0..t])",
     "ADD, LINK, MUTATE, UNLINK are the only four rewrites",
@@ -1318,6 +1319,114 @@
             "type": "datetime"
           }
         }
+      },
+      {
+        "id": "channel",
+        "description": "A named stream of messages, files, or posts. Groups externally-sourced artifacts (WhatsApp, Drive, filesystem, project board, mail) into a single topological entry point. Cooperadic: one channel emits many knowledge_items / message_packets. Source of ingested structure, not metadata. Added T=164.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:channel:<kind>.<slug>",
+        "urn_example": "urn:moos:channel:messaging.whatsapp-sam",
+        "ports": {
+          "out": [
+            "provides-kb",
+            "emits"
+          ],
+          "in": [
+            "owned-by"
+          ]
+        },
+        "properties": {
+          "kind": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "filesystem",
+              "messaging",
+              "board",
+              "drive",
+              "mail"
+            ]
+          },
+          "source_uri": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "path, protocol URL, or external identifier — the ingress handle"
+          },
+          "owner_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "provenance stamp, not topology"
+          },
+          "display_name": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "active",
+              "paused",
+              "archived"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        },
+        "note": "Every node entering the kernel from an external source is WF12-linked to its channel. Channel is the cooperad upstream of ingestion."
+      },
+      {
+        "id": "purpose",
+        "description": "Directional intent. A declared target state that steers ongoing wiring. In HDC terms, φ(purpose) = φ(target_state) - φ(current_state) — a vector field on the graph topology. The reactive kernel can score candidate rewrites by cos(φ(rewrite_effect), φ(purpose)). Added T=164.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:purpose:<subject>.<slug>",
+        "urn_example": "urn:moos:purpose:sam.t164-tie-the-room-together",
+        "ports": {
+          "out": [
+            "steers",
+            "composes"
+          ],
+          "in": [
+            "declared-by"
+          ]
+        },
+        "properties": {
+          "subject_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "who declared the purpose — user or agent. Provenance stamp."
+          },
+          "target_state": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "declared destination — prose now, node-set hypervector later"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "open",
+              "achieved",
+              "abandoned"
+            ]
+          },
+          "started_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          },
+          "closed_at": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "datetime",
+            "note": "set when status transitions to achieved or abandoned"
+          }
+        },
+        "note": "Purpose is not topology by itself — it becomes topology through WF18 (composition into programs/sessions). A session without a purpose is occupancy without direction."
       }
     ],
     "s1_grammar": [
@@ -1956,6 +2065,42 @@
         "tgt_color": "workflow",
         "src_port": "scheduled-after",
         "tgt_port": "scheduled-before"
+      },
+      {
+        "wf": "WF18",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "steers",
+        "tgt_port": "steered-by"
+      },
+      {
+        "wf": "WF19",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "opens-on",
+        "tgt_port": "occupied-by"
+      },
+      {
+        "wf": "WF19",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "claims-session",
+        "tgt_port": "session-claimed-by"
+      },
+      {
+        "wf": "WF19",
+        "src_color": "workflow",
+        "tgt_color": "workflow",
+        "src_port": "transfers-to",
+        "tgt_port": "transferred-from"
+      },
+      {
+        "wf": "WF12",
+        "src_color": "semantic",
+        "tgt_color": "semantic",
+        "src_port": "emits",
+        "tgt_port": "emitted-by",
+        "constraint": "contract_urn required — channel's kind declares the emission contract"
       }
     ]
   },
@@ -2362,7 +2507,7 @@
     {
       "id": "WF12",
       "name": "KB provision and hydration",
-      "description": "Knowledge base provision: storage→kernel boot hydration, source_feed→knowledge_item production, knowledge_item→claim extraction, tagging to domain_tags, and classification via scheme/crosswalk nodes.",
+      "description": "Knowledge base provision: storage→kernel boot hydration, source_feed→knowledge_item production, channel→knowledge_item/message_packet ingestion, knowledge_item→claim extraction, tagging to domain_tags, and classification via scheme/crosswalk nodes.",
       "allowed_rewrites": [
         "LINK",
         "UNLINK",
@@ -2371,6 +2516,7 @@
       "src_types": [
         "storage",
         "source_feed",
+        "channel",
         "knowledge_item",
         "claim",
         "domain_tag",
@@ -2380,6 +2526,7 @@
       "tgt_types": [
         "kernel",
         "knowledge_item",
+        "message_packet",
         "claim",
         "domain_tag",
         "classification_scheme",
@@ -2545,14 +2692,15 @@
     {
       "id": "WF18",
       "name": "Program composition",
-      "description": "Wires program nodes to their constituent tasks, outputs, sessions, and sub-programs. Temporal dependency DAG. Known-node dependencies use LINK directly; property-pattern dependencies use WF17 watchers that fire when ANY node matching a filter achieves required properties.",
+      "description": "Wires program nodes to their constituent tasks, outputs, sessions, purposes, and sub-programs. Temporal dependency DAG. Known-node dependencies use LINK directly; property-pattern dependencies use WF17 watchers that fire when ANY node matching a filter achieves required properties.",
       "allowed_rewrites": [
         "LINK",
         "UNLINK",
         "MUTATE"
       ],
       "src_types": [
-        "program"
+        "program",
+        "purpose"
       ],
       "tgt_types": [
         "prg_task",
@@ -2560,7 +2708,10 @@
         "agent_session",
         "program",
         "git_issue",
-        "repository"
+        "repository",
+        "session",
+        "purpose",
+        "channel"
       ],
       "src_port": "composes",
       "tgt_port": "composed-by",
@@ -2574,6 +2725,37 @@
         "completed_t"
       ],
       "sync_mode": "eventual"
+    },
+    {
+      "id": "WF19",
+      "name": "Session governance",
+      "description": "Opens, maintains, transfers, and closes session occupancy of kernels by agent delegates. Session is a monoid over kernel occupancy: empty session is identity, sequential claims compose. WF19 gates occupancy against WF02 capability scope (a delegate cannot open a session on a kernel whose owner's capability does not grant required WF categories). Complements WF07, which tracks participation; WF19 tracks kernel OCCUPANCY. Sovereign by kernel — sessions are local-only. Added T=164.",
+      "allowed_rewrites": [
+        "ADD",
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "session",
+        "agent",
+        "agent_session"
+      ],
+      "tgt_types": [
+        "kernel",
+        "session",
+        "agent_session"
+      ],
+      "src_port": "opens-on",
+      "tgt_port": "occupied-by",
+      "authority": "kernel",
+      "mutate_scope": [
+        "status",
+        "turn_count",
+        "role"
+      ],
+      "sync_mode": "local-only",
+      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise."
     }
   ]
 }
