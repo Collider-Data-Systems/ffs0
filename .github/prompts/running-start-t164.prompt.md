@@ -1,5 +1,6 @@
 ---
-mode: ask
+mode: agent
+name: running-start
 description: Load T=164 running context — use at the start of any new mo:os session
 ---
 
