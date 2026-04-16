@@ -46,7 +46,7 @@ Do not edit without reading running-state.md first.
 ## Domain knowledge
 
 Invoke the `moos-domain-expert` skill for categorical/mathematical reasoning.
-Fallback: `dev/reference/research-archive/20260408-foundation-t158.md` (archived codex).
+If needed, archive material can be retrieved from `dev/reference/research-archive/` into conversation context.
 
 ---
 

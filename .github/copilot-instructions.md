@@ -17,7 +17,6 @@ Avoid process-heavy documents unless explicitly requested.
 ## Domain knowledge
 
 Invoke the `moos-domain-expert` skill for categorical/mathematical reasoning.
-Fallback: `dev/reference/research-archive/20260408-foundation-t158.md`.
 
 ## Safety
 

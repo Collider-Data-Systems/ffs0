@@ -23,7 +23,7 @@ Nomenclature, ontology rules, and workspace structure: see `CLAUDE.md` — ident
 ## Domain knowledge
 
 Invoke the `moos-domain-expert` skill for categorical/mathematical reasoning.
-Fallback: `dev/reference/research-archive/20260408-foundation-t158.md` (archived codex).
+Nomenclature, ontology, workspace structure: see `CLAUDE.md`.
 
 ---
 
