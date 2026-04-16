@@ -30,10 +30,10 @@ The ffs0 workspace has been overhauled. Your job: verify the new stored prompts 
    Expected: `{"status":"ok","log_len":298,"t_day":166}`
 
 5. **Clean stale references**
-   If any stored prompts or workflows reference:
-   - `codex-unified.md` → does not exist
-   - `foundation-t158.md` → archived at `dev/reference/research-archive/`
-   - Ontology v3.5 / WF01-WF18 → stale (now v3.6, WF01-WF19)
+   If any stored prompts or workflows reference legacy placeholders:
+   - Non-existent Codex context files
+   - Pre-archive foundation note paths
+   - Pre-v3.6 ontology metadata
    
    Update or remove them.
 

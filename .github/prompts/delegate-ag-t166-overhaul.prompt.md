@@ -28,9 +28,9 @@ The ffs0 workspace has been overhauled. Your job: verify everything works from A
 
 5. **Clean your context**
    - If you have a `/brains/` folder or internal context, remove references to:
-     - `codex-unified.md` (never existed under that name)
-     - `foundation-t158.md` (archived, now at `dev/reference/research-archive/`)
-     - Ontology v3.5 / 38 types / 18 WFs (stale — now v3.6, 40 types, 19 WFs)
+       - non-existent Codex context files
+       - pre-archive foundation note paths
+       - pre-v3.6 ontology metadata
    - Your single source of truth is now `kb/superset/running-state.md`
 
 6. **Report back**

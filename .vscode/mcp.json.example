@@ -1,5 +1,6 @@
 {
 	"servers": {
+		"_comment_local": "Local kernels — copy to .vscode/mcp.json (gitignored) and adjust ports",
 		"moos-primary": {
 			"type": "sse",
 			"url": "http://localhost:8080/sse"
@@ -15,6 +16,23 @@
 		"moos-moos": {
 			"type": "sse",
 			"url": "http://localhost:9003/sse"
+		},
+		"_comment_cloud": "Cloud access via Cloudflare Zero Trust — set CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET env vars",
+		"moos-kernel-cloud": {
+			"type": "sse",
+			"url": "https://kernel.my-tiny-data-collider.nl/sse",
+			"headers": {
+				"CF-Access-Client-Id": "${CF_ACCESS_CLIENT_ID}",
+				"CF-Access-Client-Secret": "${CF_ACCESS_CLIENT_SECRET}"
+			}
+		},
+		"moos-api-cloud": {
+			"type": "http",
+			"url": "https://api.my-tiny-data-collider.nl",
+			"headers": {
+				"CF-Access-Client-Id": "${CF_ACCESS_CLIENT_ID}",
+				"CF-Access-Client-Secret": "${CF_ACCESS_CLIENT_SECRET}"
+			}
 		}
 	}
 }
