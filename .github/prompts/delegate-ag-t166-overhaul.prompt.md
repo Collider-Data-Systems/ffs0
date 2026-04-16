@@ -1,44 +1,38 @@
 ---
 mode: agent
-description: T=166 workspace overhaul — Antigravity IDE verification
+description: T=166 Item B delegation — Antigravity research note
 ---
 
-# T=166 Antigravity overhaul
+# T=166 Item B — Antigravity
 
-The ffs0 workspace has been overhauled. Your job: verify everything works from AG's perspective, clean up stale context, and confirm you're operational for T=164 work.
+Before starting work, update your local repo:
 
-## Steps
-
-1. **Pull latest ffs0**
+1. Pull latest `ffs0` on `main`:
    ```
    cd C:\Users\maass\HPlaptop\ffs0 && git pull
    ```
+2. Confirm pulled commit includes: `fc472a1`.
 
-2. **Read your instruction file**
-   Read `ANTIGRAVITY.md` in the repo root. It now points to `kb/superset/running-state.md` — read that too.
+Then execute this task:
 
-3. **Verify kernel reachability**
-   ```
-   GET http://localhost:8000/healthz
-   ```
-   Expected: `{"status":"ok","log_len":298,"t_day":166}`
+Item B: Write a research note in `kb/research/` answering at least one of Q1-Q6 from `kb/research/20260414-t164-wires-come-from.md` Section 7 (open questions from the T=164 walk).
 
-4. **Verify MCP**
-   If your MCP is configured (check `.vscode/mcp.json`), test a tool call to the kernel.
+Requirements:
 
-5. **Clean your context**
-   - If you have a `/brains/` folder or internal context, remove references to:
-       - non-existent Codex context files
-       - pre-archive foundation note paths
-       - pre-v3.6 ontology metadata
-   - Your single source of truth is now `kb/superset/running-state.md`
+- Pick the question you can answer most concretely given current graph and ontology state.
+- Keep the note under 300 words.
+- Create a new file named:
+  `kb/research/20260417-t166-wire-answer-[topic].md`
+- Keep naming and terms consistent with mo:os nomenclature.
 
-6. **Report back**
-   Confirm:
-   - ANTIGRAVITY.md reads clean
-   - running-state.md loaded
-   - Kernel reachable (yes/no)
-   - MCP wired (yes/no)
-   - Any stale references found and cleaned (list them)
+When complete:
 
-Do not start new work. This is a verification-only task.
+1. Commit with a focused message.
+2. Push to origin.
+3. Report back with:
+   - chosen question (Q#)
+   - new file path
+   - word count
+   - commit hash
+
+Do this task now.

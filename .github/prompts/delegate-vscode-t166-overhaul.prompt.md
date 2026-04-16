@@ -1,48 +1,38 @@
 ---
 mode: agent
-description: T=166 workspace overhaul — VSCode Codex verification
+description: T=166 Item B delegation — VSCode research note
 ---
 
-# T=166 VSCode overhaul
+# T=166 Item B — VSCode
 
-The ffs0 workspace has been overhauled. Your job: verify the new stored prompts work, confirm context files load, and report readiness.
+Before starting work, update your local repo:
 
-## Steps
-
-1. **Pull latest ffs0**
+1. Pull latest `ffs0` on `main`:
    ```
    cd C:\Users\maass\HPlaptop\ffs0 && git pull
    ```
+2. Confirm pulled commit includes: `fc472a1`.
 
-2. **Read context file**
-   Read `.github/copilot-instructions.md` — it now points to `kb/superset/running-state.md`.
-   Read `running-state.md` too.
+Then execute this task:
 
-3. **Test the stored prompt**
-   Use the stored prompt `.github/prompts/running-start-t164.prompt.md`:
-   - Does it auto-discover in the prompt picker?
-   - Run it: does it read running-state.md and give a 3-line orientation?
+Item B: Write a research note in `kb/research/` answering at least one of Q1-Q6 from `kb/research/20260414-t164-wires-come-from.md` Section 7 (open questions from the T=164 walk).
 
-4. **Verify kernel reachability**
-   ```
-   curl http://localhost:8000/healthz
-   ```
-   Expected: `{"status":"ok","log_len":298,"t_day":166}`
+Requirements:
 
-5. **Clean stale references**
-   If any stored prompts or workflows reference legacy placeholders:
-   - Non-existent Codex context files
-   - Pre-archive foundation note paths
-   - Pre-v3.6 ontology metadata
-   
-   Update or remove them.
+- Pick the question you can answer most concretely given current graph and ontology state.
+- Keep the note under 300 words.
+- Create a new file named:
+  `kb/research/20260417-t166-wire-answer-[topic].md`
+- Keep naming and terms consistent with mo:os nomenclature.
 
-6. **Report back**
-   Confirm:
-   - copilot-instructions.md loads cleanly
-   - running-start prompt discoverable and functional
-   - Kernel reachable (yes/no)
-   - Stale references found and cleaned (list)
-   - Any VSCode-specific stored prompt improvements to suggest
+When complete:
 
-Do not start new work. Verification only.
+1. Commit with a focused message.
+2. Push to origin.
+3. Report back with:
+   - chosen question (Q#)
+   - new file path
+   - word count
+   - commit hash
+
+Do this task now.
