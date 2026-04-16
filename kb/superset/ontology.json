@@ -1,8 +1,8 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.6",
-  "t_day": 164,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 40 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels).",
+  "version": "3.7",
+  "t_day": 166,
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 40 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "kb/research/20260414-t164-session-channel-purpose.md",
   "invariants": [
@@ -1375,6 +1375,13 @@
           "created_at": {
             "mutability": "immutable",
             "type": "datetime"
+          },
+          "parent_channel_urn": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "urn",
+            "optional": true,
+            "note": "Parent channel for folder/hierarchy nesting. If set, this channel is a sub-channel of the referenced one. Enables filesystem folder structure and nested project boards without duplicating topology."
           }
         },
         "note": "Every node entering the kernel from an external source is WF12-linked to its channel. Channel is the cooperad upstream of ingestion."
@@ -1680,6 +1687,12 @@
           "created_at": {
             "mutability": "immutable",
             "type": "datetime"
+          },
+          "agent_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "optional": true,
+            "note": "If this tool call invokes an agent (agent-as-tool pattern), references the agent node being called. Enables clean wiring: tool_call → LINK(WF05) → agent without encoding the relation in a property."
           }
         }
       },
