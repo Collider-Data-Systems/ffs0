@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=166 (April 16, 2026)
+> Updated: T=166 (April 17, 2026 — session close)
 
 ---
 
@@ -80,11 +80,16 @@ urn:moos:session:sam.claude-code-hp-laptop.t164
 
 ```
 hp-laptop:  kernel :8000 | MCP :8080
+            CF tunnel: kernel.my-tiny-data-collider.nl (SSE) | api.my-tiny-data-collider.nl (REST)
 Z440:       kernel :8000–:8003 | router :9000 (federation, WF16)
 ```
 
 Agents per workstation: `claude-code` · `vscode-codex` · `antigravity`
 Repos: `moos-kernel` (Go, public) · `moos-router` · `ffs0` (this workspace, private)
+
+### moos-router (feat/type-map-routing — PR #2, ready for merge)
+Type routing via `--type-map type_id=url` checked before URN-prefix shard rules.
+Companion: `dev/scripts/generate_type_map.py` emits flags from ontology.json strata.
 
 ---
 
