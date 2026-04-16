@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "moos-kernel": {
+      "type": "sse",
+      "url": "https://kernel.my-tiny-data-collider.nl/sse"
+    }
+  }
+}
