@@ -130,7 +130,7 @@ From `.github/instructions/design-research.instructions.md`:
 - Relations are topology. Rewrite categories are families of allowed operations.
 - Properties are typed, governed, and constrained — not free-form payloads.
 - Relations are truth. Properties never duplicate what topology expresses.
-- Use only sanctioned nomenclature (see table above).
+- Use only sanctioned nomenclature (see the [Nomenclature](#nomenclature) section).
 - Mark conjectures as conjectures — do not assert unproven categorical claims.
 
 ---
