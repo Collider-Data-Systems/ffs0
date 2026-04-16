@@ -2,31 +2,23 @@
 
 ## Scope
 
-- This repository is a personal portable private workspace (`ffs0`).
-- Runtime kernel code lives in sibling repos (`moos-kernel`, `moos-router`) — not inside ffs0.
-- `moos-config` is legacy — do not reference it.
-- Keep instructions repository-local and avoid assuming kernel source is present in this repo.
+Personal portable private workspace (`ffs0`).
+Runtime code lives in sibling repos (`moos-kernel`, `moos-router`). `moos-config` is legacy.
 
-## Working Style
+## Running state
 
-- Prefer small, safe, focused edits.
-- Preserve existing folder structure and naming unless a change is requested.
-- Avoid process-heavy documents unless explicitly requested.
+**Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, key URNs.
+
+## Working style
+
+Small, safe, focused edits. Preserve folder structure unless change is requested.
+Avoid process-heavy documents unless explicitly requested.
+
+## Domain knowledge
+
+Invoke the `moos-domain-expert` skill for categorical/mathematical reasoning.
+Fallback: `dev/reference/research-archive/20260408-foundation-t158.md`.
 
 ## Safety
 
-- Never commit secret values.
-- Treat `secrets/` as sensitive and local-first.
-- Keep destructive actions explicit and intentional.
-
-## Instruction Routing
-
-- Keep broad defaults in this file.
-- Keep topic-specific guidance in `.github/instructions/` and `.github/prompts/`.
-
-## Domain Knowledge
-
-- For mo:os categorical/mathematical reasoning, invoke the `category-master` skill if available.
-- Skills are machine-local (Z440: `~/.agents/skills/`, laptop: `HPlaptop/.github/skills/`) — availability varies per workstation. If a skill is not present, use `kb/research/20260408-foundation-t158.md` as the complete fallback.
-- `design-research.instructions.md` fires automatically for `dev/design/**/*.md` files.
-- Canonical domain reference: `kb/research/20260408-foundation-t158.md`.
+Never commit secret values. `secrets/` is local-first. Destructive actions are explicit.

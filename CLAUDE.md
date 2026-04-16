@@ -1,35 +1,32 @@
 # CLAUDE.md
 
-Personal portable private workspace for mo:os research and operations.  
-Owner: `urn:moos:user:sam` — pulled on every workstation.  
+Personal portable private workspace for mo:os research and operations.
+Owner: `urn:moos:user:sam` — pulled on every workstation.
 Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.json.example` → `.vscode/mcp.json` on first checkout.
 
 ---
 
-## Canonical reference
+## Running state
 
-`kb/research/20260408-foundation-t158.md` — single authoritative source for foundations, nomenclature, node types, rewrite categories, property model, two-presheaf model, functorial semantics, and federation architecture.
-
-`kb/superset/ontology.json` — formal ontology v3.5, 38 node types, 18 rewrite categories. Do not edit without reading the codex first.
+**Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, open items, key URNs.
 
 ---
 
 ## The rule
 
-Nothing happens except rewrites. Four operations: ADD, LINK, MUTATE, UNLINK.  
-Nodes do not call things. Relations do not carry messages.  
-The kernel validates and applies rewrites. The log is truth. State is derived.
+Four rewrites only: `ADD` · `LINK` · `MUTATE` · `UNLINK`
+Log is truth. State is derived. Nodes don't call things. Relations don't carry messages.
 
 ---
 
-## Nomenclature (enforced)
+## Nomenclature
 
 | Use | Never use |
 |-----|-----------|
 | node | object, element, vertex |
 | relation | binding, edge, wire, association |
 | rewrite | morphism, update, mutation |
-| rewrite category WF01-WF18 | named relation, UML association |
+| rewrite category WF01–WF19 | named relation, UML association |
 | property | field, payload, attribute |
 | operad | schema, grammar |
 | interaction node | transition, event, message |
@@ -39,37 +36,42 @@ Relations are truth. Properties never duplicate topology.
 
 ---
 
-## Workspace structure
+## Ontology
+
+`kb/superset/ontology.json` — v3.6, 40 node types, 19 WFs.
+Do not edit without reading running-state.md first.
+
+---
+
+## Domain knowledge
+
+Invoke the `moos-domain-expert` skill for categorical/mathematical reasoning.
+Fallback: `dev/reference/research-archive/20260408-foundation-t158.md` (archived codex).
+
+---
+
+## Workspace
 
 ```
 kb/
-  research/       — codex + design research
-  superset/       — ontology.json + seed data
-  reference/      — papers, external references
+  superset/     — ontology.json (S1) + running-state.md (hydration entrypoint)
+  research/     — active research notes (T=164+)
 dev/
-  design/         — historical notes (pre-rebuild)
-  reference/      — digests, evaluations
-  scripts/        — ops and utility scripts
+  scripts/      — ops and utility scripts
+  reference/
+    research-archive/  — T=158–T=162 notes (retrieve as needed)
 .github/
-  instructions/   — IDE agent instructions (topic-specific)
-  prompts/        — reusable prompt templates
-  hooks/          — documented agent hooks
-.vscode/
-  mcp.json        — GITIGNORED — machine-local MCP wiring
-  mcp.json.example — committed template
-.claude/
-  settings.json   — Claude Code bash allowlist (committed)
-.agents/
-  workflows/      — Copilot custom workflows (committed)
-secrets/          — GITIGNORED — never committed
+  instructions/ — IDE-specific auto-injected context
+  prompts/      — stored prompts (all IDEs)
+secrets/        — GITIGNORED
 ```
 
 ---
 
-## Runtime repos (siblings — not inside ffs0)
+## Runtime repos (siblings)
 
-- `moos-kernel/` — Go kernel, branch `agent/z440-claude/hdc-engine`
-- `moos-router/` — federation router, branch `master`
+- `moos-kernel/` — Go kernel
+- `moos-router/` — federation router
 - `moos-config/` — **LEGACY**, do not use
 
 ---
@@ -87,10 +89,4 @@ secrets/          — GITIGNORED — never committed
 - Broad defaults: this file
 - Design work: `.github/instructions/design-research.instructions.md`
 - Git flow: `.github/prompts/multi-workstation-git-flow.prompt.md`
-
-## Domain knowledge
-
-- For mo:os categorical/mathematical reasoning, read and follow `~/.agents/skills/category-master/SKILL.md` (Z440) or `HPlaptop/.github/skills/category-master/SKILL.md` (laptop).
-- Skills are machine-local — read the file directly; do not assume it is auto-loaded.
-- If the skill file is not present, use `kb/research/20260408-foundation-t158.md` as the complete fallback.
-- Canonical domain reference: `kb/research/20260408-foundation-t158.md`.
+- Running start: `.github/prompts/running-start-t164.prompt.md`
