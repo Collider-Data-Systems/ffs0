@@ -2,7 +2,7 @@
   "$schema": "https://moos.local/ontology.schema.json",
   "version": "3.8",
   "t_day": 167,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 43 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7).",
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 44 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "kb/research/20260414-t164-session-channel-purpose.md",
   "invariants": [
@@ -1614,6 +1614,66 @@
             "type": "datetime"
           }
         }
+      },
+      {
+        "id": "gate",
+        "description": "Subobject classifier for incomplete data (M8). A gate node guards a target node via guards/guarded-by relation. When the kernel applies a rewrite to the guarded node, ALL linked gates are evaluated first. If any gate predicate fails, the rewrite is blocked (fail-closed). Gates check external data -- the predicate target_urn is typically a DIFFERENT node from the guarded one, avoiding circular self-reference. Distinct from guard nodes (WF17 reactive path): guards gate reactor proposals; gates block kernel Apply.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:gate:<slug>",
+        "urn_example": "urn:moos:gate:require-approval",
+        "ports": {
+          "out": [
+            "guards"
+          ],
+          "in": []
+        },
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "predicate_type": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "node_property",
+              "field_set",
+              "node_exists",
+              "relation_exists",
+              "custom"
+            ],
+            "note": "field_set: field must be present on target_urn (any value). node_property: field must equal expected_value. node_exists / relation_exists: structural check."
+          },
+          "target_urn": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "string",
+            "note": "URN of the node the predicate checks. Typically DIFFERENT from the guarded node (avoid circular self-reference)."
+          },
+          "field": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "string",
+            "note": "Property field name for node_property and field_set predicates."
+          },
+          "expected_value": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "string",
+            "note": "Expected value for node_property predicate."
+          },
+          "negate": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "boolean",
+            "note": "If true, the predicate result is inverted."
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        }
       }
     ],
     "s1_grammar": [
@@ -2858,7 +2918,8 @@
         "watcher",
         "reactor",
         "guard",
-        "t_hook"
+        "t_hook",
+        "gate"
       ],
       "tgt_types": [
         "reactor",
@@ -2883,7 +2944,8 @@
         "owner_urn",
         "event_shape",
         "guard_ref",
-        "react_template"
+        "react_template",
+        "predicate_type"
       ],
       "sync_mode": "local-only",
       "note": "Reactive rules are per-kernel — they observe the local log, not remote kernels"
