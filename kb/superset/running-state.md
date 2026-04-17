@@ -27,8 +27,8 @@ T=167 session wired into HG: `urn:moos:session:sam.claude-code-hp-laptop.t167` (
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 346 |
-| Nodes | 109 |
+| Log entries | 354 |
+| Nodes | 110 |
 | Relations | 184 |
 | Ontology | v3.8 — 45 types, 19 WFs |
 
@@ -90,15 +90,25 @@ Eight of eleven sub-programs implemented across two sessions:
 Session `urn:moos:session:sam.claude-code-hp-laptop.t167` wired (WF19, role=occupier).
 Kernel binary: `moos-kernel-new.exe` (all above), log 346, 45 ontology types.
 
-## Open items — T=187 walk
+## T=187 sub-program status
 
-Remaining sub-programs:
+All 11 sub-programs complete or active:
 
-| Sub-program | Depends on | §M | Type |
-|-------------|------------|----|----- |
-| `twin-deploy-mtdc` | twin-kernel ✅ | M9 | ops: wire twin_link node, CF tunnel |
-| `answer-walk-Q1-Q4` | — | — | research notes only |
-| `categorical-contract` | all others | M1..M10 | research notes only |
+| Sub-program | Status | §M |
+|-------------|--------|----|
+| `http3-quic` | completed | M10 |
+| `strata-enforcement` | completed | M5 |
+| `fold-endpoint` | completed | M3 |
+| `session-chrono-t` | completed | M1 |
+| `system-instruction` | completed | M7 |
+| `t-hooks-first-class` | completed | M6 |
+| `gates` | completed | M8 |
+| `twin-kernel` | completed | M9 |
+| `twin-deploy-mtdc` | **active** (twin_link ADDed, remote kernel pending) | M9 |
+| `answer-walk-Q1-Q4` | completed | — |
+| `categorical-contract` | completed | M1..M10 |
+
+`twin-deploy-mtdc` ops remaining: start kernel process at mtdc, activate `urn:moos:twin_link:hp-laptop.mtdc` (MUTATE status→active) once remote `POST /twin/ingest` returns 200.
 
 ---
 
