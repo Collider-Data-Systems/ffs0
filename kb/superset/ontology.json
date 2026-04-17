@@ -2,7 +2,7 @@
   "$schema": "https://moos.local/ontology.schema.json",
   "version": "3.8",
   "t_day": 167,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 44 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7).",
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 45 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "kb/research/20260414-t164-session-channel-purpose.md",
   "invariants": [
@@ -1668,6 +1668,64 @@
             "authority_scope": "kernel",
             "type": "boolean",
             "note": "If true, the predicate result is inverted."
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        }
+      },
+      {
+        "id": "twin_link",
+        "description": "Adjoint sync pair between two kernels (M9). Captures F ⊣ G: local kernel K forwards rewrites to remote K' via F (eager POST to remote_endpoint/twin/ingest); K' acknowledges back via G. sync_mode controls direction: eager = local pushes to remote; read-only = local only receives; lazy = batched (future). Loop prevention: configure at most one side as eager; the other as read-only.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:twin_link:<local_slug>.<remote_slug>",
+        "urn_example": "urn:moos:twin_link:hp-laptop.mtdc",
+        "ports": {
+          "out": [
+            "synced-via"
+          ],
+          "in": [
+            "sync-target"
+          ]
+        },
+        "properties": {
+          "local_urn": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "URN of the local kernel (urn:moos:kernel:...)."
+          },
+          "remote_urn": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "URN of the remote twin kernel."
+          },
+          "remote_endpoint": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "string",
+            "note": "HTTP base URL of the remote kernel (e.g. https://kernel.my-tiny-data-collider.nl). POST /twin/ingest is appended."
+          },
+          "sync_mode": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "eager",
+              "lazy",
+              "read-only"
+            ],
+            "note": "eager: forward every rewrite immediately via POST /twin/ingest. read-only: receive only (no forwarding). lazy: batch (future)."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "paused",
+              "error"
+            ]
           },
           "created_at": {
             "mutability": "immutable",
