@@ -2,7 +2,7 @@
   "$schema": "https://moos.local/ontology.schema.json",
   "version": "3.8",
   "t_day": 167,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 42 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7).",
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 43 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "kb/research/20260414-t164-session-channel-purpose.md",
   "invariants": [
@@ -277,7 +277,11 @@
             "mutability": "mutable",
             "authority_scope": "kernel",
             "type": "enum",
-            "values": ["occupier", "observer", "delegate"],
+            "values": [
+              "occupier",
+              "observer",
+              "delegate"
+            ],
             "note": "Session role within kernel occupancy (WF19)."
           }
         },
@@ -778,7 +782,11 @@
             "mutability": "mutable",
             "authority_scope": "owner",
             "type": "enum",
-            "values": ["draft", "active", "archived"]
+            "values": [
+              "draft",
+              "active",
+              "archived"
+            ]
           },
           "created_at": {
             "mutability": "immutable",
@@ -804,7 +812,11 @@
           "protocol": {
             "mutability": "immutable",
             "type": "enum",
-            "values": ["http1.1", "http2", "http3-quic"],
+            "values": [
+              "http1.1",
+              "http2",
+              "http3-quic"
+            ],
             "note": "Wire-level protocol"
           },
           "listen_addr": {
@@ -826,7 +838,10 @@
             "mutability": "mutable",
             "authority_scope": "kernel",
             "type": "enum",
-            "values": ["active", "deprecated"]
+            "values": [
+              "active",
+              "deprecated"
+            ]
           },
           "created_at": {
             "mutability": "immutable",
@@ -1548,6 +1563,57 @@
           }
         },
         "note": "Purpose is not topology by itself — it becomes topology through WF18 (composition into programs/sessions). A session without a purpose is occupancy without direction."
+      },
+      {
+        "id": "t_hook",
+        "description": "First-class t-hook port descriptor (M6). Owned by any node via owner_urn. The reactive engine fires react_template when a rewrite affects the owner and event_shape matches. Optional guard_ref gates the hook (fail-closed). Backwards-compatible with watcher/reactor/guard nodes -- both patterns coexist.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:t_hook:<owner_slug>.<slug>",
+        "urn_example": "urn:moos:t_hook:ki.my-item.on-status-mutate",
+        "ports": {
+          "out": [],
+          "in": [
+            "watched-by"
+          ]
+        },
+        "properties": {
+          "owner_urn": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "URN of the node this hook belongs to. Engine fires when that node is affected by a rewrite."
+          },
+          "event_shape": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "JSON filter object: {rewrite_type, type_id, urn_prefix, port, field}. Omit or set to empty string / \"*\" to match any value on that dimension."
+          },
+          "guard_ref": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "URN of an existing guard node. Empty string = no guard (hook always fires when shape matches). Missing guard node = fail closed."
+          },
+          "react_template": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "Envelope template. Supports $matched_urn, $matched_type_id, $actor substitutions. Same format as reactor.template."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "inactive"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        }
       }
     ],
     "s1_grammar": [
@@ -2791,12 +2857,14 @@
       "src_types": [
         "watcher",
         "reactor",
-        "guard"
+        "guard",
+        "t_hook"
       ],
       "tgt_types": [
         "reactor",
         "watcher",
-        "guard"
+        "guard",
+        "t_hook"
       ],
       "src_port": "triggers",
       "tgt_port": "triggered-by",
@@ -2811,7 +2879,11 @@
         "target_urn",
         "field",
         "expected_value",
-        "negate"
+        "negate",
+        "owner_urn",
+        "event_shape",
+        "guard_ref",
+        "react_template"
       ],
       "sync_mode": "local-only",
       "note": "Reactive rules are per-kernel — they observe the local log, not remote kernels"
