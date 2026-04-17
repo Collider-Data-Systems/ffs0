@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=166 (April 17, 2026 — session close)
+> Updated: T=167 (April 17, 2026)
 
 ---
 
@@ -11,7 +11,7 @@
 |--|--|
 | Program | `urn:moos:program:sam.t164-room-tying` |
 | Title | T=164 room-tying |
-| Current T-day | T=166 (April 16, 2026) |
+| Current T-day | T=167 (April 17, 2026) |
 | Status | active |
 
 ---
@@ -22,10 +22,10 @@
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 298 |
-| Nodes | 95 |
+| Log entries | 299 |
+| Nodes | 96 |
 | Relations | 157 |
-| Ontology | v3.6 — 40 types, 19 WFs |
+| Ontology | v3.7 — 40 types, 19 WFs |
 
 ## Z440 (federation partner)
 
@@ -55,10 +55,10 @@ Source of truth: `kb/superset/ontology.json`
 
 ## Open items — T=164 walk
 
-**A.** ADD `program: wiring-proposer` to hp-laptop kernel (inert until watcher attached)
-**B.** Write research note answering one of Q1–Q6 (`kb/research/20260414-t164-wires-come-from.md` §7)
-**C.** Extend `channel` with `parent_channel_urn` optional property (folder nesting)
-**D.** Add `tool_call.agent_urn` port to ontology (agents-as-tools clean wiring)
+**A.** ✅ ADD `program: wiring-proposer` — applied T=167, log 299, nodes 96 (AG)
+**B.** ✅ Research note Q5 — `kb/research/20260417-t166-wire-answer-folder-nesting.md` (VSCode)
+**C.** ✅ `channel.parent_channel_urn` — ontology v3.7 `fc472a1` (Claude Code)
+**D.** ✅ `tool_call.agent_urn` — ontology v3.7 `fc472a1` (Claude Code)
 
 ---
 

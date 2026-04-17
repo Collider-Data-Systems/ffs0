@@ -12,7 +12,7 @@ Where do folders go?
 Folders are modeled as `channel` nodes with `kind=filesystem`.
 Nested folders are modeled as sub-channels: a child `channel` points to its parent via optional `parent_channel_urn`.
 
-This is now explicit in ontology v3.6:
+This is now explicit in ontology v3.7:
 
 - `channel` includes `parent_channel_urn` with note: "sub-channel ... enables filesystem folder structure and nested project boards".
 - `channel` already has topology ports (`owned-by` in, `emits` out), so folder trees stay graph-native.

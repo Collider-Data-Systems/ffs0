@@ -38,7 +38,7 @@ Relations are truth. Properties never duplicate topology.
 
 ## Ontology
 
-`kb/superset/ontology.json` — v3.6, 40 node types, 19 WFs.
+`kb/superset/ontology.json` — v3.7, 40 node types, 19 WFs.
 Do not edit without reading running-state.md first.
 
 ---
