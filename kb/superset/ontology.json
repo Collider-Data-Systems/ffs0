@@ -1,8 +1,8 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.7",
-  "t_day": 166,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 40 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring).",
+  "version": "3.8",
+  "t_day": 167,
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 42 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "kb/research/20260414-t164-session-channel-purpose.md",
   "invariants": [
@@ -260,9 +260,28 @@
             "mutability": "mutable",
             "authority_scope": "kernel",
             "type": "integer"
+          },
+          "local_t": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "integer",
+            "note": "Kernel-maintained per-session T counter (M1). Incremented automatically after each acknowledged rewrite issued within the session. Never decremented."
+          },
+          "context_urn": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "urn",
+            "note": "URN of the system_instruction node (S4) providing context for this session (M7). Gates which WFs the session may exercise."
+          },
+          "role": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": ["occupier", "observer", "delegate"],
+            "note": "Session role within kernel occupancy (WF19)."
           }
         },
-        "note": "Participants are discovered via WF07 relations — NOT stored as a property."
+        "note": "Participants are discovered via WF07 relations — NOT stored as a property. Session is a monoid (M1): identity = empty session, composition = sequential kernel claims."
       },
       {
         "id": "endpoint",
@@ -713,6 +732,101 @@
             "authority_scope": "owner",
             "type": "integer",
             "note": "Moos-time T-day when status became completed. Set by MUTATE, not log timestamp."
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        }
+      },
+      {
+        "id": "system_instruction",
+        "description": "S4 context overlay — human- or AI-authored instruction set that overlays the ontology (S1) read-only for a session (M7). Referenced by session.context_urn. Never modifies S0 directly; influence is through the session's WF scope gate. Gödel/Turing: may reference its own session — self-reference is typed (S4 ref → S2 occupier); incompleteness surfaces as gate failures, not crashes.",
+        "stratum": "S4",
+        "urn_pattern": "urn:moos:system_instruction:<owner>.<slug>",
+        "ports": {
+          "out": [
+            "projected-to"
+          ],
+          "in": [
+            "context-for"
+          ]
+        },
+        "properties": {
+          "title": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "owner_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "Provenance — who authored this instruction"
+          },
+          "content": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "The instruction text / context payload"
+          },
+          "wf_scope": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "array",
+            "note": "WF categories the session is allowed to exercise when this instruction is active. Empty = no restriction."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": ["draft", "active", "archived"]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        },
+        "note": "Stratum S4: projection only. A system_instruction is never ground truth — it is an overlay read by sessions to constrain their WF scope."
+      },
+      {
+        "id": "transport_binding",
+        "description": "Wire-level protocol binding for a kernel endpoint (M10). Captures whether an endpoint speaks HTTP/1.1, HTTP/2, or HTTP/3-QUIC. Immutable once the kernel is live; migration is a new ADD + LINK. Alt-Svc header value is emitted by the kernel on every response to allow automatic upgrade.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:transport_binding:<kernel>.<protocol>",
+        "ports": {
+          "out": [
+            "implements"
+          ],
+          "in": [
+            "exposed-by"
+          ]
+        },
+        "properties": {
+          "protocol": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": ["http1.1", "http2", "http3-quic"],
+            "note": "Wire-level protocol"
+          },
+          "listen_addr": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "TCP or UDP host:port the kernel listens on for this protocol"
+          },
+          "quic_addr": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "UDP host:port for QUIC listener (only set when protocol=http3-quic)"
+          },
+          "alt_svc": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "Value of the Alt-Svc header emitted on HTTP/1.1+HTTP/2 responses to signal QUIC availability"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": ["active", "deprecated"]
           },
           "created_at": {
             "mutability": "immutable",
@@ -2765,10 +2879,12 @@
       "mutate_scope": [
         "status",
         "turn_count",
-        "role"
+        "role",
+        "local_t",
+        "context_urn"
       ],
       "sync_mode": "local-only",
-      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise."
+      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically."
     }
   ]
 }

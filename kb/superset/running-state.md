@@ -15,8 +15,9 @@
 | Status | draft (planning phase) |
 | Canonical spec | `kb/research/20260417-t187-kernel-proper.md` |
 
-T=164 `sam.t164-room-tying` closed this session: status → completed, completed_t=167.
+T=164 `sam.t164-room-tying` closed at T=167: status → completed.
 Succession recorded: `t164 --WF18 scheduled-after--> t187`.
+T=167 session wired into HG: `urn:moos:session:sam.claude-code-hp-laptop.t167` (WF19, role=occupier).
 
 ---
 
@@ -26,10 +27,10 @@ Succession recorded: `t164 --WF18 scheduled-after--> t187`.
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 338 |
-| Nodes | 108 |
-| Relations | 182 |
-| Ontology | v3.7 — 40 types, 19 WFs |
+| Log entries | 346 |
+| Nodes | 109 |
+| Relations | 184 |
+| Ontology | v3.8 — 42 types, 19 WFs |
 
 ## Z440 (federation partner)
 
@@ -37,12 +38,14 @@ Not present at T=166. Tasks parked. Reconnect when back on-site.
 
 ---
 
-## Ontology delta T=164
+## Ontology delta
 
-Added: `channel` (S2, kinds: filesystem / messaging / board / drive / mail), `purpose` (S2), WF19 (session governance, local-only, authority=kernel).
+**v3.8 (T=167):** Added `system_instruction` (S4, M7 context overlay), `transport_binding` (S2, M10 QUIC binding).
+`session` type extended: `local_t`, `context_urn`, `role` properties. WF19 mutate_scope includes `local_t`, `context_urn`.
+42 node types total.
+
+**v3.7 (T=164):** Added `channel` (S2, kinds: filesystem / messaging / board / drive / mail), `purpose` (S2), WF19 (session governance).
 Source of truth: `kb/superset/ontology.json`
-
-T=187 will bump to v3.8 when new types land (see below).
 
 ---
 
@@ -69,17 +72,33 @@ M10 addition: 4 envelopes (log_seq 335..338).
 
 ---
 
+## T=167 implementation sprint (completed this session)
+
+Five sub-programs implemented and committed (`9fa37aa` on `agent/z440-claude/hdc-engine`):
+
+| Sub-program | Status | Key files |
+|-------------|--------|-----------|
+| `http3-quic` | **done** | `transport/quic.go`, `go.mod` (quic-go v0.59.0), `cmd/moos/main.go` |
+| `strata-enforcement` | **done** | `operad/validate.go` ValidateStrataLink, `kernel/runtime.go` LINK gate |
+| `fold-endpoint` | **done** | `transport/server.go` GET /fold + GET /fold/stream SSE |
+| `session-chrono-t` | **done** | `kernel/runtime.go` bumpSessionLocalT, WF19 internal MUTATE |
+| `system-instruction` | **done** | ontology v3.8 (S4 type, no new code) |
+
+Session `urn:moos:session:sam.claude-code-hp-laptop.t167` wired into HG (WF19 occupier).
+`local_t` auto-incrementing from this session forward.
+
 ## Open items — T=187 walk
 
-None yet — work picks up incrementally per sub-program. Dependency-free starting points:
+Remaining sub-programs (in dependency order):
 
-| Sub-program | Note |
-|-------------|------|
-| `http3-quic` | M10 — pure transport layer addition; `quic-go` dep + `ServeQUIC` in `transport/server.go` |
-| `system-instruction` | M7 — ontology addition only; no new WF |
-| `strata-enforcement` | M5 — operad registry validation pass |
-| `answer-walk-Q1-Q4` | Research notes only |
-| `session-chrono-t` | M1 — ontology + `runtime.Apply` bump; gateway to M6/M8 chain |
+| Sub-program | Depends on | §M |
+|-------------|------------|----|
+| `t-hooks-first-class` | session-chrono-t ✅ | M6 |
+| `gates` | t-hooks-first-class | M8 |
+| `twin-kernel` | gates + http3-quic ✅ | M9 |
+| `twin-deploy-mtdc` | twin-kernel | M9 |
+| `answer-walk-Q1-Q4` | — | — |
+| `categorical-contract` | all others | M1..M10 |
 
 ---
 
@@ -94,6 +113,7 @@ urn:moos:purpose:sam.t164-tie-the-room-together
 urn:moos:agent:claude-code.hp-laptop
 urn:moos:agent:claude-code.hp-z440
 urn:moos:session:sam.claude-code-hp-laptop.t164
+urn:moos:session:sam.claude-code-hp-laptop.t167  (active, role=occupier)
 ```
 
 ---
