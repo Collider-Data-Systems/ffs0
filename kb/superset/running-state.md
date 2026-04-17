@@ -26,9 +26,9 @@ Succession recorded: `t164 --WF18 scheduled-after--> t187`.
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 334 |
-| Nodes | 107 |
-| Relations | 179 |
+| Log entries | 338 |
+| Nodes | 108 |
+| Relations | 182 |
 | Ontology | v3.7 — 40 types, 19 WFs |
 
 ## Z440 (federation partner)
@@ -56,20 +56,30 @@ All ten are `program` nodes with URN `urn:moos:program:sam.t187.<suffix>`, statu
 | `t-hooks-first-class` | Node.t_hooks as explicit port substructure | session-chrono-t | M6 |
 | `gates` | gate type + fail-closed pathway | t-hooks-first-class | M8 |
 | `system-instruction` | system_instruction S4 type + session.context_urn | — | M7 |
-| `fold-endpoint` | Expose fold as HTTP observable `GET /fold?to=<t>` | — | M3 |
-| `twin-kernel` | twin_link + adjoint sync protocol | gates | M9 |
+| `fold-endpoint` | Expose fold as HTTP observable + SSE over HTTP/3 | **http3-quic** | M3, M10 |
+| `twin-kernel` | twin_link + adjoint sync protocol over QUIC | gates, **http3-quic** | M9, M10 |
 | `strata-enforcement` | Compile-time strata filtration | — | M5 |
 | `answer-walk-Q1-Q4` | Answer walk Q1..Q4 | — | — |
-| `categorical-contract` | Proof obligations for CI-1..CI-5 + categorical claims | all 7 others | M1..M9 |
-| `twin-deploy-mtdc` | Deploy twin at my-tiny-data-collider.nl | twin-kernel | M9 |
+| `categorical-contract` | Proof obligations for CI-1..CI-5 + categorical claims | all others | M1..M10 |
+| `twin-deploy-mtdc` | Deploy twin at my-tiny-data-collider.nl | twin-kernel | M9, M10 |
+| **`http3-quic`** | **HTTP/3 QUIC transport binding — ServeQUIC + Alt-Svc + quic-go** | **—** | **M10** |
 
-Opening envelope batch: `dev/scripts/open-t187.py` (35 envelopes, applied at log_seq 300..334).
+Opening envelope batch: `dev/scripts/open-t187.py` (35 envelopes, log_seq 300..334).
+M10 addition: 4 envelopes (log_seq 335..338).
 
 ---
 
 ## Open items — T=187 walk
 
-None yet — work picks up incrementally per sub-program. Start with any of: `fold-endpoint`, `system-instruction`, `strata-enforcement`, `answer-walk-Q1-Q4`, or `session-chrono-t`. These have no predecessors.
+None yet — work picks up incrementally per sub-program. Dependency-free starting points:
+
+| Sub-program | Note |
+|-------------|------|
+| `http3-quic` | M10 — pure transport layer addition; `quic-go` dep + `ServeQUIC` in `transport/server.go` |
+| `system-instruction` | M7 — ontology addition only; no new WF |
+| `strata-enforcement` | M5 — operad registry validation pass |
+| `answer-walk-Q1-Q4` | Research notes only |
+| `session-chrono-t` | M1 — ontology + `runtime.Apply` bump; gateway to M6/M8 chain |
 
 ---
 

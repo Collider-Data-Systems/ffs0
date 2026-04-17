@@ -2,7 +2,7 @@
 
 > Opened T=167 (April 17, 2026). Canonical reference for `urn:moos:program:sam.t187-kernel-proper`.
 > Replaces legacy "tnodes / programs / whatever" attempts at `my-tiny-data-collider.nl`.
-> Each §M below is a *named law* (M1..M9) referenced by the T=187 sub-programs.
+> Each §M below is a *named law* (M1..M10) referenced by the T=187 sub-programs.
 
 ## 0. Context
 
@@ -90,6 +90,41 @@ This is how "a system_instruction places context over S1 while other AI and kern
 
 This is what "separate kernel code pull twin kernel" means: there is no distinguished primary; the adjoint pair is the doctrine.
 
+## M10. HTTP/3 + QUIC as the colimit-compatible transport
+
+The kernel is a category (M2) and its rewrites flow across a network. The transport is not semantics — but the transport's ordering and multiplexing properties determine whether the category's coherence laws (CI-1 through CI-5) can be upheld cheaply across the wire.
+
+**Why HTTP/1.1 / HTTP/2 are wrong:**
+- HTTP/1.1: sequential requests; a large ADD blocks MUTATE notifications — violates CI-1 spirit in distributed context.
+- HTTP/2: multiplexed but TCP head-of-line blocking means a single packet loss stalls ALL streams. Under rewrite storms (e.g. twin-kernel sync during burst writes), this serialises what should be concurrent morphisms.
+
+**Why QUIC (HTTP/3) is right:**
+- QUIC streams are independent. A slow ADD stream does not block a MUTATE stream — concurrent morphisms stay concurrent across the wire. This is the transport-level preservation of the CI-1 Church-Rosser property.
+- 0-RTT connection resumption: a session that briefly loses the kernel link can resume without a full TLS handshake, restoring occupancy (M1) at minimal cost.
+- Connection migration: QUIC connections survive IP changes (mobile, failover). A session's `local_t` advancement does not reset on roaming — important for human-in-the-loop sessions.
+- Unreliable datagrams (RFC 9221): optional fast-path for log-stream fan-out where occasional replay is acceptable.
+
+**Categorical framing:**
+- `transport_binding` is a new S2 node type that captures the wire-level protocol of a kernel endpoint: `protocol` ∈ `{http1.1, http2, http3-quic}`, optional `quic_addr` (UDP `host:port`).
+- A kernel's endpoint node gets a `transport_binding` relation via WF16 (endpoint-to-kernel routing). The binding is immutable once the kernel is live; migration is a new ADD + LINK, not a MUTATE.
+- For twin kernels (M9): the adjoint `F: K → K'` is carried on a QUIC stream. Each rewrite produces a QUIC stream frame; the counit (acknowledgement) travels back on the same QUIC connection. The naturality condition of the adjunction maps to the QUIC stream ordering guarantee *within* a single stream — which is preserved even when the connection migrates.
+- For fold-endpoint (M3): the log stream `GET /fold?to=t` is SSE over HTTP/3. Each fold step (applied rewrite) is one event frame. QUIC's multiplexing means a client consuming the fold stream does not interfere with the kernel accepting new rewrites on the same connection.
+
+**Implementation:**
+- Library: `github.com/quic-go/quic-go` — most complete Go QUIC implementation (RFC 9000, 9114 HTTP/3, 9204 QPACK). Integrates as a `net.Listener` substitute; existing `http.Handler` code is unchanged.
+- CF tunnel: Cloudflare already terminates HTTP/3 at its edge (`kernel.my-tiny-data-collider.nl`). For the public endpoint, no kernel change is needed — CF to kernel can remain HTTP/1.1 or HTTP/2 internally. For direct kernel-to-kernel (twin sync without CF), QUIC is the wire of choice.
+- `moos-kernel/internal/transport/server.go`: add a `ServeQUIC(addr string, tlsCfg *tls.Config)` entry point alongside the existing `ServeHTTP`. The QUIC listener is spawned in addition to (not instead of) the TCP listener so existing tooling is not broken.
+- Alt-Svc header: the kernel HTTP/1.1 + HTTP/2 response headers emit `Alt-Svc: h3=":<port>"` so HTTP/3-capable clients upgrade automatically.
+
+**New type: `transport_binding` (S2)**
+
+| property | mutability | note |
+|----------|------------|------|
+| `protocol` | immutable | `http1.1`, `http2`, `http3-quic` |
+| `quic_addr` | immutable | UDP `host:port` for QUIC listener |
+| `alt_svc` | immutable | `Alt-Svc` header value emitted |
+| `status` | mutable | `active`, `deprecated` |
+
 ---
 
 ## Ontology additions (v3.8 when implemented)
@@ -101,6 +136,7 @@ This is what "separate kernel code pull twin kernel" means: there is no distingu
 | `twin_link` | S2 | Adjoint pair between kernels | M9 |
 | `system_instruction` | S4 | Context overlay, S4 → S1 read-only projection | M7 |
 | `chrono_t` | S2 | First-class local-`t` tick carrier (may land as `session.local_t` property — decided in `t187.session-chrono-t`) | M1 |
+| `transport_binding` | S2 | Wire-level protocol binding for kernel endpoints (HTTP/1.1, HTTP/2, HTTP/3-QUIC) | M10 |
 
 Existing types gaining sub-properties (not yet changed):
 - `session` → `local_t`, `context_urn`, `t_hook_registry`
@@ -119,12 +155,13 @@ The ten sub-programs below each get ADDed as a `program` node under `urn:moos:pr
 | `t187.t-hooks-first-class` | Node.t_hooks as explicit port substructure | `session-chrono-t` | M6, Q6 | New `t_hook` type; property sub-structure on all nodes; backwards-compat with reactor nodes |
 | `t187.gates` | `gate` type + fail-closed pathway | `t-hooks-first-class` | M8 | New `gate` type; kernel validation step between validate-operad and apply-fold |
 | `t187.system-instruction` | `system_instruction` S4 type + session.context_urn | — | M7 | New type; read-only projection semantics; no new WF |
-| `t187.fold-endpoint` | Expose `fold` as HTTP observable | — | M3 | `GET /fold?from=0&to=<t>` on moos-kernel transport layer |
-| `t187.twin-kernel` | `twin_link` + adjoint sync protocol | `gates` | M9 | New type; new WF for twin-write CAS; moos-router update for twin routing |
+| `t187.fold-endpoint` | Expose `fold` as HTTP observable + SSE over HTTP/3 | — | M3, M10 | `GET /fold?from=0&to=<t>`; SSE stream over QUIC for real-time fold steps |
+| `t187.twin-kernel` | `twin_link` + adjoint sync protocol | `gates`, `http3-quic` | M9, M10 | New type; new WF for twin-write CAS; QUIC stream per rewrite; moos-router update |
 | `t187.strata-enforcement` | Compile-time strata filtration | — | M5 | Validation pass in operad registry rejecting filtration-violating rewrites |
 | `t187.answer-walk-Q1-Q4` | Answer walk Q1..Q4 (first kernel, purpose-vector wiring, 2-cell lift, agent-as-tool path) | — | — | `kb/research/20260417-t187-walk-answers-*.md` |
-| `t187.categorical-contract` | Proof obligations for CI-1..CI-5 + monoid/functor/catamorphism claims | all above | M1..M9 | `kb/research/20260417-t187-categorical-contract.md` |
-| `t187.twin-deploy-mtdc` | Deploy twin at `my-tiny-data-collider.nl` via CF tunnel | `twin-kernel` | M9 | Ops note + kernel config; twin acknowledgement end-to-end |
+| `t187.categorical-contract` | Proof obligations for CI-1..CI-5 + monoid/functor/catamorphism claims | all above | M1..M10 | `kb/research/20260417-t187-categorical-contract.md` |
+| `t187.twin-deploy-mtdc` | Deploy twin at `my-tiny-data-collider.nl` via CF tunnel | `twin-kernel` | M9, M10 | Ops note + kernel config; CF Alt-Svc HTTP/3 upgrade; twin acknowledgement |
+| `t187.http3-quic` | HTTP/3 QUIC transport binding for kernel endpoints | — | M10 | `transport_binding` type; `ServeQUIC` in transport layer; `Alt-Svc` header; `quic-go` dep |
 
 All ten ADDed as `program` nodes (sub-programs of T=187), WF18-linked, status `draft`. The program itself survives across sessions because it lives in the HG, not in a flat document.
 
@@ -136,6 +173,7 @@ All ten ADDed as `program` nodes (sub-programs of T=187), WF18-linked, status `d
 - **Q-PP2 (`chrono_t`).** Chosen shape this session: property `session.local_t` (simpler; delay node-type decision to sub-program `t187.session-chrono-t`).
 - **Q-PP3 (prose vs diagrams).** This note is prose-only; diagrams deferred to `t187.categorical-contract`.
 - **Q-PP4 (staged vs all-at-once).** All ten sub-programs ADDed in the opening envelope batch, status `draft`; dependency LINKs added in the same batch. Cheapest and keeps the HG the single source of truth for the roadmap.
+- **Q-PP5 (HTTP/3 scope).** `t187.http3-quic` is dependency-free (pure transport, independent of data model). `t187.twin-kernel` and `t187.fold-endpoint` pick it up as a hard dependency so the twin-sync and fold-stream land on the right wire from the start. The CF edge already handles HTTP/3 externally; the kernel's QUIC listener is for direct kernel-to-kernel (twin) and for clients that bypass CF.
 
 ---
 
@@ -147,4 +185,5 @@ All ten ADDed as `program` nodes (sub-programs of T=187), WF18-linked, status `d
 - `moos-kernel/internal/graph/node.go` — `Node` struct; `t_hooks` lands as a sub-field
 - `moos-kernel/internal/operad/` — stratum filtration validator (M5)
 - `moos-router/internal/proxy/proxy.go` — twin routing (M9)
+- `moos-kernel/internal/transport/server.go` — `ServeQUIC` entry point, `Alt-Svc` header (M10)
 - `kb/superset/ontology.json` — S1 additions for v3.8
