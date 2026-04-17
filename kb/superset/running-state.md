@@ -9,10 +9,14 @@
 
 | | |
 |--|--|
-| Program | `urn:moos:program:sam.t164-room-tying` |
-| Title | T=164 room-tying |
+| Program | `urn:moos:program:sam.t187-kernel-proper` |
+| Title | T=187: kernel proper — session-as-actor, twin kernels, gates |
 | Current T-day | T=167 (April 17, 2026) |
-| Status | active |
+| Status | draft (planning phase) |
+| Canonical spec | `kb/research/20260417-t187-kernel-proper.md` |
+
+T=164 `sam.t164-room-tying` closed this session: status → completed, completed_t=167.
+Succession recorded: `t164 --WF18 scheduled-after--> t187`.
 
 ---
 
@@ -22,9 +26,9 @@
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 299 |
-| Nodes | 96 |
-| Relations | 157 |
+| Log entries | 334 |
+| Nodes | 107 |
+| Relations | 179 |
 | Ontology | v3.7 — 40 types, 19 WFs |
 
 ## Z440 (federation partner)
@@ -38,27 +42,34 @@ Not present at T=166. Tasks parked. Reconnect when back on-site.
 Added: `channel` (S2, kinds: filesystem / messaging / board / drive / mail), `purpose` (S2), WF19 (session governance, local-only, authority=kernel).
 Source of truth: `kb/superset/ontology.json`
 
----
-
-## prg_task queue (T=164)
-
-| Suffix | Title | Status |
-|--------|-------|--------|
-| `z440.cors-verify` | CORS — verify moos-viz:5173 fetch end-to-end | completed |
-| `z440.seed-schemes` | Seed classification schemes + crosswalks on Z440 | completed |
-| `z440.viz-verify` | moos-viz render matches kernel state | completed |
-| `z440.narration-update` | Demo narration — add T=164 paragraph | completed |
-| `z440.ontology-v3.6-pickup` | Pick up ontology v3.6 on Z440 | completed |
-| `z440.hdc-e-crosswalk` | HDC-E crosswalk rotations — SO(d) composition | blocked |
+T=187 will bump to v3.8 when new types land (see below).
 
 ---
 
-## Open items — T=164 walk
+## T=187 program tasks (sub-programs, WF18 composes)
 
-**A.** ✅ ADD `program: wiring-proposer` — applied T=167, log 299, nodes 96 (AG)
-**B.** ✅ Research note Q5 — `kb/research/20260417-t166-wire-answer-folder-nesting.md` (VSCode)
-**C.** ✅ `channel.parent_channel_urn` — ontology v3.7 `fc472a1` (Claude Code)
-**D.** ✅ `tool_call.agent_urn` — ontology v3.7 `fc472a1` (Claude Code)
+All ten are `program` nodes with URN `urn:moos:program:sam.t187.<suffix>`, status=draft, owned by `urn:moos:user:sam`. Dependencies are `depends-on` LINKs between siblings.
+
+| Suffix | Title | Depends on | §M |
+|--------|-------|------------|----|
+| `session-chrono-t` | Session.local_t as first-class carrier | — | M1 |
+| `t-hooks-first-class` | Node.t_hooks as explicit port substructure | session-chrono-t | M6 |
+| `gates` | gate type + fail-closed pathway | t-hooks-first-class | M8 |
+| `system-instruction` | system_instruction S4 type + session.context_urn | — | M7 |
+| `fold-endpoint` | Expose fold as HTTP observable `GET /fold?to=<t>` | — | M3 |
+| `twin-kernel` | twin_link + adjoint sync protocol | gates | M9 |
+| `strata-enforcement` | Compile-time strata filtration | — | M5 |
+| `answer-walk-Q1-Q4` | Answer walk Q1..Q4 | — | — |
+| `categorical-contract` | Proof obligations for CI-1..CI-5 + categorical claims | all 7 others | M1..M9 |
+| `twin-deploy-mtdc` | Deploy twin at my-tiny-data-collider.nl | twin-kernel | M9 |
+
+Opening envelope batch: `dev/scripts/open-t187.py` (35 envelopes, applied at log_seq 300..334).
+
+---
+
+## Open items — T=187 walk
+
+None yet — work picks up incrementally per sub-program. Start with any of: `fold-endpoint`, `system-instruction`, `strata-enforcement`, `answer-walk-Q1-Q4`, or `session-chrono-t`. These have no predecessors.
 
 ---
 
@@ -67,7 +78,8 @@ Source of truth: `kb/superset/ontology.json`
 ```
 urn:moos:user:sam
 urn:moos:kernel:hp-laptop.primary
-urn:moos:program:sam.t164-room-tying
+urn:moos:program:sam.t187-kernel-proper
+urn:moos:program:sam.t164-room-tying  (completed)
 urn:moos:purpose:sam.t164-tie-the-room-together
 urn:moos:agent:claude-code.hp-laptop
 urn:moos:agent:claude-code.hp-z440
@@ -87,7 +99,7 @@ Z440:       kernel :8000–:8003 | router :9000 (federation, WF16)
 Agents per workstation: `claude-code` · `vscode-codex` · `antigravity`
 Repos: `moos-kernel` (Go, public) · `moos-router` · `ffs0` (this workspace, private)
 
-### moos-router (feat/type-map-routing — PR #2, ready for merge)
+### moos-router (feat/type-map-routing — merged PR #2)
 Type routing via `--type-map type_id=url` checked before URN-prefix shard rules.
 Companion: `dev/scripts/generate_type_map.py` emits flags from ontology.json strata.
 
