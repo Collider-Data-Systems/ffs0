@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=167 (April 17, 2026)
+> Updated: T=167→168 (April 17–18, 2026)
 
 ---
 
@@ -30,7 +30,7 @@ T=167 session wired into HG: `urn:moos:session:sam.claude-code-hp-laptop.t167` (
 | Log entries | 346 |
 | Nodes | 109 |
 | Relations | 184 |
-| Ontology | v3.8 — 42 types, 19 WFs |
+| Ontology | v3.8 — 45 types, 19 WFs |
 
 ## Z440 (federation partner)
 
@@ -72,33 +72,33 @@ M10 addition: 4 envelopes (log_seq 335..338).
 
 ---
 
-## T=167 implementation sprint (completed this session)
+## T=167→168 implementation sprint (completed)
 
-Five sub-programs implemented and committed (`9fa37aa` on `agent/z440-claude/hdc-engine`):
+Eight of eleven sub-programs implemented across two sessions:
 
-| Sub-program | Status | Key files |
-|-------------|--------|-----------|
-| `http3-quic` | **done** | `transport/quic.go`, `go.mod` (quic-go v0.59.0), `cmd/moos/main.go` |
-| `strata-enforcement` | **done** | `operad/validate.go` ValidateStrataLink, `kernel/runtime.go` LINK gate |
-| `fold-endpoint` | **done** | `transport/server.go` GET /fold + GET /fold/stream SSE |
-| `session-chrono-t` | **done** | `kernel/runtime.go` bumpSessionLocalT, WF19 internal MUTATE |
-| `system-instruction` | **done** | ontology v3.8 (S4 type, no new code) |
+| Sub-program | Commit | §M | Key deliverable |
+|-------------|--------|----|-----------------|
+| `http3-quic` | `9fa37aa` | M10 | `transport/quic.go`, quic-go v0.59.0, Alt-Svc |
+| `strata-enforcement` | `9fa37aa` | M5 | `ValidateStrataLink` in operad + runtime gate |
+| `fold-endpoint` | `9fa37aa` | M3 | `GET /fold?to=<t>` + SSE stream |
+| `session-chrono-t` | `9fa37aa` | M1 | `bumpSessionLocalT` in runtime.Apply |
+| `system-instruction` | `9fa37aa` | M7 | ontology v3.8 S4 type (no new code) |
+| `t-hooks-first-class` | `aeee6c2` | M6 | `t_hook` type, Pass 2 in reactive engine |
+| `gates` | `dc4961a` | M8 | `gate` type, `checkGatesLocked` in Apply path |
+| `twin-kernel` | `9c24bad` | M9 | `twin_link` type, `/twin/ingest`, `RunTwinSync` |
 
-Session `urn:moos:session:sam.claude-code-hp-laptop.t167` wired into HG (WF19 occupier).
-`local_t` auto-incrementing from this session forward.
+Session `urn:moos:session:sam.claude-code-hp-laptop.t167` wired (WF19, role=occupier).
+Kernel binary: `moos-kernel-new.exe` (all above), log 346, 45 ontology types.
 
 ## Open items — T=187 walk
 
-Remaining sub-programs (in dependency order):
+Remaining sub-programs:
 
-| Sub-program | Depends on | §M |
-|-------------|------------|----|
-| `t-hooks-first-class` | session-chrono-t ✅ | M6 |
-| `gates` | t-hooks-first-class | M8 |
-| `twin-kernel` | gates + http3-quic ✅ | M9 |
-| `twin-deploy-mtdc` | twin-kernel | M9 |
-| `answer-walk-Q1-Q4` | — | — |
-| `categorical-contract` | all others | M1..M10 |
+| Sub-program | Depends on | §M | Type |
+|-------------|------------|----|----- |
+| `twin-deploy-mtdc` | twin-kernel ✅ | M9 | ops: wire twin_link node, CF tunnel |
+| `answer-walk-Q1-Q4` | — | — | research notes only |
+| `categorical-contract` | all others | M1..M10 | research notes only |
 
 ---
 
