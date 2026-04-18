@@ -285,7 +285,7 @@
             "note": "Session role within kernel occupancy (WF19)."
           }
         },
-        "note": "Participants are discovered via WF07 relations — NOT stored as a property. Session is a monoid (M1): identity = empty session, composition = sequential kernel claims."
+        "note": "Participants are discovered via WF07 relations — NOT stored as a property. Session is a monoid (M1): identity = empty session, composition = sequential kernel claims. Sessions are PERMANENT kernel-bound S2 nodes — once WF19-LINKed (opens-on/occupied-by) to a kernel they persist indefinitely; the `<T-day>` segment in urn_pattern is a creation-time label, NOT a lifetime bound. Occupancy rotates via the `role` property (WF19 mutate_scope) and WF19 `transfers-to` LINKs — never by creating new session nodes per work period. A kernel's occupancy ledger is the set of sessions WF19-LINKed to it; at any instant at most one carries role=occupier (see §M11 kernel-liveness guarantee in 20260417-t187-kernel-proper.md). TODO (deferred to sub-program t187.session-role-rename): rename `session.role` → `session.seat_role` to disambiguate from the S1 `role` permission-bundle type; current `session.role` carries seat-state (occupier|observer|delegate), NOT S1 permission-bundle values (superadmin|lead|…)."
       },
       {
         "id": "endpoint",
@@ -564,7 +564,8 @@
           "observer": "read all, write own session and ack messages only",
           "hydrator": "read kb, write S0-S2 nodes (ADD only)",
           "monitor": "read all, write nothing"
-        }
+        },
+        "note": "PERMISSION BUNDLE type (S1) — distinct from `session.role` (S2 enum: occupier|observer|delegate) which carries seat-state on a kernel. This is the permission-bundle role attached to a principal or delegate via WF02. Admin governance (§M12 in 20260417-t187-kernel-proper.md) binds: only a user whose WF02-bound role is `superadmin` may issue rewrites touching the ontology, ontology-governed types (system_instruction, gate, twin_link, transport_binding), or `authority_scope: kernel` property overrides. Enforcement: `operad.Validate` + M8 gate checks the actor's session's WF02 capabilities on every envelope; missing capability fails closed."
       },
       {
         "id": "capability",
@@ -597,7 +598,8 @@
             "mutability": "immutable",
             "type": "datetime"
           }
-        }
+        },
+        "note": "Per §M12 admin governance (20260417-t187-kernel-proper.md): every rewrite envelope is validated against the actor's session's WF02-bound capabilities at `operad.Validate`. Admin-scope rewrites (ontology edits, authority_scope:kernel fields, ontology-governed types) require a capability whose `scope` includes the relevant WF category — typically granted transitively via a `superadmin` role binding (S1). Missing capability: fails closed at the M8 gate."
       },
       {
         "id": "prg_task",

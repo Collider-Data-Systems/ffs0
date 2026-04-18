@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=167→168 (April 17–18, 2026)
+> Updated: T=168 (April 18, 2026) — T=187 spec-enrichment pass
 
 ---
 
@@ -10,14 +10,25 @@
 | | |
 |--|--|
 | Program | `urn:moos:program:sam.t187-kernel-proper` |
-| Title | T=187: kernel proper — session-as-actor, twin kernels, gates |
-| Current T-day | T=167 (April 17, 2026) |
-| Status | draft (planning phase) |
-| Canonical spec | `kb/research/20260417-t187-kernel-proper.md` |
+| Title | T=187: kernel proper — session-as-actor, twin kernels, gates, admin governance |
+| Current T-day | T=168 (April 18, 2026) |
+| Status | active (spec-enrichment + implementation phases) |
+| Canonical spec | `kb/research/20260417-t187-kernel-proper.md` (M1..M10 + T=168 appendix §M11..§M17) |
+| Session model (ratified) | `kb/research/20260418-t168-session-kernel-bound.md` |
 
 T=164 `sam.t164-room-tying` closed at T=167: status → completed.
 Succession recorded: `t164 --WF18 scheduled-after--> t187`.
-T=167 session wired into HG: `urn:moos:session:sam.claude-code-hp-laptop.t167` (WF19, role=occupier).
+
+## Current kernel occupancy
+
+Sessions are **permanent kernel-bound nodes** (per §M11). The WF19 LINK stays; `session.role` rotates.
+
+| Session URN | `role` | `local_t` | Notes |
+|-------------|--------|-----------|-------|
+| `sam.claude-code-hp-laptop.t167` | **occupier** | 1 | Current seat-holder on hp-laptop.primary |
+| `sam.claude-code-hp-laptop.t164` | observer (MUTATEd T=168) | — | Passive, kept in ledger |
+
+Neither was ADDed fresh for T=168. The `<T-day>` segment in URNs is a creation-time label, not a lifetime bound.
 
 ---
 
@@ -112,6 +123,26 @@ All 11 sub-programs complete or active:
 
 ---
 
+## T=168 spec-enrichment backlog (9 new sub-programs, status=draft)
+
+Added T=168 via `kb/research/20260417-t187-kernel-proper.md` §M11..§M17 appendix. All ADDed to HG as `program` nodes WF18 `composes-by/composed-of` linked to `urn:moos:program:sam.t187-kernel-proper`. Implementation deferred to later sprints.
+
+| Sub-program | §M / Origin | Depends on | One-line scope |
+|-------------|-------------|------------|----------------|
+| `session-liveness` | §M11 | session-chrono-t | Kernel refuses rewrites when no seat-holder (occupier/delegate) |
+| `admin-capability-enforcement` | §M12 | gates, session-liveness | operad.Validate checks actor's WF02 caps for admin-scope rewrites |
+| `t-local-simplification` | §M13 | — | Re-wording: `t_local` = ticker, `T` = calendar; retire M1 chrono-t language |
+| `t-hook-predicate-catalog` | §M14 | t-hooks-first-class | Rich predicate shapes (fires_at, window, after_urn, recurs_every, …) |
+| `t-cone-projection` | §M15 | t-hook-predicate-catalog | `GET /t-cone?session=…&at=T` — occupier's view of open-hook nodes |
+| `ontology-publication` | §M16 | twin-kernel | `ontology_publication` type + read-only twin-link flow |
+| `external-op-stub` | §M17 | — | `external_op` type for CF tunnel / remote kernel start / bootstrap |
+| `session-actor-agent-lookup` | Q3 specslist | session-chrono-t | `bumpSessionLocalT` agent→session lookup via WF19 `occupied-by` |
+| `session-role-rename` | Q-knob defer | — | `session.role` → `session.seat_role` rename (disambiguate from S1 role) |
+
+Total T=187 sub-programs after this pass: **20** (11 existing + 9 new).
+
+---
+
 ## Key URNs
 
 ```
@@ -122,8 +153,8 @@ urn:moos:program:sam.t164-room-tying  (completed)
 urn:moos:purpose:sam.t164-tie-the-room-together
 urn:moos:agent:claude-code.hp-laptop
 urn:moos:agent:claude-code.hp-z440
-urn:moos:session:sam.claude-code-hp-laptop.t164
-urn:moos:session:sam.claude-code-hp-laptop.t167  (active, role=occupier)
+urn:moos:session:sam.claude-code-hp-laptop.t164  (WF19-LINKed, role=observer after T=168 MUTATE)
+urn:moos:session:sam.claude-code-hp-laptop.t167  (WF19-LINKed, role=occupier — permanent seat-holder)
 ```
 
 ---

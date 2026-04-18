@@ -187,3 +187,260 @@ All ten ADDed as `program` nodes (sub-programs of T=187), WF18-linked, status `d
 - `moos-router/internal/proxy/proxy.go` — twin routing (M9)
 - `moos-kernel/internal/transport/server.go` — `ServeQUIC` entry point, `Alt-Svc` header (M10)
 - `kb/superset/ontology.json` — S1 additions for v3.8
+
+---
+
+# T=168 enrichment — session liveness, admin governance, T-semantics, t-cone
+
+> Appended T=168 (April 18, 2026). Extends M1..M10 with §M11..§M17 + 9 new spec-only sub-programs.
+> Triggered by sam's correction of the session model:
+>
+> > "i think sessions are kernel bound and stay. its a matter of who occupies."
+>
+> And reframing:
+>
+> > "the session is a kernels security to have at least 1 user or a delegate control the runtime, to keep the network running. all other is on permission level re-writes from any point or role."
+>
+> T=168 action: **prose + HG materialisation only**. No kernel code.
+
+## Vocabulary clarification before §M11
+
+The ontology has **two** unrelated uses of the word *role*:
+
+| Where | Type | Values | Purpose |
+|-------|------|--------|---------|
+| `session.role` | S2 enum | `occupier / observer / delegate` | **Seat state** on the kernel (WF19) |
+| `role` (standalone) | S1 type | `superadmin / lead / executor / observer / hydrator / monitor` (`builtin_roles`) | **Permission bundle** attached via WF02 |
+
+This collision is acknowledged; rename `session.role → session.seat_role` is deferred to sub-program `t187.session-role-rename` and is not part of this T=168 enrichment. Throughout §M11..§M17 the two are disambiguated by full qualification (`session.role` vs `role` (S1)).
+
+Sam (`urn:moos:user:sam`) holds the S1 `role=superadmin` via WF02 — the per-MEMORY.md founder identity. "Admin" in this note means exactly *a user with WF02-bound superadmin S1 role*.
+
+---
+
+## §M11 — Session as kernel-liveness guarantee
+
+**Statement.** A kernel is *eligible to accept rewrites* iff at least one WF19-LINKed session holds `session.role ∈ {occupier, delegate}`. Absent such a seat-holder, the kernel is live (process running, log readable) but refuses any rewrite except system-internal MUTATEs (e.g. `bumpSessionLocalT`, reactive-cascade propagation).
+
+**Categorical reading.** `KernelCat` (M2) always has an identity morphism (the no-op rewrite). Its *non-identity* arrows, however, require a *source* — a session. Without a seat-holder, only the identity is available; the category is effectively frozen (all observable rewrites become the identity).
+
+**Security consequence.** The graph cannot evolve without a permissioned seat-holder. This is the *liveness–security duality*: liveness requires a session, a session requires WF02 capability binding, therefore every graph evolution is auditably permissioned.
+
+**Delegation path.** If the occupier steps away, a `delegate` can hold the seat via WF19 `transfers-to`. The delegate's S1 role (narrower than superadmin) determines which WFs they may exercise.
+
+**Failure mode.** If all seats empty (all `session.role` → `observer`/unset), the kernel enters **idle state**. Recovery: an authenticated user+session re-opens via WF19 `opens-on`, and — if admin privileges are needed — the session's actor must hold S1 `superadmin` via WF02.
+
+**Relation to M1.** M1 says "session is a monoid." §M11 specifies that *at least one non-identity element of that monoid must be bound to the kernel at all times for the kernel to remain operational*. §M11 is the liveness clause; M1 is the algebra.
+
+---
+
+## §M12 — Admin is WF02(superadmin); ontology authority
+
+**Statement.** The ontology (`kb/superset/ontology.json`) is a special S1 artifact owned by the user holding `superadmin` role (S1) via WF02. Only sessions whose occupying user holds that S1 role may issue rewrites that touch:
+
+- The ontology file itself (publish / MUTATE version)
+- Node types that are themselves ontology-governed (`system_instruction`, `gate`, `twin_link`, `transport_binding`)
+- Authority-scope-`kernel` property overrides on any node
+
+**Enforcement pathway.** At rewrite validation (`operad.Validate`), every envelope is checked against the actor's session's bound capabilities (WF02-connected `capability` or `role` nodes). Admin-scope rewrites fail closed (via **M8 gates**) when the actor lacks `superadmin` via WF02. This is a composition of §M11 (session required) + M8 (gate classifier) + WF02 (capability binding) — no new mechanism, just the right arrangement of existing pieces.
+
+**Manual-ops bridge.** Some admin responsibilities remain **off-graph** until programmatised:
+
+- Cloudflare tunnel wiring (`kernel.my-tiny-data-collider.nl`, `api.my-tiny-data-collider.nl`)
+- Kernel process start/stop on remote hosts (e.g. mtdc deploy)
+- First-time ontology publication (bootstrapping — chicken-and-egg with §M16)
+
+These are flagged via sketched `external_op` nodes (§M17) so the admin's t-cone (§M15) surfaces them as pending work.
+
+---
+
+## §M13 — Two timers: `t_local` (ticker) vs `T` (calendar)
+
+Sam's simplification (verbatim):
+
+> `t_local` is just a ticker to be sure that in session, where state is moved into s0 s1 and HG. Possible t-hooks in other nodes will 'pop-up'. The actual time, so presented in T, like always is a value to spot the relevant hooks that are 'open'.
+
+**Reshape of M1's chrono-t claim:**
+
+- **`t_local`** (session-scoped). A monotonic non-negative integer on each `session` node. Increments by 1 per kernel-acknowledged rewrite attributed to this session (directly — `env.Actor` is the session URN — or indirectly via agent-occupier lookup, see sub-program `t187.session-actor-agent-lookup`). **Zero semantic content beyond "this many rewrites happened in this session."** No cross-session comparability, no causal reasoning, no firing semantics. It is a heartbeat.
+
+- **`T`** (global calendar). The moos-time day counter since T=0 (2025-11-01 00:00 CEST). Current T=168. Expressed as property values on nodes (`starts_t`, `deadline_t`, `fires_at`, `completed_t`, `target_t`, etc.). **T is the axis t-hooks fire against.** When a node enters the HG with a T-property, it "pops up" — its hooks evaluate against `current_T` and become open / pending / closed.
+
+**Consequence.** `t_local` participates in replay (CI-4) as a per-session tick, nothing more. T participates in causal reasoning — `after_urn`, `before_urn`, `depends-on`, `deadline_t` all reference T-values. Keep them cleanly separated: code that touches `t_local` does not reason about time; code that reasons about time does not increment `t_local`.
+
+**Existing T-properties in ontology** (on `program`, already present):
+- `starts_t`, `target_t`, `deadline_t`, `completed_t`
+
+The T-hook catalog (§M14) generalises T-property semantics to every node type.
+
+**Relation to M1.** M1 stated "action on time: `t_next = t_current + 1`". §M13 clarifies that the `t` in that statement is `t_local` — a session heartbeat, not a calendar. The calendar T is separate, lives on nodes, and drives hooks.
+
+---
+
+## §M14 — T-hook predicate catalog (extends M6)
+
+M6 defined `t_hook` as `{event_shape, guard_ref, react_template}` — the **when-something-changes** hook. §M14 adds the **when-T-crosses-a-threshold** dimension and enumerates the full catalog of natural-language project timing expressions → predicate shapes.
+
+**Recommendation.** Keep `t_hook` as one node type; grow its `predicate` sub-structure to cover the catalog. Do not proliferate types. `predicate` is a typed discriminated union — each variant has its own fields.
+
+### Catalog — time expressions → predicate shapes
+
+| Natural language | Predicate variant | Fields | Example use |
+|------------------|-------------------|--------|-------------|
+| "starts on T=X" | `fires_at` | `at: int` | `starts_t` on program |
+| "due by T=Y" | `closes_at` | `at: int` (open while `T ≤ at`) | `deadline_t` on program |
+| "between X and Y" | `window` | `opens_at: int, closes_at: int` | release window |
+| "after node N is done" | `after_urn` | `of_urn: URN, status: string` | `depends-on` resolution |
+| "before node N" | `before_urn` | `of_urn: URN` | precedence |
+| "concurrently with N" | `during_urn` | `of_urn: URN` | overlap (Allen's `during`) |
+| "recurs every K days" | `recurs_every` | `period: int, from: int` | standup |
+| "recurs on cron X" | `cron` | `spec: string` | weekly review (deferred — needs calendar type) |
+| "lasts D days from start" | `duration` | `d: int, anchor_prop: string` | sprint length |
+| "expires at T" | `expires_at` | `at: int` (permanently closed after) | token TTL |
+| "reopens at T" | `reopens_at` | `at: int` (re-fires after close) | retrospective |
+| "on event E" | `on_event` | `op: {ADD,LINK,MUTATE,UNLINK}, of_type: type_id` | M6 classic |
+| "on property P set" | `on_prop_set` | `prop: string, of_urn: URN` | completeness gate |
+| "on role change" | `on_role_change` | `from: role, to: role, of_urn: URN` | occupancy handover |
+| "when permitted" | `when_capability` | `cap_urn: URN` (fires iff session has cap) | WF02 gate |
+| "Nth instance" | `nth` | `n: int, of_prop: string` | Nth deployment |
+| "first-of" | `first_of_prop` | `prop: string` | kickoff |
+
+Each predicate variant has a canonical evaluation signature:
+
+```
+evaluate(current_T: int, state: GraphState, owner_urn: URN) → FiringState
+```
+
+Where `FiringState ∈ {open, closed, pending, satisfied}`.
+
+### Firing algebra
+
+- **Open** — predicate holds *right now*. Node is visible in the t-cone (§M15).
+- **Closed** — predicate will not hold again (one-shot already fired; or past `expires_at`).
+- **Pending** — predicate may hold in the future (`current_T < fires_at`).
+- **Satisfied** — one-shot predicate that has already fired; retained for audit.
+
+### Boolean composition
+
+- `all_of: [predicate, ...]` — conjunction (all must be open for the aggregate to be open)
+- `any_of: [predicate, ...]` — disjunction
+
+Nested composition allowed. Kept explicit so replay (CI-4) is deterministic.
+
+### CI-1 and CI-4 notes
+
+- **CI-1 (Church-Rosser).** T-hook firing must be *commutative* with respect to concurrent rewrites on the same prefix — two concurrent envelopes that both trigger the same t-hook must yield the same react_template output regardless of order. Predicate evaluation is pure (function of `current_T` + state read-only), so this holds.
+- **CI-4 (replay determinism).** Predicates are *deterministic*: `evaluate(T, S, owner)` is a total function. Replaying the log reproduces the exact same firing sequence.
+
+---
+
+## §M15 — t-cone: the occupier's view
+
+**Definition.** The **t-cone** of a session at moment `T` is the sub-hypergraph of nodes whose t-hooks are currently *open* (per §M14) AND whose rewrite pathway is *permitted* by the session's occupying user's role+capability bundle (WF02).
+
+Analogy: a *light-cone* in relativity — the set of events causally accessible from "here, now." In our setting, the t-cone is the set of nodes the session can meaningfully act on at the current calendar T.
+
+**Projection formalism.** t-cone is a CI-2-compliant projection `S2 → S3`:
+
+- **Source domain:** all S2 nodes with at least one attached `t_hook`.
+- **Filter:** `any(t_hook.predicates).firing_state == open AND permitted_by(session.user.capabilities)`.
+- **Corresponding M' (for CI-2):** identity. Viewing the t-cone does not mutate S0; it is a read-only projection. Changes to the t-cone happen *because* S0 received a rewrite that crossed a hook threshold, not because the t-cone was consulted.
+
+**Endpoint (deferred to sub-program `t187.t-cone-projection`).**
+
+```
+GET /t-cone?session=<urn>&at=<T>
+```
+
+Returns the filtered sub-hypergraph. Since `fold` is already exposed (M3), implementation is: start from `fold(log[0..current])`, filter nodes by hook-openness + permission.
+
+**As "admin's view on important programs or tasks."** Sam's phrasing maps exactly to the t-cone: the current set of nodes with open hooks that the admin's session is permitted to act on. The t-cone IS the admin dashboard. No separate "dashboard" abstraction needed.
+
+**Nesting / composition.** A session's t-cone at `T=168` is a subgraph of its t-cone at `T=167` intersected with hooks that became open between T=167 and T=168. Time advances monotonically; what becomes "no longer open" is explicit via the `closed`/`satisfied` transition.
+
+---
+
+## §M16 — Ontology publication (recommended mechanism)
+
+**Requirement.** User-kernels (future collaborators, other workstations) must be able to download the ontology published by the admin. Source of truth is admin's kernel; user kernels pull read-only.
+
+**Recommended mechanism** (smallest new surface; spec-only sketches for now):
+
+1. **Wire:** reuse M9 `twin_link` with `sync_mode: read-only`. No new transport. Admin kernel = source; user kernel = read-only twin for the ontology node(s). The existing adjoint `F ⊣ G` (M9) carries `ADD` of new ontology-publication nodes through the counit back to the user kernel.
+2. **Provenance:** add a new S1-meta node type `ontology_publication` — a claim carrying:
+   - `version: string` (e.g. `"3.9"`)
+   - `published_by_urn: URN` — must resolve to a user with `superadmin` via WF02
+   - `published_at: datetime`
+   - `content_hash: string` (sha256 of `ontology.json` bytes)
+   - `signed_by: URN` (placeholder for future crypto signing)
+   - `supersedes_urn: URN` (previous publication node)
+3. **Flow:**
+   (a) admin edits `ontology.json` locally;
+   (b) admin session ADDs an `ontology_publication` node with the new hash;
+   (c) twin-linked user kernels observe the new publication node via the adjoint;
+   (d) user kernel pulls the file content through a sibling endpoint `GET /ontology?version=X` and verifies `content_hash`.
+
+**Why this shape.** The publication *claim* (the node) is auditable inside the HG; the bytes flow out-of-band through a content-addressed endpoint. Twin-link handles the "tell me about new publications" subscription cheaply. Separating claim from bytes keeps the HG small and the sync flexible.
+
+**Alternative considered:** a bespoke `WF20-ontology-sync` category. **Rejected for now** — the read-only `twin_link` adjoint already covers the wire semantics; a new WF adds ontology surface without adding power.
+
+**Deferred to later sprint** (within `t187.ontology-publication` sub-program): signing, conflict resolution (divergent admins), rollback semantics, version migration rewrites.
+
+**Chicken-and-egg note.** The first publication of the ontology onto a new user-kernel is a bootstrapping problem (the user-kernel needs an ontology to validate the `ontology_publication` node type). Bootstrapping is an `external_op` (§M17) — admin delivers the first ontology out-of-band (git clone, scp, etc.), after which subsequent versions flow via the above mechanism.
+
+---
+
+## §M17 — `external_op` stub (supports §M12 manual-ops)
+
+Small auxiliary S2 type to keep manual admin work visible in the HG until it is programmatised.
+
+**Type sketch (spec-only, not landed in ontology.json this session):**
+
+| property | mutability | note |
+|----------|------------|------|
+| `title` | immutable | e.g. "CF tunnel wiring for kernel.my-tiny-data-collider.nl" |
+| `command_hint` | mutable | human-readable "what to run" (free text, not parseable) |
+| `responsible_urn` | immutable | must be a user with S1 `superadmin` via WF02 |
+| `status` | mutable | `pending`, `in-progress`, `done`, `obsolete` |
+| `automates_via_urn` | mutable | URN of a future `program` that, once completed, replaces this stub |
+| `deadline_t` | mutable | optional — if set, feeds §M14 `closes_at` predicate |
+
+**Use.** The admin's session-seat t-cone (§M15) surfaces pending `external_op` nodes as work to do. When the admin completes the action (by hand), they MUTATE `status → done`. When the action becomes programmatic, a new `program` is linked via `automates_via_urn` and the stub's `status → obsolete`.
+
+**Examples we'd want right now:**
+- `external_op:mtdc-kernel-start` — start the moos-kernel process at my-tiny-data-collider.nl (completes `twin-deploy-mtdc`)
+- `external_op:cf-tunnel-api-mtdc` — CF tunnel for `api.my-tiny-data-collider.nl`
+- `external_op:ontology-bootstrap-mtdc` — first ontology.json delivery to mtdc (§M16 chicken-and-egg)
+
+These are **not materialised this session** — the type itself is not in ontology.json yet. Listed here as spec input for the `external-op-stub` sub-program.
+
+---
+
+## Updated T=187 sub-program table — 9 new (total 20)
+
+| Suffix | §M / Origin | Depends on | Nature (this session) |
+|--------|-------------|------------|----------------------|
+| `session-liveness` | §M11 | session-chrono-t (existing, completed) | Spec + gate definition |
+| `admin-capability-enforcement` | §M12 | gates, session-liveness | Spec; downstream gate implementations |
+| `t-local-simplification` | §M13 | — | Spec + proposal to retire M1 wording of "chrono-t" |
+| `t-hook-predicate-catalog` | §M14 | t-hooks-first-class (existing, completed) | Spec (predicate shapes + firing algebra) |
+| `t-cone-projection` | §M15 | t-hook-predicate-catalog | Spec + endpoint design |
+| `ontology-publication` | §M16 | twin-kernel (existing, completed) | Spec + `ontology_publication` type sketch |
+| `external-op-stub` | §M17 | — | Spec + `external_op` type sketch |
+| `session-actor-agent-lookup` | Q3 specslist | session-chrono-t | `bumpSessionLocalT` agent→session lookup gap in runtime.go |
+| `session-role-rename` | Q-knob-1 deferral | — | Decide + execute `session.role` → `session.seat_role` rename |
+
+All 9 ADDed with `status=draft`, `starts_t=168`, and scope pointing back to this note's §M anchor.
+
+---
+
+## Deliverable trail (T=168)
+
+1. This appended section — §M11..§M17 + updated sub-program table ✓
+2. Standalone FAQ note — `kb/research/20260418-t168-session-kernel-bound.md` (ratified session model)
+3. Ontology doc annotations on session / role / capability types (no new types, no version bump)
+4. `running-state.md` — rewritten active-session block + spec-enrichment backlog
+5. HG hygiene — t164 `session.role` MUTATE to `observer`
+6. HG materialisation — atomic batch ADDs the 9 new sub-programs + WF18 `composes-by/composed-of` LINKs + dependency LINKs
+
+**No kernel code changes this session.**
