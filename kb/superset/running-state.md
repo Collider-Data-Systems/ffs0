@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=168 (April 18, 2026) — round 5: demo materialization + IRL-time gates (`target_t` on 6 active sub-programs) + S0 operadic lingo + research reorg (`wires/` subdir)
+> Updated: T=168 (April 18, 2026) — round 6: 4-axis research (sheaves / HDC / pipeline metrics / Ricci) + IRL→HG pipeline note + 6 v3.10 grammar_fragment proposals
 
 ---
 
@@ -52,9 +52,9 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 457 (round 5: +6 ADDs demos, +6 MUTATEs target_t) |
-| Nodes | 142 (136 + 6 round-5 demo ADDs: 2 view_filter, 1 agent, 3 grammar_fragment) |
-| Relations | 198 (unchanged in round 5 — ADDs + MUTATEs only, no LINK/UNLINK) |
+| Log entries | 463 (round 6: +6 ADDs grammar_fragment proposals) |
+| Nodes | 148 (142 + 6 round-6 grammar_fragment ADDs) |
+| Relations | 198 (unchanged in round 6 — ADDs only, no LINK/UNLINK) |
 | Ontology | **v3.9 — 51 types, 20 WFs** (session.status + turn_count marked deprecated: true) |
 
 ## Z440 (federation partner)
@@ -318,6 +318,66 @@ Sam's directive (*"mapping spec gates over irl time through the session object"*
 
 ---
 
+## T=168 round 6 — IRL→HG pipeline research + 6 v3.10 grammar_fragment proposals
+
+Directive (sam, T=168): *"and humor me, and do some research too, for ex. use context 7 or relevant sources on math, category, data pipeline metrics, http3, hdc, concurrency, sheafs... classification schemas help me with lingo here i think i am talking about vector spaces here. Then polish extraction bf adding proposals."*
+
+### Legacy extraction (pre-proposals)
+
+Quick-extraction pass over 2 legacy folders; contents absorbed into conversation context and into the IRL→HG pipeline note, then set aside per sam's "forget about them" instruction:
+
+- `dev/reference/research-archive/` — 15 pre-T=164 notes. Gems pulled forward: cascade matrix spectral check; Laplacian/Fiedler/Cheeger type coherence; crosswalks as SO(d) rotations; Ricci curvature on branchial graphs; graded algebra (grades 0-4); Shapley O(|E|) attribution; Yoneda-HDC `φ(node)`; Watch+React unification.
+- `dev/design/` — 9 pre-T=158 design notes. Gems pulled forward: two-space CS↔HG architecture (T=152); CI-1..CI-5 formulation (T=152 origin); port typing + PortBinding reification (direct predecessor of v3.10-1 proposal); dynamic fiber + interface ports + completeness metric (predecessor of v3.10-3); bridge as natural transformation (predecessor of v3.10-2 three-views identity); governance proposal promotion loop (direct predecessor of WF20).
+
+Both folders are now superseded by `kb/research/` + `kb/superset/ontology.json`. Retained on-disk as historical archive only.
+
+### 4-axis research (context7 + arXiv + HF sources)
+
+Research threads dispatched in parallel; each returned formalism + primary references:
+
+| Axis | Key results | Primary references |
+|------|-------------|--------------------|
+| **Sheaf theory** | Cellular sheaves on graphs — stalks `F(v)`, restriction maps `F_{v→e}`, sheaf Laplacian `L_F = δ*δ`. `ker(L_F)` = global sections. Presheaf→sheaf via equalizer gluing axiom. Geometric morphism `f* ⊣ f_*` between classifying toposes = the correct "map of kernels". Data migration functor `Δ_F` (Spivak) with adjoint triple `Σ_F ⊣ Δ_F ⊣ Π_F`. | Hansen-Ghrist 2019 (arXiv:1808.01513); Spivak 2012; Spivak 2013 (arXiv:1305.0297, UWD operads) |
+| **HDC / VSA** | HRR binding = circular convolution = unitary rotation (Plate); BSC via XOR (Kanerva); MAP via Hadamard (Gayler). Procrustes rotation `R* = UV^T` (Schönemann 1966) — the formal way to align two classification schemes. Stiefel manifold `V_k(ℝ^d) = O(d)/O(d−k)` is the moduli space of size-k classification schemes. Tight frame / ETF = the formal name for a classification scheme (not a basis). | Plate 1995 (HRR); Kanerva 2009 (BSC); Gayler 2003 (MAP); Schönemann 1966 (Procrustes); |
+| **Pipeline metrics & concurrency** | Little's Law `L = λW` for reactive backpressure sizing. Watermarks = event-time completeness lower bound (Akidau MillWheel VLDB 2013). HLC (Kulkarni 2014) is the right choice for twin_link causality. CRDTs: OR-Set for nodes/edges, LWW-Register-with-HLC for properties (Shapiro 2011). QUIC 0-RTT is safe only for idempotent GETs (replay attacks block admin rewrites). | Akidau 2013; Kulkarni 2014; Shapiro 2011; RFC 9000 |
+| **Ollivier-Ricci on graphs** | `κ(x,y) = 1 − W₁(μ_x, μ_y)/d(x,y)` — Wasserstein-1 over neighbour distributions. Forman-Ricci = O(deg) combinatorial proxy with ~0.7-0.9 Spearman corr vs Ollivier. Ricci flow outperforms modularity for community detection (Ni et al. Nature Sci Rep 2019). Jost-Liu 2014: `κ ≥ κ_min ⇒ λ₂ ≥ κ_min` — bridges curvature to spectral gap. | Ollivier 2007; Lin-Lu-Yau 2011; Ni 2019; Jost-Liu 2014 |
+
+**Three-views identity** (v3.10 proof obligation): **Procrustes rotation = data migration functor Δ_F = geometric morphism f***.  
+The same crosswalk object can be presented as (a) an orthogonal rotation aligning two HDC frames, (b) a pullback functor between schema categories, or (c) the inverse-image part of a geometric morphism between classifying toposes. All three must agree up to natural isomorphism — this becomes CI-6.
+
+### Polished research note
+
+`kb/research/s1/20260418-t168-irl-to-hg-pipeline.md` — 9-section ~500-line note:
+
+1. IRL→HG pipeline stages (S4 intent → S1 wire → S0 weave → S2 occupancy → S1 reflect)
+2. Vector-space lingo sam asked for (tight frames, Stiefel, Procrustes, HDC binding)
+3. Sheaf-theoretic lingo (stalks, sections, restriction maps, sheaf Laplacian)
+4. Three-views identity (Procrustes = Δ_F = geometric morphism)
+5. Mapping to current doctrine (where §M14..§M20 fit each frame)
+6. Concurrency / federation dynamics (Little's Law, HLC, CRDT, Ollivier-Ricci)
+7. v3.10 proof obligations (CI-6 three-views identity, plus the 6 candidate fragments)
+8. Vocabulary cards — one-card-per-term for session hand-offs
+9. References (~30 primary sources)
+
+Serves as the foundation for the 6 proposals below.
+
+### 6 grammar_fragment proposals for v3.10 (all ADDed, status=proposed)
+
+Each fragment crystallises doctrine from the pipeline note into a concrete candidate S1 extension. Awaiting WF20 promotion ceremony in a future round.
+
+| URN suffix | Kind | Crystallises | Specification highlights |
+|------------|------|--------------|--------------------------|
+| `v310-1-port-binding` | type | Design-era PortBinding reification (OBJ24 candidate) | New S1 type `port_binding`. Properties: `src_type, src_port, tgt_type, tgt_port, wf_category, benchmarks, req_schema, resp_schema`. Turns implicit (type, port) pairs into first-class nodes. |
+| `v310-2-crosswalk` | type | Three-views identity (§7 pipeline note) | New type `crosswalk`. Properties: `source_classification_urn, target_classification_urn, rotation_artifact_urn, procrustes_error, direction: {pullback_delta, leftkan_sigma, rightkan_pi}, verified`. Presents the three-way equivalence as a single node. |
+| `v310-3-fiber-completeness` | property | Dynamic fiber + interface ports (design-era) | New `completeness` property on `channel, view_filter, twin_link`. Computation: `|wires_present| / |wires_expected|`. Trigger: emit `bridge.sync.needed` when completeness < 0.8. |
+| `v310-4-branchial-ricci` | property | Ollivier-Ricci axis + Jost-Liu spectral bridge | New properties on `twin_link`: `ollivier_ricci`, `forman_ricci`. Composition with spectral gap via Jost-Liu 2014. Ricci flow community detection via Ni et al. 2019. |
+| `v310-5-cascade-spectral-bound` | predicate_shape | Cascade matrix stability (archive gem) | New predicate shape `cascade_stable(C, threshold)`. Formula: `ρ(C) < threshold` (spectral radius of cascade matrix). References Newman 2018 §17.8; Barrat-Barthélemy-Vespignani 2008 ch.9. |
+| `v310-6-sheaf-laplacian-inconsistency` | predicate_shape | Hansen-Ghrist sheaf Laplacian | New predicate shape `sheaf_laplacian_inconsistent(F, tolerance)`. Formula: `L_F = δ*δ` has nonzero eigenvalue > tolerance. Flags consistency failure across the graph's sheaf of restrictions. |
+
+All 6 ADDs succeeded (batch via `mcp__moos-kernel__apply_program`). `affected_node_urn` returned per fragment. Kernel stats: log 457→463 (+6), nodes 142→148 (+6), relations 198 unchanged.
+
+---
+
 ## Key URNs
 
 ```
@@ -348,6 +408,14 @@ urn:moos:agent:sam.claude-code-desktop  (placeholder future occupant, §M19)
 urn:moos:grammar_fragment:d19-1-session-has-occupant  (status=proposed)
 urn:moos:grammar_fragment:d20-2-agent-invocation-protocol  (status=proposed)
 urn:moos:grammar_fragment:d14-1-time-predicates  (status=proposed)
+
+# Round 6 v3.10 grammar_fragment proposals (all status=proposed)
+urn:moos:grammar_fragment:v310-1-port-binding
+urn:moos:grammar_fragment:v310-2-crosswalk
+urn:moos:grammar_fragment:v310-3-fiber-completeness
+urn:moos:grammar_fragment:v310-4-branchial-ricci
+urn:moos:grammar_fragment:v310-5-cascade-spectral-bound
+urn:moos:grammar_fragment:v310-6-sheaf-laplacian-inconsistency
 
 # Live sessions (exactly 2 — one per kernel, no T-day in URN)
 urn:moos:session:sam.claude-code-hp-laptop  (WF19-LINKed, seat_role=occupier)
