@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=168 (April 18, 2026) — T=187 spec-enrichment pass
+> Updated: T=168 (April 18, 2026) — v3.9 baseline audit + T=187 spec-enrichment pass
 
 ---
 
@@ -21,14 +21,16 @@ Succession recorded: `t164 --WF18 scheduled-after--> t187`.
 
 ## Current kernel occupancy
 
-Sessions are **permanent kernel-bound nodes** (per §M11). The WF19 LINK stays; `session.role` rotates.
+Sessions are **permanent kernel-bound nodes** (per §M11). The WF19 LINK stays; `session.seat_role` rotates.
 
-| Session URN | `role` | `local_t` | Notes |
-|-------------|--------|-----------|-------|
-| `sam.claude-code-hp-laptop.t167` | **occupier** | 1 | Current seat-holder on hp-laptop.primary |
-| `sam.claude-code-hp-laptop.t164` | observer (MUTATEd T=168) | — | Passive, kept in ledger |
+| Session URN | `seat_role` (v3.9) | `role` (deprecated) | `local_t` | Notes |
+|-------------|--------------------|--------------------|-----------|-------|
+| `sam.claude-code-hp-laptop.t167` | **occupier** | occupier | 4 | Current seat-holder on hp-laptop.primary |
+| `sam.claude-code-hp-laptop.t164` | observer | observer | — | Passive, kept in ledger |
 
 Neither was ADDed fresh for T=168. The `<T-day>` segment in URNs is a creation-time label, not a lifetime bound.
+
+v3.9 added `seat_role` alongside legacy `role` (non-destructive); kernel validator will honor `seat_role` in v3.10, after which `role` is removed.
 
 ---
 
@@ -38,10 +40,10 @@ Neither was ADDed fresh for T=168. The `<T-day>` segment in URNs is a creation-t
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 354 |
-| Nodes | 110 |
-| Relations | 184 |
-| Ontology | v3.8 — 45 types, 19 WFs |
+| Log entries | 366 (362 at T=168 round-1 close, +2 seat_role MUTATEs, +1 program ADD, +1 WF18 LINK) |
+| Nodes | 120 |
+| Relations | 201 |
+| Ontology | **v3.9 — 51 types, 20 WFs** |
 
 ## Z440 (federation partner)
 
@@ -51,9 +53,20 @@ Not present at T=166. Tasks parked. Reconnect when back on-site.
 
 ## Ontology delta
 
+**v3.9 (T=168 — baseline audit):** See `kb/research/20260418-t168-v3.9-ontology-audit.md` and `kb/research/20260418-t168-s1-superset-doctrine.md`.
+- **Renames:** S1 `endpoint` → `network_endpoint`; `session.role` → `session.seat_role` (non-destructive; both coexist until v3.10)
+- **Deprecations:** `prg_task`, `agent_session`, `watcher`, `reactor` (all S2)
+- **Stratum clarifications:** `system_instruction` confirmed S2 with `overlay_role: S4` (was incorrectly S4 in v3.8); `twin_link` confirmed S2
+- **New types (6):** `skill` (S1), `grammar_fragment` (S1), `pattern` (S1), `workflow` (S1), `view_filter` (S2), `harness` (S2)
+- **New WF (1):** WF20 `grammar_promotion` — carries S4→S1 adjoint Promote (src: system_instruction, governance_proposal; tgt: grammar_fragment; authority: admin)
+- **Audit annotations:** top-level `free_category_note`, `fold_contract` stub, `changelog`; per-type/WF `audit_note` where gaps found
+- **Deferred to v3.10:** `benchmark`, `evaluation`, `dataset`, `dsl`; full WF20 promotion algorithm; per-WF CR-safety contracts; kernel validator retirement of `session.role`
+
+51 node types total (35 S2 + 12 S1 + 4 interaction), 20 WFs.
+
 **v3.8 (T=167):** Added `system_instruction` (S4, M7 context overlay), `transport_binding` (S2, M10 QUIC binding).
 `session` type extended: `local_t`, `context_urn`, `role` properties. WF19 mutate_scope includes `local_t`, `context_urn`.
-42 node types total.
+45 node types total.
 
 **v3.7 (T=164):** Added `channel` (S2, kinds: filesystem / messaging / board / drive / mail), `purpose` (S2), WF19 (session governance).
 Source of truth: `kb/superset/ontology.json`
@@ -143,6 +156,22 @@ Total T=187 sub-programs after this pass: **20** (11 existing + 9 new).
 
 ---
 
+## v3.9 baseline audit (T=168 side-step, this round)
+
+Research notes (new, both committed together):
+- `kb/research/20260418-t168-v3.9-ontology-audit.md` — full audit: findings A..F, decisions, migration actions
+- `kb/research/20260418-t168-s1-superset-doctrine.md` — S4→S1 adjoint (Promote / Express), WF20 grammar_promotion, pipeline, open questions
+
+HG materialisation (4 envelopes):
+- MUTATE `urn:moos:session:sam.claude-code-hp-laptop.t164` `seat_role → observer` (WF19)
+- MUTATE `urn:moos:session:sam.claude-code-hp-laptop.t167` `seat_role → occupier` (WF19)
+- ADD `urn:moos:program:sam.ontology-publication-v3.9` (type_id=program; carrier for §M16 ontology_publication — real type in v3.10)
+- LINK `urn:moos:program:sam.t187.ontology-publication --WF18 composes / composed-by--> urn:moos:program:sam.ontology-publication-v3.9`
+
+Next: return to §M18..§M20 spec enrichment — session as generalized workspace anchor, occupant as first-class, tool-mounting + recursive tool construction (6 more sub-programs → 26 total).
+
+---
+
 ## Key URNs
 
 ```
@@ -150,11 +179,12 @@ urn:moos:user:sam
 urn:moos:kernel:hp-laptop.primary
 urn:moos:program:sam.t187-kernel-proper
 urn:moos:program:sam.t164-room-tying  (completed)
+urn:moos:program:sam.ontology-publication-v3.9  (v3.9 publication carrier)
 urn:moos:purpose:sam.t164-tie-the-room-together
 urn:moos:agent:claude-code.hp-laptop
 urn:moos:agent:claude-code.hp-z440
-urn:moos:session:sam.claude-code-hp-laptop.t164  (WF19-LINKed, role=observer after T=168 MUTATE)
-urn:moos:session:sam.claude-code-hp-laptop.t167  (WF19-LINKed, role=occupier — permanent seat-holder)
+urn:moos:session:sam.claude-code-hp-laptop.t164  (WF19-LINKed, seat_role=observer)
+urn:moos:session:sam.claude-code-hp-laptop.t167  (WF19-LINKed, seat_role=occupier — permanent seat-holder)
 ```
 
 ---

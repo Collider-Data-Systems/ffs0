@@ -1,10 +1,62 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.8",
-  "t_day": 167,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 45 node types, 19 rewrite categories (WF01-WF19). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7).",
+  "version": "3.9",
+  "t_day": 168,
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 51 node types, 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames (S1 endpoint → network_endpoint, session.role → session.seat_role), deprecations (agent_session, prg_task, watcher, reactor), 6 new types (skill, grammar_fragment, pattern, workflow, view_filter, harness), WF20 grammar_promotion for S4→S1 adjoint bridge.",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "kb/research/20260414-t164-session-channel-purpose.md",
+  "t168_audit_reference": "kb/research/20260418-t168-v3.9-ontology-audit.md",
+  "s1_superset_doctrine_reference": "kb/research/20260418-t168-s1-superset-doctrine.md",
+  "changelog": [
+    {
+      "version": "3.9",
+      "t_day": 168,
+      "summary": "Baseline audit bump — S1 as semantic embedding superset.",
+      "changes": {
+        "renames": [
+          "S1 endpoint → network_endpoint (urn:moos:ep:<host>.<port> → urn:moos:network_endpoint:<host>.<port>). No live S1 endpoint instances existed.",
+          "session.role → session.seat_role. Non-destructive: seat_role added alongside role; kernel validator will honor seat_role in v3.10."
+        ],
+        "deprecations": [
+          "agent_session — merged into session (§M18). Status: deprecated, supersedes_urn_pattern=session.",
+          "prg_task — replaced by program. Status: deprecated, supersedes_urn_pattern=program.",
+          "watcher — superseded by t_hook (§M14). Status: deprecated.",
+          "reactor — superseded by t_hook (§M14). Status: deprecated."
+        ],
+        "stratum_clarifications": [
+          "twin_link confirmed S2 (was already S2 in v3.8; audit noted for record).",
+          "system_instruction confirmed S2 with S4-role overlay semantics; stratum is S2, the S4-ness is a role/policy not a stratum classification."
+        ],
+        "new_types": [
+          "skill (S1) — named competence a user/agent declares; distinct from capability (permission token).",
+          "grammar_fragment (S1) — proposed S1 extension authored via WF20; carrier of S4→S1 promotion.",
+          "pattern (S1) — first-class template class; generalizes t_hook.react_template.",
+          "workflow (S1) — executable process template (DAG-shaped); distinct from WF rewrite category.",
+          "view_filter (S2) — saved predicate/filter a session uses as its t-cone lens; reuses §M14 predicate algebra.",
+          "harness (S2) — running execution environment for agents/tools; generalizes prg_task.harness_pattern enum."
+        ],
+        "new_workflows": [
+          "WF20 grammar_promotion — src_types: system_instruction, governance_proposal. tgt_types: grammar_fragment. Authority: admin. Carries the S4→S1 adjoint Promote functor."
+        ],
+        "additions_deferred_to_v3_10": [
+          "benchmark (S2) — test fixture + expected outcomes.",
+          "evaluation (S2) — result of running a benchmark.",
+          "dataset (S2) — structured input corpus.",
+          "dsl (S1) — domain-specific language as grammar extension (grammar_fragment covers near-term use)."
+        ],
+        "audit_annotations": [
+          "Top-level free_category_note added (ontology is effectively a free category on its generators).",
+          "Top-level fold_contract stub added (CI-4 pre-formalization).",
+          "Per-WF audit_note where gaps were identified (CR-safety, mutate_scope deferred refs)."
+        ],
+        "migration_actions_in_hg": [
+          "MUTATE urn:moos:session:sam.claude-code-hp-laptop.t164 seat_role → observer",
+          "MUTATE urn:moos:session:sam.claude-code-hp-laptop.t167 seat_role → occupier",
+          "ADD urn:moos:ontology_publication:v3.9 (type_id=program with note marking it as publication provenance carrier; first demo of §M16 publication pattern)"
+        ]
+      }
+    }
+  ],
   "invariants": [
     "state(t) = fold(log[0..t])",
     "ADD, LINK, MUTATE, UNLINK are the only four rewrites",
@@ -18,6 +70,26 @@
     "CI3": "Identity stability: forall M forall x: urn(M(x)) = urn(x)",
     "CI4": "Log replay determinism: fold(log[0..t]) is deterministic — same log -> same state",
     "CI5": "Rewrite category stability: permitted rewrite categories do not change under rewrites — only governance changes the operad"
+  },
+  "free_category_note": {
+    "statement": "The mo:os ontology is effectively the FREE category on its generators (types + WFs) — no equations are imposed beyond port_color_compatibility and permission inheritance (CI-5). Morphism equations such as WF composition laws, idempotence of specific MUTATEs, or commutativity of ADD+LINK sequences are NOT yet declared in this ontology.",
+    "implication": "v3.9+ preserves freeness: new S1 types and WFs extend the generator set; any constraints must be ADDED as explicit invariants (not inferred from type shape). The S1-as-superset doctrine (see s1_superset_doctrine_reference) treats S1 as the free category on all patterns that any user or agent would formalize given sufficient observation.",
+    "future_work": "Declare compose operator on WF pairs; spec morphism equations per-type; spec contract_schema (WF15) formally."
+  },
+  "fold_contract": {
+    "status": "stub (v3.9) — full formalization deferred to T=187 sub-program (CI-4 formalization).",
+    "signature": "fold : Log × InitialState → State, where fold([], s0) = s0 and fold(log ++ [r], s0) = Apply(r, fold(log, s0))",
+    "determinism_requirements": [
+      "Apply(r, s) must be a pure function of (r, s) — no clock, randomness, network calls, filesystem reads.",
+      "Iteration order over relations must be deterministic (stable sort by urn or insertion order).",
+      "Any kernel-authority mutation (local_t, turn_count, status auto-transitions) must be derivable from the rewrite envelope alone, not from wall clock."
+    ],
+    "non_determinism_exclusions": [
+      "Wall-clock T (the calendar day counter) — injected as envelope property at ADD time, never read inside Apply.",
+      "UUID generation — must be deterministic from envelope (hash of actor+target+seq).",
+      "External HTTP/DNS resolution — never performed inside Apply."
+    ],
+    "audit_note": "Current kernel Apply respects these requirements by construction but they are not yet enforced by type-level checks. v3.10 candidate: per-WF fold_contract declaration."
   },
   "nomenclature_rules": {
     "use": {
@@ -282,10 +354,23 @@
               "observer",
               "delegate"
             ],
-            "note": "Session role within kernel occupancy (WF19)."
+            "deprecated": true,
+            "supersedes_field": "seat_role",
+            "note": "DEPRECATED (v3.9) — scheduled for removal in v3.10 after kernel validator honors seat_role. Live instances keep this value until MUTATEd to seat_role. Session role within kernel occupancy (WF19)."
+          },
+          "seat_role": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "occupier",
+              "observer",
+              "delegate"
+            ],
+            "note": "v3.9 replacement for `role` — disambiguates session-seat-state from the S1 `role` permission-bundle type. Same value domain as deprecated `role`. WF19 mutate_scope includes seat_role. Migration: v3.9 adds MUTATE actions to set seat_role on existing sessions; v3.10 removes the old `role` field."
           }
         },
-        "note": "Participants are discovered via WF07 relations — NOT stored as a property. Session is a monoid (M1): identity = empty session, composition = sequential kernel claims. Sessions are PERMANENT kernel-bound S2 nodes — once WF19-LINKed (opens-on/occupied-by) to a kernel they persist indefinitely; the `<T-day>` segment in urn_pattern is a creation-time label, NOT a lifetime bound. Occupancy rotates via the `role` property (WF19 mutate_scope) and WF19 `transfers-to` LINKs — never by creating new session nodes per work period. A kernel's occupancy ledger is the set of sessions WF19-LINKed to it; at any instant at most one carries role=occupier (see §M11 kernel-liveness guarantee in 20260417-t187-kernel-proper.md). TODO (deferred to sub-program t187.session-role-rename): rename `session.role` → `session.seat_role` to disambiguate from the S1 `role` permission-bundle type; current `session.role` carries seat-state (occupier|observer|delegate), NOT S1 permission-bundle values (superadmin|lead|…)."
+        "note": "Participants are discovered via WF07 relations — NOT stored as a property. Session is a monoid (M1): identity = empty session, composition = sequential kernel claims. Sessions are PERMANENT kernel-bound S2 nodes — once WF19-LINKed (opens-on/occupied-by) to a kernel they persist indefinitely; the `<T-day>` segment in urn_pattern is a creation-time label, NOT a lifetime bound. Occupancy rotates via the `seat_role` property (WF19 mutate_scope) and WF19 `transfers-to` LINKs — never by creating new session nodes per work period. A kernel's occupancy ledger is the set of sessions WF19-LINKed to it; at any instant at most one carries seat_role=occupier (see §M11 kernel-liveness guarantee in 20260417-t187-kernel-proper.md). v3.9 rename: session.role → session.seat_role (non-destructive; both coexist until v3.10). See §M18..§M20 (deferred to v3.10 sub-programs): session will also be generalized as a workspace anchor carrying view_filter (S2) pinned URNs, occupant (has-occupant / is-occupant-of WF19-ext), and mounted tools (mounts-tool / tool-mounted-in-session)."
       },
       {
         "id": "endpoint",
@@ -606,6 +691,10 @@
         "description": "Program (PRG) — unit of work in mo:os. A branch of the multiway graph that receives runtime. Status lifecycle: planned → active → in_progress → completed | blocked.",
         "stratum": "S2",
         "urn_pattern": "urn:moos:prg:<id>",
+        "deprecated": true,
+        "deprecated_in_version": "3.9",
+        "supersedes_urn_pattern": "urn:moos:program:<owner>.<slug>",
+        "deprecation_note": "Wave-0 legacy. New work uses `program` (v3.8+). Existing prg_task instances persist in the log; no destructive migration planned. See t168 audit §A6.",
         "ports": {
           "out": [
             "depends-on",
@@ -747,8 +836,10 @@
       },
       {
         "id": "system_instruction",
-        "description": "S4 context overlay — human- or AI-authored instruction set that overlays the ontology (S1) read-only for a session (M7). Referenced by session.context_urn. Never modifies S0 directly; influence is through the session's WF scope gate. Gödel/Turing: may reference its own session — self-reference is typed (S4 ref → S2 occupier); incompleteness surfaces as gate failures, not crashes.",
-        "stratum": "S4",
+        "description": "S2 node with S4-overlay role — human- or AI-authored instruction set that overlays the ontology (S1) read-only for a session (M7). Referenced by session.context_urn. Never modifies S0 directly; influence is through the session's WF scope gate. Gödel/Turing: may reference its own session — self-reference is typed (overlay ref → S2 occupier); incompleteness surfaces as gate failures, not crashes.",
+        "stratum": "S2",
+        "overlay_role": "S4",
+        "stratum_clarification": "v3.9 audit §B2: stratum is S2 (authored like any S2 node). Its S4-ness is a ROLE/overlay policy, not a stratum classification. Previous v3.8 declaration `stratum: S4` was inconsistent — the S4 projection layer is for read-only UI/filesystem sinks, not for first-class nodes referenced by S2 sessions. Cross-ref §M7 (kernel-proper) and 20260418-t168-v3.9-ontology-audit.md §B2.",
         "urn_pattern": "urn:moos:system_instruction:<owner>.<slug>",
         "ports": {
           "out": [
@@ -1235,6 +1326,10 @@
         "description": "Claude or agent session state — kernel snapshot, PRG focus, active connectors. Created at session start, mutated at end.",
         "stratum": "S2",
         "urn_pattern": "urn:moos:session:<date>.<agent>",
+        "deprecated": true,
+        "deprecated_in_version": "3.9",
+        "supersedes_urn_pattern": "urn:moos:session:<user>.<agent>.<T-day>",
+        "deprecation_note": "Merged into `session` per §M18 (session generalization). Wave-0 legacy. PRG-focus / connectors semantics migrate to session.view_prefs (v3.10). Port `reads` dropped (no matching in-port anywhere — audit §A5). Port `focus` retained on session (view/attention semantics). See t168 audit §A2, §A4, §A5.",
         "ports": {
           "out": [
             "focus",
@@ -1284,6 +1379,10 @@
         "stratum": "S2",
         "urn_pattern": "urn:moos:watcher:<slug>",
         "urn_example": "urn:moos:watcher:raw-ki-detector",
+        "deprecated": true,
+        "deprecated_in_version": "3.9",
+        "supersedes_urn_pattern": "urn:moos:t_hook:<slug>",
+        "deprecation_note": "Superseded by `t_hook` (§M14 T-hook predicate catalog). The watcher match fields (match_rewrite_type, match_type_id, match_urn_prefix, match_port) become a t_hook predicate of shape on_event / on_prop_set. Existing watcher instances continue to work through WF17 until migrated. See t168 audit §C.",
         "ports": {
           "out": [
             "triggers"
@@ -1350,6 +1449,10 @@
         "stratum": "S2",
         "urn_pattern": "urn:moos:reactor:<slug>",
         "urn_example": "urn:moos:reactor:extract-claims",
+        "deprecated": true,
+        "deprecated_in_version": "3.9",
+        "supersedes_urn_pattern": "urn:moos:t_hook:<slug>",
+        "deprecation_note": "Superseded by `t_hook` (§M14 T-hook predicate catalog). The reactor template migrates to t_hook.react_template; action_type=rewrite|tool_call|notify maps into the hook's react contract. Existing reactor instances continue to work through WF17 until migrated. See t168 audit §C.",
         "ports": {
           "out": [
             "emits"
@@ -1734,6 +1837,118 @@
             "type": "datetime"
           }
         }
+      },
+      {
+        "id": "view_filter",
+        "description": "Saved predicate/filter a session uses as its t-cone (§M15) lens. Reuses §M14 t-hook predicate algebra (fires_at / closes_at / window / after_urn / recurs_every / on_event / on_prop_set / when_capability / ... with all_of / any_of composition). Multiple sessions can share a named filter. Added v3.9 per audit §D1. Supports §M18 session-as-workspace-anchor.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:view_filter:<user>.<name>",
+        "urn_example": "urn:moos:view_filter:sam.important-programs",
+        "added_in_version": "3.9",
+        "ports": {
+          "out": [
+            "filters-session"
+          ],
+          "in": [
+            "filtered-by"
+          ]
+        },
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "owner_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "Provenance — who authored this filter"
+          },
+          "predicate": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "§M14-algebra predicate. Top-level `filter_type: all_of | any_of` wraps a list of predicates. Each predicate has a `predicate_type` from the M14 catalog and its own fields."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "active",
+              "draft",
+              "archived"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        },
+        "audit_note": "Port pair `filters-session / filtered-by` is declared in v3.9 but WF20 (grammar_promotion) may also use it; the kernel validator should accept the pair via WF18 composition rules until a dedicated WF21 session-view-composition is specified (deferred)."
+      },
+      {
+        "id": "harness",
+        "description": "Running execution environment for agents or tools. Generalizes prg_task.harness_pattern enum (fixed-plan-sequential | dynamic-plan-adaptive) into a first-class S2 node that can be MUTATEd and LINKed. A harness hosts agent processes, provides tool invocation surface, and carries resource bounds. Added v3.9 per audit §D6.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:harness:<owner>.<slug>",
+        "urn_example": "urn:moos:harness:sam.claude-code-stdio",
+        "added_in_version": "3.9",
+        "ports": {
+          "out": [
+            "hosts-agent",
+            "provides-tool"
+          ],
+          "in": [
+            "hosted-by",
+            "runs-workflow"
+          ]
+        },
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "harness_pattern": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "fixed-plan-sequential",
+              "dynamic-plan-adaptive",
+              "stdio-tool",
+              "mcp-tool",
+              "http-service"
+            ],
+            "note": "Execution shape. Extends the v3.8 prg_task.harness_pattern values with runtime-shape variants (stdio-tool, mcp-tool, http-service)."
+          },
+          "invocation_surface": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "Structural description of how agents/tools are invoked within this harness (e.g. stdin/stdout schema, MCP server URN, HTTP base URL)."
+          },
+          "resource_bounds": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "CPU/RAM/GPU/timeout bounds. Optional. Enforcement out of scope for v3.9."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "active",
+              "paused",
+              "error",
+              "decommissioned"
+            ]
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        },
+        "audit_note": "Sub-program t187.tool-mounting (§M20) uses harness to ground the `mounts-tool` relation. v3.10 candidate: add benchmark/evaluation types paired with harness for §D7/§D8."
       }
     ],
     "s1_grammar": [
@@ -1790,11 +2005,13 @@
         ]
       },
       {
-        "id": "endpoint",
-        "description": "Network endpoint for a kernel or router. Carries connection details. Linked to kernel via WF05 (exposes).",
+        "id": "network_endpoint",
+        "description": "Network endpoint for a kernel or router. Carries connection details. Linked to kernel via WF05 (exposes). v3.9 rename from S1 `endpoint` — resolved collision with S2 `endpoint` type. No live instances of S1 endpoint existed at time of rename (non-breaking in practice).",
         "stratum": "S1",
-        "urn_pattern": "urn:moos:ep:<host>.<port>",
-        "urn_example": "urn:moos:ep:hp-laptop.8000",
+        "urn_pattern": "urn:moos:network_endpoint:<host>.<port>",
+        "urn_example": "urn:moos:network_endpoint:hp-laptop.8000",
+        "renamed_from": "endpoint",
+        "renamed_in_version": "3.9",
         "properties": {
           "host": {
             "mutability": "mutable",
@@ -1931,6 +2148,202 @@
             "description": "UI, filesystem, API — NEVER ground truth"
           }
         ]
+      },
+      {
+        "id": "skill",
+        "description": "Named competence a user or agent declares. Distinct from `capability` (which is a permission token): a skill is `I know how to do X`; a capability is `I am allowed to do X`. Skills are S1 because they form the vocabulary for capability declarations and for occupant<->tool binding (§M20). Added v3.9 per audit §D2.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:skill:<slug>",
+        "urn_example": "urn:moos:skill:graph-operad-reasoning",
+        "added_in_version": "3.9",
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "description": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "taxonomy_source": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "custom",
+              "openskills",
+              "esco",
+              "onet",
+              "anthropic-skill-registry"
+            ],
+            "note": "Industry taxonomies pre-registered — `custom` for user-authored skills."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "active",
+              "deprecated",
+              "draft"
+            ]
+          }
+        }
+      },
+      {
+        "id": "grammar_fragment",
+        "description": "A proposed extension to S1 — a candidate type, port, or WF clause — authored at S4 (system_instruction) or S2 (governance_proposal) and promoted via WF20. Carrier of the S4→S1 adjoint `Promote`. Status lifecycle: proposed → (rejected | promoted | merged). Merged fragments are folded into the next ontology.json baseline version. See s1_superset_doctrine_reference for the full adjoint pattern. Added v3.9 per audit §D3.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:grammar_fragment:<slug>",
+        "urn_example": "urn:moos:grammar_fragment:view-filter-pin-port",
+        "added_in_version": "3.9",
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "fragment_kind": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "type",
+              "port",
+              "wf_clause",
+              "predicate_shape",
+              "property"
+            ],
+            "note": "What kind of S1 object this fragment proposes."
+          },
+          "specification": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "Structured spec matching fragment_kind: e.g. for type, a partial type descriptor (id, stratum, ports, properties). For port, a port_color + direction + allowed pairings. For wf_clause, src_types/tgt_types/mutate_scope patch."
+          },
+          "evidence_urns": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "array<urn>",
+            "note": "S4 nodes (system_instruction) or S2 nodes (governance_proposal) cited as evidence of the recurring pattern."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "admin",
+            "type": "enum",
+            "values": [
+              "proposed",
+              "rejected",
+              "promoted",
+              "merged"
+            ],
+            "note": "proposed → admin review → rejected | promoted (enters next ontology draft) | merged (applied to ontology baseline and version bumped)."
+          },
+          "rejection_reason": {
+            "mutability": "mutable",
+            "authority_scope": "admin",
+            "type": "string",
+            "optional": true,
+            "note": "Populated when status=rejected. Used by v3.10 re-proposal gate (deferred: blocked_until)."
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        },
+        "audit_note": "v3.9 leaves evidence aggregation algorithm and automated pattern detection deferred. v3.9 only gives the nouns and WF20 verb; humans still author governance_proposals and promote them. Open questions per s1_superset_doctrine_reference §Open questions (embedding calculation, adjoint verification, rejection semantics)."
+      },
+      {
+        "id": "pattern",
+        "description": "First-class template class. Generalizes t_hook.react_template and reactor.template. A pattern is a parameterized rewrite or structural template that can be instantiated into a concrete rewrite envelope by substituting placeholders with runtime values. Added v3.9 per audit §D4.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:pattern:<slug>",
+        "urn_example": "urn:moos:pattern:ki-to-claim-extract",
+        "added_in_version": "3.9",
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "pattern_kind": {
+            "mutability": "immutable",
+            "type": "enum",
+            "values": [
+              "rewrite_template",
+              "structural_template",
+              "predicate_template"
+            ]
+          },
+          "template": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "The parameterized template. {{placeholders}} are substituted at instantiation time. For rewrite_template: a partial rewrite envelope. For structural_template: a subgraph shape. For predicate_template: a §M14-algebra predicate with free variables."
+          },
+          "placeholders": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "array<string>",
+            "note": "Named placeholders the instantiator must bind. E.g. [source_urn, target_type]."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "active",
+              "draft",
+              "deprecated"
+            ]
+          }
+        }
+      },
+      {
+        "id": "workflow",
+        "description": "Executable process template — DAG-shaped composition of rewrite steps, tool invocations, or sub-workflows. Distinct from WF rewrite categories (WF01..WF20). A workflow node is a first-class reified process that a session can instantiate and execute step-by-step. Added v3.9 per audit §D5.",
+        "stratum": "S1",
+        "urn_pattern": "urn:moos:workflow:<slug>",
+        "urn_example": "urn:moos:workflow:daily-ki-ingest",
+        "added_in_version": "3.9",
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "version": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "dag": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "DAG spec: nodes = steps (rewrite | tool_call | sub_workflow_urn), edges = data/control dependencies. Topological execution order enforced at run."
+          },
+          "input_schema": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "Expected inputs at instantiation."
+          },
+          "output_schema": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "note": "Produced outputs."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "active",
+              "draft",
+              "deprecated"
+            ]
+          }
+        },
+        "audit_note": "v3.9 declares workflow as an S1 generator; runtime (workflow execution engine) is NOT specified in v3.9. Relationship to `program` (S2 unit-of-purposeful-work): a program INSTANTIATES a workflow, not vice versa. Relationship to `harness` (S2): a workflow runs IN a harness."
       }
     ],
     "interaction_nodes": [
@@ -2929,7 +3342,8 @@
       "authority": "per contract_urn",
       "mutate_scope": "per contract_schema declaration",
       "sync_mode": "eventual",
-      "constraint": "No untyped semantic relations — contract_schema required"
+      "constraint": "No untyped semantic relations — contract_schema required",
+      "audit_note": "v3.9 audit §B4: description and mutate_scope reference `contract_schema` but no such type exists in the ontology. v3.9 leaves this as a descriptive placeholder — `contract_schema` is a v3.10 candidate type. Current WF15 usage in production is nil; validator rejects all untyped semantic LINKs which is the intended behavior. Relationship to `classification_scheme` (S2, existing taxonomy type): classification_scheme is about WHAT is being classified (e.g. LCC/Dewey), contract_schema would be about HOW a semantic relation is typed. Distinct concepts. Do not rename."
     },
     {
       "id": "WF16",
@@ -3074,11 +3488,41 @@
         "status",
         "turn_count",
         "role",
+        "seat_role",
         "local_t",
         "context_urn"
       ],
       "sync_mode": "local-only",
-      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically."
+      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically. v3.9: mutate_scope adds `seat_role` alongside legacy `role` — both supported until v3.10 removes `role`. §M18..§M20 propose extending src_types/tgt_types (add `user`, `agent` as tgt_types for has-occupant) and mutate_scope (add view_prefs). Those extensions are NOT active in v3.9 — they are captured as grammar_fragments pending promotion."
+    },
+    {
+      "id": "WF20",
+      "name": "Grammar promotion",
+      "description": "Carries the S4→S1 adjoint `Promote` functor. Admin-authored rewrites that ADD grammar_fragment nodes citing S4 (system_instruction) or S2 (governance_proposal) evidence, then MUTATE their status (proposed → rejected | promoted | merged). When a fragment reaches status=merged, the next ontology baseline version bumps and the fragment's specification is folded into the canonical ontology. Added v3.9 per audit §F and s1_superset_doctrine_reference.",
+      "allowed_rewrites": [
+        "ADD",
+        "LINK",
+        "UNLINK",
+        "MUTATE"
+      ],
+      "src_types": [
+        "system_instruction",
+        "governance_proposal"
+      ],
+      "tgt_types": [
+        "grammar_fragment"
+      ],
+      "src_port": "promotes",
+      "tgt_port": "promoted-from",
+      "authority": "admin",
+      "mutate_scope": [
+        "status",
+        "specification",
+        "evidence_urns",
+        "rejection_reason"
+      ],
+      "sync_mode": "local-only",
+      "audit_note": "v3.9 DOES NOT auto-propose grammar_fragments from observed patterns — humans still author them. The adjoint is a design principle, not an algorithm yet. Open questions (evidence aggregation thresholds, re-proposal gating, embedding-based pattern similarity via HDC) tracked in s1_superset_doctrine_reference. Unit/counit laws (round-trip coherence Promote∘Express, Express∘Promote) are ASSERTED but not mechanically verified in v3.9."
     }
   ]
 }
