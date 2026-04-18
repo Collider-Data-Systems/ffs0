@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=168 (April 18, 2026) — round 6: 4-axis research (sheaves / HDC / pipeline metrics / Ricci) + IRL→HG pipeline note + 6 v3.10 grammar_fragment proposals
+> Updated: T=168 (April 18, 2026) — round 7: still-pending cleanup — 10 more grammar_fragment proposals (6 §M18..§M20 backlog + 4 v3.10 deferred types)
 
 ---
 
@@ -52,9 +52,9 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 463 (round 6: +6 ADDs grammar_fragment proposals) |
-| Nodes | 148 (142 + 6 round-6 grammar_fragment ADDs) |
-| Relations | 198 (unchanged in round 6 — ADDs only, no LINK/UNLINK) |
+| Log entries | 473 (round 7: +10 ADDs grammar_fragment proposals) |
+| Nodes | 158 (148 + 10 round-7 grammar_fragment ADDs) |
+| Relations | 198 (unchanged in round 7 — ADDs only, no LINK/UNLINK) |
 | Ontology | **v3.9 — 51 types, 20 WFs** (session.status + turn_count marked deprecated: true) |
 
 ## Z440 (federation partner)
@@ -378,6 +378,65 @@ All 6 ADDs succeeded (batch via `mcp__moos-kernel__apply_program`). `affected_no
 
 ---
 
+## T=168 round 7 — still-pending cleanup (10 more grammar_fragment proposals)
+
+Directive (sam, T=168): *"continu where we left bf we did the last in a serie of md docs evals"* — resume from the "still pending for later rounds" backlog that was set aside for the legacy-folder evals.
+
+### Backlog identification
+
+Two residual streams pending since earlier rounds:
+
+1. **§M18..§M20 round-3 candidates** (from `kb/research/kernel/20260417-t187-kernel-proper.md` round-3 appendix, lines 529-536). 8 fragments proposed by name in round 3; only 2 (D19.1, D20.2) + 1 late-addition (D14.1) materialised in round 5. **6 still un-materialised.**
+2. **v3.9 audit §D deferred types** (from `kb/research/s1/20260418-t168-v3.9-ontology-audit.md` lines 61-64). 4 types (benchmark, evaluation, dataset, dsl) explicitly deferred to v3.10.
+
+Round 7 lands all 10 as grammar_fragment proposals. One atomic batch.
+
+### 6 §M18..§M20 backlog proposals (status=proposed, stratum_origin=1 matching round-3 siblings)
+
+| URN suffix | Kind | Crystallises |
+|------------|------|--------------|
+| `d19-2-session-view-prefs` | property | §M18: `session.view_prefs` object (`sort_by, fold_depth, density, theme`) — scalar UI prefs for t-cone rendering. Distinct from view_filter (predicate) and pins (topology). |
+| `d19-3-session-pins-urn` | port | §M18: session `pins-urn / pinned-by-session` — topology-color port to any node. Occupant's persistent visibility anchors. |
+| `d19-4-session-filtered-by` | port | §M18: session `filtered-by / filters-session` → view_filter. Semantic-color port; §M15 t-cone composes as intersection over all bound predicates. |
+| `d20-1-session-mounts-tool` | port | §M20: session `mounts-tool / tool-mounted-in-session` → agent. Mounted tools invokable by occupant under WF02 caps. |
+| `d20-3-agent-runs-in-harness` | port | §M20: agent `runs-in / runs` → harness. Capability intersection at runtime with `harness.allowed_capabilities`. |
+| `d20-4-agent-constructs-agent` | port | §M20: agent `constructs / constructed-by` → agent. Recursive tool-making. **Candidate CI-6: capability isolation** — no auto-inherit from constructor; explicit upper bound. |
+
+### 4 v3.10 deferred-type proposals (status=proposed, stratum_origin=2 matching round-6 siblings)
+
+| URN suffix | Kind | Crystallises |
+|------------|------|--------------|
+| `v310-7-benchmark` | type | S2 type. Fixture + expected outcomes + scoring rubric. Pairs with `evaluation`. Can target harness/agent/workflow. Dataset-backed when bulk. |
+| `v310-8-evaluation` | type | S2 type, append-only. Run-level node carrying scores, pass/fail, artifacts, run_t. Time-series metric tracking + pass/fail gates. |
+| `v310-9-dataset` | type | S2 type, versioned. Structured input corpus; versioning lets evaluations fix a snapshot. Doubles as **HDC tight-frame support** (per §3.4 pipeline note) when used as a classification scheme. |
+| `v310-10-dsl` | type | S1 type. Bundles many grammar_fragments into a named, versioned micro-grammar. Activation via proposed WF20-2 `dsl_activation` (atomic promote-all-and-activate). |
+
+### Crosswalks & provenance links (via `evidence_urns`)
+
+Fragment proposals wire themselves together through evidence pointers — lets any reader discover the candidate S1 cluster:
+
+- `v310-8-evaluation` → `v310-7-benchmark` (requires)
+- `v310-9-dataset` → `v310-2-crosswalk` (HDC-frame connection; `v310-2` already established the three-views identity)
+- `v310-10-dsl` → `v310-7-benchmark + v310-8-evaluation + v310-9-dataset` (bundling)
+- D19.4 → `view_filter:sam.important-programs + view_filter:sam.t168-open-deliverables` (round-5 demo instances)
+- D20.4 → `agent:claude-code.hp-laptop + agent:sam.claude-code-desktop` (constructor / constructed candidates)
+
+### Kernel stats after round 7
+
+All 10 ADDs succeeded in one atomic batch. Kernel: log 463→473 (+10), nodes 148→158 (+10 grammar_fragment), relations 198 unchanged.
+
+**Grammar_fragment census:** 19 total (3 from round 5 + 6 from round 6 + 10 from round 7). All `status=proposed`. WF20 promotion ceremony remains the outstanding gate for any of these to become live S1 grammar.
+
+### What's left in the backlog after round 7
+
+- **WF20 promotion algorithm** — how evidence aggregates, how admin signs acceptance, how canonical types materialise. Doctrine declared in v3.9 audit §F; kernel validator not yet exercising WF20.
+- **Per-WF CR-safety contracts** — v3.9 adds `audit_note` per WF flagging CR-safety; explicit contract declarations deferred.
+- **Kernel validator retirement of `session.role`** — `seat_role` added, legacy `role` marked deprecated; validator still accepts both. Removal scheduled for v3.10.
+- **LINK demos (view_filter→session, agent→session)** — deferred in round 5 (no live WF carrier); still pending a WF or WF-extension landing.
+- **Predicate evaluator implementation** — §M14 `fires_at`, `window`, etc. declared; evaluator in the `hook-predicates` sub-program (status=draft).
+
+---
+
 ## Key URNs
 
 ```
@@ -416,6 +475,20 @@ urn:moos:grammar_fragment:v310-3-fiber-completeness
 urn:moos:grammar_fragment:v310-4-branchial-ricci
 urn:moos:grammar_fragment:v310-5-cascade-spectral-bound
 urn:moos:grammar_fragment:v310-6-sheaf-laplacian-inconsistency
+
+# Round 7 §M18..§M20 backlog proposals (all status=proposed)
+urn:moos:grammar_fragment:d19-2-session-view-prefs
+urn:moos:grammar_fragment:d19-3-session-pins-urn
+urn:moos:grammar_fragment:d19-4-session-filtered-by
+urn:moos:grammar_fragment:d20-1-session-mounts-tool
+urn:moos:grammar_fragment:d20-3-agent-runs-in-harness
+urn:moos:grammar_fragment:d20-4-agent-constructs-agent
+
+# Round 7 v3.10 deferred-type proposals (all status=proposed)
+urn:moos:grammar_fragment:v310-7-benchmark
+urn:moos:grammar_fragment:v310-8-evaluation
+urn:moos:grammar_fragment:v310-9-dataset
+urn:moos:grammar_fragment:v310-10-dsl
 
 # Live sessions (exactly 2 — one per kernel, no T-day in URN)
 urn:moos:session:sam.claude-code-hp-laptop  (WF19-LINKed, seat_role=occupier)
