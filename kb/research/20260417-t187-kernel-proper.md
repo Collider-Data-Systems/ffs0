@@ -571,3 +571,92 @@ session-generalization (umbrella)
 3. `running-state.md` — update sub-program count to 26, add round-3 entry
 
 **No kernel code changes this round. No ontology.json changes this round (v3.9 is the baseline; §M18..§M20 extensions are captured as grammar-fragment candidates awaiting WF20 promotion).**
+
+---
+
+# T=168 round 4: sub-program merge + session-layer group-topology clarification
+
+> Appended T=168 (April 18, 2026). Reduces the 20-→-26 explosion from rounds 1+3 to a coherent 19 live sub-programs named by what they monitor, and formalises that the session-layer is a per-kernel group-topology stratification.
+
+## §M21 — Session-layer is group-topology, stratified by kernel
+
+The session layer divides not by ownership (`owner_urn`) but by **kernel occupancy**. Each kernel's WF19-LINKed sessions form its own **occupancy ledger**; at any instant, at most one carries `seat_role=occupier`. Sessions across different kernels are topologically disjoint — they do not compose under the session monoid (§M1), because M1's composition `∘` is "sequential kernel claims" and requires a common kernel. The **group-topology** phrasing (sam's framing): the top layer is the disjoint union
+
+```
+Sessions = ⊔_{k ∈ Kernels} Sessions_k
+```
+
+where each `Sessions_k` is a monoid (§M1) and the disjoint union carries the stratification. Ownership is a property on each session (`session`-has-`owner_urn`) — a **provenance stamp**, not a topological axis. The consequence: per-kernel liveness (§M11), per-kernel occupancy transfer (§M19), per-kernel t-cone (§M15).
+
+**Consequence for session creation.** A new session is ADDed only when:
+- A new user enters a kernel they haven't claimed before, OR
+- A new agent begins occupying a kernel it has never occupied before, OR
+- An explicit design choice demands separation (time-limited delegate, isolated subroutine).
+
+**1-per-kernel floor.** For every materialised kernel `k ∈ Kernels`, there must exist at least one `s ∈ Sessions_k` with a valid WF19 `opens-on/occupied-by` LINK. Otherwise the kernel is "dark" — visible in the HG but with no session-attributed rewrite path. At T=168 round 4 we materialised `urn:moos:session:sam.claude-code-hp-z440.t168` with `seat_role=observer` to satisfy this floor for `urn:moos:kernel:hp-z440.primary`.
+
+## §M22 — Naming scope: drop the t-ref prefix
+
+The `t187.<suffix>` and `t168.<suffix>` URN prefixes were a round-marker convention useful for attributing creation-time provenance. As sub-programs consolidate and the round-markers lose meaning (a sub-program merged across rounds has no single "starting round"), the prefix is dropped in favour of **names that state what the sub-program monitors**. Examples:
+
+| Scope (what it monitors) | URN suffix |
+|--------------------------|------------|
+| seat_role + occupant + cap gate | `session-occupancy` |
+| local_t + actor resolution | `session-timeline` |
+| view_filter + pins + t-cone | `session-view` |
+| mounts-tool + invocation + construction | `session-tools` |
+| t_hook.predicate algebra | `hook-predicates` |
+| ontology_publication events | `ontology-publication-prg` |
+| external_op nodes | `external-op` |
+
+The `t187.` prefix is retained on originals (`t187.http3-quic`, `t187.strata-enforcement`, etc.) since they were materialised under that namespace and renaming them without value would be churn. New sub-programs drop the prefix.
+
+## §M23 — Session property redundancy (v3.9 deprecations)
+
+Two `session` properties are marked `deprecated: true` in v3.9 (slated for removal in v3.10):
+- `session.status` (enum active/closed/abandoned) — subsumed by `seat_role` + permanent-session model. Sessions don't close; they become `observer`.
+- `session.turn_count` — subsumed by `local_t` (§M13 authoritative heartbeat). `turn_count` was never used by the v3.8+ runtime.
+
+New sessions (e.g. `sam.claude-code-hp-z440.t168`) are ADDed with `seat_role` + `local_t` + `started_at` only; legacy sessions keep both fields until v3.10 migration.
+
+## Merge map — round 4
+
+14 draft sub-programs from rounds 1+3 → 7 merged sub-programs named by what they monitor. `session-role-rename` marked completed (v3.9 audit delivered it). `session-chrono-t` retained as standalone (active, pre-round-1).
+
+| Merged URN | Merges (archived, status=archived) |
+|------------|-----------------------------------|
+| `session-occupancy` | session-liveness + admin-capability-enforcement + session-occupant-relation |
+| `session-timeline` | t-local-simplification + session-actor-agent-lookup |
+| `session-view` | t-cone-projection + session-generalization + session-view-holder |
+| `session-tools` | tool-mounting + cli-as-tool-protocol + recursive-tool-construction |
+| `hook-predicates` | t-hook-predicate-catalog (rename only) |
+| `ontology-publication-prg` | t187.ontology-publication (rename only; `-prg` suffix to avoid collision with `urn:moos:program:sam.ontology-publication-v3.9` carrier) |
+| `external-op` | external-op-stub (rename only) |
+
+### Post-merge depends-on chain (5 WF18 depends-on relations)
+
+- `session-timeline` → `session-occupancy` (actor resolution needs seat-model)
+- `session-view` → `hook-predicates` (t-cone uses predicate algebra)
+- `session-view` → `session-timeline` (t-cone bounded by local_t window)
+- `session-tools` → `session-occupancy` (tools need occupant)
+- `ontology-publication-prg` → `hook-predicates` (publishing manifests cite predicates)
+
+### Post-merge live sub-program count
+
+Active WF18 `composes` from `sam.t187-kernel-proper`: **19** (11 originals + 7 merged + 1 completed `session-role-rename`). Down from 26 mid-round-3.
+
+## Deliverable trail (T=168 round 4, this section)
+
+1. This appended section — §M21..§M23 + merge map + post-merge depends-on chain ✓
+2. HG materialisation:
+   - 1 MUTATE `sam.t187.session-role-rename` status → completed
+   - 7 ADD merged sub-programs (session-occupancy / -timeline / -view / -tools + hook-predicates + ontology-publication-prg + external-op)
+   - 7 LINK WF18 composes from t187-kernel-proper to each
+   - 5 LINK WF18 depends-on between merged sub-programs
+   - 26 UNLINK (14 old composes + 12 old depends-on)
+   - 28 MUTATE (14 status→archived + 14 scope pointers)
+   - 1 ADD hp-z440 session + 1 LINK WF19 opens-on (1-per-kernel floor)
+3. Ontology v3.9: `session.status` + `session.turn_count` marked `deprecated: true` (no version bump; redundancy cleanup is consistent with v3.9 baseline audit philosophy)
+4. `running-state.md` — session table with 3 rows (hp-laptop.t164 + hp-laptop.t167 + hp-z440.t168), Z440 column, round-4 merge section, sub-program count 19
+
+**No kernel code changes this round.**

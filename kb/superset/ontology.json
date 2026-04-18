@@ -322,7 +322,10 @@
               "active",
               "closed",
               "abandoned"
-            ]
+            ],
+            "deprecated": true,
+            "deprecated_in_version": "3.9",
+            "deprecation_note": "Subsumed by seat_role + permanent-session model (§M11, §M18). Sessions are kernel-bound and never close — they transition to seat_role=observer. Kept for back-compat with existing instances; scheduled for removal in v3.10 along with role. See kb/research/20260418-t168-session-kernel-bound.md."
           },
           "started_at": {
             "mutability": "immutable",
@@ -331,7 +334,10 @@
           "turn_count": {
             "mutability": "mutable",
             "authority_scope": "kernel",
-            "type": "integer"
+            "type": "integer",
+            "deprecated": true,
+            "deprecated_in_version": "3.9",
+            "deprecation_note": "Subsumed by local_t (§M13 authoritative heartbeat). local_t is the kernel-maintained per-session rewrite counter; turn_count was never used by v3.8+ runtime. Scheduled for removal in v3.10."
           },
           "local_t": {
             "mutability": "mutable",
