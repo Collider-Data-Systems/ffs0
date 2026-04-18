@@ -1,13 +1,34 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.9",
+  "version": "3.10.0",
   "t_day": 168,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 51 node types, 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames (S1 endpoint → network_endpoint, session.role → session.seat_role), deprecations (agent_session, prg_task, watcher, reactor), 6 new types (skill, grammar_fragment, pattern, workflow, view_filter, harness), WF20 grammar_promotion for S4→S1 adjoint bridge.",
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent to carry session --has-occupant/is-occupant-of--> user|agent relation (§M19 session-occupancy).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "kb/research/session/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "kb/research/s1/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "kb/research/s1/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "3.10.0",
+      "t_day": 168,
+      "summary": "Session-occupancy bump — D19.1 grammar_fragment merged. WF19 extended with has-occupant/is-occupant-of port pair for §M11+§M12+§M19 session-occupancy doctrine.",
+      "changes": {
+        "wf_extensions": [
+          "WF19 Session governance — tgt_types extends with `user` and `agent` (was kernel, session, agent_session). A second port pair `has-occupant` (src) / `is-occupant-of` (tgt) is declared for session→principal occupancy topology. Canonical opens-on/occupied-by pair remains for session→kernel. Kernel portColorFromName in operad/validate.go maps both new ports to workflow color."
+        ],
+        "fragment_merges": [
+          "urn:moos:grammar_fragment:d19-1-session-has-occupant — status: proposed → merged. Specification: WF19 port pair + tgt_types extension (see above). Author: sam. Evidence: kb/research/kernel/20260417-t187-kernel-proper.md §M19."
+        ],
+        "migration_actions_in_hg": [
+          "MUTATE urn:moos:grammar_fragment:d19-1-session-has-occupant status → merged (admin authority; principal=sam).",
+          "ADD urn:moos:ontology_publication:v3.10.0 — §M16 publication provenance record. Signed by urn:moos:user:sam. Supersedes urn:moos:ontology_publication:v3.9."
+        ],
+        "deferrals": [
+          "Remaining 22 grammar_fragments (status=proposed) kept at proposed; they flow through WF20 in subsequent v3.10.x / v3.11 bumps as their specs mature.",
+          "v3.9 deprecations (session.role, session.status, session.turn_count, agent_session, prg_task, watcher, reactor) remain deprecated; kernel validator still accepts both names. v3.11 scheduled for removal."
+        ]
+      }
+    },
     {
       "version": "3.9",
       "t_day": 168,
@@ -3547,10 +3568,23 @@
       "tgt_types": [
         "kernel",
         "session",
-        "agent_session"
+        "agent_session",
+        "user",
+        "agent"
       ],
       "src_port": "opens-on",
       "tgt_port": "occupied-by",
+      "additional_port_pairs": [
+        {
+          "src_port": "has-occupant",
+          "tgt_port": "is-occupant-of",
+          "src_types": ["session"],
+          "tgt_types": ["user", "agent"],
+          "description": "§M19 session-occupancy port pair. Session holds exactly one has-occupant relation at a time pointing at the user or agent that is currently driving the session. Seat rotation (occupier ↔ delegate ↔ observer) is the seat_role MUTATE; the has-occupant LINK changes only when occupancy itself transfers to a different principal.",
+          "added_in_version": "3.10.0",
+          "promotes_fragment": "urn:moos:grammar_fragment:d19-1-session-has-occupant"
+        }
+      ],
       "authority": "kernel",
       "mutate_scope": [
         "status",
@@ -3561,7 +3595,7 @@
         "context_urn"
       ],
       "sync_mode": "local-only",
-      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically. v3.9: mutate_scope adds `seat_role` alongside legacy `role` — both supported until v3.10 removes `role`. §M18..§M20 propose extending src_types/tgt_types (add `user`, `agent` as tgt_types for has-occupant) and mutate_scope (add view_prefs). Those extensions are NOT active in v3.9 — they are captured as grammar_fragments pending promotion."
+      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically. v3.9: mutate_scope adds `seat_role` alongside legacy `role` — both supported until v3.10 removes `role`. v3.10.0: D19.1 grammar_fragment merged — tgt_types extended with user and agent, and a second port pair (has-occupant / is-occupant-of) added to carry occupancy topology. The canonical port pair (opens-on / occupied-by) remains the session-to-kernel link; the new pair is session-to-principal for §M15 t-cone capability resolution. Kernel honours both pairs under WF19; ValidateLINK checks port colors via operad.portColorFromName."
     },
     {
       "id": "WF20",
