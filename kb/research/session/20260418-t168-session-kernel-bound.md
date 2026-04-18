@@ -1,6 +1,6 @@
 # Sessions are kernel-bound — FAQ
 
-> T=168 (April 18, 2026). Standalone companion to `20260417-t187-kernel-proper.md` §M11.
+> T=168 (April 18, 2026). Standalone companion to `../kernel/20260417-t187-kernel-proper.md` §M11.
 > Origin: sam's correction when I mis-proposed closing the T=167 session and ADDing a T=168 one.
 
 ## The correction (verbatim)
@@ -51,25 +51,30 @@ A *new* session is ADDed only when:
 
 None of these is triggered by calendar time passing.
 
-## Current hp-laptop kernel state (at T=168)
+## Current kernel state (post round-4 session merge)
+
+Exactly 2 WF19-LINKed sessions — one per kernel, no T-day in URN (§M22 naming rule applied to sessions themselves):
 
 ```
-urn:moos:session:sam.claude-code-hp-laptop.t164
-  status=active  role=(unset → MUTATEd to observer in this enrichment)
-  started_at=2026-04-14
+urn:moos:session:sam.claude-code-hp-laptop
+  seat_role=occupier  local_t=0  started_at=2026-04-14
   --WF19 opens-on/occupied-by--> urn:moos:kernel:hp-laptop.primary
 
-urn:moos:session:sam.claude-code-hp-laptop.t167
-  status=active  role=occupier  local_t=1
-  started_at=2026-04-18
-  --WF19 opens-on/occupied-by--> urn:moos:kernel:hp-laptop.primary
+urn:moos:session:sam.claude-code-hp-z440
+  seat_role=observer  local_t=0  started_at=2026-04-18
+  --WF19 opens-on/occupied-by--> urn:moos:kernel:hp-z440.primary
 ```
 
-Both sessions are WF19-LINKed. t167 carries `role=occupier`. t164 becomes `role=observer` (HG-hygiene MUTATE applied in this enrichment pass) to make the occupancy ledger explicit.
+Historical sessions remain as provenance (ADD is immutable) but carry no WF19 LINK:
+- `sam.claude-code-hp-laptop.t164` → merged into `sam.claude-code-hp-laptop`
+- `sam.claude-code-hp-laptop.t167` → merged into `sam.claude-code-hp-laptop`
+- `sam.claude-code-hp-z440.t168` → merged into `sam.claude-code-hp-z440`
 
-## Naming going forward
+## Naming (post round-4)
 
-The existing `<T-day>` in URNs (`.t164`, `.t167`) is grandfathered — we do not migrate URNs. Future sessions created on hp-laptop could follow a cleaner pattern like `urn:moos:session:<user>.<agent>.<kernel-short>` (no T-day), but the ontology's `urn_pattern` spec change is deferred to sub-program `t187.session-role-rename` (which will also handle the `session.role` → `session.seat_role` rename in one pass).
+Session URNs now follow **`urn:moos:session:<user>.<agent>-<kernel-short>`** — no `<T-day>` segment. The T-day was creation-time decoration, not a lifetime bound, and served no topological purpose once sessions became permanent kernel-bound nodes. The three historical T-day-suffixed nodes (`.t164`, `.t167`, `.t168`) are kept for log-is-truth provenance but are no longer live.
+
+The `session-role-rename` sub-program (marked `completed` in round 4) delivered the `session.role → session.seat_role` rename via the v3.9 ontology audit. The URN pattern simplification happened alongside, as part of §M22.
 
 ## Why the §M11 liveness clause matters
 
@@ -79,11 +84,11 @@ This is why `session.role` is mutable and part of WF19's `mutate_scope`. The rot
 
 ## Cross-references
 
-- `kb/research/20260417-t187-kernel-proper.md` §M1 — session as monoid (algebra)
-- `kb/research/20260417-t187-kernel-proper.md` §M11 — session as kernel-liveness guarantee
-- `kb/research/20260417-t187-kernel-proper.md` §M13 — `t_local` vs `T` disambiguation
-- `kb/research/20260417-t187-kernel-proper.md` §M18..§M20 — session generalization (workspace anchor, occupant, tool-mounting)
-- `kb/research/20260418-t168-v3.9-ontology-audit.md` — v3.9 baseline audit that renamed `session.role` → `session.seat_role`
+- `kb/research/kernel/20260417-t187-kernel-proper.md` §M1 — session as monoid (algebra)
+- `kb/research/kernel/20260417-t187-kernel-proper.md` §M11 — session as kernel-liveness guarantee
+- `kb/research/kernel/20260417-t187-kernel-proper.md` §M13 — `t_local` vs `T` disambiguation
+- `kb/research/kernel/20260417-t187-kernel-proper.md` §M18..§M20 — session generalization (workspace anchor, occupant, tool-mounting)
+- `kb/research/s1/20260418-t168-v3.9-ontology-audit.md` — v3.9 baseline audit that renamed `session.role` → `session.seat_role`
 - `kb/superset/ontology.json` v3.9 — `session` type (S2) with `seat_role` + deprecated `role`; `view_filter` (S2); `harness` (S2); WF19 `mutate_scope`
 
 ## Addendum: generalization (post-v3.9)

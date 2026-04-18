@@ -13,7 +13,7 @@ Builds one atomic envelope batch and POSTs it to the kernel:
 Total: 1 MUTATE + 11 ADDs + 16 LINKs = 28 envelopes.
 
 Rationale: places the T=187 roadmap IN the HG, not in a flat document.
-Canonical reference: kb/research/20260417-t187-kernel-proper.md §M1-M9.
+Canonical reference: kb/research/kernel/20260417-t187-kernel-proper.md §M1-M9.
 """
 import json
 import sys
@@ -103,7 +103,7 @@ envelopes.append(add(T187, "program", {
     "status":     prop("draft", mutability="mutable", authority_scope="owner"),
     "scope":      prop(
         "Distributed, decoupled, categorically independent kernel at my-tiny-data-collider.nl. "
-        "Session-as-actor doctrine. See kb/research/20260417-t187-kernel-proper.md for the full spec.",
+        "Session-as-actor doctrine. See kb/research/kernel/20260417-t187-kernel-proper.md for the full spec.",
         mutability="mutable", authority_scope="owner",
     ),
     "starts_t":   prop(187, mutability="mutable", authority_scope="owner"),
@@ -124,7 +124,7 @@ for suffix, title, _ in SUBS:
         "owner_urn":  prop(OWNER),
         "status":     prop("draft", mutability="mutable", authority_scope="owner"),
         "scope":      prop(
-            f"Sub-program of T=187 — see kb/research/20260417-t187-kernel-proper.md",
+            f"Sub-program of T=187 — see kb/research/kernel/20260417-t187-kernel-proper.md",
             mutability="mutable", authority_scope="owner",
         ),
         "starts_t":   prop(187, mutability="mutable", authority_scope="owner"),

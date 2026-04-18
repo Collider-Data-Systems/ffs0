@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=168 (April 18, 2026) — v3.9 baseline audit + sub-program merge round 4 (names by-monitoring-scope)
+> Updated: T=168 (April 18, 2026) — v3.9 baseline audit + sub-program merge + session merge (names by-monitoring-scope; no T-day in session URNs)
 
 ---
 
@@ -13,35 +13,36 @@
 | Title | T=187: kernel proper — session-as-actor, twin kernels, gates, admin governance |
 | Current T-day | T=168 (April 18, 2026) |
 | Status | active (spec-enrichment + implementation phases) |
-| Canonical spec | `kb/research/20260417-t187-kernel-proper.md` (M1..M10 + T=168 appendix §M11..§M17) |
-| Session model (ratified) | `kb/research/20260418-t168-session-kernel-bound.md` |
+| Canonical spec | `kb/research/kernel/20260417-t187-kernel-proper.md` (M1..M10 + T=168 appendix §M11..§M17) |
+| Session model (ratified) | `kb/research/session/20260418-t168-session-kernel-bound.md` |
 
 T=164 `sam.t164-room-tying` closed at T=167: status → completed.
 Succession recorded: `t164 --WF18 scheduled-after--> t187`.
 
 ## Current kernel occupancy
 
-Sessions are **permanent kernel-bound nodes** (per §M11). The WF19 LINK stays; `session.seat_role` rotates.
+Sessions are **permanent kernel-bound nodes** (§M11). The session layer is **group topology** (§M21): `Sessions = ⊔_k Sessions_k`, stratified by kernel. Exactly one session per kernel is WF19-LINKed and live; `seat_role=occupier` on the kernel the agent is driving, `seat_role=observer` on the others.
 
-The session layer is **group topology** (sam, T=168): sessions are stratified by the session-monoid **per kernel**, not by ownership hierarchy. Each kernel has its own occupancy ledger; at any instant at most one session per kernel carries `seat_role=occupier`. The 1-per-kernel floor (ADD a session per reachable kernel) is now satisfied for both materialised kernels.
+URN convention (T=168 round 4 merge): **no T-day segment**. `urn:moos:session:<user>.<agent>-<kernel-short>`. Historical `.t164 / .t167 / .t168` nodes are archived (WF19 UNLINKed, kept in HG as provenance).
 
-| Session URN | Kernel | `seat_role` (v3.9) | `role` (deprecated) | `local_t` | Notes |
-|-------------|--------|--------------------|--------------------|-----------|-------|
-| `sam.claude-code-hp-laptop.t167` | hp-laptop.primary | **occupier** | occupier | ≥4 | Current seat-holder on hp-laptop |
-| `sam.claude-code-hp-laptop.t164` | hp-laptop.primary | observer | observer | — | Passive, kept in ledger |
-| `sam.claude-code-hp-z440.t168` | hp-z440.primary | observer | — | 0 | **NEW (T=168 round 4)** — 1-per-kernel floor for hp-z440; no live occupier until agent actually drives the kernel |
+| Session URN | Kernel | `seat_role` | `local_t` |
+|-------------|--------|-------------|-----------|
+| `urn:moos:session:sam.claude-code-hp-laptop` | `urn:moos:kernel:hp-laptop.primary` | **occupier** | 0 (fresh) |
+| `urn:moos:session:sam.claude-code-hp-z440` | `urn:moos:kernel:hp-z440.primary` | observer | 0 |
 
-The `<T-day>` segment in URNs is a creation-time label, not a lifetime bound.
+### Historical sessions (archived, no WF19 LINK, retained for provenance)
 
-v3.9 added `seat_role` alongside legacy `role` (non-destructive); kernel validator will honor `seat_role` in v3.10, after which `role` is removed.
+- `sam.claude-code-hp-laptop.t164` — merged into `sam.claude-code-hp-laptop`
+- `sam.claude-code-hp-laptop.t167` — merged into `sam.claude-code-hp-laptop`
+- `sam.claude-code-hp-z440.t168` — merged into `sam.claude-code-hp-z440`
 
-### Session property redundancy cleanup (T=168 round 4)
+### Session property redundancy cleanup (v3.9)
 
-v3.9 ontology now marks two session properties as `deprecated: true` (scheduled for removal in v3.10):
-- `session.status` — subsumed by `seat_role` + permanent-session model. Sessions never "close"; they transition to `seat_role=observer`.
-- `session.turn_count` — subsumed by `local_t` (§M13 authoritative kernel-maintained heartbeat). `turn_count` was never used by v3.8+ runtime.
+Two session properties are marked `deprecated: true` (scheduled for removal in v3.10):
+- `session.status` (active/closed/abandoned) — subsumed by `seat_role` + permanent-session model.
+- `session.turn_count` — subsumed by `local_t` (§M13 kernel-maintained heartbeat).
 
-Legacy instances keep both fields until v3.10 migration; new sessions (e.g. hp-z440.t168) may be ADDed without them.
+New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` + `local_t`. Legacy nodes keep the deprecated fields until v3.10 migration.
 
 ---
 
@@ -51,9 +52,9 @@ Legacy instances keep both fields until v3.10 migration; new sessions (e.g. hp-z
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 437 (+2 hp-z440 session, +20 merge ADDs/LINKs, +26 UNLINKs, +28 MUTATEs) |
-| Nodes | 134 (126 + 1 hp-z440 session + 7 merged sub-programs) |
-| Relations | 198 (212 + 2 hp-z440 WF19 + 12 new merge LINKs − 26 UNLINKed old) |
+| Log entries | 445 (+2 merged-session ADDs, +2 new WF19 LINKs, +1 MUTATE t167 seat_role, +3 UNLINKs old WF19) |
+| Nodes | 136 (134 + 2 new merged sessions) |
+| Relations | 197 (198 + 2 new WF19 − 3 UNLINKed old WF19) |
 | Ontology | **v3.9 — 51 types, 20 WFs** (session.status + turn_count marked deprecated: true) |
 
 ## Z440 (federation partner)
@@ -64,7 +65,7 @@ Not present at T=168 (placeholder session ADDed to satisfy 1-per-kernel floor). 
 
 ## Ontology delta
 
-**v3.9 (T=168 — baseline audit):** See `kb/research/20260418-t168-v3.9-ontology-audit.md` and `kb/research/20260418-t168-s1-superset-doctrine.md`.
+**v3.9 (T=168 — baseline audit):** See `kb/research/s1/20260418-t168-v3.9-ontology-audit.md` and `kb/research/s1/20260418-t168-s1-superset-doctrine.md`.
 - **Renames:** S1 `endpoint` → `network_endpoint`; `session.role` → `session.seat_role` (non-destructive; both coexist until v3.10)
 - **Deprecations:** `prg_task`, `agent_session`, `watcher`, `reactor` (all S2)
 - **Stratum clarifications:** `system_instruction` confirmed S2 with `overlay_role: S4` (was incorrectly S4 in v3.8); `twin_link` confirmed S2
@@ -149,7 +150,7 @@ All 11 sub-programs complete or active:
 
 ## T=168 spec-enrichment backlog (9 new sub-programs, status=draft)
 
-Added T=168 via `kb/research/20260417-t187-kernel-proper.md` §M11..§M17 appendix. All ADDed to HG as `program` nodes WF18 `composes-by/composed-of` linked to `urn:moos:program:sam.t187-kernel-proper`. Implementation deferred to later sprints.
+Added T=168 via `kb/research/kernel/20260417-t187-kernel-proper.md` §M11..§M17 appendix. All ADDed to HG as `program` nodes WF18 `composes-by/composed-of` linked to `urn:moos:program:sam.t187-kernel-proper`. Implementation deferred to later sprints.
 
 | Sub-program | §M / Origin | Depends on | One-line scope |
 |-------------|-------------|------------|----------------|
@@ -169,7 +170,7 @@ Total T=187 sub-programs after this pass: **20** (11 existing + 9 new).
 
 ## T=168 round 3 — §M18..§M20 session generalization (archived in round 4 merge)
 
-Added T=168 round 3 via `kb/research/20260417-t187-kernel-proper.md` §M18..§M20 appendix. Builds on v3.9 primitives (view_filter, harness, skill). 8 grammar-fragment candidates identified (D19.1–D19.4, D20.1–D20.4) — awaiting WF20 promotion in a future round.
+Added T=168 round 3 via `kb/research/kernel/20260417-t187-kernel-proper.md` §M18..§M20 appendix. Builds on v3.9 primitives (view_filter, harness, skill). 8 grammar-fragment candidates identified (D19.1–D19.4, D20.1–D20.4) — awaiting WF20 promotion in a future round.
 
 The 6 round-3 sub-programs (`session-generalization`, `session-view-holder`, `session-occupant-relation`, `tool-mounting`, `cli-as-tool-protocol`, `recursive-tool-construction`) were archived in round 4 and merged into `session-view` + `session-tools` + `session-occupancy`. See round 4 section below.
 
@@ -254,8 +255,8 @@ Original URNs kept (log-is-truth — no UNLINK of ADD). `scope` MUTATEd to point
 ## v3.9 baseline audit (T=168 side-step, this round)
 
 Research notes (new, both committed together):
-- `kb/research/20260418-t168-v3.9-ontology-audit.md` — full audit: findings A..F, decisions, migration actions
-- `kb/research/20260418-t168-s1-superset-doctrine.md` — S4→S1 adjoint (Promote / Express), WF20 grammar_promotion, pipeline, open questions
+- `kb/research/s1/20260418-t168-v3.9-ontology-audit.md` — full audit: findings A..F, decisions, migration actions
+- `kb/research/s1/20260418-t168-s1-superset-doctrine.md` — S4→S1 adjoint (Promote / Express), WF20 grammar_promotion, pipeline, open questions
 
 HG materialisation (4 envelopes):
 - MUTATE `urn:moos:session:sam.claude-code-hp-laptop.t164` `seat_role → observer` (WF19)
@@ -289,9 +290,15 @@ urn:moos:program:sam.external-op
 urn:moos:purpose:sam.t164-tie-the-room-together
 urn:moos:agent:claude-code.hp-laptop
 urn:moos:agent:claude-code.hp-z440
-urn:moos:session:sam.claude-code-hp-laptop.t164  (WF19-LINKed hp-laptop, seat_role=observer)
-urn:moos:session:sam.claude-code-hp-laptop.t167  (WF19-LINKed hp-laptop, seat_role=occupier — permanent seat-holder)
-urn:moos:session:sam.claude-code-hp-z440.t168   (WF19-LINKed hp-z440, seat_role=observer — 1-per-kernel floor)
+
+# Live sessions (exactly 2 — one per kernel, no T-day in URN)
+urn:moos:session:sam.claude-code-hp-laptop  (WF19-LINKed, seat_role=occupier)
+urn:moos:session:sam.claude-code-hp-z440    (WF19-LINKed, seat_role=observer)
+
+# Archived sessions (provenance; no WF19 LINK)
+urn:moos:session:sam.claude-code-hp-laptop.t164
+urn:moos:session:sam.claude-code-hp-laptop.t167
+urn:moos:session:sam.claude-code-hp-z440.t168
 ```
 
 ---

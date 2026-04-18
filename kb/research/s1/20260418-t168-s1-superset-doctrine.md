@@ -1,6 +1,6 @@
 # S1 as semantic embedding superset
 
-> T=168 (April 18, 2026). Companion to `20260418-t168-v3.9-ontology-audit.md` §F.
+> T=168 (April 18, 2026). Companion to `./20260418-t168-v3.9-ontology-audit.md` §F.
 > Origin: sam — "s1 should provide semantic embedding for new grammar and types from the s4. imho this is one of the main issues we need to dive into."
 
 ## The problem
@@ -94,7 +94,7 @@ Not every "add a type" flow is an adjoint. Many are just: user proposes, committ
 
 ## Cross-references
 
-- `kb/research/20260418-t168-v3.9-ontology-audit.md` §F — Finding that motivated this doctrine
-- `kb/research/20260417-t187-kernel-proper.md` §M7 — system_instruction as S4 overlay (predecessor)
-- `kb/research/20260417-t187-kernel-proper.md` §M16 — ontology_publication (the publishing side)
+- `kb/research/s1/20260418-t168-v3.9-ontology-audit.md` §F — Finding that motivated this doctrine
+- `kb/research/kernel/20260417-t187-kernel-proper.md` §M7 — system_instruction as S4 overlay (predecessor)
+- `kb/research/kernel/20260417-t187-kernel-proper.md` §M16 — ontology_publication (the publishing side)
 - `kb/superset/ontology.json` v3.9 — types `grammar_fragment`, `pattern`, `crosswalk`, `classification_schema`, `governance_proposal`; WF20

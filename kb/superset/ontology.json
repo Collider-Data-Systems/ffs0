@@ -4,9 +4,9 @@
   "t_day": 168,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 51 node types, 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames (S1 endpoint → network_endpoint, session.role → session.seat_role), deprecations (agent_session, prg_task, watcher, reactor), 6 new types (skill, grammar_fragment, pattern, workflow, view_filter, harness), WF20 grammar_promotion for S4→S1 adjoint bridge.",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
-  "t164_delta_reference": "kb/research/20260414-t164-session-channel-purpose.md",
-  "t168_audit_reference": "kb/research/20260418-t168-v3.9-ontology-audit.md",
-  "s1_superset_doctrine_reference": "kb/research/20260418-t168-s1-superset-doctrine.md",
+  "t164_delta_reference": "kb/research/session/20260414-t164-session-channel-purpose.md",
+  "t168_audit_reference": "kb/research/s1/20260418-t168-v3.9-ontology-audit.md",
+  "s1_superset_doctrine_reference": "kb/research/s1/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
     {
       "version": "3.9",
@@ -325,7 +325,7 @@
             ],
             "deprecated": true,
             "deprecated_in_version": "3.9",
-            "deprecation_note": "Subsumed by seat_role + permanent-session model (§M11, §M18). Sessions are kernel-bound and never close — they transition to seat_role=observer. Kept for back-compat with existing instances; scheduled for removal in v3.10 along with role. See kb/research/20260418-t168-session-kernel-bound.md."
+            "deprecation_note": "Subsumed by seat_role + permanent-session model (§M11, §M18). Sessions are kernel-bound and never close — they transition to seat_role=observer. Kept for back-compat with existing instances; scheduled for removal in v3.10 along with role. See kb/research/session/20260418-t168-session-kernel-bound.md."
           },
           "started_at": {
             "mutability": "immutable",

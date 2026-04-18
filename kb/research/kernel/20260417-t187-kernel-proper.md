@@ -437,7 +437,7 @@ All 9 ADDed with `status=draft`, `starts_t=168`, and scope pointing back to this
 ## Deliverable trail (T=168)
 
 1. This appended section — §M11..§M17 + updated sub-program table ✓
-2. Standalone FAQ note — `kb/research/20260418-t168-session-kernel-bound.md` (ratified session model)
+2. Standalone FAQ note — `kb/research/session/20260418-t168-session-kernel-bound.md` (ratified session model)
 3. Ontology doc annotations on session / role / capability types (no new types, no version bump)
 4. `running-state.md` — rewritten active-session block + spec-enrichment backlog
 5. HG hygiene — t164 `session.role` MUTATE to `observer`
@@ -522,7 +522,7 @@ CI-invariant (stated, not formally verified in v3.9): nested tool construction m
 
 ## Grammar fragments this round adds (as governance_proposal candidates for WF20)
 
-Per the S1-superset doctrine (`kb/research/20260418-t168-s1-superset-doctrine.md`), §M18..§M20 propose S1 extensions. These are NOT landed in v3.9 ontology.json; they are described here, ready to be ADDed as `grammar_fragment` nodes in a later round once the WF20 promotion flow has been exercised:
+Per the S1-superset doctrine (`kb/research/s1/20260418-t168-s1-superset-doctrine.md`), §M18..§M20 propose S1 extensions. These are NOT landed in v3.9 ontology.json; they are described here, ready to be ADDed as `grammar_fragment` nodes in a later round once the WF20 promotion flow has been exercised:
 
 | Fragment | Kind | Shape |
 |----------|------|-------|
@@ -593,11 +593,13 @@ where each `Sessions_k` is a monoid (§M1) and the disjoint union carries the st
 - A new agent begins occupying a kernel it has never occupied before, OR
 - An explicit design choice demands separation (time-limited delegate, isolated subroutine).
 
-**1-per-kernel floor.** For every materialised kernel `k ∈ Kernels`, there must exist at least one `s ∈ Sessions_k` with a valid WF19 `opens-on/occupied-by` LINK. Otherwise the kernel is "dark" — visible in the HG but with no session-attributed rewrite path. At T=168 round 4 we materialised `urn:moos:session:sam.claude-code-hp-z440.t168` with `seat_role=observer` to satisfy this floor for `urn:moos:kernel:hp-z440.primary`.
+**1-per-kernel floor.** For every materialised kernel `k ∈ Kernels`, there must exist at least one `s ∈ Sessions_k` with a valid WF19 `opens-on/occupied-by` LINK. Otherwise the kernel is "dark" — visible in the HG but with no session-attributed rewrite path. At T=168 round 4 (second pass) we merged the three historical T-day-suffixed sessions into two canonical ones — `urn:moos:session:sam.claude-code-hp-laptop` (occupier) and `urn:moos:session:sam.claude-code-hp-z440` (observer) — one per kernel, no T-day in URN. The three historical nodes (`.t164`, `.t167`, `.t168`) remain in the HG as provenance but are no longer WF19-LINKed.
 
-## §M22 — Naming scope: drop the t-ref prefix
+## §M22 — Naming scope: drop the T-ref prefix (programs AND sessions)
 
-The `t187.<suffix>` and `t168.<suffix>` URN prefixes were a round-marker convention useful for attributing creation-time provenance. As sub-programs consolidate and the round-markers lose meaning (a sub-program merged across rounds has no single "starting round"), the prefix is dropped in favour of **names that state what the sub-program monitors**. Examples:
+The `t187.<suffix>` and `t168.<suffix>` URN prefixes were a round-marker convention useful for attributing creation-time provenance. As sub-programs consolidate and round-markers lose meaning (a sub-program merged across rounds has no single "starting round"), the prefix is dropped in favour of **names that state what the node monitors or represents**. The same rule applies to sessions: the `.t<N>` T-day suffix was a creation-time label, not a lifetime bound, and serves no topological purpose once sessions are permanent kernel-bound nodes (§M11, §M21). Post-round-4 convention:
+
+**Programs.** Named by monitoring scope:
 
 | Scope (what it monitors) | URN suffix |
 |--------------------------|------------|
@@ -609,7 +611,14 @@ The `t187.<suffix>` and `t168.<suffix>` URN prefixes were a round-marker convent
 | ontology_publication events | `ontology-publication-prg` |
 | external_op nodes | `external-op` |
 
-The `t187.` prefix is retained on originals (`t187.http3-quic`, `t187.strata-enforcement`, etc.) since they were materialised under that namespace and renaming them without value would be churn. New sub-programs drop the prefix.
+**Sessions.** Named by `<user>.<agent>-<kernel-short>` — no T-day:
+
+| Live session URN | Kernel |
+|------------------|--------|
+| `urn:moos:session:sam.claude-code-hp-laptop` | `kernel:hp-laptop.primary` |
+| `urn:moos:session:sam.claude-code-hp-z440` | `kernel:hp-z440.primary` |
+
+The `t187.` prefix is retained on original pre-T=168 sub-programs (`t187.http3-quic`, `t187.strata-enforcement`, etc.) since they were materialised under that namespace and renaming without value would be churn. Same principle for historical sessions — `.t164 / .t167 / .t168` nodes remain in the HG as provenance, but are no longer WF19-LINKed and don't participate in the live occupancy ledger.
 
 ## §M23 — Session property redundancy (v3.9 deprecations)
 
@@ -617,7 +626,7 @@ Two `session` properties are marked `deprecated: true` in v3.9 (slated for remov
 - `session.status` (enum active/closed/abandoned) — subsumed by `seat_role` + permanent-session model. Sessions don't close; they become `observer`.
 - `session.turn_count` — subsumed by `local_t` (§M13 authoritative heartbeat). `turn_count` was never used by the v3.8+ runtime.
 
-New sessions (e.g. `sam.claude-code-hp-z440.t168`) are ADDed with `seat_role` + `local_t` + `started_at` only; legacy sessions keep both fields until v3.10 migration.
+New merged sessions (`sam.claude-code-hp-laptop`, `sam.claude-code-hp-z440`) are ADDed with `seat_role` + `local_t` + `started_at` only; historical `.t164 / .t167 / .t168` nodes keep both fields until v3.10 migration.
 
 ## Merge map — round 4
 
@@ -647,16 +656,33 @@ Active WF18 `composes` from `sam.t187-kernel-proper`: **19** (11 originals + 7 m
 
 ## Deliverable trail (T=168 round 4, this section)
 
-1. This appended section — §M21..§M23 + merge map + post-merge depends-on chain ✓
+### Pass A — sub-program merge (14 drafts → 7)
+
+1. §M21..§M23 doctrine (this section) + merge map + post-merge depends-on chain ✓
 2. HG materialisation:
    - 1 MUTATE `sam.t187.session-role-rename` status → completed
    - 7 ADD merged sub-programs (session-occupancy / -timeline / -view / -tools + hook-predicates + ontology-publication-prg + external-op)
-   - 7 LINK WF18 composes from t187-kernel-proper to each
+   - 7 LINK WF18 composes from `t187-kernel-proper` to each
    - 5 LINK WF18 depends-on between merged sub-programs
    - 26 UNLINK (14 old composes + 12 old depends-on)
    - 28 MUTATE (14 status→archived + 14 scope pointers)
-   - 1 ADD hp-z440 session + 1 LINK WF19 opens-on (1-per-kernel floor)
 3. Ontology v3.9: `session.status` + `session.turn_count` marked `deprecated: true` (no version bump; redundancy cleanup is consistent with v3.9 baseline audit philosophy)
-4. `running-state.md` — session table with 3 rows (hp-laptop.t164 + hp-laptop.t167 + hp-z440.t168), Z440 column, round-4 merge section, sub-program count 19
+
+### Pass B — session merge (3 historical T-day sessions → 2 canonical per-kernel)
+
+Directive (sam, T=168): "merge the sessions i want the exact amount of sessions with correct names replacing these." Apply §M22 naming rule (drop T-ref) to sessions themselves.
+
+1. ADD `urn:moos:session:sam.claude-code-hp-laptop` (seat_role=occupier, fresh local_t=0)
+2. ADD `urn:moos:session:sam.claude-code-hp-z440` (seat_role=observer, fresh local_t=0)
+3. LINK WF19 `opens-on/occupied-by` for both to their respective kernels
+4. MUTATE `sam.claude-code-hp-laptop.t167` seat_role → observer (hand off)
+5. UNLINK old WF19 opens-on relations: `rel:t164-session-opens-on-kernel`, `rel:t167.session.opens-on.kernel`, `rel:wf19.hp-z440.t168.opens-on`
+
+Post-state: exactly 2 WF19-LINKed sessions (one per kernel), 3 historical nodes retained as provenance with no WF19 LINK.
+
+### Pass C — running-state.md + research cross-refs
+
+- `running-state.md` — occupancy table reduced to 2 rows (canonical URNs only); historical sessions listed in a sub-section; key URNs block updated
+- `kb/research/*.md` — post-merge session URN conventions propagated; historical URN references kept where they document historical rewrites
 
 **No kernel code changes this round.**
