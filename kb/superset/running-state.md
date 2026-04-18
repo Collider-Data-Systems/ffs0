@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=168 (April 18, 2026) — v3.9 baseline audit + sub-program merge + session merge (names by-monitoring-scope; no T-day in session URNs)
+> Updated: T=168 (April 18, 2026) — round 5: demo materialization + IRL-time gates (`target_t` on 6 active sub-programs) + S0 operadic lingo + research reorg (`wires/` subdir)
 
 ---
 
@@ -52,9 +52,9 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 445 (+2 merged-session ADDs, +2 new WF19 LINKs, +1 MUTATE t167 seat_role, +3 UNLINKs old WF19) |
-| Nodes | 136 (134 + 2 new merged sessions) |
-| Relations | 197 (198 + 2 new WF19 − 3 UNLINKed old WF19) |
+| Log entries | 457 (round 5: +6 ADDs demos, +6 MUTATEs target_t) |
+| Nodes | 142 (136 + 6 round-5 demo ADDs: 2 view_filter, 1 agent, 3 grammar_fragment) |
+| Relations | 198 (unchanged in round 5 — ADDs + MUTATEs only, no LINK/UNLINK) |
 | Ontology | **v3.9 — 51 types, 20 WFs** (session.status + turn_count marked deprecated: true) |
 
 ## Z440 (federation partner)
@@ -252,9 +252,9 @@ Original URNs kept (log-is-truth — no UNLINK of ADD). `scope` MUTATEd to point
 
 ---
 
-## v3.9 baseline audit (T=168 side-step, this round)
+## v3.9 baseline audit (T=168 side-step, pre-round-4)
 
-Research notes (new, both committed together):
+Research notes:
 - `kb/research/s1/20260418-t168-v3.9-ontology-audit.md` — full audit: findings A..F, decisions, migration actions
 - `kb/research/s1/20260418-t168-s1-superset-doctrine.md` — S4→S1 adjoint (Promote / Express), WF20 grammar_promotion, pipeline, open questions
 
@@ -264,7 +264,57 @@ HG materialisation (4 envelopes):
 - ADD `urn:moos:program:sam.ontology-publication-v3.9` (type_id=program; carrier for §M16 ontology_publication — real type in v3.10)
 - LINK `urn:moos:program:sam.t187.ontology-publication --WF18 composes / composed-by--> urn:moos:program:sam.ontology-publication-v3.9`
 
-Next: return to §M18..§M20 spec enrichment — session as generalized workspace anchor, occupant as first-class, tool-mounting + recursive tool construction (6 more sub-programs → 26 total).
+---
+
+## T=168 round 5 — demo materialization + IRL-time gates + S0 operadic lingo
+
+Directive (sam, T=168): *"eval the kb/research and remove redundancy and or move to session... continue where we left bf the version audit bump, something to do with demo session role or type... 'adding specs deliverables project t hooks' is my term for hydrating graph in a irl connected way... effectively mapping spec gates over irl time through te session object."*
+
+### Research reorg
+
+`kb/research/wires/` subdir created; 2 wires-topic notes relocated:
+- `20260414-t164-wires-come-from.md` — moved from root
+- `20260417-t166-wire-answer-folder-nesting.md` — moved from root
+
+Cross-ref fix in `wires-come-from.md`: pointer to `session/20260414-t164-session-channel-purpose.md` updated to relative `../session/...`.
+
+Research root is now 4 clean subdirs: `kernel/` · `s1/` · `session/` · `wires/`. No stray top-level notes.
+
+### Demo materialization — 6 ADDs (v3.9 types put to use)
+
+Originally deferred from round 2 pre-v3.9-audit. Now materialized:
+
+| URN | Type | Role |
+|-----|------|------|
+| `urn:moos:view_filter:sam.important-programs` | view_filter (S2) | Sam's personal t-cone lens (type=program, owner=sam, status ∈ {active, draft}) |
+| `urn:moos:view_filter:sam.t168-open-deliverables` | view_filter (S2) | IRL-time filter using §M14 `fires_at` predicate on `starts_t ≥ 168` + `status=draft` |
+| `urn:moos:agent:sam.claude-code-desktop` | agent | Placeholder future occupant per §M19 — transport=mcp-stdio, status=placeholder |
+| `urn:moos:grammar_fragment:d19-1-session-has-occupant` | grammar_fragment (S1) | WF19 extension proposal — new port pair `has-occupant / is-occupant-of`, extend tgt_types with user+agent |
+| `urn:moos:grammar_fragment:d20-2-agent-invocation-protocol` | grammar_fragment (S1) | agent property proposal — `invocation_protocol` enum [stdio, mcp, http] |
+| `urn:moos:grammar_fragment:d14-1-time-predicates` | grammar_fragment (S1) | §M14 predicate-shape catalog — 12 time predicates + boolean composition (all_of, any_of) |
+
+All 3 grammar_fragments carry `status=proposed`, awaiting WF20 promotion ceremony. They crystallise §M14/§M19/§M20 doctrine as candidate S1 extensions.
+
+LINK demos (view_filter→session, agent→session) deferred — no live WF carrier in v3.9 (WF18 excludes view_filter from src_types). Standalone ADDs land the concepts for t-cone projection to pick up via property-level predicates.
+
+### IRL-time hydration — 6 MUTATE `target_t` on active sub-programs
+
+Sam's directive (*"mapping spec gates over irl time through the session object"*) materialized as `target_t` property on each active T=187 sub-program. Parent `sam.t187-kernel-proper` already holds `target_t=220`; sub-targets stage the 6 active deliverables across T=195..220:
+
+| Sub-program | target_t |
+|-------------|----------|
+| `t187.session-chrono-t` | 195 |
+| `t187.system-instruction` | 200 |
+| `t187.strata-enforcement` | 205 |
+| `t187.fold-endpoint` | 210 |
+| `t187.http3-quic` | 215 |
+| `t187.twin-deploy-mtdc` | 220 |
+
+`view_filter:sam.t168-open-deliverables` now has live targets to surface via any t-cone reader that honours §M14 `fires_at` predicates. Predicate evaluator itself deferred — see `hook-predicates` sub-program.
+
+### S0 operadic layer — new lingo note
+
+`kb/research/s1/20260418-t168-s0-operadic-layer.md` — proposes **op-node / slot / yield / threading / weave** terminology for the category-over-S1-categories layer where `purpose`, `session`, `program`, `workflow`, `channel` live as operadic elements with typed slots. Maps sam's "semantic-to-syntax pattern" onto S4 → S0-weave → S1 → S2 → leaves pipeline. Five open questions carried forward (purpose arity; channel stratum; harness as embedded op; threading as projection; S0 bounded vs unbounded).
 
 ---
 
@@ -290,6 +340,14 @@ urn:moos:program:sam.external-op
 urn:moos:purpose:sam.t164-tie-the-room-together
 urn:moos:agent:claude-code.hp-laptop
 urn:moos:agent:claude-code.hp-z440
+
+# Round 5 demo nodes (v3.9 types in use)
+urn:moos:view_filter:sam.important-programs
+urn:moos:view_filter:sam.t168-open-deliverables
+urn:moos:agent:sam.claude-code-desktop  (placeholder future occupant, §M19)
+urn:moos:grammar_fragment:d19-1-session-has-occupant  (status=proposed)
+urn:moos:grammar_fragment:d20-2-agent-invocation-protocol  (status=proposed)
+urn:moos:grammar_fragment:d14-1-time-predicates  (status=proposed)
 
 # Live sessions (exactly 2 — one per kernel, no T-day in URN)
 urn:moos:session:sam.claude-code-hp-laptop  (WF19-LINKed, seat_role=occupier)
