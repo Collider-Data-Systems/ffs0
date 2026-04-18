@@ -2456,6 +2456,68 @@
             "type": "datetime"
           }
         }
+      },
+      {
+        "id": "external_op",
+        "description": "IRL-condition gate node (§M17 S2 type). A manual operation that must be performed before an automated kernel path can proceed. Visible in the t-cone as pending action items with deadline_t. Each external_op carries a command_hint for the operator and automates_via_urn pointing at the program it unblocks. Status lifecycle: pending → done | cancelled.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:external_op:<owner>.<slug>",
+        "urn_example": "urn:moos:external_op:sam.mtdc-kernel-start",
+        "added_in_version": "3.9",
+        "ports": {
+          "out": [],
+          "in": []
+        },
+        "properties": {
+          "title": {
+            "mutability": "immutable",
+            "type": "string"
+          },
+          "owner_urn": {
+            "mutability": "immutable",
+            "type": "urn"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": ["pending", "done", "cancelled"]
+          },
+          "deadline_t": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "integer",
+            "note": "Moos-time T-day by which this operation must be completed."
+          },
+          "command_hint": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string",
+            "note": "Shell command or procedure hint for the operator."
+          },
+          "responsible_urn": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "urn",
+            "note": "URN of the user or agent responsible for executing this operation."
+          },
+          "automates_via_urn": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "urn",
+            "note": "URN of the program or sub-program this external_op unblocks when done."
+          },
+          "note": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          }
+        },
+        "audit_note": "Added T=168 round 8. Models IRL-gate conditions (ssh, DNS, curl) that must complete before twin-deploy-mtdc or v310-delivery can proceed. Proposed as grammar_fragment pending formal WF linkage."
       }
     ]
   },

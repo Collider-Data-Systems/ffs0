@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=168 (April 18, 2026) — round 7: still-pending cleanup — 10 more grammar_fragment proposals (6 §M18..§M20 backlog + 4 v3.10 deferred types)
+> Updated: T=168 (April 18, 2026) — round 8: T=187 delivery clock — 10 t_hooks mapping IRL-time gates, 2 successor programs (v310-delivery, wiring-proposer), 3 external_op IRL gates, 4 more grammar_fragment proposals (23 total)
 
 ---
 
@@ -52,10 +52,10 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 473 (round 7: +10 ADDs grammar_fragment proposals) |
-| Nodes | 158 (148 + 10 round-7 grammar_fragment ADDs) |
-| Relations | 198 (unchanged in round 7 — ADDs only, no LINK/UNLINK) |
-| Ontology | **v3.9 — 51 types, 20 WFs** (session.status + turn_count marked deprecated: true) |
+| Log entries | 561 (round 8: +88 spread over Batch A/B/C/D) |
+| Nodes | 177 (158 + 19 round-8 ADDs: 10 t_hooks + 1 program + 4 external_op + 4 grammar_fragment) |
+| Relations | 202 (198 + 3 round-8 WF18 depends-on LINKs + 1 delta from Batch B) |
+| Ontology | **v3.9 + external_op — 52 types, 20 WFs** (external_op ADDed to ontology.json in round 8; v3.9 canonical baseline unchanged) |
 
 ## Z440 (federation partner)
 
@@ -437,6 +437,102 @@ All 10 ADDs succeeded in one atomic batch. Kernel: log 463→473 (+10), nodes 14
 
 ---
 
+## T=168 round 8 — T=187 delivery clock + successor programs + external_op IRL gates
+
+Directive (sam, T=168): *"we have the t187 as a hook, a possible calendar event a delivery date, a possible node that future nodes will depend on, nodes that are composed by this node. Surprise me."*
+
+**Central idea.** T=187 = **May 7, 2026** (T=0 is 2025-11-01). The `t187-kernel-proper` program is now treated as a real IRL-time delivery node — the kind that gates successors, anchors sub-program sprint checkpoints, and gets its own t_hook cascade. The HG becomes its own **spec-level CI/CD pipeline**: t_hooks fire at target_t values across the T=187→T=220 window, each marking a sub-program checkpoint visible via the t-cone.
+
+Full doctrine: `kb/research/s1/20260418-t168-t187-delivery-clock.md`.
+
+### Calendar map
+
+| T-value | Calendar date | Role |
+|---------|--------------|------|
+| T=168 | 2026-04-18 | Today — round 8 |
+| T=187 | 2026-05-07 | Delivery window opens |
+| T=195 | 2026-05-15 | `session-chrono-t` checkpoint |
+| T=200 | 2026-05-20 | `system-instruction` checkpoint |
+| T=205 | 2026-05-25 | `strata-enforcement` checkpoint |
+| T=210 | 2026-05-30 | `fold-endpoint` checkpoint |
+| T=215 | 2026-06-04 | `http3-quic` checkpoint |
+| T=220 | 2026-06-09 | `twin-deploy-mtdc` checkpoint; delivery window closes; v310-delivery starts |
+| T=240 | 2026-06-29 | v3.10 delivery target — 23 grammar_fragments promoted |
+| T=250 | 2026-07-09 | wiring-proposer target — HDC-grounded auto-wiring active |
+
+### Batch A — 10 t_hook ADDs (delivery clock)
+
+| URN | owner_urn | predicate | react |
+|-----|-----------|-----------|-------|
+| `t_hook:sam.t187.delivery-opens` | `program:sam.t187-kernel-proper` | `fires_at t=187` | MUTATE kernel-proper `delivery_phase=in-delivery` |
+| `t_hook:sam.t187.delivery-closes` | `program:sam.t187-kernel-proper` | `closes_at t=220` | MUTATE kernel-proper `delivery_phase=closed` |
+| `t_hook:sam.t187.checkpoint.session-chrono-t` | `program:sam.t187.session-chrono-t` | `fires_at t=195` | MUTATE status=checkpoint |
+| `t_hook:sam.t187.checkpoint.system-instruction` | `program:sam.t187.system-instruction` | `fires_at t=200` | MUTATE status=checkpoint |
+| `t_hook:sam.t187.checkpoint.strata-enforcement` | `program:sam.t187.strata-enforcement` | `fires_at t=205` | MUTATE status=checkpoint |
+| `t_hook:sam.t187.checkpoint.fold-endpoint` | `program:sam.t187.fold-endpoint` | `fires_at t=210` | MUTATE status=checkpoint |
+| `t_hook:sam.t187.checkpoint.http3-quic` | `program:sam.t187.http3-quic` | `fires_at t=215` | MUTATE status=checkpoint |
+| `t_hook:sam.t187.checkpoint.twin-deploy-mtdc` | `program:sam.t187.twin-deploy-mtdc` | `fires_at t=220` | MUTATE status=checkpoint |
+| `t_hook:sam.v310-delivery.startable` | `program:sam.v310-delivery` | `all_of(fires_at t=220, after_urn kernel-proper.status=completed)` | MUTATE status=startable |
+| `t_hook:sam.wiring-proposer.startable` | `program:sam.wiring-proposer` | `all_of(fires_at t=240, after_urn kernel-proper.status=completed, after_urn v310-delivery.status=completed)` | MUTATE status=startable |
+
+`owner_urn` is a `t_hook` property (not a separate LINK) — kernel attaches via property lookup. Predicate evaluator for `all_of` + `after_urn` deferred to `t187.hook-predicates` sub-program (currently only `fires_at` is evaluated).
+
+### Batch B — 2 successor programs + 3 WF18 LINKs
+
+| Program | status | starts_t | target_t | Depends on |
+|---------|--------|----------|----------|------------|
+| `program:sam.v310-delivery` | draft | 220 | 240 | `t187-kernel-proper` |
+| `program:sam.wiring-proposer` | inert (pre-existing node, MUTATEd starts_t/target_t) | 240 | 250 | `t187-kernel-proper`, `v310-delivery` |
+
+WF18 LINKs added (composes/composed-by + depends-on/depended-by):
+- `v310-delivery --depends-on--> t187-kernel-proper`
+- `wiring-proposer --depends-on--> t187-kernel-proper`
+- `wiring-proposer --depends-on--> v310-delivery`
+
+### Batch C — 3 external_op ADDs (IRL-condition gates)
+
+Models §M17 doctrine: IRL manual operations whose completion gates sub-program status. Added `external_op` to `ontology.json` as an S2 type (not a grammar_fragment promotion — the type landed directly since the plan required it). One test node `external_op:sam.test` persists in log with status=cancelled (log-is-truth; cannot be removed).
+
+| URN | deadline_t | automates_via | command_hint |
+|-----|-----------|---------------|--------------|
+| `external_op:sam.mtdc-kernel-start` | 187 | `program:sam.t187.twin-deploy-mtdc` | `ssh mtdc; cd moos-kernel; ./moos-kernel-new --port 8000` |
+| `external_op:sam.cf-tunnel-api-mtdc` | 187 | `program:sam.t187.twin-deploy-mtdc` | `cloudflared tunnel route dns mtdc api.my-tiny-data-collider.nl` |
+| `external_op:sam.ontology-bootstrap-mtdc` | 220 | `program:sam.v310-delivery` | `curl -X POST http://api.my-tiny-data-collider.nl/ontology -d @kb/superset/ontology.json` |
+
+### Batch D — 4 more grammar_fragment proposals (23 total now)
+
+All four status=proposed, awaiting WF20 promotion.
+
+| URN suffix | Kind | Crystallises |
+|------------|------|--------------|
+| `v310-11-ontology-publication` | type | §M16 formalised. New S1 type `ontology_publication` with version / content_hash / signed_by / promoted_fragment_urns / supersedes_urn. Twin-link read-only sync makes v3.10 landing atomic. |
+| `v310-12-grammar-fragment-enrichment` | property | Adds `blocked_until: urn` to grammar_fragment (mutable, admin scope). Enables dependency-aware promotion queue. Verified rejection_reason already in v3.9. |
+| `v310-13-purpose-arity2` | wf_clause | Purpose as S0 arity-2 op-node. `phi_current` and `phi_target` become slots (WF01 LINKs with new port pairs) not scalar properties. Yield = phi-space direction computed at t-cone read time. |
+| `v310-14-startable-status` | property | Dual-kind: `program.status` enum gains `startable` + canonical `all_of(fires_at, after_urn*)` t_hook shape. Independent programs: arity-1; dependent programs: arity-N. Materialised by `v310-delivery.startable` + `wiring-proposer.startable` t_hooks. |
+
+### Round 8 batch summary
+
+| Batch | Rewrites | Net nodes | Net relations |
+|-------|----------|-----------|---------------|
+| A — delivery clock | 10 ADD + 1 MUTATE (ontology_publication-v3.9 calendar_date props) | +10 t_hook | 0 |
+| B — successor programs | 1 ADD (v310-delivery) + 2 MUTATE (wiring-proposer starts_t/target_t) + 3 LINK | +1 program | +3 WF18 |
+| C — external_op gates | 4 ADD (3 IRL + 1 test) + 2 MUTATE (test→cancelled) | +4 external_op | 0 |
+| D — grammar_fragments | 4 ADD | +4 grammar_fragment | 0 |
+
+Totals: **+19 nodes, +3+ relations, ~88 log entries**.
+
+**Grammar_fragment census:** 23 total (3 round 5 + 6 round 6 + 10 round 7 + 4 round 8). All status=proposed.
+
+### Deferred to future rounds
+
+- Predicate evaluator (`after_urn` + `all_of`) — `t187.hook-predicates` sub-program.
+- 6 active sub-program startable t_hooks (deferred until evaluator lands).
+- MUTATEs to t187-kernel-proper `delivery_phase / calendar_date_open / calendar_date_close` — fields not in program type spec; awaiting v3.10 delivery_phase enum addition.
+- external_op → sub-program LINK via `automates_via` port (WF extension TBD).
+- WF20 grammar_promotion ceremony for the 23 fragments.
+
+---
+
 ## Key URNs
 
 ```
@@ -489,6 +585,34 @@ urn:moos:grammar_fragment:v310-7-benchmark
 urn:moos:grammar_fragment:v310-8-evaluation
 urn:moos:grammar_fragment:v310-9-dataset
 urn:moos:grammar_fragment:v310-10-dsl
+
+# Round 8 successor programs (T=187 as delivery anchor)
+urn:moos:program:sam.v310-delivery       (starts_t=220, target_t=240, status=draft)
+urn:moos:program:sam.wiring-proposer     (starts_t=240, target_t=250, status=inert)
+
+# Round 8 delivery-clock t_hooks (10)
+urn:moos:t_hook:sam.t187.delivery-opens          (fires_at=187)
+urn:moos:t_hook:sam.t187.delivery-closes         (closes_at=220)
+urn:moos:t_hook:sam.t187.checkpoint.session-chrono-t     (fires_at=195)
+urn:moos:t_hook:sam.t187.checkpoint.system-instruction   (fires_at=200)
+urn:moos:t_hook:sam.t187.checkpoint.strata-enforcement   (fires_at=205)
+urn:moos:t_hook:sam.t187.checkpoint.fold-endpoint        (fires_at=210)
+urn:moos:t_hook:sam.t187.checkpoint.http3-quic           (fires_at=215)
+urn:moos:t_hook:sam.t187.checkpoint.twin-deploy-mtdc     (fires_at=220)
+urn:moos:t_hook:sam.v310-delivery.startable      (all_of fires_at=220, after_urn kernel-proper=completed)
+urn:moos:t_hook:sam.wiring-proposer.startable    (all_of fires_at=240, after_urn kernel-proper=completed, after_urn v310-delivery=completed)
+
+# Round 8 external_op IRL gates (3 + 1 test)
+urn:moos:external_op:sam.mtdc-kernel-start           (deadline_t=187)
+urn:moos:external_op:sam.cf-tunnel-api-mtdc          (deadline_t=187)
+urn:moos:external_op:sam.ontology-bootstrap-mtdc     (deadline_t=220)
+urn:moos:external_op:sam.test                        (status=cancelled — HTTP-API verification artifact)
+
+# Round 8 grammar_fragment proposals (all status=proposed)
+urn:moos:grammar_fragment:v310-11-ontology-publication
+urn:moos:grammar_fragment:v310-12-grammar-fragment-enrichment
+urn:moos:grammar_fragment:v310-13-purpose-arity2
+urn:moos:grammar_fragment:v310-14-startable-status
 
 # Live sessions (exactly 2 — one per kernel, no T-day in URN)
 urn:moos:session:sam.claude-code-hp-laptop  (WF19-LINKed, seat_role=occupier)
