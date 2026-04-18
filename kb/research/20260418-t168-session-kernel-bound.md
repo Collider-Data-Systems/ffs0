@@ -82,4 +82,10 @@ This is why `session.role` is mutable and part of WF19's `mutate_scope`. The rot
 - `kb/research/20260417-t187-kernel-proper.md` §M1 — session as monoid (algebra)
 - `kb/research/20260417-t187-kernel-proper.md` §M11 — session as kernel-liveness guarantee
 - `kb/research/20260417-t187-kernel-proper.md` §M13 — `t_local` vs `T` disambiguation
-- `kb/superset/ontology.json` — `session` type (S2), `role` type (S1), `capability` type (S1), WF19 `mutate_scope`
+- `kb/research/20260417-t187-kernel-proper.md` §M18..§M20 — session generalization (workspace anchor, occupant, tool-mounting)
+- `kb/research/20260418-t168-v3.9-ontology-audit.md` — v3.9 baseline audit that renamed `session.role` → `session.seat_role`
+- `kb/superset/ontology.json` v3.9 — `session` type (S2) with `seat_role` + deprecated `role`; `view_filter` (S2); `harness` (S2); WF19 `mutate_scope`
+
+## Addendum: generalization (post-v3.9)
+
+This FAQ established session as a permanent kernel-bound seat. §M18..§M20 (T=168 round 3) extend that model: the same session node also carries the occupant's workspace — view filters, pinned URNs, mounted tools, and the occupant identity as a first-class WF19 relation. That generalization is purely additive: the kernel-seat semantics here remain unchanged; the new faculties compose with them. Grammar fragments D19.1..D20.4 carry the candidate S1 shapes for WF20 promotion.

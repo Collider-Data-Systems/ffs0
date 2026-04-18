@@ -40,9 +40,9 @@ v3.9 added `seat_role` alongside legacy `role` (non-destructive); kernel validat
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 366 (362 at T=168 round-1 close, +2 seat_role MUTATEs, +1 program ADD, +1 WF18 LINK) |
-| Nodes | 120 |
-| Relations | 201 |
+| Log entries | 383 (362 round-1 + 4 v3.9 migration + 11 round-3 ADDs + 6 round-3 LINKs) |
+| Nodes | 126 |
+| Relations | 212 |
 | Ontology | **v3.9 — 51 types, 20 WFs** |
 
 ## Z440 (federation partner)
@@ -153,6 +153,23 @@ Added T=168 via `kb/research/20260417-t187-kernel-proper.md` §M11..§M17 append
 | `session-role-rename` | Q-knob defer | — | `session.role` → `session.seat_role` rename (disambiguate from S1 role) |
 
 Total T=187 sub-programs after this pass: **20** (11 existing + 9 new).
+
+---
+
+## T=168 round 3 — §M18..§M20 session generalization (6 new sub-programs, status=draft)
+
+Added T=168 round 3 via `kb/research/20260417-t187-kernel-proper.md` §M18..§M20 appendix. Builds on v3.9 primitives (view_filter, harness, skill). 8 grammar-fragment candidates identified (D19.1–D19.4, D20.1–D20.4) — awaiting WF20 promotion in a future round.
+
+| Sub-program | §M | Depends on | One-line scope |
+|-------------|----|------------|----------------|
+| `session-generalization` | §M18 | — (umbrella) | Merge agent_session into session; formalize view/occupant/tool-mount faculties |
+| `session-view-holder` | §M18 | t-hook-predicate-catalog | view_filter usage + pins-urn / filtered-by relation shapes (D19.3, D19.4) |
+| `session-occupant-relation` | §M19 | session-liveness | WF19 extension: has-occupant / is-occupant-of; WF02 capability-bound submit gate (D19.1) |
+| `tool-mounting` | §M20 | session-occupant-relation | session mounts-tool -> agent (D20.1), agent.invocation_protocol (D20.2), agent runs-in harness (D20.3) |
+| `cli-as-tool-protocol` | §M20 | tool-mounting | Canonical Claude CLI stdio-tool mount pattern |
+| `recursive-tool-construction` | §M20 | cli-as-tool-protocol | agent constructs agent (D20.4); capability-isolation CI statement |
+
+**Total T=187 sub-programs after round 3: 26** (11 originals + 9 T=168 round 1 + 6 T=168 round 3).
 
 ---
 

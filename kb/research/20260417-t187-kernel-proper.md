@@ -444,3 +444,130 @@ All 9 ADDed with `status=draft`, `starts_t=168`, and scope pointing back to this
 6. HG materialisation — atomic batch ADDs the 9 new sub-programs + WF18 `composes-by/composed-of` LINKs + dependency LINKs
 
 **No kernel code changes this session.**
+
+---
+
+# T=168 round-3 addendum — session generalization (§M18..§M20)
+
+> Picks up after the v3.9 baseline audit side-step. The v3.9 audit added the type primitives this section needs (`view_filter` S2, `harness` S2, `skill` S1); §M18..§M20 describe how session binds them.
+
+## §M18 — Session as generalized workspace anchor
+
+A session is simultaneously:
+1. **Kernel seat** (§M11 liveness, §M13 timers) — the previously-specified role.
+2. **Workspace anchor** (new) — carrier of the occupant's t-cone view (§M15), pinned URNs, mounted tools, view preferences.
+
+The v3.8 session had just `role`, `local_t`, `context_urn`, `status`, `turn_count`, `started_at`. v3.9 renamed `role → seat_role` (non-destructive). §M18 adds:
+
+**New properties (candidate — not yet active in v3.9 ontology):**
+- `view_prefs` (mutable, owner) — scalar UI preferences only: `{sort_by, fold_depth, density, theme}`. Anything topological (pinned URNs, filter predicates) is a relation, per `topology_property_boundary`.
+
+**New relations (candidate — carried as grammar_fragments pending promotion):**
+- `session --pins-urn / pinned-by-session--> <URN>` — a session can pin any node into its attention. Arbitrary target type (generic topology port).
+- `session --filtered-by / filters-session--> view_filter` — a session can have zero or more named view_filter nodes scoping its t-cone projection.
+
+**Why relations not lists-in-property.** The `topology_property_boundary` rule says "If the information involves two or more nodes, it is a relation." A pin to a program URN is a relation between session and program; it must not be a property array. This is what distinguishes the carpet from a record database.
+
+**agent_session merge.** v3.9 deprecated `agent_session`. Its salvageable fields map to session:
+- `agent_session.agent_urn` → session's occupant relation (§M19).
+- `agent_session.role` (lead|active|listening) — discarded; session `seat_role` + occupant covers it.
+- `agent_session.focus` port — retained on session (attention surface).
+- `agent_session.reads` port — discarded (no matching in-port anywhere, per audit §A5).
+
+**§M15 t-cone composition.** The v3.8 t-cone was a raw projection of "nodes with open t-hooks the occupier's capability grants access to." §M18 composes it with session.view_filter relations: `t-cone(session, T) = { n ∈ open_hooks(T) ∩ WF02_visible(session.occupant) | ∀ vf ∈ session.filtered-by. vf.predicate(n) }`.
+
+## §M19 — Occupant as first-class
+
+Occupant = the principal actually driving the session. Distinct from `seat_role` (a scalar describing session's place in kernel occupancy).
+
+**New relation (candidate):** `session --has-occupant / is-occupant-of--> agent | user`
+
+WF19 extends to carry this port pair:
+- `src_types: session` (unchanged)
+- `tgt_types: [kernel, session, agent_session, user, agent]` (v3.9 adds user + agent as tgt_types for has-occupant — grammar_fragment D19.1)
+
+The occupant's `capability` set (WF02) bounds what rewrites the session may submit. Kernel gate-check at Validate: `session.submit_rewrite(r) allowed IFF r.category ∈ capabilities(session.occupant) ∧ session.seat_role ∈ {occupier, delegate}`.
+
+**Rotation.** Changing occupant = MUTATE of the has-occupant LINK's target_urn (one edge, atomic). Not ADD+UNLINK. This preserves session identity (CI-3) across occupant rotation.
+
+**Concrete path.** Sam's direction:
+- Session `sam.claude-code-hp-laptop.t167` currently has occupant = `urn:moos:agent:claude-code.hp-laptop` (this process).
+- Future: rotate to `urn:moos:agent:sam.claude-code-desktop` when the Claude Code Desktop app is wired in.
+- Further future: rotate to a homemade agent URN running locally, connected via MCP.
+
+## §M20 — Tool-mounting and recursive tool construction
+
+Occupants need tools. Tools themselves are agents. The relation that binds them:
+
+**New relation (candidate):** `session --mounts-tool / tool-mounted-in-session--> agent`
+
+The tool-agent's invocation surface is declared on the agent node:
+- `agent.invocation_protocol ∈ {"stdio", "mcp", "http"}` (property candidate)
+- Harness for runtime: `agent --runs-in / runs--> harness` (v3.9 `harness` type, §D6)
+
+When the occupant invokes a mounted tool, the tool-call node (existing interaction type) records `tool_call.agent_urn = mounted_agent`, rows for argument/result flow through existing WF11 (tool invocation).
+
+**Recursive tool construction.** Tools that make tools.
+
+**New relation (candidate):** `agent --constructs / constructed-by--> agent`
+
+CI-invariant (stated, not formally verified in v3.9): nested tool construction must preserve rewrite isolation. Each constructed tool has its own capability scope; the constructor's capabilities do NOT auto-inherit to the constructed tool. This prevents privilege escalation via recursive construction (a low-privileged constructor cannot produce a high-privileged tool).
+
+**Canonical first mount — Claude CLI.** The Claude Code CLI binary is the canonical first tool. Its invocation_protocol = "stdio". A session's occupant can spawn it as a sub-tool for:
+- Generating code (which the occupant then applies as an edit).
+- Running a sub-prompt against a different model (Opus for analysis, Haiku for bulk transforms).
+- Producing a new tool binary that becomes a further mount.
+
+**Caveat.** v3.9 does NOT implement the Claude CLI mounting — only the doctrine. The `cli-as-tool-protocol` and `recursive-tool-construction` sub-programs (below) carry implementation.
+
+## Grammar fragments this round adds (as governance_proposal candidates for WF20)
+
+Per the S1-superset doctrine (`kb/research/20260418-t168-s1-superset-doctrine.md`), §M18..§M20 propose S1 extensions. These are NOT landed in v3.9 ontology.json; they are described here, ready to be ADDed as `grammar_fragment` nodes in a later round once the WF20 promotion flow has been exercised:
+
+| Fragment | Kind | Shape |
+|----------|------|-------|
+| `D19.1-session-has-occupant` | wf_clause | WF19 tgt_types += [user, agent]; src_port alias `has-occupant` / tgt_port alias `is-occupant-of` |
+| `D19.2-session-view-prefs` | property | session.view_prefs: object (sort_by, fold_depth, density, theme); authority: owner |
+| `D19.3-session-pins-urn` | port | session `pins-urn / pinned-by-session` — topology port color; tgt: any |
+| `D19.4-session-filtered-by` | port | session `filtered-by / filters-session` — semantic port; tgt: view_filter |
+| `D20.1-session-mounts-tool` | port | session `mounts-tool / tool-mounted-in-session`; tgt: agent |
+| `D20.2-agent-invocation-protocol` | property | agent.invocation_protocol: enum(stdio, mcp, http); mutability: mutable |
+| `D20.3-agent-runs-in-harness` | port | agent `runs-in / runs`; tgt: harness |
+| `D20.4-agent-constructs-agent` | port | agent `constructs / constructed-by`; tgt: agent; with CI note on capability isolation |
+
+Pipeline: each fragment becomes an ADD+MUTATE chain via WF20 — first `status=proposed` (ADD), admin review, then `promoted` or `rejected` (MUTATE). When all D19.*/D20.* fragments reach `merged`, the ontology bumps to v3.10 carrying them as live grammar.
+
+## Updated T=187 sub-program table — 6 new (total 26)
+
+| Suffix | §M | Depends on | Nature (this session) |
+|--------|----|------------|----------------------|
+| `session-generalization` | §M18 | — (umbrella) | Spec: merge `agent_session` into `session`; view/occupant/tool-mount faculties |
+| `session-view-holder` | §M18 | t-hook-predicate-catalog (§M14), v3.9 view_filter type | Spec: view_filter usage + pins-urn / filtered-by relation shapes |
+| `session-occupant-relation` | §M19 | session-liveness | Spec: WF19 extension for has-occupant / is-occupant-of; WF02 capability-bound gate |
+| `tool-mounting` | §M20 | session-occupant-relation, v3.9 harness type | Spec: session mounts-tool → agent; invocation_protocol property |
+| `cli-as-tool-protocol` | §M20 | tool-mounting | Spec: canonical Claude CLI stdio-tool mount pattern |
+| `recursive-tool-construction` | §M20 | cli-as-tool-protocol | Spec: agent constructs agent relation + capability-isolation CI |
+
+All 6 ADDed with `status=draft`, `starts_t=168`, scope pointing back to this note's §M anchor.
+
+Dependency DAG:
+```
+session-generalization (umbrella)
+   │
+   ├─ session-view-holder     (→ M14 + v3.9 view_filter)
+   ├─ session-occupant-relation (→ session-liveness)
+   │      │
+   │      └─ tool-mounting     (→ v3.9 harness)
+   │             │
+   │             └─ cli-as-tool-protocol
+   │                    │
+   │                    └─ recursive-tool-construction
+```
+
+## Deliverable trail (T=168 round 3, this section)
+
+1. This appended section — §M18..§M20 + 8 grammar-fragment proposals + updated sub-program table (20 → 26) ✓
+2. HG materialisation — 6 new `program` ADDs + 6 WF18 composes LINKs + 5 WF18 depends-on LINKs
+3. `running-state.md` — update sub-program count to 26, add round-3 entry
+
+**No kernel code changes this round. No ontology.json changes this round (v3.9 is the baseline; §M18..§M20 extensions are captured as grammar-fragment candidates awaiting WF20 promotion).**
