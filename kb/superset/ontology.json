@@ -14,7 +14,7 @@
       "summary": "Session-occupancy bump — D19.1 grammar_fragment merged. WF19 extended with has-occupant/is-occupant-of port pair for §M11+§M12+§M19 session-occupancy doctrine.",
       "changes": {
         "wf_extensions": [
-          "WF19 Session governance — tgt_types extends with `user` and `agent` (was kernel, session, agent_session). A second port pair `has-occupant` (src) / `is-occupant-of` (tgt) is declared for session→principal occupancy topology. Canonical opens-on/occupied-by pair remains for session→kernel. Kernel portColorFromName in operad/validate.go maps both new ports to workflow color."
+          "WF19 Session governance — tgt_types extends with `user` and `agent` (was kernel, session, agent_session). An additional port pair `has-occupant` (src) / `is-occupant-of` (tgt) is declared for session→principal occupancy topology. The canonical opens-on/occupied-by pair remains in place for session→kernel seat linkage. Companion kernel support (port-color mapping + session-occupant + admin-capability helpers) lands in moos-kernel PR #13; this ontology bump is the ffs0-side half."
         ],
         "fragment_merges": [
           "urn:moos:grammar_fragment:d19-1-session-has-occupant — status: proposed → merged. Specification: WF19 port pair + tgt_types extension (see above). Author: sam. Evidence: kb/research/kernel/20260417-t187-kernel-proper.md §M19."
@@ -394,7 +394,7 @@
               "observer",
               "delegate"
             ],
-            "note": "v3.9 replacement for `role` — disambiguates session-seat-state from the S1 `role` permission-bundle type. Same value domain as deprecated `role`. WF19 mutate_scope includes seat_role. Migration: v3.9 adds MUTATE actions to set seat_role on existing sessions; v3.10 removes the old `role` field."
+            "note": "v3.9 replacement for `role` — disambiguates session-seat-state from the S1 `role` permission-bundle type. Same value domain as deprecated `role`. WF19 mutate_scope includes seat_role. Migration: v3.9 adds MUTATE actions to set seat_role on existing sessions; removal of the old `role` field is scheduled for v3.11 (v3.10.0 still accepts both for back-compat)."
           }
         },
         "note": "Participants are discovered via WF07 relations — NOT stored as a property. Session is a monoid (M1): identity = empty session, composition = sequential kernel claims. Sessions are PERMANENT kernel-bound S2 nodes — once WF19-LINKed (opens-on/occupied-by) to a kernel they persist indefinitely; the `<T-day>` segment in urn_pattern is a creation-time label, NOT a lifetime bound. Occupancy rotates via the `seat_role` property (WF19 mutate_scope) and WF19 `transfers-to` LINKs — never by creating new session nodes per work period. A kernel's occupancy ledger is the set of sessions WF19-LINKed to it; at any instant at most one carries seat_role=occupier (see §M11 kernel-liveness guarantee in 20260417-t187-kernel-proper.md). v3.9 rename: session.role → session.seat_role (non-destructive; both coexist until v3.10). See §M18..§M20 (deferred to v3.10 sub-programs): session will also be generalized as a workspace anchor carrying view_filter (S2) pinned URNs, occupant (has-occupant / is-occupant-of WF19-ext), and mounted tools (mounts-tool / tool-mounted-in-session)."
@@ -3595,7 +3595,7 @@
         "context_urn"
       ],
       "sync_mode": "local-only",
-      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically. v3.9: mutate_scope adds `seat_role` alongside legacy `role` — both supported until v3.10 removes `role`. v3.10.0: D19.1 grammar_fragment merged — tgt_types extended with user and agent, and a second port pair (has-occupant / is-occupant-of) added to carry occupancy topology. The canonical port pair (opens-on / occupied-by) remains the session-to-kernel link; the new pair is session-to-principal for §M15 t-cone capability resolution. Kernel honours both pairs under WF19; ValidateLINK checks port colors via operad.portColorFromName."
+      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically. v3.9: mutate_scope adds `seat_role` alongside legacy `role` — both supported; removal of the legacy `role` field is scheduled for v3.11. v3.10.0: D19.1 grammar_fragment merged — tgt_types extended with user and agent, plus an additional port pair (`has-occupant` / `is-occupant-of`) to carry occupancy topology. The canonical pair (`opens-on` / `occupied-by`) remains the session-to-kernel seat link; the additional pair is session-to-principal, used by §M15 t-cone for capability resolution. Kernel support (port-color mapping + occupant/admin helpers) lands in the companion moos-kernel PR #13 — this ontology bump is the ffs0-side half."
     },
     {
       "id": "WF20",
