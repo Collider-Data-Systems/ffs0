@@ -1,13 +1,53 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.11.0",
+  "version": "3.12.0",
   "t_day": 169,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed) — replaces the proposal-existence idempotency check with a first-class state machine ahead of approver-reactor work.",
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md.",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "kb/research/session/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "kb/research/s1/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "kb/research/s1/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "3.12.0",
+      "t_day": 169,
+      "summary": "First WF20 ceremony — promotes 5 proposed grammar_fragments (D19.2/D19.3/D19.4/D20.1/D20.2) and lands baseline session type fixes. Formalizes the session as kernel-bound workspace per round-10 doctrine note (kb/research/session/20260419-t169-session-generalization.md).",
+      "changes": {
+        "fragment_promotions": [
+          "urn:moos:grammar_fragment:d19-2-session-view-prefs — property added: session.view_prefs (object). Status: proposed → applied.",
+          "urn:moos:grammar_fragment:d19-3-session-pins-urn — WF19 additional_port_pair added: pins-urn / pinned-by-session (src: session, tgt: any node). Status: proposed → applied.",
+          "urn:moos:grammar_fragment:d19-4-session-filtered-by — WF19 additional_port_pair added: filtered-by / filters-session (src: session, tgt: view_filter). Status: proposed → applied.",
+          "urn:moos:grammar_fragment:d20-1-session-mounts-tool — WF19 additional_port_pair added: mounts-tool / tool-mounted-in-session (src: session, tgt: agent). Status: proposed → applied.",
+          "urn:moos:grammar_fragment:d20-2-agent-invocation-protocol — property added: agent.invocation_protocol (enum stdio/mcp/http). Status: proposed → applied."
+        ],
+        "session_type_baseline_fixes": [
+          "urn_pattern: urn:moos:session:<user>.<agent>.<T-day> → urn:moos:session:<kernel-short> | <owner-short>.<purpose-slug>. Reflects kernel-bound workspace semantics (birth-session per kernel + purpose-scoped workspaces per principal).",
+          "description: rewritten to 'persistent, always-on, kernel-bound workspace (tmux/Chrome-tab analogy). Occupant carried by single-valued WF19 has-occupant LINK.'",
+          "seat_role property flagged deprecated under the corrected single-driver-via-LINK model. Scheduled for removal in v3.13. Existing instances retain the field; validators ignore it going forward.",
+          "Type-level note updated with the corrected CT framing (transition-monoid + operadic scope composition + user/group lattice — three separable algebras). Supersedes the 'session IS a monoid' phrasing in session-channel-purpose.md §2.",
+          "Added property: view_prefs (object with sort_by/fold_depth/density/theme scalars). Holds UI prefs for the occupant's t-cone rendering; distinct from view_filter (saved predicate) and pins (topology)."
+        ],
+        "wf19_extensions": [
+          "Three new additional_port_pairs on WF19 — all single-valued-with-rotation semantics (like has-occupant). Full specs below in the WF19 definition."
+        ],
+        "agent_type_extensions": [
+          "New property: agent.invocation_protocol (enum: stdio, mcp, http). Documents how the agent is invoked — complements transport_type (the transport layer) and delegate_type (the runtime kind)."
+        ],
+        "migration_actions_in_hg": [
+          "Z440-side: hp-laptop kernel holds the original proposed fragment nodes; Z440 kernel does not. The ontology.json write (git-shared) is the ceremony's material outcome; HG-level status MUTATEs (proposed→approved→applied) can land on hp-laptop's kernel in a separate conversation. Z440 commits the ontology.json change; kernel-0 restart loads v3.12 and begins validating against it.",
+          "No MUTATEs against ontology itself beyond this version+changelog bump. The bump IS the ceremony at the file-system level."
+        ],
+        "backwards_compat": [
+          "Pre-v3.12 kernels tolerate the new port pairs and agent.invocation_protocol as additional_port_pairs + properties are additive. seat_role deprecation is advisory — existing nodes carrying the property still validate.",
+          "Rollback-safe: the 5 promoted fragments are additive to the S1 schema; removing them requires a separate ceremony (WF20 reverse-direction — not yet designed)."
+        ],
+        "references": [
+          "kb/research/session/20260419-t169-session-generalization.md — the round-10 doctrine note this ceremony operationalizes.",
+          "kb/research/s1/20260418-t168-v3.9-ontology-audit.md §F — WF20 ceremony algorithm (this is its first exercise).",
+          "Plan file: C:/Users/hp/.claude/plans/1-if-specs-are-parsed-jellyfish.md Conversation B."
+        ]
+      }
+    },
     {
       "version": "3.11.0",
       "t_day": 169,
@@ -303,6 +343,19 @@
               "webhook"
             ]
           },
+          "invocation_protocol": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "stdio",
+              "mcp",
+              "http"
+            ],
+            "added_in_version": "3.12.0",
+            "promotes_fragment": "urn:moos:grammar_fragment:d20-2-agent-invocation-protocol",
+            "note": "How this agent is invoked at the application layer. Complements transport_type (wire-level protocol) and delegate_type (runtime kind). stdio = CLI agents / MCP stdio bindings; mcp = MCP SSE/Streamable-HTTP; http = plain HTTP endpoints. Promoted in the first WF20 ceremony (v3.12.0, T=169 round 10)."
+          },
           "model": {
             "mutability": "mutable",
             "authority_scope": "owner",
@@ -343,10 +396,10 @@
       },
       {
         "id": "session",
-        "description": "A bounded interaction context: participants x time interval.",
+        "description": "Persistent, always-on, kernel-bound workspace. Analogue: tmux session, Chrome tab, desktop application left open. Defined by the tuple (scope, purpose) × (host, owner, occupant): scope = pinned URNs (D19.3) + contained sessions (D22.5 future); purpose = single-valued has-purpose LINK (D22.1 future); host = the kernel it runs on (WF19 opens-on); owner = the principal served (user/agent/kernel-for-birth-sessions); occupant = the current driver (WF19 has-occupant, single-valued, rotatable via MUTATE target_urn). Not an IDE conversation — conversations are ephemeral and traced via actor_urn on each rewrite. See kb/research/session/20260419-t169-session-generalization.md for the full corrected model.",
         "stratum": "S2",
-        "urn_pattern": "urn:moos:session:<user>.<agent>.<T-day>",
-        "urn_example": "urn:moos:session:sam.claude-code.T152",
+        "urn_pattern": "urn:moos:session:<kernel-short> | urn:moos:session:<owner-short>.<purpose-slug>",
+        "urn_example": "urn:moos:session:hp-z440.primary",
         "ports": {
           "out": [
             "focus",
@@ -416,10 +469,20 @@
               "observer",
               "delegate"
             ],
-            "note": "v3.9 replacement for `role` — disambiguates session-seat-state from the S1 `role` permission-bundle type. Same value domain as deprecated `role`. WF19 mutate_scope includes seat_role. Migration: v3.9 adds MUTATE actions to set seat_role on existing sessions; removal of the old `role` field is scheduled for v3.11 (v3.10.0 still accepts both for back-compat)."
+            "deprecated": true,
+            "deprecated_in_version": "3.12.0",
+            "deprecation_note": "Redundant under the single-driver-via-has-occupant-LINK model (D19.1 merged v3.10, D22.2 invariant proposed v3.12). The presence/absence of the has-occupant LINK captures idle-vs-driven; the LINK target captures who. Observer/delegate semantics move to WF02 delegates-to LINKs between principals, orthogonal to session membership. Existing sessions carrying seat_role continue to validate until removal (scheduled v3.13). See kb/research/session/20260419-t169-session-generalization.md §3."
+          },
+          "view_prefs": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "added_in_version": "3.12.0",
+            "promotes_fragment": "urn:moos:grammar_fragment:d19-2-session-view-prefs",
+            "note": "Scalar UI prefs held by the session for its occupant's t-cone rendering. Non-topological — anything topological (pins, filters) is carried by relations (D19.3/D19.4). Distinct from view_filter (a saved predicate): view_prefs is how the filtered result is displayed. Schema: {sort_by: enum[created_at|t_ref|target_t|priority], fold_depth: integer(default 2), density: enum[compact|comfortable|spacious], theme: string(optional)}."
           }
         },
-        "note": "Participants are discovered via WF07 relations — NOT stored as a property. Session is a monoid (M1): identity = empty session, composition = sequential kernel claims. Sessions are PERMANENT kernel-bound S2 nodes — once WF19-LINKed (opens-on/occupied-by) to a kernel they persist indefinitely; the `<T-day>` segment in urn_pattern is a creation-time label, NOT a lifetime bound. Occupancy rotates via the `seat_role` property (WF19 mutate_scope) and WF19 `transfers-to` LINKs — never by creating new session nodes per work period. A kernel's occupancy ledger is the set of sessions WF19-LINKed to it; at any instant at most one carries seat_role=occupier (see §M11 kernel-liveness guarantee in 20260417-t187-kernel-proper.md). v3.9 rename: session.role → session.seat_role (non-destructive; both coexist until v3.10). See §M18..§M20 (deferred to v3.10 sub-programs): session will also be generalized as a workspace anchor carrying view_filter (S2) pinned URNs, occupant (has-occupant / is-occupant-of WF19-ext), and mounted tools (mounts-tool / tool-mounted-in-session)."
+        "note": "Participants are discovered via WF07 relations — NOT stored as a property. Each session is a category with one object (the session's snapshot); its self-morphisms (advance local_t, rotate has-occupant target_urn, rotate has-purpose, add/remove pin, mount/unmount tool, context-swap) form a monoid under composition with identity = no-op. §M4 `S: SessionCat → KernelCat` is the structure-preserving functor; WF19 is the naturality square. Two additional algebraic layers compose on top: operadic scope composition (sessions nest via scope containment, birth-session as root scope) and a user/group topology lattice orthogonal to scope (which principals can open/occupy which sessions, partially carried by WF02). The old 'session IS a monoid' phrasing (session-channel-purpose.md §2) confused identity-morphism with empty-object; the corrected framing lives in kb/research/session/20260419-t169-session-generalization.md §2. Sessions are PERMANENT kernel-bound S2 nodes — once WF19-LINKed (opens-on/occupied-by) to a kernel they persist indefinitely. A kernel's occupancy ledger is the set of has-occupant target_urns its session(s) have held over time, retrievable via log replay. Birth-session per kernel is ADDed atomically with the kernel (D22.4 proposed); additional purpose-scoped sessions may be ADDed as workspaces (Chrome-tab model). See §M11 (liveness), §M13 (local_t as heartbeat), §M18-§M20 (session generalization)."
       },
       {
         "id": "endpoint",
@@ -3618,9 +3681,36 @@
           "tgt_port": "is-occupant-of",
           "src_types": ["session"],
           "tgt_types": ["user", "agent"],
-          "description": "§M19 session-occupancy port pair. Session holds exactly one has-occupant relation at a time pointing at the user or agent that is currently driving the session. Seat rotation (occupier ↔ delegate ↔ observer) is the seat_role MUTATE; the has-occupant LINK changes only when occupancy itself transfers to a different principal.",
+          "description": "§M19 session-occupancy port pair. Session holds at-most-one has-occupant relation at a time pointing at the user or agent that is currently driving the session. Rotation = MUTATE of the LINK's target_urn (atomic; preserves session identity per CI-3). D22.2 (proposed v3.12) formalizes the at-most-one invariant. Zero has-occupant = session alive but idle; one = session occupied and driving.",
           "added_in_version": "3.10.0",
           "promotes_fragment": "urn:moos:grammar_fragment:d19-1-session-has-occupant"
+        },
+        {
+          "src_port": "pins-urn",
+          "tgt_port": "pinned-by-session",
+          "src_types": ["session"],
+          "tgt_types": ["*"],
+          "description": "§M18 session workspace anchor — pins. Session pins arbitrary nodes (kernels, programs, purposes, other sessions, knowledge_items, calendar_events — any node) as its follow-list / dashboard contents. Many pins per session (unlike has-occupant which is single-valued). Adding a pin = ADD pins-urn LINK; removing = UNLINK. Workspace scope evolves via topology changes, not via property churn.",
+          "added_in_version": "3.12.0",
+          "promotes_fragment": "urn:moos:grammar_fragment:d19-3-session-pins-urn"
+        },
+        {
+          "src_port": "filtered-by",
+          "tgt_port": "filters-session",
+          "src_types": ["session"],
+          "tgt_types": ["view_filter"],
+          "description": "§M18 session workspace anchor — filtered view. Session binds to one or more view_filter nodes whose predicates restrict what's visible in the t-cone projection. §M15 t-cone composes as the intersection over all bound predicates. Multiple view_filters allowed per session.",
+          "added_in_version": "3.12.0",
+          "promotes_fragment": "urn:moos:grammar_fragment:d19-4-session-filtered-by"
+        },
+        {
+          "src_port": "mounts-tool",
+          "tgt_port": "tool-mounted-in-session",
+          "src_types": ["session"],
+          "tgt_types": ["agent"],
+          "description": "§M20 session workspace anchor — mounted tools. Session binds to agent nodes that the session's occupant can invoke under WF02 capability scope. Multiple mounted tools per session allowed. Distinguishes the session's invokable-tools-list (topology) from its occupant (who is actually driving right now). When combined with agent.invocation_protocol (v3.12) this gives the session a full tool-library shape compatible with MCP client, LangGraph, CrewAI, etc.",
+          "added_in_version": "3.12.0",
+          "promotes_fragment": "urn:moos:grammar_fragment:d20-1-session-mounts-tool"
         }
       ],
       "authority": "kernel",
@@ -3633,7 +3723,7 @@
         "context_urn"
       ],
       "sync_mode": "local-only",
-      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically. v3.9: mutate_scope adds `seat_role` alongside legacy `role` — both supported; removal of the legacy `role` field is scheduled for v3.11. v3.10.0: D19.1 grammar_fragment merged — tgt_types extended with user and agent, plus an additional port pair (`has-occupant` / `is-occupant-of`) to carry occupancy topology. The canonical pair (`opens-on` / `occupied-by`) remains the session-to-kernel seat link; the additional pair is session-to-principal, used by §M15 t-cone for capability resolution. Kernel support (port-color mapping + occupant/admin helpers) lands in the companion moos-kernel PR #13 — this ontology bump is the ffs0-side half."
+      "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically. v3.9: mutate_scope adds `seat_role` alongside legacy `role` — both supported; removal of the legacy `role` field is scheduled for v3.11. v3.10.0: D19.1 grammar_fragment merged — tgt_types extended with user and agent, plus an additional port pair (`has-occupant` / `is-occupant-of`) to carry occupancy topology. The canonical pair (`opens-on` / `occupied-by`) remains the session-to-kernel seat link; the additional pair is session-to-principal, used by §M15 t-cone for capability resolution. Kernel support (port-color mapping + occupant/admin helpers) lands in the companion moos-kernel PR #13 — this ontology bump is the ffs0-side half. v3.12.0: first WF20 ceremony promotes D19.3 (pins-urn/pinned-by-session → any node, many pins), D19.4 (filtered-by/filters-session → view_filter), and D20.1 (mounts-tool/tool-mounted-in-session → agent) as three new additional_port_pairs — completing the §M18-§M20 session-as-workspace shape. seat_role property deprecated under the corrected single-driver-via-LINK model (see kb/research/session/20260419-t169-session-generalization.md §3). NOTE TO KERNEL CODE: the current operad/loader.go does not consume additional_port_pairs; the five pairs declared here (has-occupant plus the three v3.12 additions) validate only as the primary opens-on/occupied-by pair until the loader gains multi-port-pair awareness. Tracked as a code gap; round-11 session-occupancy sub-program closes it."
     },
     {
       "id": "WF20",
