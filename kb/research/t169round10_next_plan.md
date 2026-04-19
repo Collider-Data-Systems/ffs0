@@ -55,13 +55,25 @@ cd /d/HPZ440/moos-kernel && ./moos-kernel.exe \
 
 **If restart fails** (schema error on v3.12): diagnose. Possible causes: JSON syntax error I missed, ontology loader rejecting `deprecated: true` markers I added, fragment-reference IDs not matching existing fragments. Roll forward by fixing, not by reverting to v3.11.
 
+## Post-round-10 MVP projection (added after Conversation D)
+
+After Conversation D I projected the 6-gate MVP roadmap into the HG on Z440. Details in `t169round10_conv_sum_claude_z440.md` "Post-Conversation-D addition" section. Summary:
+
+- `purpose:sam.mvp-sovereign-knowledge-os` — T=190 (2026-05-10) target: demo-able sovereign knowledge OS
+- `program:sam.mvp-delivery` + 6 gate sub-programs (G1..G6) with t_hooks + calendar_events + session
+- MVP spec is now HG-native: queryable via `/t-cone`, MUTATE-able as reality slips, auditable via log-is-truth
+- G1 (session layer code) IS what Conversation E below executes. They're the same work.
+- Z440 HG already has 9 source_feeds, watcher/reactor ingest pipeline, 2 classification_schemes — MVP G3 and G5 reference these rather than reinvent.
+
+The round-10 program (`sam.round10-session-generalization`) is `scheduled-after` mvp-g1-session-layer via WF18, so the fresh conversation's work chains cleanly: closes round 10's operational side, then opens round 11 which IS MVP G1.
+
 ## Decision 2 — scope of the fresh conversation
 
 Pick one:
 
-**Option A — Minimal (30 min)**: just the restart + verification + marker commit. Clean close of round 10's operational side. Round 11 starts in a later conversation.
+**Option A — Minimal (30 min)**: just the kernel restart + verification + marker commit. Clean close of round 10's operational side. Round 11 / MVP G1 starts in a later conversation.
 
-**Option B — Opener-for-round-11 (~90 min, recommended if context allows)**: restart + verify, then open Conversation E PR 1 on moos-kernel:
+**Option B — Opener-for-round-11 / MVP G1 first PR (~90 min, recommended if context allows)**: restart + verify, then open Conversation E / MVP G1 PR 1 on moos-kernel:
 
 - Branch: `feat/t187-session-occupancy-rotate`
 - File changes: `internal/operad/occupancy.go` gains `RotateSessionOccupant(state, sessionURN, newPrincipalURN) (graph.Envelope, error)` helper + its validation logic. `internal/operad/occupancy_test.go` gets rotation tests (happy path; double-occupant rejected if D22.2 invariant code lands; new principal is user/agent).
@@ -81,6 +93,10 @@ Default choice: **Option B**. Delivers visible round-11 progress while keeping t
 - [ ] Verify startup log matches expectations.
 - [ ] Commit `T=169 round 10: Z440 kernel on v3.12 ontology` on ffs0 main (if any running-state header tweak is needed; otherwise no commit — the log-on-disk IS the change record).
 - [ ] Optionally: push a small running-state header update reflecting "Z440 kernel on v3.12.0 — PID <new>".
+
+### MVP G1 progression markers (all options)
+
+Post-G1 PR merges, MUTATE `program:sam.mvp-g1-session-layer` status `active → completed`. G1's t_hook at T=173 (2026-04-23) will also auto-MUTATE to checkpoint via react_template once sweep ticks past it (effective after G2 approver reactor lands — until then manual MUTATE by sam or admin-session).
 
 ### Round-11 opener (Option B)
 

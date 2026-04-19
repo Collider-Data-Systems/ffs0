@@ -77,6 +77,43 @@ Practical consequence for Conversation A: the has-occupant LINKs I planned to em
   - Note: Z440's ontology commit is visible to hp-laptop via `git pull`; hp-laptop's kernel also needs restart to load v3.12.
 - **Conversation E / round 11**: session-occupancy sub-program Go implementation — 4 stacked moos-kernel PRs.
 
+## Post-Conversation-D addition: MVP spec projected into HG
+
+After closing round 10's 4-conversation arc, sam directed: project the MVP roadmap into the HG itself as a time-dependent spec. Executed (31 rewrites, Z440 log 192 → 223; +3 scope MUTATEs → 226):
+
+- **Purpose**: `urn:moos:purpose:sam.mvp-sovereign-knowledge-os` (target_state: demo-able sovereign knowledge OS by T=190 / 2026-05-10).
+- **7 programs**: `mvp-delivery` parent + 6 gates (`mvp-g1-session-layer` through `mvp-g6-twin-deploy`), each with starts_t + target_t + own t_hook.
+- **7 t_hooks**: one per program, predicate `fires_at=target_t`, react_template MUTATE status → checkpoint, firing_state=pending.
+- **6 calendar_events**: wall-clock anchors at T=173 (2026-04-23) through T=190 (2026-05-10), color_label=purple (PRG-tracked).
+- **1 session**: `sam.mvp-delivery` (sam's MVP workspace, WF19 opens-on kernel:hp-z440.primary).
+- **Composition LINKs**: purpose → parent → 6 gates (WF18 composes/composed-by); round10 scheduled-after mvp-g1.
+
+Commit [f194c04](https://github.com/MSD21091969/ffs0/commit/f194c04) — running-state.md extended with MVP delivery section + gate map + dependency sketch + existing Z440 infrastructure inventory.
+
+### Existing Z440 infrastructure discovered (via `moos-kernel/moos.jsonl` inspection)
+
+Antigravity-hp-z440 had posted 20 rewrites earlier T=169 that MVP gates can leverage instead of reinventing:
+
+- 9 source_feeds (arxiv.cs-ai, arxiv.physics, yt.mlst, paperswithcode, lmsys-arena, yt.discover-ai, ifrs.news, + 2 more)
+- watcher+reactor pair: `raw-ki-claim-extract` + `emit-claim-extract-task`
+- 2 classification_schemes (`scheme:arxiv` with 5 tag LINKs, `scheme:ifrs` with 4)
+- 5 git_issues (ffs0 #13/14/15 + moos-config #5/6)
+- 4 federation kernel nodes (primary live, lola/menno/moos dormant)
+
+Actor distribution on Z440 log: user:sam (191), agent:antigravity.hp-z440 (20), user:{lola,menno,moos} (4 each), `$actor` stubs (2). **Claude-code.hp-laptop has NOT posted to Z440 kernel** — sovereign-kernels per §M9.
+
+MVP-G3 + MVP-G5 scope MUTATEs now explicitly reference these existing nodes.
+
+## Final Z440 kernel state at conversation close
+
+- Log: 226 entries
+- Runtime ontology: v3.11 (on-disk is v3.12; restart still pending explicit approval)
+- Sessions: 4 (hp-z440.primary birth + sam.round10-session-generalization + sam.mvp-delivery + vscode-codex-hp-z440.t161 legacy)
+- Grammar_fragments: 4 D22.* (proposed)
+- MVP programs: 7 (parent + 6 gates, all status ∈ {active, draft})
+- MVP t_hooks: 7 (all firing_state=pending, will auto-fire when sweep ticks past their target_t — effective once G2 approver reactor lands)
+- MVP calendar_events: 6 (all status=confirmed)
+
 ## Cross-references
 
 - **Doctrine**: `kb/research/session/20260419-t169-session-generalization.md` (this round's deliverable; still canonical).
