@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: **T=169 (April 19, 2026) 12:xx CEST** — round 9 kernel work + round 9.5 firing_state lifecycle. 9 moos-kernel PRs on master + 2 ffs0 PRs on main (v3.10 + v3.11). T=169 closed in-source TODOs (shared tday, secondary indexes on GraphState) and then promoted sweep idempotency to a first-class state machine via t_hook.firing_state (v3.11 ontology + sweep emits ADD+MUTATE pair on each firing). **Z440 kernel 0 caught up** — PID 23896 bound :8000/:8080, replay N=180, sweep live; federation kernels 1-3 still on T=164 code (dormant).
+> Updated: **T=169 (April 19, 2026) ~15:00 CEST** — round 10 (sessions) open through Conversation D. Doctrine note for the corrected session model written; ontology bumped to v3.12 (first-ever WF20 ceremony, promoting D19.2/D19.3/D19.4/D20.1/D20.2); 4 new D22 grammar_fragments proposed (D22.1 session-has-purpose, D22.2 single-driver invariant, D22.3 attach/detach, D22.4 kernel-birth-session pair); 5 absorbed research notes moved to `dev/reference/research-archive/`. Round 9/9.5 already closed: 9 moos-kernel PRs + ffs0 PRs for v3.10 (D19.1 has-occupant) and v3.11 (t_hook.firing_state). **Z440 kernel 0 is still running v3.11** — pick up v3.12 requires a restart (pending explicit approval). Federation kernels 1-3 on :8001-:8003 still dormant on pre-T=164 code.
 
 ---
 
@@ -460,7 +460,7 @@ Directive (sam, T=168): *"we have the t187 as a hook, a possible calendar event 
 
 **Central idea.** T=187 = **May 7, 2026** (T=0 is 2025-11-01). The `t187-kernel-proper` program is now treated as a real IRL-time delivery node — the kind that gates successors, anchors sub-program sprint checkpoints, and gets its own t_hook cascade. The HG becomes its own **spec-level CI/CD pipeline**: t_hooks fire at target_t values across the T=187→T=220 window, each marking a sub-program checkpoint visible via the t-cone.
 
-Full doctrine: `kb/research/s1/20260418-t168-t187-delivery-clock.md`.
+Full doctrine: `dev/reference/research-archive/20260418-t168-t187-delivery-clock.md` (archived in T=169 round 10).
 
 ### Calendar map
 
@@ -648,6 +648,107 @@ closed   (future: expires_at / manual)   (terminal)
 
 ---
 
+## T=169 round 10 — session generalization (in progress)
+
+Directive (sam, T=169): generalize the session concept beyond claude-code-per-kernel. Tools, CLI agents, third-party agentic frameworks; users + delegates; **kernel-bound workspace, not IDE conversation**. Completion-drive = session's purpose; spec-completion = the drive; incomplete data = gate-blocked realization.
+
+Plan file: `C:/Users/hp/.claude/plans/1-if-specs-are-parsed-jellyfish.md` (decomposes round 10 into Conversations A/B/C/D + E for round 11).
+
+### Doctrine note
+
+`kb/research/session/20260419-t169-session-generalization.md` — the corrected model:
+
+- **Session = (scope, purpose) × (host, owner, occupant)** — five orthogonal facets. Persistent, always-on, host-bound workspace. Tmux-session / Chrome-tab analogy. IDE conversations are ephemeral; their rewrites are traced via `actor_urn`, not via session nodes.
+- **CT lingo corrected** — three separable algebras: per-session transition-monoid (identity = no-op morphism, not empty-object); operadic scope composition (sessions nest; birth-session as root scope); user/group topology as an orthogonal lattice (WF02 capability carries pieces of this, full formalization deferred).
+- **Single-driver invariant** — has-occupant LINK single-valued per session (D19.1 merged v3.10; D22.2 formalizes at-most-one invariant in v3.12 proposals). Rotation = MUTATE of LINK target_urn.
+- **Kernel-birth atomic pair** — ADD kernel:K + ADD session:<K-short> in the same ApplyProgram envelope (D22.4 proposed).
+- **Purpose as higher-level semantic wiring** — not a leaf tool. Gradient φ(purpose) = φ(target_state) − φ(current_state). D22.1 wires purpose-steers-session; cos-similarity scoring deferred to wiring-proposer (T=240+). Purpose is a future-operational building-block, like tools; not actively steering rewrites until session layer is operational.
+- **Disposition** — mis-classified `session:sam.claude-code-hp-*` nodes live only on hp-laptop kernel (Z440 is sovereign per §M9). Z440-local retrofit ADDed correctly-named `session:hp-z440.primary` as the birth-session. hp-laptop-side retire/replace is a separate conversation's work.
+
+### Conversation A (complete, commit 37124d5) — doctrine + Z440 opening HG rewrites
+
+8 envelopes applied atomically to Z440 kernel 0, log 180 → 188:
+
+- ADD `program:sam.round10-session-generalization` (status=active, starts_t=169, target_t=175)
+- ADD `purpose:sam.coherent-session-doctrine` (generic intent, not round-specific naming)
+- LINK `purpose --WF18 composes--> program`
+- ADD `t_hook:sam.round10-session-generalization.target` (fires_at=175, react: MUTATE program status→checkpoint)
+- ADD `session:hp-z440.primary` (birth-session retrofit, started_at=kernel.created_at)
+- LINK `session:hp-z440.primary --WF19 opens-on--> kernel:hp-z440.primary`
+- ADD `session:sam.round10-session-generalization` (round workspace — Chrome-tabs demonstrator)
+- LINK `session:sam.round10-session-generalization --WF19 opens-on--> kernel:hp-z440.primary`
+
+Note: `has-occupant` LINKs declared in v3.10 as WF19 additional_port_pairs but not consumed by operad/loader.go yet — deferred to Conversation E / round 11.
+
+### Conversation B (complete, commit 2a0a0f1) — ontology v3.11 → v3.12, first WF20 ceremony
+
+Ontology-level promotion of 5 proposed grammar_fragments (HG-level status MUTATEs remain for hp-laptop kernel, which holds the proposal nodes):
+
+- D19.2 session-view-prefs → `session.view_prefs` object property
+- D19.3 session-pins-urn → WF19 additional_port_pair (session → any node)
+- D19.4 session-filtered-by → WF19 additional_port_pair (session → view_filter)
+- D20.1 session-mounts-tool → WF19 additional_port_pair (session → agent)
+- D20.2 agent-invocation-protocol → `agent.invocation_protocol` enum {stdio, mcp, http}
+
+Baseline session type fixes alongside the ceremony:
+- `urn_pattern` → kernel-short | owner.purpose-slug
+- `description` → persistent kernel-bound workspace semantics
+- `seat_role` deprecated (single-driver-via-LINK model supersedes)
+- Type-level note rewritten with transition-monoid + operadic-scope + user/group-lattice framing
+
+Known code gap: `operad/loader.go` does not consume `additional_port_pairs`. The 4 pairs on WF19 (has-occupant + 3 new v3.12) validate only as the primary opens-on/occupied-by pair. Round 11 session-occupancy closes this.
+
+### Conversation C (complete) — 4 new D22 grammar_fragment proposals
+
+Applied to Z440 kernel 0, log 188 → 192:
+
+- D22.1 session-has-purpose (port pair, 1-to-1 with rotation, WF19 extension)
+- D22.2 session-single-driver-invariant (at-most-one has-occupant per session)
+- D22.3 session-attach-detach (attach/detach/rotate verbs on single-driver model)
+- D22.4 kernel-birth-session-pair (atomic-pair invariant for kernel ADDs; seed-code change blocked on this promotion)
+
+All 4 status=proposed. No ontology bump.
+
+### Conversation D (this update) — archive + running-state close
+
+5 research notes moved to `dev/reference/research-archive/`:
+
+- `20260418-t187-categorical-contract.md` (proofs hold by construction; landed)
+- `20260418-t187-walk-answers-Q1-Q4.md` (Q1–Q4 answered + implemented)
+- `20260414-t164-session-channel-purpose.md` (T=164 foundational work; in HG)
+- `20260418-t168-t187-delivery-clock.md` (schedule live in v3.11 firing_state)
+- `20260417-t166-wire-answer-folder-nesting.md` (Q5 answered, ontology-only)
+
+Cross-refs updated across: ontology.json (`t164_delta_reference`), running-state.md, the new doctrine note, `wires/20260414-t164-wires-come-from.md`, `s1/20260418-t168-s0-operadic-layer.md`.
+
+### Deferred to round 11 (Conversation E)
+
+- session-occupancy Go implementation — 4 stacked PRs: RotateSessionOccupant + validator, §M11 liveness check in runtime.Apply, §M12 admin-cap gate extended to occupant chain, `GET /session/<urn>/occupant?at=T` endpoint.
+- operad/loader.go gains multi-port-pair awareness (closes the additional_port_pairs gap).
+- hp-laptop-side retire/replace of mis-classified session:sam.claude-code-hp-* nodes (UNLINK WF19 + ADD session:hp-laptop.primary + has-occupant wiring).
+- kernel restart to load v3.12 (still pending explicit approval as of T=169 round-10 close).
+
+### Open questions (not blocking)
+
+- WF home for `purpose --has-purpose--> session` (D22.1) — WF19 extended likely; new WF21 possible. Promotion-ceremony decision, not design-ahead.
+- Cos-similarity as one of many "cutting methods" (operads, type algebra, Ricci curvature, symmetry groups, Wolfram hypergraph, sheaf Laplacian, Procrustes rotation, cascade spectral radius). Candidate future discussion node: `program:sam.cutting-methods`.
+- D20.3 agent-runs-in-harness + D20.4 agent-constructs-agent — for agents we author (Google ADK, PydanticAI, CLI), not the prepackaged IDE agents. Blocked on harness concept + CI-6 capability isolation + first bespoke-agent prototype.
+- v310-13 purpose-arity2 — structural change to purpose (phi_current, phi_target as slots, not scalars). Later round, after operational experience with purpose at t-cone read time.
+- Platform-as-host (Reading B, D22.5 future) — extending session.host beyond `kernel` to `platform` for non-mo:os agent runtimes (Google ADK, Anthropic workspace, external MCP daemons).
+
+### Round-10 grammar_fragment census (Z440 kernel perspective)
+
+4 new at status=proposed (D22.1–D22.4). Z440 kernel does not hold the 23 pre-existing rounds 5–8 proposals (those live only on hp-laptop kernel; sovereign-kernels principle).
+
+### Kernel stats (Z440 kernel 0, post-Conversation A+C)
+
+- Log: 192 entries
+- Ontology on-disk: v3.12.0 (kernel runtime still loading v3.11 — restart pending)
+- Sessions: 3 (`hp-z440.primary` birth, `sam.round10-session-generalization` workspace, `vscode-codex-hp-z440.t161` legacy-mis-classified non-round-10-scope)
+- Grammar_fragments: 4 (all D22.*)
+
+---
+
 ## Key URNs
 
 ```
@@ -729,9 +830,24 @@ urn:moos:grammar_fragment:v310-12-grammar-fragment-enrichment
 urn:moos:grammar_fragment:v310-13-purpose-arity2
 urn:moos:grammar_fragment:v310-14-startable-status
 
-# Live sessions (exactly 2 — one per kernel, no T-day in URN)
+# Live sessions on hp-laptop kernel (pre-round-10 model; mis-classified under the v3.12 kernel-bound model — scheduled for retire/replace in a hp-laptop-side conversation)
 urn:moos:session:sam.claude-code-hp-laptop  (WF19-LINKed, seat_role=occupier)
 urn:moos:session:sam.claude-code-hp-z440    (WF19-LINKed, seat_role=observer)
+
+# Round 10 — corrected session nodes (Z440 kernel only; hp-laptop kernel gets its own in a separate conversation)
+urn:moos:session:hp-z440.primary                      (birth-session; WF19 opens-on kernel:hp-z440.primary)
+urn:moos:session:sam.round10-session-generalization   (round-10 workspace; WF19 opens-on kernel:hp-z440.primary)
+
+# Round 10 new nodes
+urn:moos:program:sam.round10-session-generalization  (starts_t=169, target_t=175, status=active)
+urn:moos:purpose:sam.coherent-session-doctrine       (generic intent, reusable across rounds)
+urn:moos:t_hook:sam.round10-session-generalization.target  (fires_at=175, firing_state=pending)
+
+# Round 10 D22 grammar_fragment proposals (all status=proposed on Z440 kernel)
+urn:moos:grammar_fragment:d22-1-session-has-purpose
+urn:moos:grammar_fragment:d22-2-session-single-driver-invariant
+urn:moos:grammar_fragment:d22-3-session-attach-detach
+urn:moos:grammar_fragment:d22-4-kernel-birth-session-pair
 
 # Archived sessions (provenance; no WF19 LINK)
 urn:moos:session:sam.claude-code-hp-laptop.t164

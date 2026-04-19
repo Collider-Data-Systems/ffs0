@@ -125,8 +125,8 @@ Threading this program is reading the WF18 closure downward from the root. The k
 - `20260418-t168-v3.9-ontology-audit.md` — v3.9 baseline (purpose, session, program, workflow are now all declared S1 types; S0 is the category *over* them)
 - `../kernel/20260417-t187-kernel-proper.md` §M1 — session as monoid object (monoids are arity-2 ops with identity)
 - `../kernel/20260417-t187-kernel-proper.md` §M15 — t-cone projection (a reading of a session weave)
-- `../kernel/20260418-t187-categorical-contract.md` — CI-1..CI-5 proofs (the contracts S0 must respect)
-- `../session/20260414-t164-session-channel-purpose.md` — foundational T=164 paper introducing session/channel/purpose as distinct kinds; this note names the kind
+- `../../../dev/reference/research-archive/20260418-t187-categorical-contract.md` — CI-1..CI-5 proofs (the contracts S0 must respect; archived T=169 round 10)
+- `../../../dev/reference/research-archive/20260414-t164-session-channel-purpose.md` — foundational T=164 paper introducing session/channel/purpose as distinct kinds; this note names the kind (archived T=169 round 10)
 - `../wires/20260414-t164-wires-come-from.md` §2 — "nodes are incomplete datasets with optional T-hooks" — compatible with op-node shape (slots are the T-hooks of an op-node)
 
 ## One-line summary

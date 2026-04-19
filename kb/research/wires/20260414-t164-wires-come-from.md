@@ -1,7 +1,7 @@
 # T=164 — Where do wires come from?
 
 > April 14, 2026, 11:30 CEST. Sam on a walk.
-> Continuation of `../session/20260414-t164-session-channel-purpose.md`.
+> Continuation of `../../../dev/reference/research-archive/20260414-t164-session-channel-purpose.md` (archived T=169 round 10).
 > Bottom-up. Syntax → semantics.
 
 ---

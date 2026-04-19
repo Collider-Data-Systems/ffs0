@@ -2,7 +2,7 @@
 
 > April 19, 2026 (T=169). Round-10 doctrine note.
 > Author: claude-code on hp-z440 (driving session `sam.round10-session-generalization`).
-> Supersedes: parts of `20260418-t168-session-kernel-bound.md` (§M11 FAQ) and `20260414-t164-session-channel-purpose.md` §2 (monoid framing).
+> Supersedes: parts of `20260418-t168-session-kernel-bound.md` (§M11 FAQ) and `../../../dev/reference/research-archive/20260414-t164-session-channel-purpose.md` §2 (monoid framing; archived T=169 round 10).
 
 ---
 
@@ -13,7 +13,7 @@ The session concept accumulated a set of related but partially-sloppy claims acr
 - §M1 (kernel-proper.md): "session is a monoid `(S, ∘, e)`; identity = empty session"
 - §M11 (kernel-proper.md): at least one non-identity element of the monoid must be bound to the kernel for liveness
 - `20260418-t168-session-kernel-bound.md`: sessions are permanent kernel-bound; occupancy ledger = multiple sessions per kernel, one occupier
-- `20260414-t164-session-channel-purpose.md` §2: "Session is a MONOID over kernel occupancy — identity = the empty session (kernel idle, no delegate), binary operation = s₁ ∘ s₂"
+- `../../../dev/reference/research-archive/20260414-t164-session-channel-purpose.md` §2: "Session is a MONOID over kernel occupancy — identity = the empty session (kernel idle, no delegate), binary operation = s₁ ∘ s₂" (archived T=169 round 10)
 
 Each captured part of the truth but left open: what exactly is the carrier of the monoid (object? transitions?); is a session per-kernel or per-user; what is an IDE conversation relative to a session; how do delegates / groups / nested workspaces fit. This round-10 note settles the corrections in one place, lifts the CT framing to the right algebraic register (operadic + monoid + lattice), and defines the session tuple the kernel code will act on from round 11 onward.
 
@@ -247,15 +247,15 @@ Live doctrine (still authoritative):
 Superseded (partially) by this note:
 
 - `kb/research/session/20260418-t168-session-kernel-bound.md` — the FAQ model of "multiple sessions per kernel, one with seat_role=occupier" is replaced by "one birth-session per kernel + additional purpose-scoped sessions; at-most-one has-occupant LINK per session". The FAQ stays as historical record.
-- `kb/research/session/20260414-t164-session-channel-purpose.md` — §2 "Session is a MONOID over kernel occupancy" with identity = empty session is replaced by §2.1 of this note (transition-monoid with identity morphism). Note is being moved to `dev/reference/research-archive/` in Conversation D.
+- `dev/reference/research-archive/20260414-t164-session-channel-purpose.md` — §2 "Session is a MONOID over kernel occupancy" with identity = empty session is replaced by §2.1 of this note (transition-monoid with identity morphism). Archived T=169 round 10 Conversation D.
 
 Archived in Conversation D (pure-absorption, full content carried forward into live doctrine):
 
-- `kb/research/kernel/20260418-t187-categorical-contract.md` — proofs hold by construction; landed.
-- `kb/research/kernel/20260418-t187-walk-answers-Q1-Q4.md` — Q1-Q4 answered + implemented.
-- `kb/research/session/20260414-t164-session-channel-purpose.md` — T=164 foundational work; in HG.
-- `kb/research/s1/20260418-t168-t187-delivery-clock.md` — schedule live in v3.11 firing_state.
-- `kb/research/wires/20260417-t166-wire-answer-folder-nesting.md` — Q5 answered, ontology-only.
+- `dev/reference/research-archive/20260418-t187-categorical-contract.md` — proofs hold by construction; landed.
+- `dev/reference/research-archive/20260418-t187-walk-answers-Q1-Q4.md` — Q1-Q4 answered + implemented.
+- `dev/reference/research-archive/20260414-t164-session-channel-purpose.md` — T=164 foundational work; in HG.
+- `dev/reference/research-archive/20260418-t168-t187-delivery-clock.md` — schedule live in v3.11 firing_state.
+- `dev/reference/research-archive/20260417-t166-wire-answer-folder-nesting.md` — Q5 answered, ontology-only.
 
 ---
 
