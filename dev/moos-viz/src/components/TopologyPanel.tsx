@@ -8,7 +8,7 @@ import {
   Controls,
 } from '@xyflow/react'
 
-import type { Connection, Edge, Node } from '@xyflow/react'
+import type { Connection } from '@xyflow/react'
 
 const initialNodes: any[] = []
 const initialEdges: any[] = []

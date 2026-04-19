@@ -1,4 +1,3 @@
-import { Zap } from 'lucide-react'
 
 export function ClassificationPanel() {
   // Mock data for PCA投影 (HDC vectors)
