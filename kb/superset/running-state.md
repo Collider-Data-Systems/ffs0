@@ -740,12 +740,105 @@ Cross-refs updated across: ontology.json (`t164_delta_reference`), running-state
 
 4 new at status=proposed (D22.1–D22.4). Z440 kernel does not hold the 23 pre-existing rounds 5–8 proposals (those live only on hp-laptop kernel; sovereign-kernels principle).
 
-### Kernel stats (Z440 kernel 0, post-Conversation A+C)
+### Kernel stats (Z440 kernel 0, post-Conversation A+C+MVP-spec projection)
 
-- Log: 192 entries
+- Log: 223 entries
 - Ontology on-disk: v3.12.0 (kernel runtime still loading v3.11 — restart pending)
-- Sessions: 3 (`hp-z440.primary` birth, `sam.round10-session-generalization` workspace, `vscode-codex-hp-z440.t161` legacy-mis-classified non-round-10-scope)
+- Sessions: 4 (`hp-z440.primary` birth, `sam.round10-session-generalization` workspace, `sam.mvp-delivery` workspace, `vscode-codex-hp-z440.t161` legacy-mis-classified non-round-10-scope)
 - Grammar_fragments: 4 (all D22.*)
+
+---
+
+## MVP delivery — spec-in-HG (projected T=169, 2026-04-19 ~15:00)
+
+Round-10 close-out projection: the 6-gate path to MVP lives in the HG as time-dependent programs + t_hooks + calendar_events + a dedicated session. Each gate is a `program` node with `target_t` + a `t_hook` firing at that T that MUTATEs the program status → checkpoint on arrival. Each gate also has a `calendar_event` as IRL-time anchor. `sam.mvp-delivery` session pins them operationally (scope-via-pins pending loader extension per round 11 G1).
+
+Purpose: `urn:moos:purpose:sam.mvp-sovereign-knowledge-os` — *"Demo-able sovereign knowledge OS: local kernel stable, one real knowledge channel flowing in, HDC reasoning over it, live moos-viz visualization, auditable log-is-truth, twin federation via mtdc. A non-technical friend can sit in front of one screen and see: your data, your graph, your AI, no cloud. Anchored at T=190 (2026-05-10)."*
+
+### Gate map
+
+| Gate | Program URN | T | Wall-clock | Status | Dependencies |
+|---|---|---|---|---|---|
+| parent | `program:sam.mvp-delivery` | 190 | 2026-05-10 | active | composes G1–G6 |
+| G1 session layer | `program:sam.mvp-g1-session-layer` | 173 | 2026-04-23 | active | scheduled-after `round10-session-generalization` |
+| G2 approver reactor | `program:sam.mvp-g2-approver-reactor` | 176 | 2026-04-26 | draft | after G1 (firing_state needs session infra) |
+| G3 first channel | `program:sam.mvp-g3-first-channel` | 180 | 2026-04-30 | draft | after G2 (real-data flow needs approver) |
+| G4 moos-viz live | `program:sam.mvp-g4-moos-viz-live` | 182 | 2026-05-02 | draft | parallel with G3 (reads state independent of data) |
+| G5 HDC query demo | `program:sam.mvp-g5-hdc-query-demo` | 185 | 2026-05-05 | draft | after G3 (needs data to score) |
+| G6 twin-deploy | `program:sam.mvp-g6-twin-deploy` | 190 | 2026-05-10 | draft | after T=187 delivery-window-opens + G1-G5 |
+
+### Dependency sketch
+
+```
+round10-session-generalization (done) ─scheduled-after→ G1 (session layer code)
+                                                         │
+                                                         ▼
+                                                        G2 (approver reactor)
+                                                         │
+                                       ┌─────────────────┴─────────────────┐
+                                       ▼                                   ▼
+                                      G3 (first channel)               G4 (moos-viz live)
+                                       │
+                                       ▼
+                                      G5 (HDC query demo)
+                                       │                  T=187 delivery-window-opens
+                                       ▼                  │
+                                      G6 (twin-deploy mtdc) ◀─ delivery-window
+                                       │
+                                       ▼
+                                      MVP close (T=190)
+```
+
+### t_hook map
+
+Each gate has a `fires_at` t_hook (predicate `{kind: fires_at, t: <target_t>}`, react_template MUTATE program.status → checkpoint, firing_state=pending). Once the v3.11 sweep tick crosses T=173/176/180/182/185/190, hooks auto-fire proposing checkpoint MUTATEs. Approver reactor (G2 itself!) is the thing that actually applies them — bootstrap dependency: G1+G2 must land before later hooks can auto-progress status. Until G2, gates advance via manual sam-authored MUTATEs.
+
+### Calendar anchor map
+
+Six calendar_event nodes bridge kernel-T to wall-clock:
+
+| URN | Date | t_day | Anchor |
+|---|---|---|---|
+| `cal:2026-04-23.mvp-g1` | 2026-04-23 | 173 | G1 target |
+| `cal:2026-04-26.mvp-g2` | 2026-04-26 | 176 | G2 target |
+| `cal:2026-04-30.mvp-g3` | 2026-04-30 | 180 | G3 target |
+| `cal:2026-05-02.mvp-g4` | 2026-05-02 | 182 | G4 target |
+| `cal:2026-05-05.mvp-g5` | 2026-05-05 | 185 | G5 target |
+| `cal:2026-05-10.mvp-close` | 2026-05-10 | 190 | MVP close + G6 target |
+
+Color: all purple (PRG-tracked, per `calendar_event` color_label convention).
+
+### Session anchor
+
+`urn:moos:session:sam.mvp-delivery` — sam's persistent MVP workspace, WF19 opens-on kernel:hp-z440.primary. Currently occupant-less at the HG level (has-occupant LINKs blocked on loader extension); operationally driven by whichever agent is working on the MVP at the moment. Pins pending until D19.3 pins-urn LINK support lands in round 11 G1 (loader awareness).
+
+### Existing Z440 infrastructure MVP can reuse (posted by antigravity.hp-z440 earlier T=169)
+
+While scoping MVP gates I realized Z440's HG was already populated with several MVP-relevant nodes — antigravity on Z440 posted them in a 20-rewrite burst at log_seq 161-180. Not reinventing; MVP gates reference these:
+
+- **9 source_feeds already configured**: `feed:arxiv.cs-ai`, `feed:arxiv.physics`, `feed:yt.mlst`, `feed:yt.discover-ai`, `feed:paperswithcode`, `feed:lmsys-arena`, `feed:web.lmsys-arena`, `feed:web.paperswithcode`, `feed:ifrs.news`. G3 = pick one, flip to active — default `arxiv.cs-ai` (clean RSS, public, no auth). MVP-G3 scope MUTATEd to reference these.
+- **Ingest pipeline already wired**: `watcher:raw-ki-claim-extract` + `reactor:emit-claim-extract-task`. The ingest → raw knowledge_item ADD → claim-extract reactor chain is present. G3 likely just activates the fetch-side (HTTP poll / RSS parse).
+- **2 classification_schemes with tag LINKs**: `scheme:arxiv` (tags: cs-ai, cs-lg, math-ct, physics-hep-th, q-bio), `scheme:ifrs` (tags: 9, 15, 16, 17). G5 HDC scoring has ready-made classification frames for cos-similarity. MVP-G5 scope MUTATEd to reference scheme:arxiv.
+- **5 git_issues**: ffs0#13/14/15 + moos-config#5/6. Pre-existing project-board wiring — MVP gates can add more as round-11+ PRs open. Pattern is `git_issue` type nodes mirroring GitHub issue numbers.
+- **Watcher/reactor pairs also present**: `watcher:tool.verify_baseline` + `reactor:tool.verify_baseline`. Test-harness wiring; outside MVP scope but confirms the reactive-engine pattern is exercised on Z440.
+
+The 4 federation kernel nodes (hp-z440.primary, lola, menno, moos) all exist on Z440; kernels 1-3 are dormant. MVP-G6 twin-deploy targets the mtdc CF tunnel (not these federation shards).
+
+Actor distribution on Z440 kernel log (log_seq 1-223 at round-10 close):
+- `user:sam` — 191 rewrites (my round-10 + mvp + pre-existing)
+- `agent:antigravity.hp-z440` — 20 rewrites (the infrastructure burst above)
+- `user:lola`, `user:menno`, `user:moos` — 4 each (federation-user placeholders)
+- `$actor` — 2 (template-stub debris; harmless)
+
+Claude-code.hp-laptop has NOT posted directly to Z440 kernel (sovereign-kernels per §M9; hp-laptop's work lives on hp-laptop kernel). The `kb/moos_from_HPLAP.jsonl` file (committed to ffs0) is hp-laptop's log snapshot for reference.
+
+### Why project the MVP plan into HG
+
+- **Queryability**: `GET /t-cone?session=sam.mvp-delivery&at=185` tells us at T=185 which gates fired, which are still open, which are blocked.
+- **MUTATE-ability**: as reality shifts (target slips, dependencies re-order), `MUTATE target_t` on any program; log records the revision. No spreadsheet, no planning tool — the HG IS the plan.
+- **Auditability**: log-is-truth over every adjustment. Future-sam can run `fold?to=T=185` and see exactly what the plan looked like at that point.
+- **Composability**: post-MVP programs can `depends-on` `mvp-delivery` directly. The MVP is a node like any other — it doesn't disappear once shipped; it becomes provenance for everything downstream.
+- **Spec-realizer applied to itself**: the entire pattern sam articulated ("specs + incomplete data mapped over time") describes how to treat any idea. Doing it to the MVP plan is the test of the pattern's self-consistency.
 
 ---
 
