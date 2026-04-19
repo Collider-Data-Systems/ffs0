@@ -26,7 +26,7 @@ Log is truth. State is derived. Nodes don't call things. Relations don't carry m
 | node | object, element, vertex |
 | relation | binding, edge, wire, association |
 | rewrite | morphism, update, mutation |
-| rewrite category WF01–WF19 | named relation, UML association |
+| rewrite category WF01–WF20 | named relation, UML association |
 | property | field, payload, attribute |
 | operad | schema, grammar |
 | interaction node | transition, event, message |
@@ -38,8 +38,12 @@ Relations are truth. Properties never duplicate topology.
 
 ## Ontology
 
-`kb/superset/ontology.json` — v3.8, 42 node types, 19 WFs.
+`kb/superset/ontology.json` — **v3.11.0**, 52 node types, 20 WFs.
 Do not edit without reading running-state.md first.
+
+Notable recent bumps:
+- v3.10.0 (T=168 round 9) — WF19 extended with `has-occupant`/`is-occupant-of` port pair for §M19 session-occupancy; D19.1 grammar_fragment merged.
+- v3.11.0 (T=169 round 9.5) — `t_hook.firing_state` enum `{pending, proposed, approved, rejected, applied, closed}` for the sweep's state-machine idempotency.
 
 ---
 
@@ -55,7 +59,7 @@ If needed, archive material can be retrieved from `dev/reference/research-archiv
 ```
 kb/
   superset/     — ontology.json (S1) + running-state.md (hydration entrypoint)
-  research/     — active research notes (T=164+)
+  research/     — active research notes (T=164+), incl. per-round + per-agent conversation summaries and plans
 dev/
   scripts/      — ops and utility scripts
   reference/

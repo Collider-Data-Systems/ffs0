@@ -9,6 +9,8 @@ Runtime code lives in sibling repos (`moos-kernel`, `moos-router`). `moos-config
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, key URNs.
 
+Round-level handoffs (per agent × machine) live under `kb/research/` as `t<N>plan_<agent>_<machine>.md` and `t<N>_conv_sum_<agent>_<machine>.md`. Skim the latest when picking up fresh context.
+
 ## Working style
 
 Small, safe, focused edits. Preserve folder structure unless change is requested.
