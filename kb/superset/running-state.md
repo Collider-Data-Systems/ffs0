@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: **T=169 (April 19, 2026)** — round 9 kernel work: 7 PRs merged to master (predicate evaluator, introspection + batch endpoints, sweep loop with WF13 proposals, session-occupancy helpers with v3.10 ontology bump, t-cone endpoint, 4 extended §M14 predicate kinds, plus review-followups). T=169 closed out the in-source TODOs: shared `internal/tday` package + `NodesByType`/`Relations{Src,Tgt}` indexes on GraphState.
+> Updated: **T=169 (April 19, 2026) 11:47 CEST** — round 9 kernel work + round 9.5 firing_state lifecycle. 9 moos-kernel PRs on master + 2 ffs0 PRs on main (v3.10 + v3.11). T=169 closed in-source TODOs (shared tday, secondary indexes on GraphState) and then promoted sweep idempotency to a first-class state machine via t_hook.firing_state (v3.11 ontology + sweep emits ADD+MUTATE pair on each firing). Z440 catch-up from T=164 in progress via Z440-side IDE AI.
 
 ---
 
@@ -55,7 +55,7 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 | Log entries | 561 (HG unchanged since round 8 — round 9 was kernel Go code, not HG hydration) |
 | Nodes | 177 |
 | Relations | 202 |
-| Ontology | **v3.10.0 — 52 types, 20 WFs** (D19.1 merged: WF19 extended with has-occupant/is-occupant-of port pair for §M19 session-occupancy; ffs0 PR #31 merged) |
+| Ontology | **v3.11.0 — 52 types, 20 WFs** (v3.11 adds t_hook.firing_state lifecycle {pending, proposed, approved, rejected, applied, closed} ahead of approver-reactor work; ffs0 PR #32 merged. v3.10 prerequisite: WF19 extended with has-occupant/is-occupant-of for §M19 session-occupancy; ffs0 PR #31 merged) |
 
 ## Z440 (federation partner)
 
@@ -583,10 +583,51 @@ Sweep **proposes via WF13 governance** — NEVER auto-applies. Each firing hook 
 
 ### Deferred to future rounds
 
-- Approver reactor (governance_proposal.status=approved → apply proposed_envelope).
-- `firing_state` property on t_hook — ontology v3.11 candidate; would tighten sweep idempotency from "check proposal existence" to "check firing_state != proposed".
+- Approver reactor (governance_proposal.status=approved → apply proposed_envelope). **Still pending** — see T=169.5 section below for the state-machine prerequisites.
+- `firing_state` property on t_hook — **shipped in T=169.5 (v3.11.0 + moos-kernel PR #25)**. See below.
 - Bounded worker pool for `forwardToEagerTwins` (closed #8 Gemini flagged; structural, separate PR).
 - Event-shape JSON round-trip fast-path in reactive engine (closed #8 Gemini flagged; cache parsed shape on t_hook node).
+- `GraphState.Clone` copy-on-write (T=169 Gemini MEDIUM, TODO in code).
+
+---
+
+## T=169.5 — firing_state lifecycle (v3.11 + kernel PR #25)
+
+Round-9.5 extends the sweep's idempotency from "does a governance_proposal with matching source_t_hook_urn exist?" (O(proposals) scan per tick) to a first-class state machine on the hook itself.
+
+### Ontology (ffs0 PR #32, merged)
+
+`t_hook.firing_state` enum: `{pending, proposed, approved, rejected, applied, closed}`. Default `pending`. Authority `kernel` — only sweep/reactor mutate it.
+
+Transition graph:
+
+```
+pending  ──(sweep fires)────▶ proposed
+proposed ──(admin approves)─▶ approved  ──(approver reactor applies)─▶ applied
+proposed ──(admin rejects)──▶ rejected  (terminal)
+applied                                  (terminal for one-shot hooks)
+closed   (future: expires_at / manual)   (terminal)
+```
+
+### Kernel (moos-kernel PR #25)
+
+- Sweep filters on `firing_state ∈ {"", "pending"}` (empty = pending default).
+- Each firing emits TWO envelopes atomically in one ApplyProgram batch:
+  1. `ADD urn:moos:proposal:kernel.<slug>-t<T>-seq<N>` (unchanged shape)
+  2. `MUTATE <hookURN> firing_state pending → proposed`
+- The old O(proposals) scan is gone. ApplyProgram is all-or-nothing, so the pair lands together or not at all (log-is-truth + CI-4 preserved).
+
+### Rollback & migration
+
+- Pre-v3.11 hooks (round-8 t_hooks, no firing_state on node) work transparently — first sweep evaluation produces an additive MUTATE setting firing_state → proposed. One-time per hook, idempotent on replay.
+- Pre-v3.11 kernels reading v3.11-style hooks ignore the extra property. The ADD proposal shape is unchanged, so old-kernel idempotency-via-proposal-existence still works. Rollback-safe.
+
+### Next (still pending)
+
+- **Approver reactor** — watches `governance_proposal.status` MUTATEs, applies `proposed_envelope` on approve, transitions hook's firing_state proposed → applied | rejected. Needs design around actor-authority threading (whose authority is the reactor acting under when it applies? the admin who approved? a kernel-synthesized actor?).
+- Bounded twin worker pool (now matters once Z440 peers).
+- event_shape JSON fast-path.
+- Clone-COW.
 
 ---
 
