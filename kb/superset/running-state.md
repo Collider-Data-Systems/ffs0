@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: T=168 (April 18, 2026) — round 8: T=187 delivery clock — 10 t_hooks mapping IRL-time gates, 2 successor programs (v310-delivery, wiring-proposer), 3 external_op IRL gates, 4 more grammar_fragment proposals (23 total)
+> Updated: **T=169 (April 19, 2026)** — round 9 kernel work: 7 PRs merged to master (predicate evaluator, introspection + batch endpoints, sweep loop with WF13 proposals, session-occupancy helpers with v3.10 ontology bump, t-cone endpoint, 4 extended §M14 predicate kinds, plus review-followups). T=169 closed out the in-source TODOs: shared `internal/tday` package + `NodesByType`/`Relations{Src,Tgt}` indexes on GraphState.
 
 ---
 
@@ -11,8 +11,8 @@
 |--|--|
 | Program | `urn:moos:program:sam.t187-kernel-proper` |
 | Title | T=187: kernel proper — session-as-actor, twin kernels, gates, admin governance |
-| Current T-day | T=168 (April 18, 2026) |
-| Status | active (spec-enrichment + implementation phases) |
+| Current T-day | **T=169 (April 19, 2026)** |
+| Status | active (hook-predicates sub-program shipped; sweep + t-cone + session-occupancy landed) |
 | Canonical spec | `kb/research/kernel/20260417-t187-kernel-proper.md` (M1..M10 + T=168 appendix §M11..§M17) |
 | Session model (ratified) | `kb/research/session/20260418-t168-session-kernel-bound.md` |
 
@@ -52,10 +52,10 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | Endpoint | `http://localhost:8000` |
-| Log entries | 561 (round 8: +88 spread over Batch A/B/C/D) |
-| Nodes | 177 (158 + 19 round-8 ADDs: 10 t_hooks + 1 program + 4 external_op + 4 grammar_fragment) |
-| Relations | 202 (198 + 3 round-8 WF18 depends-on LINKs + 1 delta from Batch B) |
-| Ontology | **v3.9 + external_op — 52 types, 20 WFs** (external_op ADDed to ontology.json in round 8; v3.9 canonical baseline unchanged) |
+| Log entries | 561 (HG unchanged since round 8 — round 9 was kernel Go code, not HG hydration) |
+| Nodes | 177 |
+| Relations | 202 |
+| Ontology | **v3.10.0 — 52 types, 20 WFs** (D19.1 merged: WF19 extended with has-occupant/is-occupant-of port pair for §M19 session-occupancy; ffs0 PR #31 merged) |
 
 ## Z440 (federation partner)
 
@@ -523,13 +523,70 @@ Totals: **+19 nodes, +3+ relations, ~88 log entries**.
 
 **Grammar_fragment census:** 23 total (3 round 5 + 6 round 6 + 10 round 7 + 4 round 8). All status=proposed.
 
+### Deferred to future rounds (status at round-8 close)
+
+- Predicate evaluator (`after_urn` + `all_of`) — **shipped in round 9** (`t187.hook-predicates` sub-program). See next section.
+- 6 active sub-program startable t_hooks — now evaluable; sweep emits governance_proposals when conditions meet.
+- MUTATEs to t187-kernel-proper `delivery_phase / calendar_date_open / calendar_date_close` — fields still not in program type spec; awaiting future ontology bump.
+- external_op → sub-program LINK via `automates_via` port (WF extension TBD).
+- WF20 grammar_promotion ceremony for the remaining 22 fragments (D19.1 merged in round 9).
+
+---
+
+## T=168→169 round 9 — kernel code (no HG hydration)
+
+Round 9 is the first round where the delta is in Go code, not HG ADDs. The `t187.hook-predicates` sub-program is now shipped end-to-end, plus session-occupancy (§M11+§M12+§M19) and t-cone (§M15).
+
+### PRs merged to master
+
+| # | Scope | Branch |
+|---|-------|--------|
+| **#15** | T=187 sprint v2 replacement for closed #8 | `agent/z440-claude/hdc-engine` |
+| **#17** | pure predicate evaluator (§M14 subset: fires_at, closes_at, after_urn, before_urn, all_of, any_of) | hook-predicates |
+| **#18** | `GET /t-hook/evaluate/{urn}?at=T` introspection endpoint | thook-evaluate-endpoint |
+| **#19** | `POST /t-hook/evaluate` batch endpoint (max 1 MiB body) | thook-batch |
+| **#20** | time-driven sweep + WF13 governance_proposal emission (`--sweep-interval` flag, default 30s) | sweep-loop |
+| **#21** | `GET /t-cone?session=...&at=T` projection | t-cone |
+| **#22** | 4 extended §M14 kinds: window, expires_at, on_prop_set, when_capability (with EvalContext) | predicates-extended |
+| **#23** | review-comment followups (correctness tightening across #12–#16) | round-9-review-followups |
+| **#24** | **T=169** perf followups: shared `internal/tday` + NodesByType/Relations{Src,Tgt} indexes | t169-perf-followups |
+| **ffs0 #31** | **ontology v3.10.0** — D19.1 merged; WF19 gains has-occupant/is-occupant-of port pair and tgt_types {user, agent} | v3.10-session-occupancy |
+
+### New / extended APIs
+
+```
+POST /t-hook/evaluate        { "urns": [...], "at": T }    → [{urn, at_t, fires, ...}]
+GET  /t-hook/evaluate/{urn}  ?at=T                         → {urn, at_t, fires, ...}
+GET  /t-cone                 ?session=urn&at=T             → occupier's projection
+```
+
+### New CLI flag
+
+```
+--sweep-interval=30s   (0 disables)
+```
+
+### Package additions
+
+- `internal/tday` — single source of truth for the mo:os T-day epoch + `Now()` / `At(t)` helpers. Used by `cmd/moos`, `internal/transport`, `internal/kernel/sweep`.
+- `internal/operad/occupancy.go` — `ResolveSessionOccupant(state, sessionURN)` and `CheckAdminCapability(state, actor)` (§M11/§M12).
+- `internal/kernel/sweep.go` — `SweepOnce`, `RunTimedSweep`, `SweepTick`, `SetSweepActor`.
+
+### Structural hardening (T=169)
+
+- `graph.GraphState` gains 3 secondary indexes (JSON-omitted, rebuilt on load): `NodesByType`, `RelationsBySrc`, `RelationsByTgt`. Maintained by `fold.apply{ADD,LINK,UNLINK}`. Accessors `NodesOfType` / `RelationsFrom` / `RelationsTo` fall back to a full scan when the index is nil (keeps test fixtures correct without Rebuild).
+- Hot paths (sweep, occupancy helpers, t-cone, when_capability) migrated from O(N)/O(R) scans to O(bucket-size).
+
+### Firing semantics (locked for this round)
+
+Sweep **proposes via WF13 governance** — NEVER auto-applies. Each firing hook produces a `governance_proposal` node with `status=pending`, `source_t_hook_urn`, `fires_at_t`, `proposed_envelope` (the decoded react_template). Admin sessions flip status to approved or rejected; a separate approver-reactor (not yet shipped) applies the envelope on approval. Matches §M12 fail-closed stance.
+
 ### Deferred to future rounds
 
-- Predicate evaluator (`after_urn` + `all_of`) — `t187.hook-predicates` sub-program.
-- 6 active sub-program startable t_hooks (deferred until evaluator lands).
-- MUTATEs to t187-kernel-proper `delivery_phase / calendar_date_open / calendar_date_close` — fields not in program type spec; awaiting v3.10 delivery_phase enum addition.
-- external_op → sub-program LINK via `automates_via` port (WF extension TBD).
-- WF20 grammar_promotion ceremony for the 23 fragments.
+- Approver reactor (governance_proposal.status=approved → apply proposed_envelope).
+- `firing_state` property on t_hook — ontology v3.11 candidate; would tighten sweep idempotency from "check proposal existence" to "check firing_state != proposed".
+- Bounded worker pool for `forwardToEagerTwins` (closed #8 Gemini flagged; structural, separate PR).
+- Event-shape JSON round-trip fast-path in reactive engine (closed #8 Gemini flagged; cache parsed shape on t_hook node).
 
 ---
 
