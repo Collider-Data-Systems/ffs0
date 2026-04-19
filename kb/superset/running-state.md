@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: **T=169 (April 19, 2026) 11:47 CEST** — round 9 kernel work + round 9.5 firing_state lifecycle. 9 moos-kernel PRs on master + 2 ffs0 PRs on main (v3.10 + v3.11). T=169 closed in-source TODOs (shared tday, secondary indexes on GraphState) and then promoted sweep idempotency to a first-class state machine via t_hook.firing_state (v3.11 ontology + sweep emits ADD+MUTATE pair on each firing). Z440 catch-up from T=164 in progress via Z440-side IDE AI.
+> Updated: **T=169 (April 19, 2026) 12:xx CEST** — round 9 kernel work + round 9.5 firing_state lifecycle. 9 moos-kernel PRs on master + 2 ffs0 PRs on main (v3.10 + v3.11). T=169 closed in-source TODOs (shared tday, secondary indexes on GraphState) and then promoted sweep idempotency to a first-class state machine via t_hook.firing_state (v3.11 ontology + sweep emits ADD+MUTATE pair on each firing). **Z440 kernel 0 caught up** — PID 23896 bound :8000/:8080, replay N=180, sweep live; federation kernels 1-3 still on T=164 code (dormant).
 
 ---
 
@@ -59,7 +59,24 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 
 ## Z440 (federation partner)
 
-Not present at T=168 (placeholder session ADDed to satisfy 1-per-kernel floor). Tasks parked. Reconnect when back on-site.
+**T=169 11:xx CEST status — back on-site.** Kernel 0 caught up from T=164:
+
+| | |
+|--|--|
+| PID | 23896 |
+| Endpoint | `:8000` (transport) + `:8080` (MCP) |
+| Log replay | 180 rewrites (Z440's own local history; diverges from hp-laptop's 561) |
+| Ontology | v3.11.0 (same as hp-laptop) |
+| Kernel binary | from master tip `88f0f96` (round-9 + round-9.5 merged) |
+| Sweep | live, 30s interval |
+| twin sync goroutine | started (but no active twin_link to hp-laptop yet — peering is next) |
+
+**Federation kernels 1-3** (`PIDs 26020, 22004, 20556` on :8001-:8003): still running pre-T=164 code. Dormant — federation shard testing paused. Restart with `--sweep-interval=30s` when federation comes back into scope.
+
+**Log divergence (381 rewrites)** is the expected consequence of the two kernels running independently since T=164 with no active twin_link syncing between them. Reconciliation options (not yet picked):
+- **One-shot POST /twin/ingest** of hp-laptop's log[180..561] to Z440 — brings Z440 to parity once
+- **Two-way twin_link** with `sync_mode=eager` — ongoing reconciliation; matches §M9 doctrine
+- **Accept divergence** — treat Z440 as its own kernel with its own history until explicit twin-deploy
 
 ---
 
