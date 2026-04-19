@@ -1,13 +1,35 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.10.0",
-  "t_day": 168,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent to carry session --has-occupant/is-occupant-of--> user|agent relation (§M19 session-occupancy).",
+  "version": "3.11.0",
+  "t_day": 169,
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed) — replaces the proposal-existence idempotency check with a first-class state machine ahead of approver-reactor work.",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "kb/research/session/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "kb/research/s1/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "kb/research/s1/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "3.11.0",
+      "t_day": 169,
+      "summary": "t_hook gains firing_state lifecycle. Replaces the v3.10 proposal-existence idempotency check; makes the firing contract legible as a state machine so the approver reactor can land cleanly.",
+      "changes": {
+        "property_additions": [
+          "t_hook.firing_state — enum {pending, proposed, approved, rejected, applied, closed}. Default pending. Authority: kernel (only sweep/reactor transitions it). Transitions described in the property note."
+        ],
+        "contract_upgrades": [
+          "Sweep filters on firing_state==pending (was: scan governance_proposal nodes to build an idempotency set). O(proposals) scan replaced by an O(1) per-hook predicate.",
+          "Sweep MUTATEs firing_state pending → proposed in the same ApplyProgram batch that ADDs the governance_proposal. Atomic transition; log-is-truth preserved.",
+          "Future approver reactor: governance_proposal.status pending → approved triggers firing_state proposed → applied (via react_template application). pending → rejected triggers firing_state proposed → rejected (terminal)."
+        ],
+        "migration_actions_in_hg": [
+          "Existing 10 t_hook nodes from round-8 have no firing_state property. At their first sweep evaluation under v3.11 kernel, an additive MUTATE sets firing_state → pending (the enum's default). This is a one-time no-op write per hook; idempotent under replay (ValidateMUTATE additive path accepts fields declared in the ontology spec).",
+          "No MUTATEs against ontology itself beyond the version+changelog bump."
+        ],
+        "backwards_compat": [
+          "Pre-v3.11 kernels that don't know firing_state will tolerate the property (extra properties are allowed on ADD; kernel_validator rejects MUTATE on undeclared fields). A v3.10 kernel reading a v3.11 hook sees the firing_state as an extra property and ignores it, which means the old 'check proposal existence' idempotency still works. Rollback-safe."
+        ]
+      }
+    },
     {
       "version": "3.10.0",
       "t_day": 168,
@@ -1740,6 +1762,22 @@
               "active",
               "inactive"
             ]
+          },
+          "firing_state": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "pending",
+              "proposed",
+              "approved",
+              "rejected",
+              "applied",
+              "closed"
+            ],
+            "default": "pending",
+            "added_in_version": "3.11",
+            "note": "Lifecycle of a firing attempt for this hook. v3.11 replaces the proposal-existence idempotency used by the sweep in v3.10. Transitions: pending (predicate not yet true) → proposed (sweep ADDed governance_proposal) → approved|rejected (admin MUTATE on proposal) → applied (approver reactor applied proposed_envelope) → closed (terminal, for expires_at-style hooks). The sweep filters on firing_state==pending so a hook won't re-fire once it's in any other state. kernel-authority because only the sweep/reactor mutate it — user edits would break the idempotency contract."
           },
           "created_at": {
             "mutability": "immutable",
