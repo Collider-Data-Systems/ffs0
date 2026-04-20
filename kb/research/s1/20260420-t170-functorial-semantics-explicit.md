@@ -158,6 +158,56 @@ Sam reached for *"an information boundary something dinges"*. Candidate crisping
 
 I'd lean **site boundary** as the plain-language winner. "Boundary of what the kernel sees, at this moment, under its current ontology version." Everything else (routing, DNS, lineage, federation colimit) is about crossing that boundary.
 
+### 4.7 The central triangle — FS is the CT corner, not the whole shape
+
+Every mo:os design decision lives inside a triangle (`moos-domain-expert` skill + `20260418-t168-irl-to-hg-pipeline.md`):
+
+```
+         Category Theory  ←————————→  Hypergraph Rewriting (Wolfram)
+                 ↖                           ↗
+                          mo:os
+                            ↑
+                    HDC / VSA (Kanerva)
+```
+
+FS is **the formal language of the CT corner**. Adjoints, classifying toposes, geometric morphisms, limits/colimits, natural transformations. Without FS, the CT corner is just vibes. But the CT corner alone isn't mo:os — any real design decision recruits all three.
+
+Everything in §4.1–§4.6 above was written in CT register. Triangulating that reading:
+
+| Federation concept | CT view (FS register) | Wolfram view | HDC view |
+|---|---|---|---|
+| Kernel | site in 𝓚 | branch of multiway graph | `φ(K) = ⊕ {φ(n) : n ∈ nodes(K)}` |
+| Signature colimit | colimit in operad-theory cat | rule-merge in a multiway system | `φ(Sig(K)) = ⊕ {φ(t) ⊗ TYPE ⊕ φ(w) ⊗ WF}` — bundle the signature |
+| Federation coherence | sheaf condition over 𝓚 | causal invariance (rulial determinism) | cosine-similarity(φ(K₁), φ(K₂)) > τ on overlapping scope |
+| Routing — URN to kernel | stalk lookup `F_K` in presheaf | tracing a multiway-graph branch | argmax cos-sim over `{φ(K) : K ∈ candidates}` |
+| DNS | presheaf evaluation table | causal-event-to-branch map | hypervector index `URN → φ` |
+| Information boundary | site boundary | causal horizon | norm-threshold beyond which φ(neighbor) is noise |
+| Sheaf violation (disagree) | natural-transformation non-square | multiway non-invariance | cos-sim below τ on overlapping scope → divergence |
+
+The three corners describe the **same objects** with different **computation strategies**:
+
+- **CT** — proof/derivation via adjoint laws; exact, non-scalable
+- **Wolfram** — exhaustive multiway enumeration; complete but computationally irreducible at S2+
+- **HDC** — approximate, GPU-parallel, noise-robust, good enough for hydration and retrieval
+
+When all three agree on an answer we have **triangle coherence**. CI-6 (three-views identity) is the formal claim that they must agree up to the natural isos + quasi-orthogonality tolerance. That's why Procrustes = Δ_F = geometric morphism matters — it's the CT+HDC-corner-agreement for the specific case of crosswalks; the generalization across all federation questions is the full CI-6.
+
+### 4.8 Express — an adjoint computed in the triangle
+
+The unshipped Express half of Promote ⊣ Express (§2.2) is exactly **triangle-coherent pattern detection**:
+
+- **CT** specifies what Express is (the left adjoint; the functor satisfying η, ε laws with Promote).
+- **Wolfram** gives the search space: enumerate multiway branches where an S2 pattern recurs, identify the minimal-support set of S1 primitives that license it.
+- **HDC** gives the computation: `φ(pattern) = ⊕ {φ(event_i) : i ∈ observations}`, similarity-cluster over hypervector space using quasi-orthogonality, cluster centers become Express candidate overlays.
+
+Express is *not* "write a pattern detector in isolation". It's "compute the same pattern in all three corners and promote only when they agree." The LLM / HDC path proposes candidates; the CT path verifies adjoint laws; the Wolfram path confirms causal invariance. Divergent agreement = no promotion.
+
+### 4.9 GPU and the representation layer
+
+The `computed_at` and `signature_hash` properties on `kernel_operadic_signature` (v313-2) are hooks for the HDC corner: `signature_hash` can evolve into a **hypervector fingerprint** `φ(Sig(K))` in a later round. Federation colimit-evaluation then becomes a single CUDA kernel launch — bundle all candidate-federation-member hypervectors, compute similarity against a target URN's neighborhood, argmax. Serial topology-traversal replaced by parallel vector algebra.
+
+This is the GPU-CDU direction the founder's design envisioned (see HDC founding arc in `moos-domain-expert`). FS + Wolfram + HDC together is what makes it legal: CT guarantees the functor is structure-preserving, Wolfram guarantees the multiway exploration is causally invariant, HDC makes it run fast enough to be a session-timescale operation.
+
 ## 5. v3.13-candidate grammar_fragments
 
 This note argues for four fragments to add at `status=proposed` in the HG:
