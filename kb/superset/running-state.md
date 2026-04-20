@@ -1,7 +1,7 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
-> Updated: **T=169 (April 19, 2026) ~15:00 CEST** — round 10 (sessions) open through Conversation D. Doctrine note for the corrected session model written; ontology bumped to v3.12 (first-ever WF20 ceremony, promoting D19.2/D19.3/D19.4/D20.1/D20.2); 4 new D22 grammar_fragments proposed (D22.1 session-has-purpose, D22.2 single-driver invariant, D22.3 attach/detach, D22.4 kernel-birth-session pair); 5 absorbed research notes moved to `dev/reference/research-archive/`. Round 9/9.5 already closed: 9 moos-kernel PRs + ffs0 PRs for v3.10 (D19.1 has-occupant) and v3.11 (t_hook.firing_state). **Z440 kernel 0 is still running v3.11** — pick up v3.12 requires a restart (pending explicit approval). Federation kernels 1-3 on :8001-:8003 still dormant on pre-T=164 code.
+> Updated: **T=170 (April 20, 2026) ~18:00 CEST** — round 10.5 hp-laptop retrofits landed (14-envelope atomic batch): mis-classified `session:sam.claude-code-hp-*` WF19 opens-on LINKs UNLINKed; `session:hp-laptop.primary` birth-session ADDed + WF19 opens-on LINK wired; 5 v3.12-promoted grammar_fragments (D19.2/D19.3/D19.4/D20.1/D20.2) MUTATEd `proposed → promoted → merged` mirroring the ontology. Hp-laptop kernel runtime ontology **still v3.11** — restart to load v3.12 pending explicit approval. Yesterday (T=169 ~15:00 CEST): z440-claude shipped round 10 Conversations A–D on Z440 kernel (doctrine note, ontology v3.12, 4 D22.* proposals, 5 note archive). Round 9/9.5 prior closed: 9 moos-kernel PRs + ffs0 PRs for v3.10 (D19.1 has-occupant) and v3.11 (t_hook.firing_state). **Z440 kernel 0 also still running v3.11** — pick up v3.12 requires a restart (pending explicit approval). Federation kernels 1-3 on :8001-:8003 still dormant on pre-T=164 code.
 
 ---
 
@@ -19,22 +19,25 @@
 T=164 `sam.t164-room-tying` closed at T=167: status → completed.
 Succession recorded: `t164 --WF18 scheduled-after--> t187`.
 
-## Current kernel occupancy
+## Current kernel occupancy (post-T=170 retrofit)
 
-Sessions are **permanent kernel-bound nodes** (§M11). The session layer is **group topology** (§M21): `Sessions = ⊔_k Sessions_k`, stratified by kernel. Exactly one session per kernel is WF19-LINKed and live; `seat_role=occupier` on the kernel the agent is driving, `seat_role=observer` on the others.
+**T=170 correction** — per `kb/research/session/20260419-t169-session-generalization.md`: the IDE-conversation-shaped `session:sam.claude-code-hp-*` nodes were mis-classified under the corrected model. Each kernel gets one **birth-session** (kernel-owned, URN = `urn:moos:session:<kernel-short>`) present from startup; additional purpose-scoped sessions stack on top. Hp-laptop side of this retrofit landed in T=170 round 10.5; z440-claude will mirror on Z440 when they pick up round 11.
 
-URN convention (T=168 round 4 merge): **no T-day segment**. `urn:moos:session:<user>.<agent>-<kernel-short>`. Historical `.t164 / .t167 / .t168` nodes are archived (WF19 UNLINKed, kept in HG as provenance).
+| Session URN | Kernel | Role | `local_t` | Notes |
+|-------------|--------|------|-----------|-------|
+| `urn:moos:session:hp-laptop.primary` | `urn:moos:kernel:hp-laptop.primary` | birth-session (kernel-owned) | 0 | ADDed T=170; WF19 opens-on live |
+| `urn:moos:session:hp-z440.primary` | `urn:moos:kernel:hp-z440.primary` | birth-session (kernel-owned) | 0 | ADDed yesterday on Z440 kernel; WF19 opens-on live |
+| `urn:moos:session:sam.round10-session-generalization` | `kernel:hp-z440.primary` | workspace (sam-owned) | ≥0 | Z440-local; the session doctrine was driven from this |
+| `urn:moos:session:sam.mvp-delivery` | `kernel:hp-z440.primary` | workspace (sam-owned) | ≥0 | Z440-local; MVP roadmap projection |
 
-| Session URN | Kernel | `seat_role` | `local_t` |
-|-------------|--------|-------------|-----------|
-| `urn:moos:session:sam.claude-code-hp-laptop` | `urn:moos:kernel:hp-laptop.primary` | **occupier** | 0 (fresh) |
-| `urn:moos:session:sam.claude-code-hp-z440` | `urn:moos:kernel:hp-z440.primary` | observer | 0 |
+### Unlinked (WF19 opens-on removed T=170, nodes retained for provenance)
 
-### Historical sessions (archived, no WF19 LINK, retained for provenance)
+- `urn:moos:session:sam.claude-code-hp-laptop` — previously WF19-LINKed to hp-laptop kernel; retrofit UNLINKed. Node persists (log-is-truth) but has no active kernel binding.
+- `urn:moos:session:sam.claude-code-hp-z440` — same treatment. Node persists.
 
-- `sam.claude-code-hp-laptop.t164` — merged into `sam.claude-code-hp-laptop`
-- `sam.claude-code-hp-laptop.t167` — merged into `sam.claude-code-hp-laptop`
-- `sam.claude-code-hp-z440.t168` — merged into `sam.claude-code-hp-z440`
+### Historical sessions (T-day-suffixed, archived earlier rounds)
+
+- `sam.claude-code-hp-laptop.t164` · `sam.claude-code-hp-laptop.t167` · `sam.claude-code-hp-z440.t168` — already WF19 UNLINKed in round 4 merge; retained as provenance.
 
 ### Session property redundancy cleanup (v3.9)
 
@@ -51,11 +54,11 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 | | |
 |--|--|
 | URN | `urn:moos:kernel:hp-laptop.primary` |
-| Endpoint | `http://localhost:8000` |
-| Log entries | 561 (HG unchanged since round 8 — round 9 was kernel Go code, not HG hydration) |
-| Nodes | 177 |
-| Relations | 202 |
-| Ontology | **v3.11.0 — 52 types, 20 WFs** (v3.11 adds t_hook.firing_state lifecycle {pending, proposed, approved, rejected, applied, closed} ahead of approver-reactor work; ffs0 PR #32 merged. v3.10 prerequisite: WF19 extended with has-occupant/is-occupant-of for §M19 session-occupancy; ffs0 PR #31 merged) |
+| PID | 5944 |
+| Endpoint | `:8000` (transport) + `:8080` (MCP). 3 stale `moos-kernel.exe` PIDs (13460, 7520) + 1 extra exist with no port bindings — leftover dev processes, safe to ignore |
+| Log entries | 575 (561 pre-T=170 + 14 from the round-10.5 retrofit atomic batch) |
+| Ontology at runtime | **v3.11.0** (kernel loaded at last startup — the v3.12 additions are on disk but not in memory; restart pending explicit approval) |
+| Ontology on disk | **v3.12.0 — 52 types, 20 WFs** (v3.12: first-ever WF20 ceremony promoted D19.2/D19.3/D19.4/D20.1/D20.2; baseline session type fixes; `seat_role` deprecated. Ffs0 commits `2a0a0f1` + `dcd75d9`) |
 
 ## Z440 (federation partner)
 
@@ -648,7 +651,7 @@ closed   (future: expires_at / manual)   (terminal)
 
 ---
 
-## T=169 round 10 — session generalization (in progress)
+## T=169 round 10 — session generalization (closed; Conversations A–D done on Z440; hp-laptop retrofit in T=170 round 10.5 below)
 
 Directive (sam, T=169): generalize the session concept beyond claude-code-per-kernel. Tools, CLI agents, third-party agentic frameworks; users + delegates; **kernel-bound workspace, not IDE conversation**. Completion-drive = session's purpose; spec-completion = the drive; incomplete data = gate-blocked realization.
 
@@ -746,6 +749,42 @@ Cross-refs updated across: ontology.json (`t164_delta_reference`), running-state
 - Ontology on-disk: v3.12.0 (kernel runtime still loading v3.11 — restart pending)
 - Sessions: 4 (`hp-z440.primary` birth, `sam.round10-session-generalization` workspace, `sam.mvp-delivery` workspace, `vscode-codex-hp-z440.t161` legacy-mis-classified non-round-10-scope)
 - Grammar_fragments: 4 (all D22.*)
+
+---
+
+## T=170 round 10.5 — hp-laptop retrofits (2026-04-20 ~18:00 CEST)
+
+Round 10.5 lands the hp-laptop-side counterpart of z440-claude's round-10 work: the mis-classified session-WF19-LINKs are unwired, the hp-laptop birth-session is installed, and the five grammar_fragments that z440-claude promoted in the ontology ceremony get their HG-level status MUTATEd to match (`proposed → promoted → merged`). No new doctrine written — the z440-claude note is authoritative. This is pure mechanical sync.
+
+### What landed (single atomic batch, 14 envelopes, hp-laptop kernel)
+
+| Envelope | Details |
+|----------|---------|
+| UNLINK ×2 | `wf19.sam.claude-code-hp-laptop.opens-on` + `wf19.sam.claude-code-hp-z440.opens-on` removed; sessions persist un-wired |
+| ADD ×1 | `session:hp-laptop.primary` (birth-session; `started_at=2026-04-03T01:05:11Z` ≡ kernel's `created_at`; `local_t=0`) |
+| LINK ×1 | `wf19.hp-laptop.primary.opens-on` — birth-session → kernel |
+| MUTATE ×10 | D19.2, D19.3, D19.4, D20.1, D20.2 each: status `proposed → promoted` then `promoted → merged` (WF20, admin authority) |
+
+Corrected state-machine enum note: grammar_fragment.status is `proposed → rejected | promoted | merged` per ontology; z440-claude's conv sum used "approved/applied" casually — the retrofit uses the correct enum values.
+
+### Explicitly **not** done (deferred)
+
+- **`session:hp-laptop.primary --has-occupant--> agent:claude-code.hp-laptop`** — v3.11 runtime loader doesn't consume `additional_port_pairs`, so the `has-occupant` port would fail validation. Deferred until Round-11 Conversation E PR 1 (loader extension) lands.
+- **Z440 side identical work** (analogous UNLINKs + birth-session ADD for any kernel missing it) — z440-claude's `t169round10_next_plan.md` owns that. Not hp-laptop's call.
+- **Kernel restart to load v3.12** — destructive, pending explicit sam approval.
+- **`POST /twin/ingest` of `kb/moos_from_HPLAP.jsonl`** — file is in ffs0 git; not applied into z440's running HG. Per §M9 sovereign kernels, divergence is normal — this stays optional.
+
+### Kernel stats (hp-laptop kernel, post-retrofit)
+
+- Log: 575 entries (+14 from the atomic batch)
+- Ontology at runtime: **v3.11.0** (no restart yet)
+- Ontology on disk: v3.12.0 (after `git pull` this morning)
+- Sessions at this kernel: `session:hp-laptop.primary` (birth, WF19-LINKed) + `session:sam.claude-code-hp-laptop` + `session:sam.claude-code-hp-z440` (both persisted without WF19 binding) + the historical `.t164/.t167/.t168` nodes
+- Grammar_fragments at this kernel: 23 total; 5 now `status=merged` (D19.2/D19.3/D19.4/D20.1/D20.2); 18 remaining `status=proposed` (including 4 D22.* that live only on Z440 — still unmirrored here)
+
+### Open: D22.* proposals un-mirrored on hp-laptop
+
+D22.1 session-has-purpose · D22.2 single-driver invariant · D22.3 attach/detach verbs · D22.4 kernel-birth-session pair were ADDed only on Z440 kernel. Mirroring them onto hp-laptop kernel is a later round's call — not urgent; doctrine is already in the shared note. Flagged for future.
 
 ---
 
@@ -864,6 +903,11 @@ urn:moos:program:sam.external-op
 urn:moos:purpose:sam.t164-tie-the-room-together
 urn:moos:agent:claude-code.hp-laptop
 urn:moos:agent:claude-code.hp-z440
+
+# T=170 round 10.5 — hp-laptop retrofit
+urn:moos:session:hp-laptop.primary   (birth-session, WF19 opens-on kernel:hp-laptop.primary)
+urn:moos:session:sam.claude-code-hp-laptop   (persisted, WF19 UNLINKed T=170)
+urn:moos:session:sam.claude-code-hp-z440     (persisted, WF19 UNLINKed T=170)
 
 # Round 5 demo nodes (v3.9 types in use)
 urn:moos:view_filter:sam.important-programs
