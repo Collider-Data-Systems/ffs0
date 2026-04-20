@@ -56,7 +56,7 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 | URN | `urn:moos:kernel:hp-laptop.primary` |
 | PID | 5944 |
 | Endpoint | `:8000` (transport) + `:8080` (MCP). 3 stale `moos-kernel.exe` PIDs (13460, 7520) + 1 extra exist with no port bindings — leftover dev processes, safe to ignore |
-| Log entries | 575 (561 pre-T=170 + 14 from the round-10.5 retrofit atomic batch) |
+| Log entries | 580 (561 pre-T=170 + 14 round-10.5 retrofit + 5 round-10.6 v3.13-candidate fragments) |
 | Ontology at runtime | **v3.12.0** — kernel restarted T=170 ~18:01 CEST (new PID 1208, replayed 575 rewrites, `invocation_protocol` + v3.12 port pairs visible via `/operad/node-types`) |
 | Ontology on disk | **v3.12.0 — 52 types, 20 WFs** (v3.12: first-ever WF20 ceremony promoted D19.2/D19.3/D19.4/D20.1/D20.2; baseline session type fixes; `seat_role` deprecated. Ffs0 commits `2a0a0f1` + `dcd75d9`) |
 | Kernel binary | `C:\Users\maass\HPlaptop\moos-kernel\moos-kernel.exe` — mtime `2026-04-18 00:12`; **pre-round-9**. No `--sweep-interval` flag support; sweep loop NOT running. Ontology-load path works; rebuild to master tip (`go build ./cmd/moos`) needed before sweep comes alive. |
@@ -795,7 +795,65 @@ Two skills added under `~/.claude/skills/` — both triggered automatically from
 - **`moos-state-readback`** — 10-sec open-of-round dance: `git fetch` on ffs0 + moos-kernel, diff vs origin, running-state header read, kernel PID + port check, MCP `/healthz` ping, handoff-issue comment scan. Prevents the "local `git status` lies by omission" failure mode that cost T=170 an initial plan revision.
 - **`moos-round-close`** — end-of-round checklist: running-state update (header + kernel block + new section + Key URNs), single atomic commit (HEREDOC-formatted), push, optional handoff-issue comment. Prevents partial closes.
 
-These supplement the existing `moos-rewrite-envelope` skill (envelope-shape cheat sheet). Trio now covers open + rewrite + close.
+These supplement the existing `moos-rewrite-envelope` skill (envelope-shape cheat sheet). Trio now covers open + rewrite + close. Also shared at `dev/claude-skills/` for any workstation to install via copy-to-`~/.claude/skills/`.
+
+---
+
+## T=170 round 10.6 — doctrine + S0 sketch + 5 v3.13-candidate fragments + tidy
+
+Round 10.6 lands the "coat thing" conversation as three artifacts plus HG hydration plus a tidy:
+
+### Artifacts
+
+- **`kb/research/s1/20260420-t170-functorial-semantics-explicit.md`** — names FS as the spine of mo:os; identifies 3 places it already lives (Fold, WF20 Promote⊣Express, v310-2-crosswalk three-views identity); applies the lens to federation (kernels as sites, sheaves over kernel-category, routing = stalk lookup, DNS = presheaf evaluation, free-set = signature colimit, lineage = spawned-by subcategory, Wolfram multiway = the unnamed coherence layer).
+- **`kb/research/s1/20260420-t170-s0-materialization.md`** — draft type specs for op_node / slot / yields / threading / weave as v3.13-candidate types. Not hydrated this round; sketch only.
+- **`kb/research/ops/20260420-t170-branching-strategy.md`** — the write-down of the branching question sam said he "should have written down." Answer: keep current pattern. Four candidate reconstructions listed.
+
+### Hydration — 5 v3.13 grammar_fragments ADDed (all status=proposed)
+
+| URN suffix | Kind | Crystallises |
+|---|---|---|
+| `v313-1-functorial-semantics-spine` | wf_clause (stretch — true kind = doctrine; fragment_kind enum extension is itself a future proposal) | FS as the spine; unshipped halves = Express + CI-6 |
+| `v313-2-kernel-operadic-signature` | type (S1) | Each kernel publishes `kernel_operadic_signature` with ontology_version + type_count + wf_count + signature_hash |
+| `v313-3-kernel-lineage` | port | WF19-extension `spawned-by / spawned` on kernel; initial-kernel is root; tree-structured lineage |
+| `v313-4-federation-presheaf` | wf_clause (stretch — doctrine) | Federation as sheaf over category of kernels; routing=stalk, DNS=presheaf evaluation, sheaf-violation → WF13 governance_proposal |
+| `v313-5-diary` | type (S2) | `diary` type + canonical instance `urn:moos:diary:moos.main` (moos the dachshund, narrator) |
+
+### Tidy
+
+4 memory-snapshot files moved from `kb/research/` (top-level clutter) → `dev/reference/research-archive/`:
+- `t169_memory_MEMORY.md`
+- `t169_memory_project_moos.md`
+- `t169_memory_project_prg_naming.md`
+- `t169_memory_user_sam.md`
+
+These captured the T=169 consolidated-memory moment; the live Claude MEMORY has moved on, and the snapshots are historical from here.
+
+### Grammar_fragment census (hp-laptop kernel)
+
+After round 10.5+10.6: 28 total (was 23 pre-T=170).
+- `status=merged`: 5 (D19.2/D19.3/D19.4/D20.1/D20.2 — the v3.12 ceremony)
+- `status=proposed`: 23 (18 pre-existing + 5 new v313-1..v313-5)
+
+Z440 kernel's 4 D22.* proposals (D22.1..D22.4) still live only on Z440.
+
+### Key URNs added this round
+
+```
+urn:moos:grammar_fragment:v313-1-functorial-semantics-spine  (status=proposed, doctrine-via-wf_clause-stretch)
+urn:moos:grammar_fragment:v313-2-kernel-operadic-signature   (status=proposed, type)
+urn:moos:grammar_fragment:v313-3-kernel-lineage              (status=proposed, port)
+urn:moos:grammar_fragment:v313-4-federation-presheaf         (status=proposed, doctrine-via-wf_clause-stretch)
+urn:moos:grammar_fragment:v313-5-diary                       (status=proposed, type)
+```
+
+### Explicit next steps, deferred
+
+- **Promote these 5** — needs a second WF20 ceremony (admin cap, doctrine review, batch MUTATE chain). Should rollup with Z440's D22.1..D22.4 when z440-claude completes Round 11.
+- **Extend fragment_kind enum to include 'doctrine'** — itself a candidate proposal; meta-recursive. Track for v3.14.
+- **S0 type specs (op_node/slot/yields/threading/weave)** — sketch only; hydration in a later round.
+- **FS-spine + federation-presheaf mirrored onto Z440** — z440-claude's call when they pull.
+- **Express adjoint implementation** — pattern-mining algorithm from S2 → S4 overlays. Not code-ready; design pending.
 
 ---
 
