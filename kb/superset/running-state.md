@@ -57,8 +57,9 @@ New merged sessions are ADDed with only `started_at` (immutable) + `seat_role` +
 | PID | 5944 |
 | Endpoint | `:8000` (transport) + `:8080` (MCP). 3 stale `moos-kernel.exe` PIDs (13460, 7520) + 1 extra exist with no port bindings — leftover dev processes, safe to ignore |
 | Log entries | 575 (561 pre-T=170 + 14 from the round-10.5 retrofit atomic batch) |
-| Ontology at runtime | **v3.11.0** (kernel loaded at last startup — the v3.12 additions are on disk but not in memory; restart pending explicit approval) |
+| Ontology at runtime | **v3.12.0** — kernel restarted T=170 ~18:01 CEST (new PID 1208, replayed 575 rewrites, `invocation_protocol` + v3.12 port pairs visible via `/operad/node-types`) |
 | Ontology on disk | **v3.12.0 — 52 types, 20 WFs** (v3.12: first-ever WF20 ceremony promoted D19.2/D19.3/D19.4/D20.1/D20.2; baseline session type fixes; `seat_role` deprecated. Ffs0 commits `2a0a0f1` + `dcd75d9`) |
+| Kernel binary | `C:\Users\maass\HPlaptop\moos-kernel\moos-kernel.exe` — mtime `2026-04-18 00:12`; **pre-round-9**. No `--sweep-interval` flag support; sweep loop NOT running. Ontology-load path works; rebuild to master tip (`go build ./cmd/moos`) needed before sweep comes alive. |
 
 ## Z440 (federation partner)
 
@@ -774,17 +775,27 @@ Corrected state-machine enum note: grammar_fragment.status is `proposed → reje
 - **Kernel restart to load v3.12** — destructive, pending explicit sam approval.
 - **`POST /twin/ingest` of `kb/moos_from_HPLAP.jsonl`** — file is in ffs0 git; not applied into z440's running HG. Per §M9 sovereign kernels, divergence is normal — this stays optional.
 
-### Kernel stats (hp-laptop kernel, post-retrofit)
+### Kernel stats (hp-laptop kernel, post-retrofit + post-restart)
 
 - Log: 575 entries (+14 from the atomic batch)
-- Ontology at runtime: **v3.11.0** (no restart yet)
-- Ontology on disk: v3.12.0 (after `git pull` this morning)
+- Ontology at runtime: **v3.12.0** — kernel restarted T=170 ~18:01 CEST (PID 5944 → 1208)
+- Replay on startup: clean, 575 rewrites applied against v3.12 validator; one known idempotent skip (`twin_link:hp-laptop.mtdc` duplicate ADD at seq 347 index 354 — pre-existing, benign)
+- Kernel binary pre-round-9 (mtime 2026-04-18 00:12) — no sweep loop. Rebuild pending if sweep-on-hp-laptop matters; for now hp-laptop runs v3.12 validator + HTTP/MCP surface only
 - Sessions at this kernel: `session:hp-laptop.primary` (birth, WF19-LINKed) + `session:sam.claude-code-hp-laptop` + `session:sam.claude-code-hp-z440` (both persisted without WF19 binding) + the historical `.t164/.t167/.t168` nodes
 - Grammar_fragments at this kernel: 23 total; 5 now `status=merged` (D19.2/D19.3/D19.4/D20.1/D20.2); 18 remaining `status=proposed` (including 4 D22.* that live only on Z440 — still unmirrored here)
 
 ### Open: D22.* proposals un-mirrored on hp-laptop
 
 D22.1 session-has-purpose · D22.2 single-driver invariant · D22.3 attach/detach verbs · D22.4 kernel-birth-session pair were ADDed only on Z440 kernel. Mirroring them onto hp-laptop kernel is a later round's call — not urgent; doctrine is already in the shared note. Flagged for future.
+
+### Claude skills scaffolded (T=170)
+
+Two skills added under `~/.claude/skills/` — both triggered automatically from now on:
+
+- **`moos-state-readback`** — 10-sec open-of-round dance: `git fetch` on ffs0 + moos-kernel, diff vs origin, running-state header read, kernel PID + port check, MCP `/healthz` ping, handoff-issue comment scan. Prevents the "local `git status` lies by omission" failure mode that cost T=170 an initial plan revision.
+- **`moos-round-close`** — end-of-round checklist: running-state update (header + kernel block + new section + Key URNs), single atomic commit (HEREDOC-formatted), push, optional handoff-issue comment. Prevents partial closes.
+
+These supplement the existing `moos-rewrite-envelope` skill (envelope-shape cheat sheet). Trio now covers open + rewrite + close.
 
 ---
 
