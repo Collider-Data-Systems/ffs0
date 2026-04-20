@@ -2,9 +2,20 @@
 
 Shared Claude Code skills for the mo:os workspace. Live here so any machine checked out of ffs0 can install them locally.
 
-## Install
+## Install — two separate places, depending on which Claude surface
 
-Claude Code reads skills from `~/.claude/skills/<skill-name>/SKILL.md` (on Windows: `C:\Users\<you>\.claude\skills\`). Copy each skill's directory there:
+Claude has two skill-discovery mechanisms and they are **not** linked:
+
+| Surface | How it finds skills | Where they live |
+|---|---|---|
+| **Claude Code runtime** (CLI, IDE plugin, claude-code chat) | Auto-scans `~/.claude/skills/*/SKILL.md` at session start; enumerates available skills in the session context | `~/.claude/skills/<skill-name>/SKILL.md` |
+| **Claude Desktop — Customize > Skills panel** | Shows only skills registered through its own UI flow ("Create skill", "Upload a skill", "Create with Claude"). Does NOT auto-scan the filesystem. | Separate internal location that the Desktop app manages |
+
+**Implication**: dropping files into `~/.claude/skills/` is enough for Claude Code to use them, but **not enough** to make them appear in the Customize panel. Both may be useful. Pick based on how you work.
+
+### Option A — filesystem drop (Claude Code runtime)
+
+Sufficient if you only need the skills to auto-trigger in claude-code sessions:
 
 ```bash
 # PowerShell / Git Bash (Windows)
@@ -15,7 +26,30 @@ cp -r dev/claude-skills/moos-rewrite-envelope "$USERPROFILE/.claude/skills/"
 
 On Linux / macOS: `~/.claude/skills/` is the destination.
 
-Once copied, the skill auto-triggers on matching prompts — Claude Code discovers it from the frontmatter `description`. No restart needed for a new conversation; existing conversations won't pick up the skill until you start a new one.
+**Test it worked**: open a new claude-code conversation. The opening system-reminder lists available skills. Your three moos-* entries should appear (no `plugin:` prefix — they're personal/filesystem-scanned).
+
+If they don't appear in the session's available-skills list, Claude Code isn't discovering them for some reason (plugin conflict, version quirk, etc.) — fall back to Option B.
+
+### Option B — UI registration (Claude Desktop Customize panel)
+
+Needed if you want the skills visible in Customize > Skills panel, or if Option A isn't working:
+
+1. Open Claude Desktop.
+2. Customize > Skills.
+3. Click `+` > **Upload a skill**.
+4. Point at `dev/claude-skills/<skill-name>/SKILL.md` (or the whole directory if the dialog accepts folders). Repeat for each of the three.
+
+After registering, the panel shows them under "Personal skills" with Added by / Last updated metadata. They're now invokable via slash command and auto-triggered per the `description`.
+
+### Explicit invocation always works
+
+Whatever the discovery state, you can always point Claude at a skill by path:
+
+```
+Run the instructions at ~/.claude/skills/moos-state-readback/SKILL.md
+```
+
+That bypasses discovery entirely. Use when a skill won't auto-trigger or auto-list.
 
 ## Current skills
 
