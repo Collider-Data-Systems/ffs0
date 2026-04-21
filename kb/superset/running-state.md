@@ -1,9 +1,11 @@
 # mo:os — running state
 
 > Hydration entrypoint. Read this first in any new conversation.
+> Updated: **T=171 (April 21, 2026) ~09:30 CEST** — Multimodal Moos Diary agenda corrected on Z440. Antigravity IDE agent persona established (`session:sam.moos-diary`, `system_instruction:persona.moos-dachshund` context overlay). Google Labs Flow videos pending ingestion.
 > Updated: **T=170 (April 20, 2026) ~18:00 CEST** — round 10.5 hp-laptop retrofits landed (14-envelope atomic batch): mis-classified `session:sam.claude-code-hp-*` WF19 opens-on LINKs UNLINKed; `session:hp-laptop.primary` birth-session ADDed + WF19 opens-on LINK wired; 5 v3.12-promoted grammar_fragments (D19.2/D19.3/D19.4/D20.1/D20.2) MUTATEd `proposed → promoted → merged` mirroring the ontology. Hp-laptop kernel runtime ontology **still v3.11** — restart to load v3.12 pending explicit approval. Yesterday (T=169 ~15:00 CEST): z440-claude shipped round 10 Conversations A–D on Z440 kernel (doctrine note, ontology v3.12, 4 D22.* proposals, 5 note archive). Round 9/9.5 prior closed: 9 moos-kernel PRs + ffs0 PRs for v3.10 (D19.1 has-occupant) and v3.11 (t_hook.firing_state). **Z440 kernel 0 also still running v3.11** — pick up v3.12 requires a restart (pending explicit approval). Federation kernels 1-3 on :8001-:8003 still dormant on pre-T=164 code.
 
 ---
+
 
 ## Active program
 
@@ -854,6 +856,13 @@ urn:moos:grammar_fragment:v313-5-diary                       (status=proposed, t
 - **S0 type specs (op_node/slot/yields/threading/weave)** — sketch only; hydration in a later round.
 - **FS-spine + federation-presheaf mirrored onto Z440** — z440-claude's call when they pull.
 - **Express adjoint implementation** — pattern-mining algorithm from S2 → S4 overlays. Not code-ready; design pending.
+
+---
+
+## T=171 round 10.7 — Antigravity moos-diary doctrine & alignment
+
+**Date:** April 21, 2026 (~09:30 CEST)
+Antigravity IDE ingestion of the moos-diary multimodal vision. Corrected `session` ontology against Guido's strict S4 parameterization rules (no host conflation, stripped unauthorized `WF22`/`WF18` syntax). Drafted `kb/moos-diary/t171.md` establishing the dachshund's 1-year anniversary of watching Sam struggle. `z440-claude` handles Z440 kernel restart and Round 11 implementation next.
 
 ---
 
