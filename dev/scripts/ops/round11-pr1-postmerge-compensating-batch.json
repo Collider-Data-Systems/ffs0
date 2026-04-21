@@ -1,0 +1,28 @@
+[
+  {
+    "rewrite_type": "UNLINK",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "relation_urn": "urn:moos:relation:has_occupant:session.diary.to.occupant",
+    "rewrite_category": "WF19"
+  },
+  {
+    "rewrite_type": "LINK",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "relation_urn": "urn:moos:rel:session.sam.moos-diary.has-occupant.agent.antigravity-hp-z440",
+    "src_urn": "urn:moos:session:sam.moos-diary",
+    "src_port": "has-occupant",
+    "tgt_urn": "urn:moos:agent:antigravity.hp-z440",
+    "tgt_port": "is-occupant-of",
+    "rewrite_category": "WF19"
+  },
+  {
+    "rewrite_type": "LINK",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "relation_urn": "urn:moos:rel:session.sam.kernel-proper.has-occupant.agent.claude-code-hp-z440",
+    "src_urn": "urn:moos:session:sam.kernel-proper",
+    "src_port": "has-occupant",
+    "tgt_urn": "urn:moos:agent:claude-code.hp-z440",
+    "tgt_port": "is-occupant-of",
+    "rewrite_category": "WF19"
+  }
+]
