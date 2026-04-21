@@ -46,6 +46,15 @@ PR 3 and PR 4 therefore introduce **zero new occupancy logic** — they wire exi
    - `local_t` / `turn_count` MUTATEs emitted by the runtime's session-heartbeat helper.
    - Replay — enforcement is on new rewrites only, **not** `fold.Replay` (same doctrine as PR 1: prospective only).
 
+3. **Session-as-actor rule.** When `env.Actor` is itself a session node the actor IS the session — but only if that session is itself occupied (has a canonical `has-occupant` relation pointing at a `user`\|`agent`). An unoccupied session-as-actor is NOT §M11-compliant: there is no seated principal to gate against, and letting such an envelope through would bypass the entire occupancy invariant. This mirrors §M12's hop-through-`has-occupant` pattern (an actor-session in `CheckAdminCapability` must also resolve to a seated principal). Test pin in the operad package: `TestResolveSessionForEnvelope_ActorIsSession_Unoccupied` (returns `Absent`) plus the kernel-integration pair `TestApply_M11_UnoccupiedSessionAsActor_Rejected` / `TestApply_M11_OccupiedSessionAsActor_Accepted`.
+
+4. **`ApplyProgram` preflight checks initial state, not working state.** Every envelope's liveness check runs against the state at the start of the batch. A batch that ADDs a session in envelope 1 and references that newly-ADDed session in envelope 2's `session_urn` is rejected at preflight — envelope 2's context does not yet exist when the preflight walks the program. This is **deliberate**:
+   - Emitter context is what §M11 gates on; it must pre-exist to be a valid gate-ground.
+   - Session birth + first occupant is a bootstrap pattern, handled via `SeedIfAbsent`'s structural `skipLiveness` bypass, never a user-space program.
+   - Threading a working-state through preflight would make §M11 observations batch-order-dependent, which invites subtle bugs (an envelope passes under one ordering and not another). Cheaper to leave the constraint in place and document it.
+   
+   Test pin: `TestApplyProgram_M11_InitialStateCheck_RejectsIntraBatchSessionReference`. Revisit only if a concrete user-space use case demands atomic session-birth + emission outside the seed path.
+
 ### Design decisions to defer to review
 
 - **Where does session URN come from on an envelope?** The envelope struct in `internal/graph/rewrite.go` has no `session_urn` field today. Two options:
