@@ -1,113 +1,153 @@
 ---
 name: moos-state-readback
-description: Use this skill at the start of any mo:os working session before claiming state is "crisp" or planning a round. Performs the 10-second readback: `git fetch` on ffs0 + moos-kernel, diffs against origin, reads running-state.md header, checks hp-laptop kernel process + ports, pings MCP, lists open `ffs0#33` (and any other pinned handoff issue) comments. Answers "am I up to date?", "is the kernel up and on what ontology version?", "has the peer agent pushed anything I should pull?". Trigger whenever a new conversation opens in one of the mo:os workspaces (`C:\Users\maass\HPlaptop\ffs0`, `moos-kernel`, `moos-router`, `moos-viz`), or any time you are about to make a claim about "is hp-laptop crisp".
+description: Use this skill at the start of any mo:os working session, before claiming state is "crisp", and before any git pull/rebuild/restart. Performs the 15-second readback: per-repo `git -C <path> fetch` on ffs0 + moos-kernel + moos-router, diffs against their respective default branches, reads running-state.md header, checks kernel process + ports, pings `/healthz` (reads `ontology_version` directly — no grep-for-features heuristic), lists open handoff-issue comments. Answers "am I up to date — per repo?", "is the kernel up and on what runtime ontology version?", "has any peer agent pushed anything I should pull?". Trigger whenever a new conversation opens in one of the mo:os workspaces (`ffs0`, `moos-kernel`, `moos-router`, `moos-viz`), or any time you are about to make a claim about "is hp-laptop crisp", or before any bash command that changes repo state (pull / rebuild / commit).
 ---
 
 # mo:os state readback
 
-The 10-second "where are we" dance. Run it before any round. Without this, local `git status` lies by omission — see T=170 round 10.5 in running-state where a skipped fetch cost the hp-laptop agent a plan revision.
+The 15-second "where are we" dance. Run it before any round. Without this, two failure modes hit:
+
+- **Local `git status` lies by omission** when tracking branches aren't refreshed (T=170 opener: claimed "crisp" while ffs0 was 7 commits behind).
+- **Wrong-repo operations** when `cd`-state drifts between bash calls and you pull/build the wrong thing (T=171: "pulled" moos-kernel but was actually in ffs0 dir; built from stale master without the merge).
+
+Both avoidable with the discipline below.
+
+## Cardinal rule — use `git -C <path>`, never trust `cd`
+
+The Bash tool persists working-directory state across calls unpredictably. Rely on explicit `-C` for every git command, every time. No exceptions.
+
+```bash
+git -C /c/Users/maass/HPlaptop/ffs0 status -uno   # RIGHT
+cd /c/Users/maass/HPlaptop/ffs0 && git status -uno # WRONG (drifts)
+```
+
+Same for `gh` — use `gh <cmd> --repo MSD21091969/<repo-name>` rather than relying on repo auto-detection from cwd.
+
+## Cardinal rule — always qualify PR/issue numbers with repo
+
+`#29` is ambiguous when three repos have their own PR sequences. Write `moos-kernel#29` or `ffs0#33` — every time, even when the context "obviously" implies one. On multi-machine handoffs (hp-laptop, Z440), the context doesn't always carry.
 
 ## What to check (in parallel)
 
-Run these in a single message with parallel `Bash` calls. Nothing here modifies state — all read-only.
+Run the following as parallel `Bash` calls in a single tool use. Nothing here modifies state — all read-only.
 
-### 1. ffs0 fetch + divergence
-
-```bash
-cd /c/Users/maass/HPlaptop/ffs0
-git fetch --all --prune 2>&1
-git status -uno
-git log --oneline origin/main -10
-# If behind: the number of missing commits and their messages
-```
-
-Expected: clean wd, `up to date with origin/main`, recent commits visible. If "behind by N commits", **you are not crisp** — plan a pull first.
-
-### 2. moos-kernel fetch + divergence
+### 1. Per-repo fetch + divergence (all three repos)
 
 ```bash
-cd /c/Users/maass/HPlaptop/moos-kernel
-git fetch --all --prune 2>&1
-git status -uno
-git log --oneline origin/master -10
+git -C /c/Users/maass/HPlaptop/ffs0 fetch --all --prune 2>&1 | tail -5
+git -C /c/Users/maass/HPlaptop/ffs0 status -uno
+git -C /c/Users/maass/HPlaptop/ffs0 log --oneline origin/main -10
 ```
 
-### 3. Running-state header
+```bash
+git -C /c/Users/maass/HPlaptop/moos-kernel fetch --all --prune 2>&1 | tail -5
+git -C /c/Users/maass/HPlaptop/moos-kernel status -uno
+git -C /c/Users/maass/HPlaptop/moos-kernel log --oneline origin/master -10
+```
+
+```bash
+git -C /c/Users/maass/HPlaptop/moos-router fetch --all --prune 2>&1 | tail -5
+git -C /c/Users/maass/HPlaptop/moos-router status -uno
+git -C /c/Users/maass/HPlaptop/moos-router log --oneline -5
+```
+
+Default branches: `ffs0` = `main`, `moos-kernel` = `master`, `moos-router` = `feat/type-map-routing` (current feature branch) or `master`. Check each.
+
+For each repo: clean working-dir + `up to date with origin/<branch>` = crisp on that repo. "Behind by N commits" on any = **not crisp — plan per-repo pull before making claims**.
+
+### 2. Running-state header
 
 ```bash
 head -10 /c/Users/maass/HPlaptop/ffs0/kb/superset/running-state.md
 ```
 
-The header line after `> Updated:` tells you the last T-day update and what's in flight. Compare its T-day against today's.
+The header line after `> Updated:` tells you the last T-day update and what's in flight. Compare its T-day against today's (from the `currentDate` context in your conversation).
 
-### 4. Kernel process + MCP liveness
+### 3. Kernel process + port audit
 
 ```bash
 tasklist | grep -Ei 'moos|cloudflared'
-netstat -ano | grep -E 'LISTENING.*:(8000|8080|9000|4433)' | head -20
+netstat -ano | grep -Ei 'LISTENING.*:(8000|8001|8002|8003|8080|8081|8082|8083|9000|4433)' | head -20
 ```
 
-Expect PID on `:8000` (transport) + same PID on `:8080` (MCP). Extra `moos-kernel.exe` PIDs with no port bindings = leftover dev processes, ignore.
+Expected on hp-laptop: one `moos-kernel.exe` PID bound to both `:8000` (transport) and `:8080` (MCP); one `moos-router.exe` on `:9000`. Extra `moos-kernel.exe` PIDs with no port bindings = leftover dev processes, ignore but note.
 
-Then MCP ping:
+On Z440: up to 4 kernel PIDs (primary on `:8000/:8080` plus federation trio on `:8001-:8003` / `:9001-:9003`). Running-state typically names each.
+
+### 4. MCP + runtime ontology version
 
 ```bash
 curl -sS http://localhost:8000/healthz
 ```
 
-Returns `{"log_len": N, "status": "ok", "t_day": T}`. If fails: kernel not up; note it and decide whether to restart (destructive — needs owner OK).
+Post-PR-#26 (moos-kernel master tip c642872+) returns:
 
-### 5. Ontology delta: runtime vs on-disk
+```json
+{"log_len": N, "ontology_version": "3.X.Y", "status": "ok", "t_day": T}
+```
+
+If `ontology_version` is absent: the kernel is running a pre-c642872 binary — note this. Older field set was `{log_len, status, t_day}`.
+
+Compare to on-disk ontology version:
 
 ```bash
-# Quick v3.12 marker — if present in runtime, kernel is on v3.12+
-curl -sS http://localhost:8000/operad/node-types 2>&1 | grep -o '"version":"[0-9.]*"' | head -1
 grep -o '"version": "[0-9.]*"' /c/Users/maass/HPlaptop/ffs0/kb/superset/ontology.json | head -1
 ```
 
-Runtime < on-disk → kernel needs a restart to pick up the bump.
+Runtime < on-disk → kernel needs a rebuild+restart to pick up the bump.
 
-### 6. Peer-agent handoff issue(s)
+### 5. Peer-agent handoff issue(s)
 
 ```bash
-cd /c/Users/maass/HPlaptop/ffs0
-gh issue list --state open --limit 10
-# If a specific handoff issue is live:
-gh issue view 33 --comments
+gh issue list --repo MSD21091969/ffs0 --state open --limit 10
+gh issue view 33 --repo MSD21091969/ffs0 --comments 2>&1 | tail -80
 ```
 
-Comments from peers on the current handoff issue reveal what they shipped and what's queued for you.
+If the active handoff issue isn't `ffs0#33`, substitute the current one. `--comments` with `tail -80` gets the last round of comments from peers — claude-z440, antigravity, or whoever is handing off.
 
 ## Reporting shape
 
-After the parallel batch, synthesize a 5-line summary:
+After the parallel batch, synthesize a 7-line summary:
 
 ```
-ffs0:     <ahead|behind|clean> by N — <summary of latest commit>
-kernel:   <ahead|behind|clean> — master tip <sha> <short msg>
-running:  header T=<day>, <in-flight note>
-kernel 0: PID <pid> on :8000/:8080 — ontology v<runtime> (on disk v<disk>)
-handoff:  ffs0#<N> has <M> new comments from <peer>
+ffs0:        <ahead|behind|clean> by N — <latest commit sha + short msg>
+moos-kernel: <ahead|behind|clean> — <branch> tip <sha> <short msg>
+moos-router: <ahead|behind|clean> — <branch>
+running:     header T=<day>, <in-flight note>
+kernel 0:    PID <pid> on :8000/:8080 — runtime v<X> (on disk v<Y>) [sweep: on|off]
+federation:  [Z440 only] PIDs on :8001-:8003 — <status>
+handoff:     ffs0#<N> — <M> new comments from <peer>; action queued: <yes/no>
 ```
 
-## When to pull
+If any row says "behind" or a version mismatch, the round opens with a pull/rebuild/restart plan, NOT with a doctrine claim.
 
-- Fast-forward safe (`Your branch is behind by N commits, can be fast-forwarded`) + you have no local WIP: **`git pull --ff-only` and continue**.
-- Divergent (local commits ahead of origin + remote ahead): **plan a merge or rebase; don't auto-pull**.
-- Clean + up to date: nothing to do.
+## When to pull — and which repo
+
+- **Each repo independently.** A single `git pull` covers one repo's WD. Others stay untouched.
+- **Fast-forward safe + no local WIP on that repo**: `git -C <path> pull --ff-only` is fine.
+- **Divergent (local ahead + remote ahead on same branch)**: plan a rebase or merge — don't auto-pull.
+- **Clean + up to date**: nothing to do.
+
+After pulling any repo: re-read the relevant running-state section / issue comments / PR state, because upstream edits may change what the next action is.
 
 ## What this skill does NOT do
 
 - Doesn't restart the kernel (destructive; owner-approval required).
 - Doesn't pull automatically (owner-approval for any state change).
-- Doesn't write anything — read-only by design.
+- Doesn't rebuild binaries (owner-approval).
+- Doesn't commit or push anything — pure read-only.
 
 ## Why it exists
 
-T=170 opener: local `git status` showed "up to date" because tracking branches weren't refreshed. `ffs0` was actually 7 commits behind origin (z440-claude had shipped Round 10 overnight). Caught by Sam's "please check git" nudge, at the cost of one plan-file revision. This skill is the unprompted version of that nudge.
+**T=170 opener**: local `git status` showed "up to date" on ffs0 because tracking branches weren't refreshed. ffs0 was actually 7 commits behind origin — z440-claude had shipped Round 10 overnight. Caught by Sam's "please check git" nudge at the cost of one plan-file revision.
+
+**T=171 opener** (same machine, fresh conversation): I said "pulling ffs0, rebuilding my binary" — the bash tool's `cd`-state drifted between calls and the "pull" command ran in the ffs0 directory (which was current) instead of moos-kernel (which wasn't). I then built from stale local master, missed the PR-26/#27 merges, and would have shipped a LINK against the pre-strict validator if `/healthz` hadn't told me `ontology_version` wasn't populated. Caught only by the PR 26 feature I was about to check.
+
+Both failures preventable by: (a) per-repo explicit `git -C <path>`, (b) reading `ontology_version` directly from `/healthz` instead of grepping features, (c) enumerating all three repos in the readback rather than just the two most obvious.
 
 ## See also
 
 - `moos-rewrite-envelope` — envelope shapes for applying state changes after readback.
 - `moos-round-close` — the end-of-round counterpart.
 - `ffs0/kb/superset/running-state.md` — the living state card this skill reads.
+- `ffs0/kb/research/session/20260421-t171-guido-governance-session.md` — persona context for the hp-laptop agent running this skill.
