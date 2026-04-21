@@ -89,7 +89,7 @@ If this round delivered prerequisites for a peer (e.g. hp-laptop → z440-claude
 
 ```bash
 gh issue comment <N> --body "$(cat <<'EOF'
-<Peer-name> side <round-slug> landed — ffs0 commit [`<sha>`](https://github.com/MSD21091969/ffs0/commit/<sha>).
+<Peer-name> side <round-slug> landed — ffs0 commit [`<sha>`](https://github.com/Collider-Data-Systems/ffs0/commit/<sha>).
 
 <what shipped — bullet list of the 3-5 key moves>
 

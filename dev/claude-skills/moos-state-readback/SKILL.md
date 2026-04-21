@@ -21,7 +21,7 @@ git -C /c/Users/maass/HPlaptop/ffs0 status -uno   # RIGHT
 cd /c/Users/maass/HPlaptop/ffs0 && git status -uno # WRONG (drifts)
 ```
 
-Same for `gh` — use `gh <cmd> --repo MSD21091969/<repo-name>` rather than relying on repo auto-detection from cwd.
+Same for `gh` — use `gh <cmd> --repo Collider-Data-Systems/<repo-name>` rather than relying on repo auto-detection from cwd.
 
 ## Cardinal rule — always qualify PR/issue numbers with repo
 
@@ -99,8 +99,8 @@ Runtime < on-disk → kernel needs a rebuild+restart to pick up the bump.
 ### 5. Peer-agent handoff issue(s)
 
 ```bash
-gh issue list --repo MSD21091969/ffs0 --state open --limit 10
-gh issue view 33 --repo MSD21091969/ffs0 --comments 2>&1 | tail -80
+gh issue list --repo Collider-Data-Systems/ffs0 --state open --limit 10
+gh issue view 33 --repo Collider-Data-Systems/ffs0 --comments 2>&1 | tail -80
 ```
 
 If the active handoff issue isn't `ffs0#33`, substitute the current one. `--comments` with `tail -80` gets the last round of comments from peers — claude-z440, antigravity, or whoever is handing off.
