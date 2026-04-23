@@ -1,13 +1,57 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.12.0",
-  "t_day": 169,
-  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md.",
+  "version": "3.13.0",
+  "t_day": 173,
+  "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md. T=173 round-12 v3.13.0: four promoted grammar_fragments materialized into ontology — v313-6 (WF02 delegates-to/delegated-by additional port pair for role→role capability delegation), v313-7 (new S2 `group` node type — collective principal, extends principalTypes from {user, agent} to {user, agent, group}), v313-8 (channel.kind enum expansion: +calendar, +task-list, +cloud-storage, +vcs, +project-board), v313-9 (WF01 owns/owned-by additional port pair — group|user source owning kernel|session|purpose|program|channel|agent targets). WF19 has-occupant tgt_types extends to include `group` (session occupancy by a collective principal). See kb/research/session/20260422-t172-wolframs-court-social-topology.md §3 + T=173 batch on Z440 kernel 0 log_seq 285-288 (WF20 promotion ceremony for the 4 fragments).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "dev/reference/research-archive/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "3.13.0",
+      "t_day": 173,
+      "summary": "Second WF20 ceremony promotes 4 fragments (v313-6/7/8/9) introducing the `group` S2 node type, WF02 delegates-to, WF01 owns/owned-by, and channel.kind enum expansion. Enables Collider-Data-Systems team reification (group:sam, group:moos) and the Wolfram's-court delegation topology.",
+      "changes": {
+        "fragment_promotions": [
+          "urn:moos:grammar_fragment:v313-6-wf02-delegates-to — WF02 additional_port_pair added: delegates-to / delegated-by (src: role, tgt: role). Status: proposed → promoted (T=173 Z440 log_seq 285) → merged (this bump).",
+          "urn:moos:grammar_fragment:v313-7-group-type — new S2 node type `group` (collective principal). Status: proposed → promoted (T=173 log_seq 286) → merged.",
+          "urn:moos:grammar_fragment:v313-8-channel-kind-vcs — channel.kind enum expanded with calendar, task-list, cloud-storage, vcs, project-board. Status: proposed → promoted (T=173 log_seq 287) → merged. Note: kind remains Mutability=immutable; post-promotion channel upgrades still require UNLINK+re-ADD or a migration-window feature.",
+          "urn:moos:grammar_fragment:v313-9-owns-port-pair — WF01 additional_port_pair added: owns / owned-by (src: group|user, tgt: kernel|session|purpose|program|channel|agent). Status: proposed → promoted (T=173 log_seq 288) → merged."
+        ],
+        "type_additions": [
+          "group — S2 collective principal. Properties: created_at (immutable), name (immutable), owner_urn (immutable), description (mutable, owner), status (mutable, owner, enum: active|archived). Ports: out=[owns, delegates-to], in=[member-of, governed-by]. URN pattern urn:moos:group:<slug>."
+        ],
+        "wf01_extensions": [
+          "additional_port_pair added: owns/owned-by. Coexists with the primary owns/child pair (which stays for legacy user→workstation ownership). New pair enables group→kernel, group→session, group→purpose, etc. for typed topology-level ownership replacing scattered owner_urn properties."
+        ],
+        "wf02_extensions": [
+          "additional_port_pair added: delegates-to/delegated-by. Enables role→role capability delegation (role:superadmin --delegates-to--> role:karpathy-scope, etc). Capability walk in CheckAdminCapability can be extended post-bump to traverse the delegation chain up to a bounded depth."
+        ],
+        "wf19_extensions": [
+          "has-occupant additional_port_pair tgt_types extended from [user, agent] to [user, agent, group]. Session occupancy by a collective principal becomes valid. session --has-occupant--> group:<slug> carries the same at-most-one invariant (D22.2)."
+        ],
+        "channel_kind_expansion": [
+          "5 new kinds added to channel.kind enum: calendar (Google Calendar/ICS), task-list (Google Tasks/boards), cloud-storage (Drive-like storage distinct from filesystem), vcs (git repos), project-board (GitHub Projects v2 and similar). Existing kinds (filesystem, messaging, board, drive, mail) unchanged; no placeholder channels are auto-migrated — kind remains immutable per spec. Placeholder channels from T=173 (`channel:google.calendar.sam` kind=messaging, `channel:google.tasks.sam` kind=board, `channel:github.*` kind=board) stay on placeholder kinds until explicit UNLINK+re-ADD or a migration-window ontology feature."
+        ],
+        "migration_actions_in_hg": [
+          "Post-bump MUTATE grammar_fragment.status: v313-6/7/8/9 promoted → merged on Z440 kernel 0. Hp-laptop side mirrors when Guido replays ontology + restarts.",
+          "Post-bump ADD group:sam and group:moos nodes (matching the Collider-Data-Systems GitHub teams). LINK each via owns/owned-by to its scoped URNs (group:sam owns kernel:hp-z440.primary, kernel:hp-laptop.primary, kernel:hp-z440.lola, kernel:hp-z440.menno, sessions, purposes; group:moos owns kernel:hp-z440.moos + session:sam.moos-diary + purpose:sam.multimodal-curation-and-diary).",
+          "No automatic migration of existing owner_urn properties to topology-level owns/owned-by edges. The two coexist; owner_urn is the sticky provenance stamp, owns/owned-by is the mutable topology relation. Future round can deprecate owner_urn in favor of owns/owned-by traversal."
+        ],
+        "backwards_compat": [
+          "Additive bump. Pre-v3.13 kernels accept the new types + port pairs + enum values silently (unknown type_ids are filtered by pre-ADD validation; new port pairs show as 'undeclared' to pre-v3.13 loaders and fall to permissive-unknown-color path).",
+          "Existing channel kind values unchanged. Existing WF01 owns/child and WF02 governs/governed-by pairs unchanged — new additional pairs are siblings.",
+          "Rollback-safe: removing the 4 fragments requires a separate ceremony (WF20 reverse-direction — not yet designed). Practical rollback: revert ontology.json to 3.12.0 + restart kernels; HG state retains group nodes + owns edges but they become orphans (types/ports no longer declared) — kernel warns but doesn't delete."
+        ],
+        "references": [
+          "kb/research/session/20260422-t172-wolframs-court-social-topology.md — Wolfram's-court doctrine introducing persona-court + group-level ownership.",
+          "kb/research/session/20260422-t172-cowork-as-occupant.md — Cowork-as-occupant doctrine that motivates the group concept (sam's cowork instances are cousins on the same team).",
+          "Z440 kernel 0 log_seq 268-270 — original grammar_fragment ADDs (T=173).",
+          "Z440 kernel 0 log_seq 285-288 — promotion MUTATEs (proposed → promoted, T=173 WF20 ceremony batch C)."
+        ]
+      }
+    },
     {
       "version": "3.12.0",
       "t_day": 169,
@@ -1690,7 +1734,12 @@
               "messaging",
               "board",
               "drive",
-              "mail"
+              "mail",
+              "calendar",
+              "task-list",
+              "cloud-storage",
+              "vcs",
+              "project-board"
             ]
           },
           "source_uri": {
@@ -2077,6 +2126,56 @@
           }
         },
         "audit_note": "Sub-program t187.tool-mounting (§M20) uses harness to ground the `mounts-tool` relation. v3.10 candidate: add benchmark/evaluation types paired with harness for §D7/§D8."
+      },
+      {
+        "id": "group",
+        "name": "Group (collective principal)",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:group:<slug>",
+        "description": "Collective principal — multiple users, agents, or mixed entities sharing ownership/occupancy scope. Mirrors GitHub organization-team semantics. Extends principalTypes in §M12 admin chain to {user, agent, group}. Seats that need delegation to a named collective reify as group nodes with member-of relations inbound and owns/delegates-to outbound. CheckAdminCapability in operad/occupancy.go can hop through group membership if actor is in a group that holds WF02 governs → role:superadmin. v3.13 addition from grammar_fragment v313-7-group-type.",
+        "ports": {
+          "out": [
+            "owns",
+            "delegates-to"
+          ],
+          "in": [
+            "member-of",
+            "governed-by"
+          ],
+          "self": null
+        },
+        "properties": {
+          "created_at": {
+            "mutability": "immutable",
+            "authority_scope": "",
+            "type": "datetime"
+          },
+          "name": {
+            "mutability": "immutable",
+            "authority_scope": "",
+            "type": "string"
+          },
+          "owner_urn": {
+            "mutability": "immutable",
+            "authority_scope": "",
+            "type": "urn",
+            "note": "sticky provenance; who ADDed the group"
+          },
+          "description": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "string"
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "active",
+              "archived"
+            ]
+          }
+        }
       }
     ],
     "s1_grammar": [
@@ -2607,7 +2706,11 @@
             "mutability": "mutable",
             "authority_scope": "owner",
             "type": "enum",
-            "values": ["pending", "done", "cancelled"]
+            "values": [
+              "pending",
+              "done",
+              "cancelled"
+            ]
           },
           "deadline_t": {
             "mutability": "mutable",
@@ -3177,20 +3280,46 @@
         "UNLINK"
       ],
       "src_types": [
-        "user"
+        "user",
+        "group"
       ],
       "tgt_types": [
         "workstation",
         "kernel",
         "storage",
         "program",
-        "repository"
+        "repository",
+        "session",
+        "purpose",
+        "channel",
+        "agent"
       ],
       "src_port": "owns",
       "tgt_port": "child",
       "authority": "principal only",
       "mutate_scope": null,
-      "sync_mode": "strict"
+      "sync_mode": "strict",
+      "additional_port_pairs": [
+        {
+          "src_port": "owns",
+          "tgt_port": "owned-by",
+          "src_types": [
+            "group",
+            "user"
+          ],
+          "tgt_types": [
+            "kernel",
+            "session",
+            "purpose",
+            "program",
+            "channel",
+            "agent"
+          ],
+          "added_in_version": "3.13.0",
+          "promotes_fragment": "urn:moos:grammar_fragment:v313-9-owns-port-pair",
+          "description": "Generalized ownership port-pair. Lifts the ownership relation from property (owner_urn, scattered across every node type) to typed topology. Coexists with the primary owns/child pair (legacy user→workstation) and also with owner_urn properties (sticky provenance) — operads can derive owner_urn from inbound owned-by edges when needed, deprecating the property gradually. Enables group→downstream traversal (what does group:sam own?)."
+        }
+      ]
     },
     {
       "id": "WF02",
@@ -3202,7 +3331,9 @@
         "MUTATE"
       ],
       "src_types": [
-        "user"
+        "user",
+        "role",
+        "group"
       ],
       "tgt_types": [
         "agent",
@@ -3219,7 +3350,23 @@
         "system_prompt",
         "temperature"
       ],
-      "sync_mode": "strict"
+      "sync_mode": "strict",
+      "additional_port_pairs": [
+        {
+          "src_port": "delegates-to",
+          "tgt_port": "delegated-by",
+          "src_types": [
+            "role",
+            "group"
+          ],
+          "tgt_types": [
+            "role"
+          ],
+          "added_in_version": "3.13.0",
+          "promotes_fragment": "urn:moos:grammar_fragment:v313-6-wf02-delegates-to",
+          "description": "Role→role capability delegation. A superadmin role can narrow-delegate scoped sub-capability to other roles (e.g. role:superadmin --delegates-to--> role:karpathy-scope, role:steinberger-scope, role:moos-scope). operad.CheckAdminCapability can extend to traverse delegates-to up to a bounded depth so scoped roles inherit narrowed admin capability without requiring full superadmin assignment. v3.13 addition from grammar_fragment v313-6."
+        }
+      ]
     },
     {
       "id": "WF03",
@@ -3679,17 +3826,27 @@
         {
           "src_port": "has-occupant",
           "tgt_port": "is-occupant-of",
-          "src_types": ["session"],
-          "tgt_types": ["user", "agent"],
-          "description": "§M19 session-occupancy port pair. Session holds at-most-one has-occupant relation at a time pointing at the user or agent that is currently driving the session. Rotation = MUTATE of the LINK's target_urn (atomic; preserves session identity per CI-3). D22.2 (proposed v3.12) formalizes the at-most-one invariant. Zero has-occupant = session alive but idle; one = session occupied and driving.",
+          "src_types": [
+            "session"
+          ],
+          "tgt_types": [
+            "user",
+            "agent",
+            "group"
+          ],
+          "description": "§M19 session-occupancy port pair. Session holds at-most-one has-occupant relation at a time pointing at the user or agent that is currently driving the session. Rotation = MUTATE of the LINK's target_urn (atomic; preserves session identity per CI-3). D22.2 (proposed v3.12) formalizes the at-most-one invariant. Zero has-occupant = session alive but idle; one = session occupied and driving. (v3.13: tgt_types extends with `group` — a session can have a collective principal as occupant via group-as-occupant.)",
           "added_in_version": "3.10.0",
           "promotes_fragment": "urn:moos:grammar_fragment:d19-1-session-has-occupant"
         },
         {
           "src_port": "pins-urn",
           "tgt_port": "pinned-by-session",
-          "src_types": ["session"],
-          "tgt_types": ["*"],
+          "src_types": [
+            "session"
+          ],
+          "tgt_types": [
+            "*"
+          ],
           "description": "§M18 session workspace anchor — pins. Session pins arbitrary nodes (kernels, programs, purposes, other sessions, knowledge_items, calendar_events — any node) as its follow-list / dashboard contents. Many pins per session (unlike has-occupant which is single-valued). Adding a pin = ADD pins-urn LINK; removing = UNLINK. Workspace scope evolves via topology changes, not via property churn.",
           "added_in_version": "3.12.0",
           "promotes_fragment": "urn:moos:grammar_fragment:d19-3-session-pins-urn"
@@ -3697,8 +3854,12 @@
         {
           "src_port": "filtered-by",
           "tgt_port": "filters-session",
-          "src_types": ["session"],
-          "tgt_types": ["view_filter"],
+          "src_types": [
+            "session"
+          ],
+          "tgt_types": [
+            "view_filter"
+          ],
           "description": "§M18 session workspace anchor — filtered view. Session binds to one or more view_filter nodes whose predicates restrict what's visible in the t-cone projection. §M15 t-cone composes as the intersection over all bound predicates. Multiple view_filters allowed per session.",
           "added_in_version": "3.12.0",
           "promotes_fragment": "urn:moos:grammar_fragment:d19-4-session-filtered-by"
@@ -3706,8 +3867,12 @@
         {
           "src_port": "mounts-tool",
           "tgt_port": "tool-mounted-in-session",
-          "src_types": ["session"],
-          "tgt_types": ["agent"],
+          "src_types": [
+            "session"
+          ],
+          "tgt_types": [
+            "agent"
+          ],
           "description": "§M20 session workspace anchor — mounted tools. Session binds to agent nodes that the session's occupant can invoke under WF02 capability scope. Multiple mounted tools per session allowed. Distinguishes the session's invokable-tools-list (topology) from its occupant (who is actually driving right now). When combined with agent.invocation_protocol (v3.12) this gives the session a full tool-library shape compatible with MCP client, LangGraph, CrewAI, etc.",
           "added_in_version": "3.12.0",
           "promotes_fragment": "urn:moos:grammar_fragment:d20-1-session-mounts-tool"
