@@ -55,21 +55,25 @@ Override only with explicit user instruction. If unsure between per-section and 
 
 ### Per-item case (single chunk)
 
-One `ADD knowledge_item` envelope. Source URN goes on `source_uri` (immutable). No umbrella. No `provides-kb` LINKs. One `channel --WF12 provides-kb--> knowledge_item` LINK back to the source channel so downstream readback counts it.
+One `ADD knowledge_item` envelope. Source URL goes on `source_url` (immutable). No umbrella. No `provides-kb` LINKs. One `channel --WF12 provides-kb--> knowledge_item` LINK back to the source channel so downstream readback counts it.
+
+**Proof note (T=173 ~23:30 CEST):** Live ontology `knowledge_item` operad has `source_url` (not `source_uri`). URN pattern is `urn:moos:ki:<source-type>.<slug>` (not `urn:moos:knowledge_item:*`). `owner_urn` and `body` are NOT in the registered property set — use `ingest_actor` for provenance; `summary` (authority_scope=kernel, mutable) for body. Extra properties (`chunk_index`, `chunk_label`, `umbrella_urn`, `ingest_actor`) are accepted by the kernel on ADD but are unregistered.
 
 ```json
 {
   "rewrite_type": "ADD",
   "actor": "urn:moos:agent:claude-cowork.hp-z440",
-  "node_urn": "urn:moos:knowledge_item:cowork.<source-slug>",
+  "node_urn": "urn:moos:ki:<source-type>.<source-slug>",
   "type_id": "knowledge_item",
   "properties": {
-    "title":      {"value": "<source title>", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-    "owner_urn":  {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-    "created_at": {"value": "<ISO-8601 source created>", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-    "source_uri": {"value": "<full source URN>", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-    "body":       {"value": "<full text>", "mutability": "mutable", "authority_scope": "", "stratum_origin": 2},
-    "ingest_actor": {"value": "urn:moos:agent:claude-cowork.hp-z440", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+    "title":       {"value": "<source title>", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "source_url":  {"value": "<full source URL>", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "source_type": {"value": "<gdrive|email|website|...>", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "language":    {"value": "en", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "created_at":  {"value": "<ISO-8601 source created>", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "retrieved_at":{"value": "<ISO-8601 fetch time>", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "status":      {"value": "raw", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+    "ingest_actor":{"value": "urn:moos:agent:claude-cowork.hp-z440", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
   }
 }
 ```
@@ -78,8 +82,8 @@ One `ADD knowledge_item` envelope. Source URN goes on `source_uri` (immutable). 
 
 Order in the batch:
 
-1. **Umbrella** — `ADD knowledge_item` for the source as a whole. `source_uri` = source URN. `body` = source preamble (above first H2) or empty.
-2. **Chunks** — one `ADD knowledge_item` per chunk. Each carries `chunk_index` + `chunk_label` (H2 text or section heading) properties. Their `source_uri` = the umbrella URN (NOT the original source — chunks are children of the umbrella).
+1. **Umbrella** — `ADD knowledge_item` for the source as a whole. `source_url` = source URL; `source_type` = source kind. Set `chunk_count` (extra property, kernel accepts). Set `status: "summarized"` if preamble available; `"raw"` otherwise.
+2. **Chunks** — one `ADD knowledge_item` per chunk. Each carries `chunk_index` + `chunk_label` (H2 text or section heading) + `umbrella_urn` (extra properties — all accepted by kernel on ADD). Their `source_url` references the section anchor, not the umbrella URN.
 3. **LINKs** — one per chunk via WF12 `provides-kb`/`kb-source` (umbrella is source, chunk is target), plus one LINK from the source `channel` to the umbrella (channel is source, umbrella is target):
 
 ```json
