@@ -1,0 +1,24 @@
+# Normalize line endings across Z440 (Windows) and hp-laptop (Windows) checkouts.
+# Text files stored as LF in the repo; working trees may render as CRLF or LF.
+# Fixes the 190-file phantom diff seen at T=169.
+
+* text=auto eol=lf
+
+# Always treat as binary (never munge)
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.pdf   binary
+*.ico   binary
+*.zip   binary
+*.gz    binary
+*.tar   binary
+*.mov   binary
+*.mp4   binary
+
+# PowerShell scripts prefer CRLF (Windows tooling expectation)
+*.ps1   text eol=crlf
+
+# JSONL log — LF only (kernel writes append-only line-by-line)
+*.jsonl text eol=lf

@@ -2,24 +2,23 @@
   "folders": [
     {
       "path": ".",
-      "name": "ffs0-private-workspace"
+      "name": "ffs0-private-workspace",
     },
     {
       "path": "../moos-kernel",
-      "name": "moos-kernel"
+      "name": "moos-kernel",
     },
     {
-
       "path": "../moos-router",
-      "name": "moos-router"
+      "name": "moos-router",
     },
     {
       "path": "..",
-      "name": "hpz440-root"
+      "name": "hpz440-root",
     },
     {
-      "path": "C:/Users/hp"
-    }
+      "path": "C:/Users/hp",
+    },
   ],
   "settings": {
     "task.allowAutomaticTasks": "off",
@@ -36,7 +35,7 @@
       "editor.defaultFormatter": "esbenp.prettier-vscode",
     },
     "[jsonc]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.defaultFormatter": "vscode.json-language-features",
     },
     "[powershell]": {
       "editor.defaultFormatter": "ms-vscode.powershell",
