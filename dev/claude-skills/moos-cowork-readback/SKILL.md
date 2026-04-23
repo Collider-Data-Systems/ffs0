@@ -68,14 +68,16 @@ done
 
 ### Step 6 — recent ingests per channel
 
-Walk relations inbound at each channel with the composes/composed-by port pair (WF18) to count umbrella `knowledge_item` nodes. This is the "chunked something from this channel recently" signal:
+Walk relations **outbound** from each channel via the WF12 `provides-kb`/`kb-source` port pair to count umbrella `knowledge_item` nodes. This is the "chunked something from this channel recently" signal:
 
 ```bash
 for ch in $(echo "$SCOPE_PINS" | jq -r '.[]'); do
-  count=$(curl -sS "http://localhost:8000/state/relations/tgt/$ch" | jq '[.[] | select(.src_port == "composes")] | length')
+  count=$(curl -sS "http://localhost:8000/state/relations/src/$ch" | jq '[.[] | select(.src_port == "provides-kb")] | length')
   echo "$ch → $count umbrella KIs"
 done
 ```
+
+**WF correction (T=173 ~22:30 CEST):** Earlier drafts of this skill and the ingest skill prescribed WF18 `composes`/`composed-by` (inbound at channel via the `tgt` relations endpoint). That was wrong: WF18 is program composition (`src_types: [program, purpose]`), which excludes `channel`. The correct category is WF12 `provides-kb`/`kb-source` (KB hydration; channel→umbrella is a WF12 src→tgt edge, so query the `src` relations endpoint with `src_port == "provides-kb"`).
 
 A channel with 0 umbrellas that you expected to have chunks = an **orphan source** (artifact exists externally, no HG reification yet). Either:
 - Chunker didn't run for that surface (schedule or invocation missed)

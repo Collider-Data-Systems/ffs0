@@ -55,7 +55,7 @@ Override only with explicit user instruction. If unsure between per-section and 
 
 ### Per-item case (single chunk)
 
-One `ADD knowledge_item` envelope. Source URN goes on `source_uri` (immutable). No umbrella. No composes LINKs.
+One `ADD knowledge_item` envelope. Source URN goes on `source_uri` (immutable). No umbrella. No `provides-kb` LINKs. One `channel --WF12 provides-kb--> knowledge_item` LINK back to the source channel so downstream readback counts it.
 
 ```json
 {
@@ -80,20 +80,37 @@ Order in the batch:
 
 1. **Umbrella** — `ADD knowledge_item` for the source as a whole. `source_uri` = source URN. `body` = source preamble (above first H2) or empty.
 2. **Chunks** — one `ADD knowledge_item` per chunk. Each carries `chunk_index` + `chunk_label` (H2 text or section heading) properties. Their `source_uri` = the umbrella URN (NOT the original source — chunks are children of the umbrella).
-3. **LINKs** — one `LINK` per chunk via WF18 `composes`/`composed-by`:
+3. **LINKs** — one per chunk via WF12 `provides-kb`/`kb-source` (umbrella is source, chunk is target), plus one LINK from the source `channel` to the umbrella (channel is source, umbrella is target):
 
 ```json
 {
   "rewrite_type": "LINK",
   "actor": "urn:moos:agent:claude-cowork.hp-z440",
-  "relation_urn": "urn:moos:rel:<umbrella-slug>.composes.<chunk-slug>",
-  "src_urn":  "urn:moos:knowledge_item:cowork.<chunk-slug>",
-  "src_port": "composes",
-  "tgt_urn":  "urn:moos:knowledge_item:cowork.<umbrella-slug>",
-  "tgt_port": "composed-by",
-  "rewrite_category": "WF18"
+  "relation_urn": "urn:moos:rel:<umbrella-slug>.provides-kb.<chunk-slug>",
+  "src_urn":  "urn:moos:knowledge_item:cowork.<umbrella-slug>",
+  "src_port": "provides-kb",
+  "tgt_urn":  "urn:moos:knowledge_item:cowork.<chunk-slug>",
+  "tgt_port": "kb-source",
+  "rewrite_category": "WF12"
 }
 ```
+
+And the channel→umbrella LINK:
+
+```json
+{
+  "rewrite_type": "LINK",
+  "actor": "urn:moos:agent:claude-cowork.hp-z440",
+  "relation_urn": "urn:moos:rel:<channel-slug>.provides-kb.<umbrella-slug>",
+  "src_urn":  "urn:moos:channel:google.drive.sam",
+  "src_port": "provides-kb",
+  "tgt_urn":  "urn:moos:knowledge_item:cowork.<umbrella-slug>",
+  "tgt_port": "kb-source",
+  "rewrite_category": "WF12"
+}
+```
+
+**WF correction (T=173 ~22:30 CEST):** Earlier drafts of this skill and `cowork-as-occupant.md` §3 prescribed WF18 `composes`/`composed-by` here. That was wrong — WF18 is program composition (`src_types: [program, purpose]`), which excludes both `channel` and `knowledge_item`. The correct category is WF12 `provides-kb`/`kb-source` (KB provision and hydration; see ontology.json WF12). Fixed inline before the first chunker proof fired. Readback-skill grep counts accordingly.
 
 ## Pinning into the Cowork session scope
 
@@ -136,7 +153,7 @@ Slug collision is rare in practice (source IDs are usually globally unique withi
 source:    <source URN>
 kind:      <gmail-thread|calendar-event|drive-doc|task|cowork-artifact>
 chunked:   <per-item|per-section|per-artifact-section>
-batch:     <N envelopes> (1 umbrella + <K> chunks + <K> composes + 1 scope_pins MUTATE)
+batch:     <N envelopes> (1 umbrella + <K> chunks + <K>+1 WF12 provides-kb LINKs + 1 scope_pins MUTATE)
 landed on: kernel:hp-z440.primary  log_seq <start>..<end>
 umbrella:  urn:moos:knowledge_item:cowork.<umbrella-slug>
 session:   session:sam.z440-cowork-workspace (scope_pins now has <P> entries)

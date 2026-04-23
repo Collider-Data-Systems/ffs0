@@ -104,8 +104,8 @@ Sam wants Cowork artifacts broken into HG pieces for further session processing.
 | Chunk unit | When | Example |
 |---|---|---|
 | **Per Workspace item** | atomic source object (one email, one calendar event, one Drive file) | a Gmail thread → one `knowledge_item` with the thread URN as source |
-| **Per semantic section** | structured doc with H1/H2 boundaries | a Drive doc → one `knowledge_item` per H2; `composes`/`composed-by` LINKs reflect the doc structure |
-| **Per Cowork artifact section** | Cowork-emitted HTML/markdown artifact with internal sections | a meeting-prep brief → one `knowledge_item` per top-level section, all `composes` an umbrella `knowledge_item` for the brief itself |
+| **Per semantic section** | structured doc with H1/H2 boundaries | a Drive doc → one `knowledge_item` per H2; `provides-kb`/`kb-source` LINKs (WF12) reflect the doc structure |
+| **Per Cowork artifact section** | Cowork-emitted HTML/markdown artifact with internal sections | a meeting-prep brief → one `knowledge_item` per top-level section, all hydrated from an umbrella `knowledge_item` via WF12 `provides-kb` |
 
 Skill choice rule (per the chunker skill, see §6):
 
@@ -122,9 +122,11 @@ else:
 
 ### 3.1 The umbrella pattern
 
-For multi-chunk sources, ADD an **umbrella `knowledge_item`** first, then ADD each chunk as its own `knowledge_item`, then LINK each chunk via `composes/composed-by` (WF18) to the umbrella. The umbrella carries the source URN; the chunks carry their offset/section identifier as a property.
+For multi-chunk sources, ADD an **umbrella `knowledge_item`** first, then ADD each chunk as its own `knowledge_item`, then LINK each chunk to the umbrella via WF12 `provides-kb`/`kb-source` (src_port=`provides-kb`, tgt_port=`kb-source`). The umbrella is the WF12 source; each chunk is a WF12 target. The umbrella carries the source URN; the chunks carry their offset/section identifier as a property.
 
 This preserves both grain (per-chunk t-cones, per-chunk tagging) and provenance (one URN traces back to the source artifact).
+
+**WF correction note (T=173 ~22:30 CEST):** Earlier drafts of this doctrine and the chunker skill prescribed WF18 `composes`/`composed-by`. That was wrong — WF18 is program composition (`src_types: [program, purpose]`), not KB hydration. The right category is **WF12 `provides-kb`/`kb-source`** (KB provision and hydration), whose `src_types` include `channel` and `knowledge_item` and whose `tgt_types` include `knowledge_item`. This file and both Cowork skills corrected inline; pattern clarified before the first chunker proof landed.
 
 ### 3.2 What does NOT get chunked
 
