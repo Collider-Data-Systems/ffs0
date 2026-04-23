@@ -10,6 +10,8 @@ Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, open items, key URNs.
 
+At T=173 Z440 is the lead workstation (round-11 closed, §M12 gate live, Cowork substrate materialized, kb/research/ contracted to live-doctrine-only). Hp-laptop stays quiet between rounds.
+
 ---
 
 ## The rule
@@ -38,19 +40,77 @@ Relations are truth. Properties never duplicate topology.
 
 ## Ontology
 
-`kb/superset/ontology.json` — **v3.11.0**, 52 node types, 20 WFs.
+`kb/superset/ontology.json` — **v3.12.0**, 52 node types, 20 WFs (WF01–WF20).
 Do not edit without reading running-state.md first.
 
 Notable recent bumps:
 - v3.10.0 (T=168 round 9) — WF19 extended with `has-occupant`/`is-occupant-of` port pair for §M19 session-occupancy; D19.1 grammar_fragment merged.
-- v3.11.0 (T=169 round 9.5) — `t_hook.firing_state` enum `{pending, proposed, approved, rejected, applied, closed}` for the sweep's state-machine idempotency.
+- v3.11.0 (T=169 round 9.5) — `t_hook.firing_state` enum `{pending, proposed, approved, rejected, applied, closed}`.
+- v3.12.0 (T=169 round 10) — first WF20 ceremony: D19.3 `pins-urn` / D19.4 `filtered-by` / D20.1 `mounts-tool` port pairs + D20.2 `agent.invocation_protocol` enum + D19.2 `session.view_prefs` merged.
+
+v3.13 candidates (proposed, not yet promoted):
+- `channel.kind` additions: `calendar`, `task-list`, `cloud-storage`
+- `v313-6-wf02-delegates-to` — capability-delegation port pair for Wolfram's court
+- `running_host` supertype with subtypes `kernel` and `platform` (post-D22.5) — for Cowork platform-host doctrine
+
+---
+
+## Post-§M11 actor discipline (T=171 PR #30, T=171 PR #31)
+
+Every envelope has `actor`. The kernel gate-checks it against §M11 (session liveness) + §M12 (admin capability).
+
+- **Agent actor** (`urn:moos:agent:<short>`) — default. Works via reverse-lookup when the agent occupies exactly one session (inferred path). Sets `env.session_urn` explicitly when the agent drives multiple sessions.
+- **Kernel actor** (`urn:moos:kernel:<ws>.<name>`) — bypasses §M11 allowlist AND §M12 admin-scope. Required for: ontology-governed type ADDs (`system_instruction`, `gate`, `twin_link`, `transport_binding`, `kernel`), kernel-authority-scope MUTATEs on non-kernel nodes, WF19 `opens-on` LINKs, sweep WF13 emissions.
+- **User actor** (`urn:moos:user:sam`) — fails §M11 (sam is owner, not occupant). Only valid inside `SeedIfAbsent` path (liveness bypassed structurally).
+
+`env.actor` = who emits (ephemeral, per envelope). `owner_urn` property = who owns (sticky provenance). Don't conflate.
+
+Full envelope shape + gotchas: `moos-rewrite-envelope` skill.
+
+---
+
+## Current sessions + personae (T=173)
+
+| Persona | Agent | Session | Host kernel | Notes |
+|---|---|---|---|---|
+| Guido van Rossum | `claude-code.hp-laptop` | `sam.governance` | `hp-laptop.primary` | doctrine + audit |
+| Stephen Wolfram | `claude-code.hp-z440` | `sam.kernel-proper` | `hp-z440.primary` | kernel implementation (currently driving this conversation) |
+| Moos the Dachshund | `antigravity.hp-z440` | `sam.moos-diary` | `hp-z440.primary` | multimodal diary curation |
+| Andrej Karpathy | (pending VSCode attach) | `sam.karpathy-seat` | `hp-z440.lola` | HDC/VSA categorical bridge |
+| Peter Steinberger | (pending VSCode attach) | `sam.steinberger-seat` | `hp-z440.menno` | tooling + DX ergonomics |
+| (Cowork substrate) | `claude-cowork.hp-{z440,hp-laptop}` | `sam.{z440,laptop}-cowork-workspace` | kernel double-duty | Google Workspace channels pinned; has-occupant fires when Desktop runs |
+
+Full topology: `kb/research/session/20260422-t172-wolframs-court-social-topology.md` + `20260422-t172-cowork-as-occupant.md`.
+
+---
+
+## Conversations are S0 (T=173 pivot)
+
+IDE conversations are **S0 substrate** — the raw rewriting layer that emits work. They are NOT data, code, or doctrine. The reification path forward:
+
+```
+S0 conversation
+  → chunker-skill (moos-workspace-ingest, queued)
+  → knowledge_item chunks
+  → pinned to a session (G ingest direction, adjunction F⊣G)
+  → programs / tasks delegate to tools / sub-agents / other personae
+  → F projects back out to calendar / git / social / network surfaces
+```
+
+New doctrine `.md` files only when establishing a new invariant. Past-round scratch, shipped implementation plans, instantiation snapshots, and substrate-lingo notes live in `dev/reference/research-archive/` — retrievable by path, provenance intact.
+
+Current adjunctions inventory (channel nodes live, skill queued):
+- Google Gmail / Calendar / Drive / Tasks — `channel:google.*.sam`
+- Git (Collider-Data-Systems) / Social / Network — queued
 
 ---
 
 ## Domain knowledge
 
 Invoke the `moos-domain-expert` skill for categorical/mathematical reasoning.
-If needed, archive material can be retrieved from `dev/reference/research-archive/` into conversation context.
+Invoke `moos-rewrite-envelope` for HG envelope authoring, `moos-state-readback` for session/round opens, `moos-round-close` for end-of-round cleanup.
+
+Archive material (`dev/reference/research-archive/`) is retrievable on demand: sheaves, operadic-layer lingo, pre-WF20 superset doctrine, T=168 ontology audit, session-kernel-bound FAQ, session-seating snapshots, past-round conversation summaries.
 
 ---
 
@@ -58,25 +118,30 @@ If needed, archive material can be retrieved from `dev/reference/research-archiv
 
 ```
 kb/
-  superset/     — ontology.json (S1) + running-state.md (hydration entrypoint)
-  research/     — active research notes (T=164+), incl. per-round + per-agent conversation summaries and plans
+  superset/          ontology.json (S1) + running-state.md (hydration entrypoint)
+  research/
+    kernel/          t187-kernel-proper.md (M1-M20 spec)
+    session/         3 live doctrine notes (generalization, cowork-as-occupant, wolframs-court)
+    moos-diary/      active multimodal ingest zone
 dev/
-  scripts/      — ops and utility scripts
+  scripts/           ops + utility scripts
   reference/
-    research-archive/  — T=158–T=162 notes (retrieve as needed)
+    research-archive/  retrievable: past-round scratch, shipped plans, substrate lingo, Apr 5 Workspace snapshot, seating snapshots
+secrets/             GITIGNORED (local-first)
 .github/
-  instructions/ — IDE-specific auto-injected context
-  prompts/      — stored prompts (all IDEs)
-secrets/        — GITIGNORED
+  instructions/      IDE-specific auto-injected context
+  prompts/           stored prompts (all IDEs)
 ```
 
 ---
 
 ## Runtime repos (siblings)
 
-- `moos-kernel/` — Go kernel
-- `moos-router/` — federation router
+- `moos-kernel/` — Go kernel (ontology-aware; §M11 + §M12 gates live)
+- `moos-router/` — federation router (WF16)
 - `moos-config/` — **LEGACY**, do not use
+
+All three at `github.com/Collider-Data-Systems/*` since T=172.
 
 ---
 
@@ -92,5 +157,4 @@ secrets/        — GITIGNORED
 
 - Broad defaults: this file
 - Design work: `.github/instructions/design-research.instructions.md`
-- Git flow: `.github/prompts/multi-workstation-git-flow.prompt.md`
-- Running start: `.github/prompts/running-start-t164.prompt.md`
+- Current plan (if any): `~/.claude/plans/<slug>.md` — this Claude-Code IDE's plan-mode outputs
