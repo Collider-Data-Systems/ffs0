@@ -59,11 +59,18 @@ Putting `type_id` only inside `properties` yields `unknown type_id ""`. Fix: put
 
 **Gotcha #3 — `actor`, not `actor_urn`.** JSON key is `"actor"` per the struct tag.
 
-**Canonical ADD example:**
+**Gotcha #3a — post-§M11 actor discipline (T=171 PR 30+).** Actor URNs that don't resolve to a seated session are rejected by the kernel with `kernel(§M11): no session context for actor=...`. In practice:
+
+- **Agent actor** (`urn:moos:agent:<short>`) is the default. Works via the inferred-session reverse-lookup when that agent occupies exactly one session via WF19 `has-occupant`. This is what Claude Code / Antigravity / Cowork actors use day-to-day.
+- **User actor** (`urn:moos:user:sam`) fails §M11 unless `user:sam` is directly seated as a session occupant — which sam is NOT in the current topology (agents are the occupants; sam is the owner). Avoid `user:sam` as actor except inside `SeedIfAbsent` paths (where liveness is structurally bypassed).
+- **Kernel actor** (`urn:moos:kernel:<ws>.<name>`) bypasses §M11 via the `SystemInternalEnvelope` allowlist AND bypasses §M12 admin-scope. Use when the envelope is ontology-governed (`system_instruction`, `gate`, `twin_link`, `transport_binding`, `kernel` ADD/MUTATE) AND the current agent doesn't hold WF02 superadmin. Also the canonical actor for WF19 `opens-on` LINKs (Authority=kernel).
+- **Ambiguous-session agent**: if one agent occupies multiple sessions, set `session_urn` explicitly on the envelope to disambiguate.
+
+**Canonical ADD example** (agent actor — the common case):
 ```json
 {
   "rewrite_type": "ADD",
-  "actor": "urn:moos:user:sam",
+  "actor": "urn:moos:agent:claude-code.hp-z440",
   "node_urn": "urn:moos:external_op:sam.mtdc-kernel-start",
   "type_id": "external_op",
   "properties": {
@@ -74,6 +81,8 @@ Putting `type_id` only inside `properties` yields `unknown type_id ""`. Fix: put
   }
 }
 ```
+
+Note the split: `actor` = who emits (agent, traced per envelope), `owner_urn` property = who owns the node (user, sticky provenance). Don't conflate them.
 
 ## MUTATE — change one typed property on one node
 
@@ -110,7 +119,7 @@ Additive (field not yet on node, field IS in type spec):
 ```json
 {
   "rewrite_type": "MUTATE",
-  "actor": "urn:moos:user:sam",
+  "actor": "urn:moos:agent:claude-code.hp-z440",
   "target_urn": "urn:moos:external_op:sam.test",
   "field": "status",
   "new_value": "cancelled"
@@ -121,7 +130,20 @@ Standard (field already on node, WF governs):
 ```json
 {
   "rewrite_type": "MUTATE",
-  "actor": "urn:moos:user:sam",
+  "actor": "urn:moos:agent:claude-code.hp-z440",
+  "target_urn": "urn:moos:program:sam.wiring-proposer",
+  "field": "target_t",
+  "new_value": 250,
+  "rewrite_category": "WF18"
+}
+```
+
+Kernel-authority MUTATE (the actor must be a kernel URN per §M12; `target_t` is `authority_scope: "kernel"` on `program`, so a non-kernel actor gets rejected):
+
+```json
+{
+  "rewrite_type": "MUTATE",
+  "actor": "urn:moos:kernel:hp-z440.primary",
   "target_urn": "urn:moos:program:sam.wiring-proposer",
   "field": "target_t",
   "new_value": 250,
@@ -141,11 +163,11 @@ Standard (field already on node, WF governs):
 
 **Gotcha #9 — S4 nodes cannot be the src of a LINK to S0/S1/S2.** Strata filtration in `ValidateStrataLink`.
 
-**Canonical LINK example:**
+**Canonical LINK example** (agent actor, non-kernel-authority WF):
 ```json
 {
   "rewrite_type": "LINK",
-  "actor": "urn:moos:user:sam",
+  "actor": "urn:moos:agent:claude-code.hp-z440",
   "relation_urn": "urn:moos:rel:v310-delivery.depends-on.t187-kernel-proper",
   "src_urn": "urn:moos:program:sam.v310-delivery",
   "src_port": "depends-on",
