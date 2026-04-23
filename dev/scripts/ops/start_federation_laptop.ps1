@@ -6,7 +6,7 @@ $ErrorActionPreference = "Stop"
 
 $KernelExe   = "$env:USERPROFILE\HPLaptop\moos-kernel\moos-kernel.exe"
 $Ontology    = "$env:USERPROFILE\HPLaptop\ffs0\kb\superset\ontology.json"
-$Log         = "$env:TEMP\moos-primary-laptop.log"
+$Log         = "$env:USERPROFILE\HPLaptop\moos-kernel\moos.jsonl"  # sovereign log — NOT $env:TEMP (would start fresh)
 
 Write-Host "Starting moos primary kernel (laptop)..." -ForegroundColor Cyan
 
