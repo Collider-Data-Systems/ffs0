@@ -125,8 +125,8 @@ Federation-via-router (WF16) handles the cross-kernel coordination when it's act
 ## 8. Cross-references
 
 - `kb/research/session/20260419-t169-session-generalization.md` — round-10 session doctrine (5-facet tuple)
-- `kb/research/session/20260421-t171-guido-governance-session.md` — Guido seating
-- `kb/research/session/20260421-t171-wolfram-kernel-proper-session.md` — Wolfram seating
+- `dev/reference/research-archive/20260421-t171-guido-governance-session.md` — Guido seating (archived T=173; seat materialized in `kernel:hp-laptop.primary` log)
+- `dev/reference/research-archive/20260421-t171-wolfram-kernel-proper-session.md` — Wolfram seating (archived T=173; seat materialized in `kernel:hp-z440.primary` log seq 234-240)
 - `kb/research/moos-diary/20260421-t171-multimodal-diary-personas.md` — Moos seating
 - `kb/research/kernel/20260417-t187-kernel-proper.md` §M9 (sovereignty), §M11 (liveness), §M12 (admin-cap), §M15 (t-cone), §M21 (group topology per kernel)
 - `ffs0#33` — round-11 handoff thread (social-topology discussion surfaced here)
