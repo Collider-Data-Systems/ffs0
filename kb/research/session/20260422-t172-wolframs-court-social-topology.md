@@ -15,9 +15,11 @@ Z440's federation layer (kernels 1-3 on `:8001-:8003`) has been dormant on pre-T
 |---|---|---|---|---|
 | `kernel:hp-laptop.primary` | :8000 | `user:sam` | sam | live, post-PR-30 v3.12, has sweep |
 | `kernel:hp-z440.primary` | :8000 (Z440) | `user:sam` | sam | live, post-PR-30 |
-| `kernel:hp-z440.lola` | :8001 | `user:lola` | lola | dormant, pre-T=164 code |
-| `kernel:hp-z440.menno` | :8002 | `user:menno` | menno | dormant, pre-T=164 code |
+| `kernel:hp-z440.menno` | :8001 | `user:menno` | menno | dormant, pre-T=164 code |
+| `kernel:hp-z440.lola` | :8002 | `user:lola` | lola | dormant, pre-T=164 code |
 | `kernel:hp-z440.moos` | :8003 | `user:moos-dachshund` | moos-dachshund | dormant, pre-T=164 code |
+
+> **Port-to-kernel binding is operational, not structural.** Kernel identity is by URN (`kernel:hp-z440.<name>`), not by port. The :8001↔menno / :8002↔lola assignment follows `start_federation.ps1` on Z440 (script of record, preserves existing per-kernel log file paths). Drafted T=172 ~00:21 CEST with lola/menno on the opposite ports; corrected T=173 ~17:00 CEST (Guido round-open follow-up) to match script reality. WF19 `opens-on` LINKs reference kernel URNs, so no HG-side edits were needed.
 
 Sam's proposal at T=172 open: wake these three federation kernels back up, pair each with a persona session, and let each of Wolfram / Karpathy / Steinberger / Moos drive their own seat. **Five kernels, two workstations, three new concurrent sessions on Z440.**
 

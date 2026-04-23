@@ -1,0 +1,21 @@
+[
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:agent:claude-code.hp-laptop",
+    "node_urn": "urn:moos:role:superadmin",
+    "type_id": "role",
+    "properties": {
+      "name": {"value": "superadmin", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+    }
+  },
+  {
+    "rewrite_type": "LINK",
+    "actor": "urn:moos:agent:claude-code.hp-laptop",
+    "relation_urn": "urn:moos:rel:sam.governs.role-superadmin",
+    "src_urn": "urn:moos:user:sam",
+    "src_port": "governs",
+    "tgt_urn": "urn:moos:role:superadmin",
+    "tgt_port": "governed-by",
+    "rewrite_category": "WF02"
+  }
+]
