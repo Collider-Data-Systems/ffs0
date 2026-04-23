@@ -240,13 +240,13 @@ New kernels from round 11 onward will emit the kernel+birth-session atomic pair 
 Live doctrine (still authoritative):
 
 - `kb/research/kernel/20260417-t187-kernel-proper.md` — §M1 (session as monoid — CT-framing superseded by §2 of this note), §M4 (monoid functor — accurate), §M11 (liveness — accurate), §M13 (t_local as heartbeat — accurate), §M18–§M20 (session generalization — accurate), §M21 (group topology — accurate).
-- `kb/research/s1/20260418-t168-s0-operadic-layer.md` — operadic lingo, applicable to §2.2 of this note.
-- `kb/research/s1/20260418-t168-s1-superset-doctrine.md` — S4→S1 adjoint, grammar_fragment lifecycle.
-- `kb/research/s1/20260418-t168-v3.9-ontology-audit.md` — baseline audit, WF20 promotion pipeline.
+- `dev/reference/research-archive/20260418-t168-s0-operadic-layer.md` — operadic lingo, applicable to §2.2 of this note.
+- `dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md` — S4→S1 adjoint, grammar_fragment lifecycle.
+- `dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md` — baseline audit, WF20 promotion pipeline.
 
 Superseded (partially) by this note:
 
-- `kb/research/session/20260418-t168-session-kernel-bound.md` — the FAQ model of "multiple sessions per kernel, one with seat_role=occupier" is replaced by "one birth-session per kernel + additional purpose-scoped sessions; at-most-one has-occupant LINK per session". The FAQ stays as historical record.
+- `dev/reference/research-archive/20260418-t168-session-kernel-bound.md` — the FAQ model of "multiple sessions per kernel, one with seat_role=occupier" is replaced by "one birth-session per kernel + additional purpose-scoped sessions; at-most-one has-occupant LINK per session". The FAQ stays as historical record.
 - `dev/reference/research-archive/20260414-t164-session-channel-purpose.md` — §2 "Session is a MONOID over kernel occupancy" with identity = empty session is replaced by §2.1 of this note (transition-monoid with identity morphism). Archived T=169 round 10 Conversation D.
 
 Archived in Conversation D (pure-absorption, full content carried forward into live doctrine):

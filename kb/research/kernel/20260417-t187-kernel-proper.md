@@ -437,7 +437,7 @@ All 9 ADDed with `status=draft`, `starts_t=168`, and scope pointing back to this
 ## Deliverable trail (T=168)
 
 1. This appended section — §M11..§M17 + updated sub-program table ✓
-2. Standalone FAQ note — `kb/research/session/20260418-t168-session-kernel-bound.md` (ratified session model)
+2. Standalone FAQ note — `dev/reference/research-archive/20260418-t168-session-kernel-bound.md` (ratified session model)
 3. Ontology doc annotations on session / role / capability types (no new types, no version bump)
 4. `running-state.md` — rewritten active-session block + spec-enrichment backlog
 5. HG hygiene — t164 `session.role` MUTATE to `observer`
@@ -522,7 +522,7 @@ CI-invariant (stated, not formally verified in v3.9): nested tool construction m
 
 ## Grammar fragments this round adds (as governance_proposal candidates for WF20)
 
-Per the S1-superset doctrine (`kb/research/s1/20260418-t168-s1-superset-doctrine.md`), §M18..§M20 propose S1 extensions. These are NOT landed in v3.9 ontology.json; they are described here, ready to be ADDed as `grammar_fragment` nodes in a later round once the WF20 promotion flow has been exercised:
+Per the S1-superset doctrine (`dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md`), §M18..§M20 propose S1 extensions. These are NOT landed in v3.9 ontology.json; they are described here, ready to be ADDed as `grammar_fragment` nodes in a later round once the WF20 promotion flow has been exercised:
 
 | Fragment | Kind | Shape |
 |----------|------|-------|

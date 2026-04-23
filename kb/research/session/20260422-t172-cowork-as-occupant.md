@@ -227,7 +227,7 @@ Each skill emits envelopes per `moos-rewrite-envelope` rules (one field per MUTA
 ### Inside ffs0
 
 - `kb/research/session/20260419-t169-session-generalization.md` — 5-facet tuple, Reading B / D22.5 hint about `running_host`/`platform`
-- `kb/research/session/20260418-t168-session-kernel-bound.md` — kernel-bound discipline (still binds; Cowork inherits it via the kernel host)
+- `dev/reference/research-archive/20260418-t168-session-kernel-bound.md` — kernel-bound discipline (still binds; Cowork inherits it via the kernel host)
 - `dev/reference/research-archive/20260421-t171-wolfram-kernel-proper-session.md` — Wolfram seat on Z440.primary (Cowork is a sibling-occupant with a different scope; archived T=173)
 - `kb/research/session/20260422-t172-wolframs-court-social-topology.md` — 5-kernel court (Cowork sessions are NOT new kernels, they're occupants on existing kernels)
 - `kb/research/kernel/20260417-t187-kernel-proper.md` §M9 (sovereignty), §M11 (liveness), §M15 (t-cone), §M16 (ontology publication)
