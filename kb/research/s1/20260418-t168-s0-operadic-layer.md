@@ -127,7 +127,7 @@ Threading this program is reading the WF18 closure downward from the root. The k
 - `../kernel/20260417-t187-kernel-proper.md` §M15 — t-cone projection (a reading of a session weave)
 - `../../../dev/reference/research-archive/20260418-t187-categorical-contract.md` — CI-1..CI-5 proofs (the contracts S0 must respect; archived T=169 round 10)
 - `../../../dev/reference/research-archive/20260414-t164-session-channel-purpose.md` — foundational T=164 paper introducing session/channel/purpose as distinct kinds; this note names the kind (archived T=169 round 10)
-- `../wires/20260414-t164-wires-come-from.md` §2 — "nodes are incomplete datasets with optional T-hooks" — compatible with op-node shape (slots are the T-hooks of an op-node)
+- `../../../dev/reference/research-archive/20260414-t164-wires-come-from.md` §2 — "nodes are incomplete datasets with optional T-hooks" — compatible with op-node shape (slots are the T-hooks of an op-node). [Archived T=173 round-open per Sam's IRL-mirrors-and-past-round-scratch principle; content still canonical, relative path updated.]
 
 ## One-line summary
 
