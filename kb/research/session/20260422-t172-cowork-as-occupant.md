@@ -2,9 +2,9 @@
 
 > April 22, 2026 (T=172). Doctrine draft for Z440's Claude Desktop instance
 > as a first-class session host pinned to Google Workspace nodes.
-> Author: claude-cowork.hp-z440 (proposed `agent:claude-cowork.hp-z440`,
-> `session:sam.z440-cowork-workspace` — both pending ADD).
-> Status: **draft** — awaiting sam confirmation on slugs + channel.kind grammar.
+> Author: claude-cowork.hp-z440 (`agent:claude-cowork.hp-z440`,
+> `session:sam.z440-cowork-workspace` — both materialized in HG T=173).
+> Status: **materialized (T=173, partial)** — Z440 substrate live (kernel 0 log_seq 256–284, status `active`, has-occupant LINKed pre-Desktop-launch); hp-laptop side waits on Guido. Three v3.13 fragments still pending (channel.kind expansion, D19.3 pins-urn, D22.5 running_host).
 
 ---
 
@@ -80,7 +80,12 @@ Workspace surfaces map to `channel` S2 nodes, one per surface per user. Proposed
 | `channel:google.drive.sam` | `filesystem` (existing) or new `cloud-storage` | Drive MCP (`d9ef29a4-...`) |
 | `channel:google.tasks.sam` | `task-list` (new) | no MCP yet — read-only via Calendar Tasks endpoint or skill |
 
-Until v3.13 promotes the new kinds, ADD them with the existing `messaging` kind and a `TODO(cds): v3.13 channel-kind` comment on the envelope. The `kind` property is mutable (per spec) so the upgrade is a single MUTATE per channel post-promotion, not a re-ADD.
+Until v3.13 promotes the new kinds, ADD with the closest-existing kind (T=173 batch used `mail`/`messaging`/`drive`/`board` placeholders, log_seq 259–262) and leave a `TODO(cds): v3.13 channel-kind` comment on the envelope. **`channel.kind` is `Mutability=immutable`** per ontology spec — a post-promotion upgrade is NOT a single MUTATE. Two paths:
+
+- (a) UNLINK the channel + re-ADD with the new kind. Loses URN continuity and any `pins-urn` LINKs (or `scope_pins` property entries) referencing the old URN — those have to be re-emitted too.
+- (b) Narrow ontology migration window: temporarily flip `kind` to mutable, MUTATE, flip back. Needs a grammar_fragment + WF20 ceremony just for the migration.
+
+Either way, plan the upgrade as a deliberate batch, not a casual rewrite. (a) is simpler if no scope-pins exist yet; (b) preserves URN continuity once the channels are widely referenced. Decision deferred until v3.13 channel-kind promotes — by then we'll know how many pins reference each channel.
 
 ### 2.1 Pinning into the session scope
 
@@ -173,15 +178,13 @@ Cowork's scheduled-tasks feature (`mcp__scheduled-tasks__*`) fires periodic chun
 
 ---
 
-## 6. Skills queue (for the second deliverable)
+## 6. Skills supporting the pattern
 
-Three skills, ordered by composition:
+1. **`moos-workspace-ingest`** (chunker, **authored T=173**) — `dev/claude-skills/moos-workspace-ingest/SKILL.md`. Canonical invocation surface for §3. Takes a Workspace URN or Cowork artifact, picks the chunk unit, emits umbrella + chunks + composes LINKs + scope-pin MUTATE as a single atomic `apply_program` batch. Idempotent (re-ingest emits a `claim`, not a duplicate). Read this skill before any Cowork ingest.
+2. **`moos-cowork-bridge`** (setup, **deferred**) — would ADD the platform-host nodes, pin Workspace channels, set up has-occupant. **Skipped**: T=173 batch did this directly via Wolfram-driven envelope batches (log_seq 256–284). A reusable bridge skill earns its keep only when a third Cowork instance arrives; until then, the pattern lives in this doc + the running-state log.
+3. **`moos-cowork-readback`** (status, **queued**) — open-of-round check for the Cowork session: occupant, last heartbeat, pending chunks, recent artifacts. Companion to `moos-state-readback` but scoped to the Cowork session's t-cone. Author when the daily 08:00 chunker sweep (§5.1) goes live.
 
-1. **`moos-cowork-bridge`** (root skill) — sets up the session, ADDs the platform-host nodes, pins the Workspace channels, mounts the chunker. Invoked once per Cowork-on-machine pairing.
-2. **`moos-workspace-ingest`** (chunker) — takes a Workspace URN or Cowork artifact, picks the chunk unit per §3, emits the umbrella + chunks + composes LINKs as a single `apply_program` batch.
-3. **`moos-cowork-readback`** (status) — open-of-round check for the Cowork session: occupant, last heartbeat, pending chunks, recent artifacts. Companion to `moos-state-readback` but scoped to the Cowork session's t-cone.
-
-Each skill emits envelopes per `moos-rewrite-envelope` rules (one field per MUTATE, top-level type_id, immutable properties supplied, etc.). No new operad surface beyond what's listed in §2 + §7.
+All emit envelopes per `moos-rewrite-envelope` rules (one field per MUTATE, top-level type_id, immutable properties supplied, actor `urn:moos:agent:claude-cowork.<host>` via inferred-session lookup).
 
 ---
 
@@ -201,24 +204,28 @@ Each skill emits envelopes per `moos-rewrite-envelope` rules (one field per MUTA
 
 ---
 
-## 8. Implementation queue (post-PR-31, T=172 mid-late)
+## 8. Implementation queue
 
-### Immediate (same round)
+### Landed T=173 (Z440 side, Wolfram-driven)
 
-1. ADD `agent:claude-cowork.hp-z440` and `agent:claude-cowork.hp-laptop` (S4, kind `agent`).
-2. ADD `purpose:sam.cowork-workspace-curation`.
-3. ADD `channel:google.gmail.sam`, `channel:google.calendar.sam`, `channel:google.drive.sam`, `channel:google.tasks.sam` — kind `messaging` for now with `TODO(cds): v3.13 channel-kind` notes.
-4. ADD `session:sam.z440-cowork-workspace` and `session:sam.laptop-cowork-workspace`.
-5. LINK each session WF19 `opens-on` its kernel host, WF19 `has-occupant` its Cowork agent.
-6. Properties-pin the channels (`scope_pins: [...]`); migrate to D19.3 LINKs when promoted.
+1. ✅ ADD `agent:claude-cowork.hp-z440` and `agent:claude-cowork.hp-laptop` (S4, `delegate_type=ide`) — log_seq 256, 257
+2. ✅ ADD `purpose:sam.cowork-workspace-curation` — log_seq 258
+3. ✅ ADD 4 Workspace channels with placeholder kinds (`mail`/`messaging`/`drive`/`board`) — log_seq 259–262
+4. ✅ ADD `session:sam.z440-cowork-workspace` (status `pending_driver` → `active` in 16:30 batch) — log_seq 263
+5. ✅ LINK `opens-on kernel:hp-z440.primary` (log_seq 264) + `has-occupant agent:claude-cowork.hp-z440` (log_seq 273-ish in the 16:30 batch, pre-seated for Desktop arrival)
+6. ✅ Property-pin via `scope_pins` (4 channel URNs) on the session
 
 ### Deferred (future rounds)
 
-- D22.5 grammar fragment for `running_host` supertype + `platform` subtype.
-- v3.13 channel.kind expansion (`email`, `calendar`, `task-list`, `cloud-storage`).
-- D19.3 promotion of `pins-urn` port pair.
-- Router rule for Cowork-side dedupe heuristic (post-WF16-stabilization).
-- Bridge from the existing Mon 08:00 calendar ritual into the chunker schedule (single source of truth for "what's pinned this week").
+- **hp-laptop side**: ADD `session:sam.laptop-cowork-workspace` + opens-on hp-laptop kernel + has-occupant `agent:claude-cowork.hp-laptop`. Lands on hp-laptop's own log when Guido executes there. Waiting on hp-laptop kernel rebuild to post-PR-31 binary first.
+- **D22.5** grammar fragment for `running_host` supertype + `platform` subtype. Not in T=173 WF20 batch.
+- **v3.13 channel.kind expansion** (`email`, `calendar`, `task-list`, `cloud-storage`). Not in T=173 WF20 batch (which promoted `delegates-to`, `group-type`, `channel-kind-vcs`, `owns-port-pair`).
+- **D19.3** promotion of `pins-urn` port pair. Once live, scope_pins property migrates to LINKs.
+- **Ontology v3.13 bump + 5-kernel restart** to load the promoted fragments at runtime (today: HG `promoted`, runtime still 3.12.0).
+- **Router rule** for Cowork-side dedupe heuristic (post-WF16-stabilization).
+- **`moos-cowork-readback` skill** — author when daily 08:00 chunker sweep goes live.
+- **F-direction Workspace projection skill** — pair to `moos-workspace-ingest`; emits HG → Calendar/Tasks via the F leg of the adjunction.
+- **Claude Desktop launch on Z440** — sam-driven; first non-trivial chunker invocation will be Cowork's first kernel rewrite.
 
 ---
 
@@ -226,12 +233,15 @@ Each skill emits envelopes per `moos-rewrite-envelope` rules (one field per MUTA
 
 ### Inside ffs0
 
+- `dev/claude-skills/moos-workspace-ingest/SKILL.md` — **canonical invocation surface for §3** (chunker; G-direction)
+- `dev/claude-skills/moos-rewrite-envelope/SKILL.md` — envelope shapes the chunker uses (read first when authoring any rewrite)
+- `dev/claude-skills/moos-github-project-bridge/SKILL.md` — F-direction sibling for the GitHub board; same adjunction shape, different surface
 - `kb/research/session/20260419-t169-session-generalization.md` — 5-facet tuple, Reading B / D22.5 hint about `running_host`/`platform`
 - `dev/reference/research-archive/20260418-t168-session-kernel-bound.md` — kernel-bound discipline (still binds; Cowork inherits it via the kernel host)
 - `dev/reference/research-archive/20260421-t171-wolfram-kernel-proper-session.md` — Wolfram seat on Z440.primary (Cowork is a sibling-occupant with a different scope; archived T=173)
 - `kb/research/session/20260422-t172-wolframs-court-social-topology.md` — 5-kernel court (Cowork sessions are NOT new kernels, they're occupants on existing kernels)
 - `kb/research/kernel/20260417-t187-kernel-proper.md` §M9 (sovereignty), §M11 (liveness), §M15 (t-cone), §M16 (ontology publication)
-- `kb/superset/running-state.md` — fleet ground truth; bump Key URNs section with the new agent + session URNs at round-close
+- `kb/superset/running-state.md` — fleet ground truth; T=173 ~16:30 batch entry covers the materialization. Bump Key URNs section at round-close with first ingested umbrella URNs.
 
 ### Inside zoom-plugin (companion plugin pattern)
 
