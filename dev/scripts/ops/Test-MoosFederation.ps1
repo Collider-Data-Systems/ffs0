@@ -257,6 +257,37 @@ function Test-Persona {
     $rows
 }
 
+function ConvertTo-ProgramJsonArray {
+    param(
+        [Parameter(Mandatory)][array]$Envelopes,
+        [int]$Depth = 50
+    )
+
+    if ($Envelopes.Count -eq 0) {
+        throw 'Program payload must contain at least one envelope.'
+    }
+
+    $items = foreach ($envelope in $Envelopes) {
+        ConvertTo-Json -InputObject $envelope -Depth $Depth -Compress
+    }
+
+    '[' + ($items -join ',') + ']'
+}
+
+function Get-ProgramEnvelopes {
+    param([Parameter(Mandatory)]$Payload)
+
+    if (($Payload -isnot [array]) -and $Payload.PSObject.Properties['envelopes']) {
+        $source = $Payload.envelopes
+    }
+    else {
+        $source = $Payload
+    }
+
+    if ($null -eq $source) { return @() }
+    @($source)
+}
+
 function Invoke-PostProgram {
     param(
         [Parameter(Mandatory)]$Topology,
@@ -279,8 +310,8 @@ function Invoke-PostProgram {
     }
 
     $json = Read-JsonFile -Path $Path
-    $envelopes = if ($json.PSObject.Properties['envelopes']) { $json.envelopes } else { $json }
-    $body = $envelopes | ConvertTo-Json -Depth 50 -Compress
+    $envelopes = @(Get-ProgramEnvelopes -Payload $json)
+    $body = ConvertTo-ProgramJsonArray -Envelopes $envelopes -Depth 50
     $url = $resolved.EmitUrl.TrimEnd('/') + '/programs'
 
     Write-Host "POST $Path -> $url as persona '$Name' (emit=$($resolved.EmitKernelName), opens-on=$($resolved.OpensOnKernelName))" -ForegroundColor Cyan
