@@ -1,0 +1,55 @@
+{
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:derivation:moos.section-06-multimodal-substrate-foundation",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "Multimodal substrate foundation (§6)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-25T22:43:34Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "confidence": {
+          "value": 0.5,
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "hybrid",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "closed",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "stochastic_weights": {
+          "value": "t171-multimodal-diary-personas (origin); observations from the 8-video/2-jpeg/2-md ingest pile; multimodal-encoder-as-functor framing (Karpathy §1); multimodal embeddings as LLM substrate (Karpathy §10); FS layout as substrate candidates; Antigravity-Z440-native visual/audio handling capabilities.",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    }
+  ]
+}
