@@ -1,6 +1,6 @@
 ---
 name: moos-tooling-dx
-description: Tooling + developer-experience work for Steinberger's seat (`session:sam.steinberger-seat` on `kernel:hp-z440.menno` :8001). Use when reasoning about IDE attach (VSCode + Antigravity + Claude Desktop + Cursor), MCP wiring (SSE vs stdio, port assignments, transport correctness), shell-script reification (PowerShell sync scripts, federation startup), keybinding ergonomics, agent-harness shape (CLI as tool protocol per §M20), or DX failure modes (bad envelope shapes, validator errors, sandbox boundaries). Trigger phrases: ".vscode/mcp.json", "MCP transport", "stdio sidecar", "PowerShell here-string", "keybinding chord", "skill routing", "harness pattern", "tool ergonomics", "DX gap". Companion to `moos-rewrite-envelope` (envelope shape) and `moos-running-state-validator` (state-doc consistency).
+description: Tooling + developer-experience work for Steinberger's seat (`session:sam.steinberger-seat`; emit-target `kernel:hp-z440.primary` :8000/:8080 today; opens-on `kernel:hp-z440.menno` :8001/:9001 as future §M9 topology metadata). Use when reasoning about IDE attach (VSCode + Antigravity + Claude Desktop + Cursor), MCP wiring (SSE vs stdio, port assignments, transport correctness), shell-script reification (PowerShell sync scripts, federation startup), keybinding ergonomics, agent-harness shape (CLI as tool protocol per §M20), or DX failure modes (bad envelope shapes, validator errors, sandbox boundaries). Trigger phrases: ".vscode/mcp.json", "MCP transport", "stdio sidecar", "PowerShell here-string", "keybinding chord", "skill routing", "harness pattern", "tool ergonomics", "DX gap". Companion to `moos-rewrite-envelope` (envelope shape) and `moos-running-state-validator` (state-doc consistency).
 ---
 
 # moos-tooling-dx
@@ -50,7 +50,7 @@ DX work compounds because each friction claim becomes findable next time the sam
 
 | Surface | Common failures | Likely fix lane |
 |---|---|---|
-| `.vscode/mcp.json` (machine-specific, gitignored) | wrong port, stdio vs SSE confusion, missing entry | per-host config; reference `.vscode/mcp.json.example` |
+| `.vscode/mcp.json` (machine-specific, gitignored) | wrong port, stdio vs SSE confusion, treating opens-on endpoint as emit endpoint | per-host config; reference `.vscode/mcp.json.example` |
 | Federation startup (`start_federation.ps1`) | wrong log path, port collision, dead PIDs | PS1 script update; commit to ffs0 |
 | Sandbox → kernel reach | Cowork can't POST `:8000` from Desktop sandbox | runner pattern: emit JSON in sandbox, fire from host PS |
 | Skill sync | `~/.claude/skills/` out of date relative to `dev/claude-skills/` | run `dev/scripts/sync-claude-skills.ps1` |
@@ -87,16 +87,16 @@ A shell command becomes a script when (a) it's run more than 3 times, (b) it has
 }
 ```
 
-## Worked example: VSCode MCP wiring claim
+## Worked example: VSCode MCP emit-target claim
 
-**Friction.** Steinberger's seat boots on `kernel:hp-z440.menno` :8001 + MCP :9001. The `.vscode/mcp.json` (machine-specific) needs the right SSE URL. If it's wrong, the seat can't emit envelopes through MCP at all — bypassed via curl POST instead, but loses the rich tool surface.
+**Friction.** Steinberger's seat opens-on `kernel:hp-z440.menno` :8001 + MCP :9001, but current Z440 emissions still POST through primary :8000 / MCP :8080 because the seat-topology state has not been replicated into menno's sovereign log. The `.vscode/mcp.json` (machine-specific) needs to distinguish emit-target from opens-on metadata. If that is wrong, the runner can POST into a kernel whose §M11 state cannot resolve the actor/session.
 
 **Locate.** IDE attach + MCP transport layer.
 
-**Claim.** ADD `claim:steinberger.vscode-mcp-sse-port-9001`:
-> "VSCode on hp-z440 attached to Steinberger seat requires `.vscode/mcp.json` to declare an SSE entry pointing at `http://localhost:9001/sse` (the menno kernel's MCP listener). The startup script binds :9001 to menno; if VSCode points at :8080 (primary kernel's MCP) instead, envelopes go to the wrong kernel and §M11 rejects them as wrong-session-context. Fix: per-host `.vscode/mcp.json.example` should document all 4 kernel SSE ports + which seat uses which."
+**Claim.** ADD `claim:steinberger.vscode-mcp-emit-target-primary`:
+> "VSCode on hp-z440 attached to Steinberger's seat currently emits through primary MCP `http://localhost:8080/sse`, while `http://localhost:9001/sse` remains the menno opens-on/future-sync endpoint. The startup script binds :9001 to menno, but §M11 checks the receiving kernel's local state; until §M9 twin sync lands, `Test-MoosFederation.ps1` must POST Steinberger envelopes to primary and verify the primary-held `has-occupant` edge."
 
-**Derive** (post v3.14): wrap claim in `derivation:steinberger.vscode-mcp-port-mapping-derivation`, consumes the federation startup script + .vscode/mcp.json.example, produces this claim + a proposed `program:sam.t176-arch.08-vscode-mcp-doc` (if comprehensive-architecture spec gets going).
+**Derive** (post v3.14): wrap claim in `derivation:steinberger.vscode-mcp-emit-target-derivation`, consumes the federation startup script + `.vscode/mcp.json.example`, produces this claim + a proposed `program:sam.t176-arch.08-vscode-mcp-doc` (if comprehensive-architecture spec gets going).
 
 **Propose.** Update `.vscode/mcp.json.example` with all 4 port entries; commit on ffs0; running-state.md gets a one-line note about per-seat MCP port mapping.
 

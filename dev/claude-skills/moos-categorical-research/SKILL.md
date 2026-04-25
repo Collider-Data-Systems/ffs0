@@ -1,6 +1,6 @@
 ---
 name: moos-categorical-research
-description: Categorical reasoning + HDC/VSA bridge work for Karpathy's seat (`session:sam.karpathy-seat` on `kernel:hp-z440.lola` :8002). Use when emitting categorical/sheaf-theoretic claims, reasoning about presheaves on the strata filtration, working out the F⊣G adjunction details for a specific surface, designing hyperdimensional encoders/decoders, or proposing new categorical structure for the ontology. Trigger phrases: "as a categorical object", "presheaf on", "the adjoint of", "the operadic interface", "VSA encoding of", "sheaf gluing for", "Yoneda", "natural transformation", "fibration", "limit/colimit". Companion to `moos-rewrite-envelope` (envelope authoring) and `moos-domain-expert` (deeper math).
+description: Categorical reasoning + HDC/VSA bridge work for Karpathy's seat (`session:sam.karpathy-seat`; emit-target `kernel:hp-z440.primary` :8000/:8080 today; opens-on `kernel:hp-z440.lola` :8002/:9002 as future §M9 topology metadata). Use when emitting categorical/sheaf-theoretic claims, reasoning about presheaves on the strata filtration, working out the F⊣G adjunction details for a specific surface, designing hyperdimensional encoders/decoders, or proposing new categorical structure for the ontology. Trigger phrases: "as a categorical object", "presheaf on", "the adjoint of", "the operadic interface", "VSA encoding of", "sheaf gluing for", "Yoneda", "natural transformation", "fibration", "limit/colimit". Companion to `moos-rewrite-envelope` (envelope authoring) and `moos-domain-expert` (deeper math).
 ---
 
 # moos-categorical-research
@@ -43,7 +43,7 @@ A claim is *finished* when all three registers agree. A draft sits at one regist
 - **opens-on (topology metadata, future-§M9-sync target):** `kernel:hp-z440.lola` (`:8002` HTTP / `:9002` MCP SSE)
 - **Branch role on board items:** `agent`
 
-**Why emit to primary, not lola:** Seat-topology (this session, your agent, the WF19 LINKs) was materialized at T=173 batch B on Z440 primary `:8000` only. Twin kernels (`:8001`/`:8002`/`:8003`) ran fresh from federation startup with their own sovereign logs and don't carry seat-state. §M11 runs against the receiving kernel's state; primary has it, twins don't. Once §M9 twin_link adjoint sync ships (round-15+, paired with §M10 QUIC), emit-target collapses into opens-on. Until then: emit to primary. See `running-state.md` Persona → emit-target mapping block for the full table.
+**Why emit to primary, not lola:** Seat-topology (this session, your agent, the WF19 LINKs) was materialized at T=173 batch B on Z440 primary `:8000` only. Twin kernels (`:8001`/`:8002`/`:8003`) ran fresh from federation startup with their own sovereign logs and don't carry seat-state. §M11 runs against the receiving kernel's state; primary has it, twins don't. Once §M9 twin_link adjoint sync ships (round-15+, paired with §M10 QUIC), emit-target collapses into opens-on. Until then: emit to primary. The local doctor catching this is valid categorical evidence about where state lives and what §M9 sheaf-gluing must formalize; include the #36 Wolfram correction as consumes-evidence for `derivation:karpathy.section-01-categorical-formalism`. See `running-state.md` Persona → emit-target mapping block for the full table.
 
 ## Typical envelope: claim ADD
 

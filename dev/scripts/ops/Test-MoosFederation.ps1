@@ -1,0 +1,324 @@
+[CmdletBinding()]
+param(
+    [ValidateSet('Doctor', 'Start', 'VerifyPersona', 'PostProgram')]
+    [string]$Mode = 'Doctor',
+
+    [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'cowork-z440', 'guido', 'cowork-laptop', 'ag-laptop')]
+    [string]$Persona,
+
+    [string]$PayloadPath,
+    [string]$TopologyPath,
+    [string]$McpConfigPath,
+    [switch]$Force
+)
+
+$ErrorActionPreference = 'Stop'
+
+$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..\..')
+if (-not $TopologyPath) {
+    $TopologyPath = Join-Path $RepoRoot 'dev\config\moos-federation.topology.json'
+}
+if (-not $McpConfigPath) {
+    $McpConfigPath = Join-Path $RepoRoot '.vscode\mcp.json'
+}
+
+function Read-JsonFile {
+    param([Parameter(Mandatory)][string]$Path)
+    if (-not (Test-Path $Path)) {
+        throw "Missing JSON file: $Path"
+    }
+    Get-Content -Path $Path -Raw | ConvertFrom-Json
+}
+
+function Get-ObjectProperty {
+    param(
+        [Parameter(Mandatory)]$Object,
+        [Parameter(Mandatory)][string]$Name
+    )
+    $property = $Object.PSObject.Properties[$Name]
+    if ($null -eq $property) { return $null }
+    $property.Value
+}
+
+function Get-KernelUrl {
+    param([Parameter(Mandatory)]$Kernel)
+    if ($Kernel.http_local) { return [string]$Kernel.http_local }
+    if ($Kernel.http_lan) { return [string]$Kernel.http_lan }
+    throw "Kernel $($Kernel.urn) has no http_local or http_lan URL"
+}
+
+function Resolve-MoosPath {
+    param([Parameter(Mandatory)][string]$Path)
+    if (Test-Path $Path) { return (Resolve-Path $Path).Path }
+    $repoRelative = Join-Path $RepoRoot $Path
+    if (Test-Path $repoRelative) { return (Resolve-Path $repoRelative).Path }
+    return $Path
+}
+
+function Test-TcpEndpoint {
+    param([Parameter(Mandatory)][string]$Url)
+    try {
+        $uri = [uri]$Url
+        $port = if ($uri.Port -gt 0) { $uri.Port } elseif ($uri.Scheme -eq 'https') { 443 } else { 80 }
+        $client = [System.Net.Sockets.TcpClient]::new()
+        $async = $client.BeginConnect($uri.Host, $port, $null, $null)
+        $ok = $async.AsyncWaitHandle.WaitOne(1000, $false)
+        if (-not $ok) {
+            $client.Close()
+            return $false
+        }
+        $client.EndConnect($async)
+        $client.Close()
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+function Invoke-MoosGet {
+    param(
+        [Parameter(Mandatory)][string]$BaseUrl,
+        [Parameter(Mandatory)][string]$Path
+    )
+    $url = $BaseUrl.TrimEnd('/') + '/' + $Path.TrimStart('/')
+    Invoke-RestMethod -Uri $url -TimeoutSec 5
+}
+
+function Test-KernelHealth {
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)]$Kernel,
+        [Parameter(Mandatory)][string]$ExpectedOntologyVersion
+    )
+    $baseUrl = Get-KernelUrl -Kernel $Kernel
+    $result = [ordered]@{
+        Kernel = $Name
+        Url = $baseUrl
+        Urn = $Kernel.urn
+        Status = 'unknown'
+        Ontology = ''
+        LogLen = ''
+        Derivation = 'unknown'
+        Error = ''
+    }
+
+    try {
+        $health = Invoke-MoosGet -BaseUrl $baseUrl -Path 'healthz'
+        $result.Status = [string]$health.status
+        $result.Ontology = [string]$health.ontology_version
+        $result.LogLen = [string]$health.log_len
+        if ($result.Ontology -ne $ExpectedOntologyVersion) {
+            $result.Error = "expected ontology $ExpectedOntologyVersion"
+        }
+
+        $nodeTypes = Invoke-MoosGet -BaseUrl $baseUrl -Path 'operad/node-types'
+        $result.Derivation = if ($nodeTypes.PSObject.Properties['derivation']) { 'yes' } else { 'missing' }
+    }
+    catch {
+        $result.Status = 'error'
+        $result.Error = $_.Exception.Message
+    }
+
+    [pscustomobject]$result
+}
+
+function Test-McpConfig {
+    param(
+        [Parameter(Mandatory)]$Topology,
+        [Parameter(Mandatory)][string]$Path
+    )
+    if (-not (Test-Path $Path)) {
+        Write-Warning "No MCP config found at $Path"
+        return
+    }
+
+    $config = Read-JsonFile -Path $Path
+    foreach ($serverProperty in $Topology.mcp_servers.PSObject.Properties) {
+        $name = $serverProperty.Name
+        $expectedUrl = [string]$serverProperty.Value
+        $server = Get-ObjectProperty -Object $config.servers -Name $name
+        $actualUrl = if ($server) { [string]$server.url } else { '' }
+        [pscustomobject]@{
+            Server = $name
+            ExpectedUrl = $expectedUrl
+            ActualUrl = $actualUrl
+            TcpReachable = if ($actualUrl) { Test-TcpEndpoint -Url $actualUrl } else { $false }
+            Status = if ($actualUrl -eq $expectedUrl) { 'ok' } elseif ($actualUrl) { 'mismatch' } else { 'missing' }
+        }
+    }
+}
+
+function Get-PersonaKernelName {
+    param(
+        [Parameter(Mandatory)]$PersonaConfig,
+        [ValidateSet('Emit', 'OpensOn')][string]$Kind
+    )
+    if ($Kind -eq 'Emit') {
+        if ($PersonaConfig.emit_kernel) { return [string]$PersonaConfig.emit_kernel }
+        if ($PersonaConfig.state_kernel) { return [string]$PersonaConfig.state_kernel }
+        if ($PersonaConfig.kernel) { return [string]$PersonaConfig.kernel }
+    }
+    if ($PersonaConfig.opens_on_kernel) { return [string]$PersonaConfig.opens_on_kernel }
+    if ($PersonaConfig.kernel) { return [string]$PersonaConfig.kernel }
+    if ($PersonaConfig.emit_kernel) { return [string]$PersonaConfig.emit_kernel }
+    throw 'Persona has no kernel mapping'
+}
+
+function Resolve-Persona {
+    param(
+        [Parameter(Mandatory)]$Topology,
+        [Parameter(Mandatory)][string]$Name
+    )
+    $personaConfig = Get-ObjectProperty -Object $Topology.personas -Name $Name
+    if (-not $personaConfig) {
+        throw "Unknown persona '$Name'"
+    }
+
+    $emitKernelName = Get-PersonaKernelName -PersonaConfig $personaConfig -Kind Emit
+    $opensOnKernelName = Get-PersonaKernelName -PersonaConfig $personaConfig -Kind OpensOn
+    $emitKernel = Get-ObjectProperty -Object $Topology.kernels -Name $emitKernelName
+    $opensOnKernel = Get-ObjectProperty -Object $Topology.kernels -Name $opensOnKernelName
+    if (-not $emitKernel) {
+        throw "Persona '$Name' references unknown emit kernel '$emitKernelName'"
+    }
+    if (-not $opensOnKernel) {
+        throw "Persona '$Name' references unknown opens-on kernel '$opensOnKernelName'"
+    }
+
+    [pscustomobject]@{
+        Name = $Name
+        Config = $personaConfig
+        EmitKernelName = $emitKernelName
+        OpensOnKernelName = $opensOnKernelName
+        EmitKernel = $emitKernel
+        OpensOnKernel = $opensOnKernel
+        EmitUrl = Get-KernelUrl -Kernel $emitKernel
+        OpensOnUrl = Get-KernelUrl -Kernel $opensOnKernel
+    }
+}
+
+function Test-Persona {
+    param(
+        [Parameter(Mandatory)]$Topology,
+        [Parameter(Mandatory)][string]$Name
+    )
+    $resolved = Resolve-Persona -Topology $Topology -Name $Name
+    $rows = @()
+    $rows += [pscustomobject]@{ Check = 'emit-kernel'; Target = $resolved.EmitKernelName; Status = 'ok'; Detail = $resolved.EmitUrl }
+    $rows += [pscustomobject]@{ Check = 'opens-on-kernel'; Target = $resolved.OpensOnKernelName; Status = 'topology'; Detail = $resolved.OpensOnUrl }
+    $rows += [pscustomobject]@{ Check = 'actor'; Target = $resolved.Config.actor_urn; Status = 'declared'; Detail = '' }
+    $rows += [pscustomobject]@{ Check = 'session'; Target = $resolved.Config.session_urn; Status = 'declared'; Detail = '' }
+
+    $mcpServer = Get-ObjectProperty -Object $Topology.mcp_servers -Name $resolved.Config.mcp_server
+    if ($mcpServer) {
+        $rows += [pscustomobject]@{ Check = 'mcp-target'; Target = $resolved.Config.mcp_server; Status = if (Test-TcpEndpoint -Url $mcpServer) { 'ok' } else { 'unreachable' }; Detail = $mcpServer }
+    }
+    else {
+        $rows += [pscustomobject]@{ Check = 'mcp-target'; Target = $resolved.Config.mcp_server; Status = 'missing'; Detail = 'not present in topology.mcp_servers' }
+    }
+
+    $topologyMcpName = if ($resolved.Config.topology_mcp_server) { [string]$resolved.Config.topology_mcp_server } else { '' }
+    if ($topologyMcpName) {
+        $topologyMcp = Get-ObjectProperty -Object $Topology.mcp_servers -Name $topologyMcpName
+        $rows += [pscustomobject]@{ Check = 'opens-on-mcp'; Target = $topologyMcpName; Status = if ($topologyMcp) { 'topology' } else { 'missing' }; Detail = if ($topologyMcp) { $topologyMcp } else { 'not present in topology.mcp_servers' } }
+    }
+
+    try {
+        $sessionPath = 'state/nodes/' + [uri]::EscapeDataString([string]$resolved.Config.session_urn)
+        $sessionNode = Invoke-MoosGet -BaseUrl $resolved.EmitUrl -Path $sessionPath
+        $rows += [pscustomobject]@{ Check = 'session-on-receiving-kernel'; Target = $resolved.Config.session_urn; Status = 'ok'; Detail = $sessionNode.type_id }
+    }
+    catch {
+        $rows += [pscustomobject]@{ Check = 'session-on-receiving-kernel'; Target = $resolved.Config.session_urn; Status = 'missing'; Detail = $_.Exception.Message }
+    }
+
+    try {
+        $relationsPath = 'state/relations/src/' + [uri]::EscapeDataString([string]$resolved.Config.session_urn)
+        $relations = @(Invoke-MoosGet -BaseUrl $resolved.EmitUrl -Path $relationsPath)
+        $occupant = $relations | Where-Object { $_.src_port -eq 'has-occupant' -and $_.tgt_urn -eq $resolved.Config.actor_urn } | Select-Object -First 1
+        $opensOn = $relations | Where-Object { $_.src_port -eq 'opens-on' -and $_.tgt_urn -eq $resolved.OpensOnKernel.urn } | Select-Object -First 1
+        $rows += [pscustomObject]@{ Check = 'has-occupant'; Target = $resolved.Config.actor_urn; Status = if ($occupant) { 'ok' } else { 'missing' }; Detail = "checked on $($resolved.EmitUrl)" }
+        $rows += [pscustomObject]@{ Check = 'opens-on-link'; Target = $resolved.OpensOnKernel.urn; Status = if ($opensOn) { 'ok' } else { 'missing' }; Detail = 'topology intent stored on receiving kernel' }
+    }
+    catch {
+        $rows += [pscustomObject]@{ Check = 'has-occupant'; Target = $resolved.Config.actor_urn; Status = 'error'; Detail = $_.Exception.Message }
+        $rows += [pscustomObject]@{ Check = 'opens-on-link'; Target = $resolved.OpensOnKernel.urn; Status = 'error'; Detail = $_.Exception.Message }
+    }
+
+    try {
+        $health = Invoke-MoosGet -BaseUrl $resolved.EmitUrl -Path 'healthz'
+        $rows += [pscustomobject]@{ Check = 'health'; Target = $resolved.EmitUrl; Status = $health.status; Detail = "ontology=$($health.ontology_version) log_len=$($health.log_len)" }
+    }
+    catch {
+        $rows += [pscustomobject]@{ Check = 'health'; Target = $resolved.EmitUrl; Status = 'error'; Detail = $_.Exception.Message }
+    }
+
+    $rows
+}
+
+function Invoke-PostProgram {
+    param(
+        [Parameter(Mandatory)]$Topology,
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][string]$Path,
+        [switch]$Force
+    )
+    $Path = Resolve-MoosPath -Path $Path
+    if (-not (Test-Path $Path)) {
+        throw "Payload not found: $Path"
+    }
+
+    $resolved = Resolve-Persona -Topology $Topology -Name $Name
+    $preflight = Test-Persona -Topology $Topology -Name $Name
+    $blockingChecks = @('mcp-target', 'session-on-receiving-kernel', 'has-occupant', 'opens-on-link', 'health')
+    $blocking = @($preflight | Where-Object { $blockingChecks -contains $_.Check -and $_.Status -ne 'ok' })
+    if ($blocking.Count -gt 0 -and -not $Force) {
+        $blocking | Format-Table -AutoSize | Out-String | Write-Host
+        throw "Preflight failed for persona '$Name'. Re-run with -Force to POST anyway."
+    }
+
+    $json = Read-JsonFile -Path $Path
+    $envelopes = if ($json.PSObject.Properties['envelopes']) { $json.envelopes } else { $json }
+    $body = $envelopes | ConvertTo-Json -Depth 50 -Compress
+    $url = $resolved.EmitUrl.TrimEnd('/') + '/programs'
+
+    Write-Host "POST $Path -> $url as persona '$Name' (emit=$($resolved.EmitKernelName), opens-on=$($resolved.OpensOnKernelName))" -ForegroundColor Cyan
+    Invoke-RestMethod -Uri $url -Method Post -Body $body -ContentType 'application/json' | ConvertTo-Json -Depth 20
+}
+
+$topology = Read-JsonFile -Path $TopologyPath
+
+switch ($Mode) {
+    'Doctor' {
+        Write-Host "Topology: $TopologyPath" -ForegroundColor Cyan
+        Write-Host "MCP config: $McpConfigPath" -ForegroundColor Cyan
+        Write-Host ''
+        Write-Host 'Kernel health' -ForegroundColor Cyan
+        $kernelResults = foreach ($kernelProperty in $topology.kernels.PSObject.Properties) {
+            Test-KernelHealth -Name $kernelProperty.Name -Kernel $kernelProperty.Value -ExpectedOntologyVersion $topology.expected_ontology_version
+        }
+        $kernelResults | Format-Table -AutoSize
+
+        Write-Host ''
+        Write-Host 'MCP config' -ForegroundColor Cyan
+        Test-McpConfig -Topology $topology -Path $McpConfigPath | Format-Table -AutoSize
+    }
+    'Start' {
+        $startScript = $topology.scripts.z440_start_federation
+        if (-not (Test-Path $startScript)) {
+            throw "Z440 federation start script not found: $startScript"
+        }
+        & $startScript
+        & $PSCommandPath -Mode Doctor -TopologyPath $TopologyPath -McpConfigPath $McpConfigPath
+    }
+    'VerifyPersona' {
+        if (-not $Persona) { throw '-Persona is required for VerifyPersona' }
+        Test-Persona -Topology $topology -Name $Persona | Format-Table -AutoSize
+    }
+    'PostProgram' {
+        if (-not $Persona) { throw '-Persona is required for PostProgram' }
+        if (-not $PayloadPath) { throw '-PayloadPath is required for PostProgram' }
+        Invoke-PostProgram -Topology $topology -Name $Persona -Path $PayloadPath -Force:$Force
+    }
+}

@@ -1,6 +1,6 @@
 {
 	"servers": {
-		"_comment_local": "Local kernels — copy to .vscode/mcp.json (gitignored) and adjust ports",
+		"_comment_local": "Local kernels. Active Z440 emits use moos-primary (:8080) until §M9 twin_link sync. Menno (:9001) and lola (:9002) are opens-on topology/future direct endpoints.",
 		"moos-primary": {
 			"type": "sse",
 			"url": "http://localhost:8080/sse"

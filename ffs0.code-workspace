@@ -18,6 +18,7 @@
     },
     {
       "path": "C:/Users/hp",
+      "name": "user-home",
     },
   ],
   "settings": {
@@ -48,8 +49,15 @@
     },
     "search.exclude": {
       "**/dev/reference/**": true,
+      "**/AppData/**": true,
+      "**/.cache/**": true,
+      "**/.docker/**": true,
+      "**/.ollama/**": true,
+      "**/node_modules/**": true,
+      "**/.git/objects/**": true,
     },
-    "powershell.cwd": "ffs0-private-workspace",
+    "terminal.integrated.cwd": "${workspaceFolder:ffs0-private-workspace}",
+    "powershell.cwd": "${workspaceFolder:ffs0-private-workspace}",
   },
   "extensions": {
     "recommendations": [
@@ -66,6 +74,89 @@
   "tasks": {
     "version": "2.0.0",
     "tasks": [
+      {
+        "label": "Moos: Doctor",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder:ffs0-private-workspace}/dev/scripts/ops/Test-MoosFederation.ps1",
+          "-Mode",
+          "Doctor"
+        ],
+        "group": "build",
+      },
+      {
+        "label": "Moos: Start Z440 Federation",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder:ffs0-private-workspace}/dev/scripts/ops/Test-MoosFederation.ps1",
+          "-Mode",
+          "Start"
+        ],
+        "group": "build",
+      },
+      {
+        "label": "Moos: Verify Steinberger Emit Target",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder:ffs0-private-workspace}/dev/scripts/ops/Test-MoosFederation.ps1",
+          "-Mode",
+          "VerifyPersona",
+          "-Persona",
+          "steinberger"
+        ],
+        "group": "test",
+      },
+      {
+        "label": "Moos: Verify Karpathy Emit Target",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder:ffs0-private-workspace}/dev/scripts/ops/Test-MoosFederation.ps1",
+          "-Mode",
+          "VerifyPersona",
+          "-Persona",
+          "karpathy"
+        ],
+        "group": "test",
+      },
+      {
+        "label": "Moos: Post Program Payload",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder:ffs0-private-workspace}/dev/scripts/ops/Test-MoosFederation.ps1",
+          "-Mode",
+          "PostProgram",
+          "-Persona",
+          "${input:moosPersona}",
+          "-PayloadPath",
+          "${input:moosPayloadPath}"
+        ],
+        "group": "build",
+      },
       {
         "label": "Ops: Snapshot (Local Z440)",
         "type": "shell",
@@ -99,6 +190,29 @@
         ],
         "group": "build",
       },
+    ],
+    "inputs": [
+      {
+        "id": "moosPersona",
+        "type": "pickString",
+        "description": "Persona whose emit target receives the program payload",
+        "options": [
+          "wolfram",
+          "steinberger",
+          "karpathy",
+          "moos",
+          "cowork-z440",
+          "guido",
+          "cowork-laptop",
+          "ag-laptop"
+        ],
+        "default": "steinberger"
+      },
+      {
+        "id": "moosPayloadPath",
+        "type": "promptString",
+        "description": "Absolute or workspace-relative path to a JSON array or {envelopes:[...]} payload"
+      }
     ],
   },
 }

@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "source_of_truth": "kb/superset/running-state.md federation port map, T=175 v3.14.0. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
+  "local_host": "hp-z440",
+  "expected_ontology_version": "3.14.0",
+  "kernels": {
+    "hp-z440.primary": {
+      "urn": "urn:moos:kernel:hp-z440.primary",
+      "host": "hp-z440",
+      "http_local": "http://localhost:8000",
+      "http_lan": "http://192.168.1.13:8000",
+      "mcp_sse_local": "http://localhost:8080/sse",
+      "mcp_server": "moos-primary",
+      "seats": [
+        "urn:moos:session:sam.kernel-proper",
+        "urn:moos:session:sam.moos-diary",
+        "urn:moos:session:sam.z440-cowork-workspace",
+        "urn:moos:session:sam.mvp-delivery"
+      ]
+    },
+    "hp-z440.menno": {
+      "urn": "urn:moos:kernel:hp-z440.menno",
+      "host": "hp-z440",
+      "http_local": "http://localhost:8001",
+      "http_lan": "http://192.168.1.13:8001",
+      "mcp_sse_local": "http://localhost:9001/sse",
+      "mcp_server": "moos-menno",
+      "seats": ["urn:moos:session:sam.steinberger-seat"]
+    },
+    "hp-z440.lola": {
+      "urn": "urn:moos:kernel:hp-z440.lola",
+      "host": "hp-z440",
+      "http_local": "http://localhost:8002",
+      "http_lan": "http://192.168.1.13:8002",
+      "mcp_sse_local": "http://localhost:9002/sse",
+      "mcp_server": "moos-lola",
+      "seats": ["urn:moos:session:sam.karpathy-seat"]
+    },
+    "hp-z440.moos": {
+      "urn": "urn:moos:kernel:hp-z440.moos",
+      "host": "hp-z440",
+      "http_local": "http://localhost:8003",
+      "http_lan": "http://192.168.1.13:8003",
+      "mcp_sse_local": "http://localhost:9003/sse",
+      "mcp_server": "moos-moos",
+      "seats": []
+    },
+    "hp-laptop.primary": {
+      "urn": "urn:moos:kernel:hp-laptop.primary",
+      "host": "hp-laptop",
+      "http_lan": "http://192.168.1.18:8000",
+      "mcp_sse_lan": "http://192.168.1.18:8080/sse",
+      "mcp_server": "moos-hp-laptop-primary",
+      "seats": [
+        "urn:moos:session:sam.governance",
+        "urn:moos:session:sam.laptop-cowork-workspace",
+        "urn:moos:session:sam.laptop-moos-diary"
+      ]
+    }
+  },
+  "router": {
+    "name": "moos-router",
+    "http_local": "http://localhost:9000",
+    "http_lan": "http://192.168.1.13:9000"
+  },
+  "mcp_servers": {
+    "moos-primary": "http://localhost:8080/sse",
+    "moos-menno": "http://localhost:9001/sse",
+    "moos-lola": "http://localhost:9002/sse",
+    "moos-moos": "http://localhost:9003/sse"
+  },
+  "personas": {
+    "wolfram": {
+      "actor_urn": "urn:moos:agent:claude-code.hp-z440",
+      "session_urn": "urn:moos:session:sam.kernel-proper",
+      "opens_on_kernel": "hp-z440.primary",
+      "emit_kernel": "hp-z440.primary",
+      "mcp_server": "moos-primary"
+    },
+    "steinberger": {
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.menno",
+      "session_urn": "urn:moos:session:sam.steinberger-seat",
+      "opens_on_kernel": "hp-z440.menno",
+      "emit_kernel": "hp-z440.primary",
+      "mcp_server": "moos-primary",
+      "topology_mcp_server": "moos-menno"
+    },
+    "karpathy": {
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.lola",
+      "session_urn": "urn:moos:session:sam.karpathy-seat",
+      "opens_on_kernel": "hp-z440.lola",
+      "emit_kernel": "hp-z440.primary",
+      "mcp_server": "moos-primary",
+      "topology_mcp_server": "moos-lola"
+    },
+    "moos": {
+      "actor_urn": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "opens_on_kernel": "hp-z440.primary",
+      "emit_kernel": "hp-z440.primary",
+      "mcp_server": "moos-primary"
+    },
+    "cowork-z440": {
+      "actor_urn": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "opens_on_kernel": "hp-z440.primary",
+      "emit_kernel": "hp-z440.primary",
+      "mcp_server": "moos-primary"
+    },
+    "guido": {
+      "actor_urn": "urn:moos:agent:claude-code.hp-laptop",
+      "session_urn": "urn:moos:session:sam.governance",
+      "opens_on_kernel": "hp-laptop.primary",
+      "emit_kernel": "hp-laptop.primary",
+      "mcp_server": "moos-hp-laptop-primary"
+    },
+    "cowork-laptop": {
+      "actor_urn": "urn:moos:agent:claude-cowork.hp-laptop",
+      "session_urn": "urn:moos:session:sam.laptop-cowork-workspace",
+      "opens_on_kernel": "hp-laptop.primary",
+      "emit_kernel": "hp-laptop.primary",
+      "mcp_server": "moos-hp-laptop-primary"
+    },
+    "ag-laptop": {
+      "actor_urn": "urn:moos:agent:antigravity.hp-laptop",
+      "session_urn": "urn:moos:session:sam.laptop-moos-diary",
+      "opens_on_kernel": "hp-laptop.primary",
+      "emit_kernel": "hp-laptop.primary",
+      "mcp_server": "moos-hp-laptop-primary"
+    }
+  },
+  "scripts": {
+    "z440_start_federation": "D:/HPZ440/start_federation.ps1"
+  }
+}
