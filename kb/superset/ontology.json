@@ -1,13 +1,39 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.13.0",
-  "t_day": 173,
+  "version": "3.14.0",
+  "t_day": 175,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md. T=173 round-12 v3.13.0: four promoted grammar_fragments materialized into ontology — v313-6 (WF02 delegates-to/delegated-by additional port pair for role→role capability delegation), v313-7 (new S2 `group` node type — collective principal, extends principalTypes from {user, agent} to {user, agent, group}), v313-8 (channel.kind enum expansion: +calendar, +task-list, +cloud-storage, +vcs, +project-board), v313-9 (WF01 owns/owned-by additional port pair — group|user source owning kernel|session|purpose|program|channel|agent targets). WF19 has-occupant tgt_types extends to include `group` (session occupancy by a collective principal). See kb/research/session/20260422-t172-wolframs-court-social-topology.md §3 + T=173 batch on Z440 kernel 0 log_seq 285-288 (WF20 promotion ceremony for the 4 fragments).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "dev/reference/research-archive/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "3.14.0",
+      "t_day": 175,
+      "summary": "Round-13 thin-Option-A slice: v314-1 grammar_fragment promotes the `derivation` S2 node-type. Reifies session-internal inference as a first-class graph object — every program / claim / knowledge_item produced by a session can walk back to its derivation, the evidence consumed, the weights applied, and the confidence assigned. Closes the inference-visibility gap surfaced in the T=175 program-authoring fabric note. Companion port-pair fragment (authors-via/authored-by-session for session) deferred; WF21 causes/caused-by fragment deferred. For now derivation nodes ADD with all properties but their LINKs to programs/claims/evidence wait for those follow-up fragments. Authored by Wolfram on session:sam.kernel-proper, Z440 :8000.",
+      "changes": {
+        "type_extensions": [
+          "New S2 node-type `derivation` (id=derivation, urn_pattern=urn:moos:derivation:<session-slug>.<seq>). Properties: name (immutable string), inference_kind (mutable owner enum: bayesian|llm_completion|deterministic_rule|dag_walk|hand_authored|hybrid), stochastic_weights (mutable owner object, optional), confidence (mutable owner number 0..1), status (mutable kernel enum: open|closed|retracted), owner_urn (immutable urn), created_at (immutable datetime). Ports: out=[produces, consumes]; in=[authored-by]."
+        ],
+        "fragment_merges": [
+          "urn:moos:grammar_fragment:v314-1-derivation-type — status: proposed → promoted → merged. Specification: see type_extensions above. Author: sam (via agent:claude-code.hp-z440 on session:sam.kernel-proper). Evidence: kb/research/session/20260424-t175-program-authoring-fabric.md §1."
+        ],
+        "migration_actions_in_hg": [
+          "ADD urn:moos:grammar_fragment:v314-1-derivation-type at log_seq 340 on Z440 :8000 (proposed status).",
+          "Edit ontology.json: bump version to 3.14.0, add `derivation` to types.s2_infrastructure, append this changelog entry. Commit on ffs0 main.",
+          "Restart 5 kernels (4 Z440 + 1 hp-laptop) to load v3.14.0; verify /operad/node-types reports derivation on each.",
+          "MUTATE urn:moos:grammar_fragment:v314-1-derivation-type status proposed → promoted (admin authority; principal=sam).",
+          "MUTATE same fragment status promoted → merged (after baseline ontology.json carries the type)."
+        ],
+        "deferrals": [
+          "Companion fragment for session port-pair authors-via/authored-by-session — deferred to a future round.",
+          "WF21 causes/caused-by rewrite-category — deferred (T=175 fabric note §3); needed for the consumes/produces LINKs to wire derivation → its evidence + outputs.",
+          "v314-2-clock-type, v314-3-wf21-causes, v314-4-substrate-property, v314-5-leaf-firing-state — all deferred to subsequent rounds (T=175 fabric note §8 promotion order).",
+          "Backfill of existing doctrine notes as derivation nodes (7 ADDs: t169, t172×2, t173, t175, t187, t171-multimodal-diary) — Round-13 Batch 3, follows this promotion."
+        ]
+      }
+    },
     {
       "version": "3.13.0",
       "t_day": 173,
@@ -1316,6 +1342,77 @@
             "note": "0.0 to 1.0"
           },
           "source_ki_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "provenance stamp, not topology"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        }
+      },
+      {
+        "id": "derivation",
+        "description": "Reifies session-internal inference as a first-class graph object. Every program / claim / knowledge_item produced by a session can walk back to its derivation, the evidence consumed, the weights applied, and the confidence assigned. Closes the inference-visibility gap surfaced in T=175 program-authoring fabric note. Companion port-pair (authors-via/authored-by-session for session) deferred to a future fragment; for now derivation nodes ADD with all properties but their LINKs to programs/claims/evidence land via WF21 causes/caused-by once that fragment promotes. Added v3.14 per `urn:moos:grammar_fragment:v314-1-derivation-type`.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:derivation:<session-slug>.<seq>",
+        "urn_example": "urn:moos:derivation:cowork-z440.glossary-h2-chunker",
+        "added_in_version": "3.14",
+        "ports": {
+          "out": [
+            "produces",
+            "consumes"
+          ],
+          "in": [
+            "authored-by"
+          ]
+        },
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "short label for the derivation; e.g. glossary-h2-chunker"
+          },
+          "inference_kind": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "bayesian",
+              "llm_completion",
+              "deterministic_rule",
+              "dag_walk",
+              "hand_authored",
+              "hybrid"
+            ],
+            "note": "What kind of inference produced this derivation's outputs."
+          },
+          "stochastic_weights": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "object",
+            "optional": true,
+            "note": "Free-form: priors, biases, temperature, top-p, sampling strategy, model_urn. Populated when inference_kind ∈ {bayesian, llm_completion, hybrid}; null/empty for deterministic_rule and hand_authored."
+          },
+          "confidence": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "number",
+            "note": "0.0 to 1.0. 1.0 for deterministic_rule; varies for stochastic kinds."
+          },
+          "status": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "enum",
+            "values": [
+              "open",
+              "closed",
+              "retracted"
+            ],
+            "note": "open: derivation in flight; closed: emitted its outputs; retracted: superseded or withdrawn."
+          },
+          "owner_urn": {
             "mutability": "immutable",
             "type": "urn",
             "note": "provenance stamp, not topology"
