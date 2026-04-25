@@ -15,14 +15,16 @@ Every ingest of a single source URN lands as exactly one `apply_program` batch o
 
 If the source spans 200 sections and the batch validation rejects on chunk 73, the whole batch fails — fix the offending chunk's properties, retry. Don't chunk-then-LINK in two transactions.
 
-## Cardinal rule — actor is the Cowork agent, scope is the session
+## Cardinal rule — actor is the Cowork agent, scope is the session (set EXPLICITLY)
 
 ```
 actor:        urn:moos:agent:claude-cowork.hp-z440  (or .hp-laptop)
-session_urn:  inferred via reverse-lookup (you're the sole occupant of session:sam.<host>-cowork-workspace)
+session_urn:  urn:moos:session:sam.z440-cowork-workspace  (or sam.laptop-cowork-workspace)
 ```
 
-Per `moos-rewrite-envelope` §1 — the inferred-session path works because Cowork agents drive exactly one session at a time. **Set `session_urn` explicitly** if Cowork ever multiplexes (today, don't).
+**T=175 update — set `session_urn` explicitly on every envelope.** The inferred-session path (reverse-lookup via `has-occupant`) is functionally accepted by §M11 but currently fails to tick `session.local_t` per the §M13 sub-program `session-actor-agent-lookup` gap. Surfaced concretely at T=174 ~00:45 CEST: `session:sam.laptop-cowork-workspace.local_t = 0` after 24 acknowledged Phase A rewrites. Phase E.2 of `~/.claude/plans/valiant-kindling-sunrise.md` closes the gap in `runtime.go`; until that PR merges + 5 kernels rebuild, **always set `session_urn` explicitly**. After E.2 lands, the rule still holds as best practice — explicit beats implicit, and multi-session agents (Wolfram on `sam.kernel-proper`+`sam.mvp-delivery`) require it anyway.
+
+Per `moos-rewrite-envelope` §1 (canonical envelope shape) — every envelope carries both `actor` and `session_urn`; never omit `session_urn` on the bet that reverse-lookup will infer it.
 
 ## Inputs
 
@@ -63,6 +65,7 @@ One `ADD knowledge_item` envelope. Source URL goes on `source_url` (immutable). 
 {
   "rewrite_type": "ADD",
   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
   "node_urn": "urn:moos:ki:<source-type>.<source-slug>",
   "type_id": "knowledge_item",
   "properties": {
@@ -78,6 +81,8 @@ One `ADD knowledge_item` envelope. Source URL goes on `source_url` (immutable). 
 }
 ```
 
+**On hp-laptop swap `actor` to `urn:moos:agent:claude-cowork.hp-laptop` and `session_urn` to `urn:moos:session:sam.laptop-cowork-workspace`.**
+
 ### Multi-chunk case (umbrella + N chunks)
 
 Order in the batch:
@@ -90,6 +95,7 @@ Order in the batch:
 {
   "rewrite_type": "LINK",
   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
   "relation_urn": "urn:moos:rel:<umbrella-slug>.provides-kb.<chunk-slug>",
   "src_urn":  "urn:moos:knowledge_item:cowork.<umbrella-slug>",
   "src_port": "provides-kb",
@@ -105,6 +111,7 @@ And the channel→umbrella LINK:
 {
   "rewrite_type": "LINK",
   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
   "relation_urn": "urn:moos:rel:<channel-slug>.provides-kb.<umbrella-slug>",
   "src_urn":  "urn:moos:channel:google.drive.sam",
   "src_port": "provides-kb",
@@ -124,6 +131,7 @@ Per `cowork-as-occupant.md` §2.1 — D19.3 `pins-urn` is **proposed** (not yet 
 {
   "rewrite_type": "MUTATE",
   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
   "target_urn": "urn:moos:session:sam.z440-cowork-workspace",
   "field": "scope_pins",
   "new_value": [...existing pins..., "urn:moos:knowledge_item:cowork.<umbrella-slug>"]

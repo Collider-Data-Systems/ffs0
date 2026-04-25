@@ -275,6 +275,8 @@ The T-hook catalog (§M14) generalises T-property semantics to every node type.
 
 **Relation to M1.** M1 stated "action on time: `t_next = t_current + 1`". §M13 clarifies that the `t` in that statement is `t_local` — a session heartbeat, not a calendar. The calendar T is separate, lives on nodes, and drives hooks.
 
+**T=175 update — sub-program `session-actor-agent-lookup` closing.** The inferred-session path of `bumpSessionLocalT` (in moos-kernel `runtime.go`) currently fails to increment `session.local_t` when an envelope arrives without explicit `env.session_urn`, even though the kernel reverse-resolves the session via `has-occupant` lookup. Surfaced concretely by Guido at T=174 ~00:45 CEST during Phase A: `session:sam.laptop-cowork-workspace.local_t = 0` after 24 acknowledged rewrites because Cowork emits without explicit `session_urn`. Fix is small (~5–10 lines runtime.go + tests) and lands as Phase E.2 of `~/.claude/plans/valiant-kindling-sunrise.md`: increment `local_t` whenever the kernel resolves an envelope to a session, regardless of explicit-vs-inferred path. Multi-session agents (e.g. Wolfram on `sam.kernel-proper` + `sam.mvp-delivery`) still require explicit `env.session_urn` or fail loud — single-session agents tick automatically. After PR merge + 5-kernel rebuild, this sub-program closes; §M13 heartbeat becomes universally reliable across all agents and all leaves (the latter per `kb/research/session/20260424-t175-program-authoring-fabric.md` §5).
+
 ---
 
 ## §M14 — T-hook predicate catalog (extends M6)
