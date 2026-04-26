@@ -1,0 +1,58 @@
+[
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:agent:claude-code.hp-laptop",
+    "session_urn": "urn:moos:session:sam.governance",
+    "node_urn": "urn:moos:ki:spec.section-09-governance-and-audit",
+    "type_id": "knowledge_item",
+    "properties": {
+      "title":        {"value": "Section 09: Governance and audit (round-14 chapter)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "source_url":   {"value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/kb/research/spec/09-governance-and-audit.md", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "source_type":  {"value": "internal-spec-chapter", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "language":     {"value": "en", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "retrieved_at": {"value": "2026-04-26T14:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "created_at":   {"value": "2026-04-26T14:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "summary":      {"value": "§9 chapter of the round-14 comprehensive architecture spec — governance + audit layer. Two registers (preflight gates §M11+§M12+§M13 + post-hoc audit pattern). Four sub-sections in §9.4 carry round-14-surfaced doctrinal claims: invariant-bracketing-discipline, scaffolding-on-emission-not-reasoning, topology-degenerate-vs-federated, stochastic_weights-as-transitional-citation-surface. Audit-as-functor F: PersonaLattice → CoherenceVerdict (7-tuple). Authored by Guido on session:sam.governance, anchored to derivation:guido.section-09-governance-and-audit at hp-laptop log_seq 659.", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+      "status":       {"value": "raw", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+    }
+  },
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:agent:claude-code.hp-laptop",
+    "session_urn": "urn:moos:session:sam.governance",
+    "node_urn": "urn:moos:claim:guido.invariant-bracketing-discipline",
+    "type_id": "claim",
+    "properties": {
+      "text":          {"value": "Every governance invariant gains a (preflight_gate, post_hoc_audit) pair. Both registers must reach the same coherence-verdict for canonical operation; drift between them is itself a meta-invariant (A.7 candidate — 'preflight ≡ audit on same invariant'). Each invariant carries (1) a preflight register that gates emission at kernel-Apply time and (2) a post-hoc audit register that verifies post-emission state. The pair is the discipline; the invariant alone is incomplete. First live demonstration: A.4 emit-target-adherence on Karpathy's §1 derivation at Z440 :8000 log_seq 353 — Steinberger's harness preflighted; Guido audited; both passed.", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "confidence":    {"value": 0.9, "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+      "source_ki_urn": {"value": "urn:moos:ki:spec.section-09-governance-and-audit", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "created_at":    {"value": "2026-04-26T14:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+    }
+  },
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:agent:claude-code.hp-laptop",
+    "session_urn": "urn:moos:session:sam.governance",
+    "node_urn": "urn:moos:claim:guido.topology-degenerate-vs-federated",
+    "type_id": "claim",
+    "properties": {
+      "text":          {"value": "Governance invariants behave differently on a single-kernel host vs a federated multi-kernel host. The hp-laptop case is topology-degenerate (single kernel = emit-target == opens-on by construction). The Z440 case is federated (4 kernels = emit-target ≠ opens-on for VSCode-mediated seats until §M9 twin-sync ships). Same A.4 invariant covers both, but the substrate behaves differently. Audit must be aware of host-shape; the audit ritual queries the federation router (/healthz cascade) to know which kernels participate. The distinction collapses post-§M9 + §M10 paired-promotion when twin_link adjoint sync ships.", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "confidence":    {"value": 0.9, "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+      "source_ki_urn": {"value": "urn:moos:ki:spec.section-09-governance-and-audit", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "created_at":    {"value": "2026-04-26T14:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+    }
+  },
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:agent:claude-code.hp-laptop",
+    "session_urn": "urn:moos:session:sam.governance",
+    "node_urn": "urn:moos:claim:guido.scaffolding-on-emission-not-reasoning",
+    "type_id": "claim",
+    "properties": {
+      "text":          {"value": "mo:os scaffolding is on emission, not on reasoning. The §M11 + §M12 + §M13 gates restrict what the model can WRITE TO HG (the F-direction of F⊣G). The reasoning that authors the F-morphism is unconstrained — the LLM is free to think in whatever activation patterns it has. This is more like a type system on F-morphisms than a command-sequence template. The operad restricts which RESULTS are expressible; it doesn't constrain which THOUGHTS occur. External critiques of skill.md scaffolding (e.g. AI-Eigenvectors-of-Skills, KARL/skill.md, The-AI-Automators march-of-nines) target scaffolding-on-reasoning. mo:os's discipline is governance-on-commit — different layer, different argument. Protects the lattice against the 'but scaffolding is dead' reading.", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "confidence":    {"value": 0.9, "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+      "source_ki_urn": {"value": "urn:moos:ki:spec.section-09-governance-and-audit", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+      "created_at":    {"value": "2026-04-26T14:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+    }
+  }
+]
