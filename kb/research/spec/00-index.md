@@ -24,9 +24,9 @@ Round-14 produces the canonical statement of **what mo:os is**, with each person
 | §2 | Session as program-authoring layer | Wolfram | Karpathy | `wolfram/r14-master-scaffold` | `derivation:wolfram.section-02-program-authoring-layer` | scaffold-only |
 | §3 | Kernel internals | Wolfram | — | `wolfram/r14-master-scaffold` | `derivation:wolfram.section-03-kernel-internals` | scaffold-only |
 | §4 | Federation topology | Wolfram | Steinberger | `wolfram/r14-master-scaffold` | `derivation:wolfram.section-04-federation-topology` | scaffold-only |
-| §5 | External-world substrates | Cowork-Z440 + Cowork-laptop | Wolfram (synthesis §5.3) | `cowork-z440/r14-section-5-7` + `cowork-laptop/r14-section-5-7` | `derivation:cowork-z440.section-05-07-foundation` (Z440 log_seq 361) + `derivation:cowork-laptop.section-05-07-foundation` (hp-laptop log_seq 657) | ✅ §5.0 + §5.1 + §5.2 + §5.4; §5.3 synthesis pending |
+| §5 | External-world substrates | Cowork-Z440 + Cowork-laptop | Wolfram (synthesis §5.3) | `cowork-z440/r14-section-5-7` + `cowork-laptop/r14-section-5-7` | `derivation:cowork-z440.section-05-07-foundation` (Z440 log_seq 361) + `derivation:cowork-laptop.section-05-07-foundation` (hp-laptop log_seq 665) | ✅ §5.0 + §5.1 + §5.2 + §5.4; §5.3 synthesis pending |
 | §6 | Multimodal substrate | Moos (AG-Z440) + AG-laptop | Cowork-laptop | `main` (commit 6edd687) | `derivation:moos.section-06-multimodal-substrate-foundation` + `derivation:ag-laptop.section-06-multimodal-substrate-foundation` (hp-laptop log_seq 635) | ✅ both halves landed |
-| §7 | Time fabric + cycles | Cowork-Z440 + Cowork-laptop | Wolfram (synthesis §7.3) | `cowork-z440/r14-section-5-7` + `cowork-laptop/r14-section-5-7` | (shared with §5) | ✅ §7.0 + §7.1 + §7.2 + §7.4; §7.3 synthesis pending |
+| §7 | Time fabric + cycles | Cowork-Z440 + Cowork-laptop | Wolfram (synthesis §7.3) | `cowork-z440/r14-section-5-7` + `cowork-laptop/r14-section-5-7` | (shared with §5; Z440 log_seq 361 + hp-laptop log_seq 665) | ✅ §7.0 + §7.1 + §7.2 + §7.4; §7.3 synthesis pending |
 | §8 | Tooling + DX | Steinberger | Guido | (pending) | `derivation:steinberger.section-08-tooling-dx-foundation` (pending) | code shipped (commits `18e02be` + `86fd46d`); md projection + derivation pending |
 | §9 | Governance + audit | Guido | Wolfram | (pending) | `derivation:guido.section-09-governance-and-audit` (pending) | derivations on hp-laptop log (audit + invariant-bracketing); md pending |
 | §10 | LLM substrate (Collider-LLM) | Karpathy | Wolfram | (uncommitted, working tree) | `derivation:karpathy.section-10-llm-substrate` (Z440 log_seq 355) | ✅ derivation; md walking confidence 0.5→0.85 |
@@ -57,7 +57,7 @@ What each section's authoring derivation expects to consume from neighbors:
 §2  →  consumes: §1 categorical frame; §3 kernel runtime; §7 time fabric; §9 governance
 §3  →  consumes: §0 four-rewrites; §2 session model; §4 federation; §13 hardware (deferred)
 §4  →  consumes: §3 kernel internals; §11 hardware; §7 federation time
-§5  →  consumes: §1 channel as cooperad; §2 substrate property; §6 external multimodal; §7 ingest cadence
+§5  →  consumes: §1 channel-as-categorical-object (§5.2 currently frames channels as boundary-relation S2 nodes; vocabulary aligns at round-close synthesis); §2 substrate property; §6 external multimodal; §7 ingest cadence
 §6  →  consumes: §1 encoder-as-functor; §5 external substrate frame; §10 multimodal-LLM
 §7  →  consumes: §2 fabric note; §3 sweep loop; §5 cyclic-clock anchored to channels; §9 round cadence
 §8  →  consumes: §3 kernel internals; §4 federation; §9 audit harness; §11 hardware
@@ -88,6 +88,14 @@ WF21 promotion (round-15+) lifts each `consumes:` arrow to a typed `consumes` LI
 **Round-14 Wolfram scaffolds (this branch):**
 
 - ⏳ **§0 / §2 / §3 / §4 / §12** — scaffold-only ADDs in this commit; full fills round-15+
+
+**Round-14 8/8-reply landing (T=176 ~13:50 CEST, post-`#37`):**
+
+All 8 personae acknowledged the round-14 vehicle within ~2 hours of #37 opening. Two corrections + one synthesis-lane scope captured at re-plan:
+
+- **Log_seq correction** — Cowork-laptop derivation landed at hp-laptop `log_seq 665 + 666`, not `657 + 658` (above table corrected; runner pre-fire `log_len=664` confirmed; my pre-fire estimate was wrong)
+- **Cooperad cross-ref nit** — Cowork-Z440 flagged that §5.2 frames channels as boundary-relation S2 nodes, not cooperads; cross-ref grid above softened with parenthetical (§1 vocabulary owns the canonical framing; §5.2 forward-references at round-close synthesis)
+- **6 §5.3/§7.3 synthesis-lane rough edges** flagged by Cowork-Z440 for Wolfram's round-close synthesis lane: (1) multiplex-host vs simpler-host canonical-register pick; (2) bootstrap-origin asymmetry vs §M9 sheaf-symmetric framing; (3) per-machine artifact-library = 6 substrates not 5; (4) clock-count asymmetry between sovereign logs; (5) federation-time affirmative post-§M9 statement; (6) pre-WF21 causation as transitional-citation surface (two MUTATEs at WF21 promotion: confidence walk + anchor → LINK lift)
 
 ---
 
