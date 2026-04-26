@@ -1,6 +1,6 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.14.0",
+  "version": "3.15.0",
   "t_day": 175,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md. T=173 round-12 v3.13.0: four promoted grammar_fragments materialized into ontology — v313-6 (WF02 delegates-to/delegated-by additional port pair for role→role capability delegation), v313-7 (new S2 `group` node type — collective principal, extends principalTypes from {user, agent} to {user, agent, group}), v313-8 (channel.kind enum expansion: +calendar, +task-list, +cloud-storage, +vcs, +project-board), v313-9 (WF01 owns/owned-by additional port pair — group|user source owning kernel|session|purpose|program|channel|agent targets). WF19 has-occupant tgt_types extends to include `group` (session occupancy by a collective principal). See kb/research/session/20260422-t172-wolframs-court-social-topology.md §3 + T=173 batch on Z440 kernel 0 log_seq 285-288 (WF20 promotion ceremony for the 4 fragments).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
@@ -8,6 +8,18 @@
   "t168_audit_reference": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "3.15.0",
+      "date": "2026-04-26",
+      "round": "round-15 (T=176)",
+      "fragments_promoted": [
+        "v314-2-clock-type",
+        "v314-3-wf21-causes",
+        "v314-4-substrate-property",
+        "v314-6-channel-kind-video"
+      ],
+      "summary": "Round-15 ceremony promotes 4 grammar_fragments into the runtime operad: clock node-type (S2; six canonical kinds covered), WF21 causes/caused-by rewrite-category (acyclic validator ValidateCausalAcyclic), substrate + substrate_anchor_urn properties on channel + knowledge_item, channel.kind enum extended with video + audio. Doctrine anchors: kb/research/spec/05-external-substrates.md §5.3.5; kb/research/spec/07-time-fabric.md §7.3.4-§7.3.5."
+    },
     {
       "version": "3.14.0",
       "t_day": 175,
@@ -1313,6 +1325,25 @@
           "created_at": {
             "mutability": "immutable",
             "type": "datetime"
+          },
+          "substrate": {
+            "type": "enum",
+            "values": [
+              "hg-native",
+              "external-channel",
+              "volatile",
+              "cached",
+              "federation-reconciled"
+            ],
+            "mutability": "immutable",
+            "authority_scope": "kernel",
+            "note": "default hg-native; auto-defaulted on backfill for nodes minted pre-v3.15"
+          },
+          "substrate_anchor_urn": {
+            "type": "urn",
+            "mutability": "immutable",
+            "authority_scope": "kernel",
+            "note": "required when substrate in {external-channel, federation-reconciled}; resolves to channel|derivation that anchors the external observation"
           }
         }
       },
@@ -1420,6 +1451,118 @@
           "created_at": {
             "mutability": "immutable",
             "type": "datetime"
+          }
+        }
+      },
+      {
+        "id": "clock",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:clock:<owner>.<slug>",
+        "ports": {
+          "out": [
+            "ticks-on",
+            "keeps-time-with"
+          ],
+          "in": [
+            "keeps-time-with"
+          ]
+        },
+        "properties": {
+          "cardinality": {
+            "type": "enum",
+            "values": [
+              "point",
+              "interval"
+            ],
+            "mutability": "immutable",
+            "authority_scope": ""
+          },
+          "embedding": {
+            "type": "enum",
+            "values": [
+              "linear",
+              "cyclic",
+              "dag",
+              "branching"
+            ],
+            "mutability": "immutable",
+            "authority_scope": ""
+          },
+          "frame": {
+            "type": "enum",
+            "values": [
+              "absolute",
+              "relative"
+            ],
+            "mutability": "immutable",
+            "authority_scope": ""
+          },
+          "frame_anchor_urn": {
+            "type": "urn",
+            "mutability": "immutable",
+            "authority_scope": "",
+            "note": "required when frame=relative"
+          },
+          "density": {
+            "type": "enum",
+            "values": [
+              "sec",
+              "min",
+              "hr",
+              "sweep",
+              "T-day",
+              "round",
+              "program-cycle",
+              "event-driven",
+              "custom"
+            ],
+            "mutability": "immutable",
+            "authority_scope": ""
+          },
+          "density_n": {
+            "type": "number",
+            "mutability": "immutable",
+            "authority_scope": ""
+          },
+          "cycle_period": {
+            "type": "object",
+            "mutability": "immutable",
+            "authority_scope": "",
+            "note": "required when embedding=cyclic"
+          },
+          "authority": {
+            "type": "enum",
+            "values": [
+              "kernel",
+              "user",
+              "session-occupant"
+            ],
+            "mutability": "immutable",
+            "authority_scope": ""
+          },
+          "scope_descriptor": {
+            "type": "string",
+            "mutability": "immutable",
+            "authority_scope": ""
+          },
+          "status": {
+            "type": "enum",
+            "values": [
+              "active",
+              "closed"
+            ],
+            "mutability": "mutable",
+            "authority_scope": "kernel"
+          },
+          "owner_urn": {
+            "type": "urn",
+            "mutability": "immutable",
+            "authority_scope": ""
+          },
+          "created_at": {
+            "type": "datetime",
+            "mutability": "immutable",
+            "authority_scope": ""
           }
         }
       },
@@ -1836,7 +1979,9 @@
               "task-list",
               "cloud-storage",
               "vcs",
-              "project-board"
+              "project-board",
+              "video",
+              "audio"
             ]
           },
           "source_uri": {
@@ -1874,6 +2019,25 @@
             "type": "urn",
             "optional": true,
             "note": "Parent channel for folder/hierarchy nesting. If set, this channel is a sub-channel of the referenced one. Enables filesystem folder structure and nested project boards without duplicating topology."
+          },
+          "substrate": {
+            "type": "enum",
+            "values": [
+              "hg-native",
+              "external-channel",
+              "volatile",
+              "cached",
+              "federation-reconciled"
+            ],
+            "mutability": "immutable",
+            "authority_scope": "kernel",
+            "note": "default hg-native; auto-defaulted on backfill for nodes minted pre-v3.15"
+          },
+          "substrate_anchor_urn": {
+            "type": "urn",
+            "mutability": "immutable",
+            "authority_scope": "kernel",
+            "note": "required when substrate in {external-channel, federation-reconciled}; resolves to channel|derivation that anchors the external observation"
           }
         },
         "note": "Every node entering the kernel from an external source is WF12-linked to its channel. Channel is the cooperad upstream of ingestion."
@@ -4015,6 +4179,39 @@
       ],
       "sync_mode": "local-only",
       "audit_note": "v3.9 DOES NOT auto-propose grammar_fragments from observed patterns — humans still author them. The adjoint is a design principle, not an algorithm yet. Open questions (evidence aggregation thresholds, re-proposal gating, embedding-based pattern similarity via HDC) tracked in s1_superset_doctrine_reference. Unit/counit laws (round-trip coherence Promote∘Express, Express∘Promote) are ASSERTED but not mechanically verified in v3.9."
+    },
+    {
+      "id": "WF21",
+      "name": "causes",
+      "allowed_rewrites": [
+        "LINK",
+        "UNLINK"
+      ],
+      "src_types": [
+        "derivation",
+        "claim",
+        "knowledge_item",
+        "program",
+        "task",
+        "knowledge_artifact"
+      ],
+      "tgt_types": [
+        "derivation",
+        "claim",
+        "knowledge_item",
+        "program",
+        "task",
+        "knowledge_artifact",
+        "channel",
+        "clock"
+      ],
+      "src_port": "causes",
+      "tgt_port": "caused-by",
+      "authority": "owner",
+      "mutate_scope": [],
+      "sync_mode": "none",
+      "validator_extension": "ValidateCausalAcyclic — reject any LINK that would close a cycle in the causes/caused-by DAG",
+      "additional_port_pairs": []
     }
   ]
 }
