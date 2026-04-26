@@ -1,0 +1,832 @@
+{
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:video.dachshund-moos-diary-202604210945",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "Dachshund_Moos_diary_202604210945.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/Dachshund_Moos_diary_202604210945.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Another day, another existential crisis brought to you by Sam, the alleged master of this operation...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:video.dachshund-moos-remarks-202604210945",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "Dachshund_Moos_remarks_202604210945.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/Dachshund_Moos_remarks_202604210945.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Journal Entry, T=171. Day, ya know, just another Tuesday or somethin\u2019...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:video.dachshund-moos-remarks-202604210945-2",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "Dachshund_Moos_remarks_202604210945_2.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/Dachshund_Moos_remarks_202604210945_2.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Puppy Log, Stardate: November 6, 2026, S4 Ingestion T=171...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:video.dachshund-moos-talks-202604210945",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "Dachshund_Moos_talks_202604210945.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/Dachshund_Moos_talks_202604210945.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Alright, another day, another existential crisis for a fella just tryin' to live his best life...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:video.moos-diary-entry-202604210945",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "Moos_diary_entry_202604210945.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/Moos_diary_entry_202604210945.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Alright, Moos, let's get this over with. Another day, another staredown with the Big Dummy...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:video.moos-diary-entry-202604210945-2",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "Moos_diary_entry_202604210945_2.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/Moos_diary_entry_202604210945_2.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "So, another day, another performance review from my prime viewing spot...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:video.moos-diary-entry-202604210945-3",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "Moos_diary_entry_202604210945_3.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/Moos_diary_entry_202604210945_3.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Another day, another existential crisis brought on by the big galoot I call 'my human.'...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:video.moos-diary-entry-202604210945-4",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "Moos_diary_entry_202604210945_4.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/Moos_diary_entry_202604210945_4.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Oy, another night, another human existential crisis. I was parked up on the couch, right?...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:photo.whatsapp-image-2026-03-20-202604210945",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "WhatsApp_Image_2026-03-20_202604210945.jpeg",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/WhatsApp_Image_2026-03-20_202604210945.jpeg",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "photo",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "image",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Photo of Moos, a handsome black and tan wire-haired dachshund, resting on a white blanket next to a yellow and black striped rope toy, looking directly at the camera with sunlight illuminating his face.",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:photo.whatsapp-image-2026-03-25-202604210945",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "WhatsApp_Image_2026-03-25_202604210945.jpeg",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/WhatsApp_Image_2026-03-25_202604210945.jpeg",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "photo",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "image",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Photo showing Moos curled up from behind, a small black shape resting on a white blanket draped over a sofa, taking a peaceful nap.",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:markdown.t171-batch-ingestion",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "t171-batch-ingestion.md",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/t171-batch-ingestion.md",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "markdown",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "text",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Batch Moos Diary Ingestion (T=171) containing 8 video transcriptions...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:markdown.readme",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "README.md",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/README.md",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "markdown",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-04-26T12:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "raw",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:antigravity.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "media_kind": {
+          "value": "text",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "Moos diary README documentation...",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    }
+  ]
+}
