@@ -10,7 +10,7 @@ Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, open items, key URNs.
 
-At T=173 Z440 is the lead workstation (round-11 closed, §M12 gate live, Cowork substrate materialized, kb/research/ contracted to live-doctrine-only). Hp-laptop stays quiet between rounds.
+At T=178 both kernels are live (Z440 4-kernel federation + hp-laptop primary), v3.15.0 ontology, 9 sessions occupied. `kb/research/planning.md` carries the live state summary; doctrine lives as derivations on log.
 
 ---
 
@@ -80,7 +80,7 @@ Full envelope shape + gotchas: `moos-rewrite-envelope` skill.
 | Peter Steinberger | (pending VSCode attach) | `sam.steinberger-seat` | `hp-z440.menno` | tooling + DX ergonomics |
 | (Cowork substrate) | `claude-cowork.hp-{z440,hp-laptop}` | `sam.{z440,laptop}-cowork-workspace` | kernel double-duty | Google Workspace channels pinned; has-occupant fires when Desktop runs |
 
-Full topology: `kb/research/session/20260422-t172-wolframs-court-social-topology.md` + `20260422-t172-cowork-as-occupant.md`.
+Full topology: `derivation:t172.wolframs-court` + `derivation:t172.cowork-as-occupant` (both on log; `kb/research/planning.md` has the live state summary).
 
 ---
 

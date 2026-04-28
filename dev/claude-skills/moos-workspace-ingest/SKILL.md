@@ -7,7 +7,7 @@ description: Chunker for the Cowork-as-occupant ingest direction (G in the F⊣G
 
 The G-direction skill for Cowork sessions. External Workspace state (Gmail / Calendar / Drive / Tasks) and Cowork-authored artifacts come **into** the HG as `knowledge_item` chunks pinned to the active Cowork session's scope.
 
-This skill is the canonical invocation surface for the doctrine in `kb/research/session/20260422-t172-cowork-as-occupant.md` §3 (chunking discipline). Don't reinvent the chunker per ingest — call this.
+This skill is the canonical invocation surface for the doctrine reified as `derivation:t172.cowork-as-occupant` on log (chunking discipline). Don't reinvent the chunker per ingest — call this.
 
 ## Cardinal rule — one atomic batch per source
 
@@ -217,8 +217,8 @@ A daily 08:00 chunker sweep matches sam's existing Mon 08:00-09:00 calendar ritu
 
 ### Inside ffs0
 
-- `kb/research/session/20260422-t172-cowork-as-occupant.md` — full doctrine; this skill implements §3
-- `kb/research/session/20260419-t169-session-generalization.md` — 5-facet tuple, Cowork session shape
+- `derivation:t172.cowork-as-occupant` (on log) — full doctrine; this skill implements the chunking discipline
+- `derivation:t169.session-generalization` (on log) — 5-facet tuple, Cowork session shape
 - `kb/superset/running-state.md` — current Cowork session URNs, scope-pins state, kernel host bindings
 
 ### Companion skills

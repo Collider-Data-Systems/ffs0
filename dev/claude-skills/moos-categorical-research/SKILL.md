@@ -122,7 +122,7 @@ When proposing new categorical structure, sketch which HDC operation realizes it
 
 - `moos-rewrite-envelope` — envelope shapes, gates, immutability discipline
 - `moos-state-readback` — round-open before any work
-- `kb/research/session/20260424-t175-program-authoring-fabric.md` — derivation node-type spec; v314-1 fragment
+- `derivation:t175.program-authoring-fabric` (on log) — derivation node-type spec origin; v314-1 fragment
 - `dev/reference/research-archive/20260414-t164-session-channel-purpose.md` — operad/cooperad duality, the original cross-bridge attempt
 - `dev/reference/research-archive/20260410-yoneda-hdc-graded-algebra-t160.md` — Yoneda + HDC connection (older but foundational)
 - moos-kernel `internal/hdc/` — implementation surface

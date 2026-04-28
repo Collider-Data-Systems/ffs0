@@ -136,8 +136,8 @@ cowork readback: ANOMALY
 
 ### Inside ffs0
 
-- `kb/research/session/20260422-t172-cowork-as-occupant.md` — the doctrine this skill readback-checks
-- `kb/research/session/20260419-t169-session-generalization.md` — 5-facet tuple (scope, purpose, host, owner, occupant); all 5 are what readback inspects
+- `derivation:t172.cowork-as-occupant` (on log) — the doctrine this skill readback-checks
+- `derivation:t169.session-generalization` (on log) — 5-facet tuple (scope, purpose, host, owner, occupant); all 5 are what readback inspects
 - `kb/superset/running-state.md` — fleet-wide ground truth for comparison
 
 ### Companion skills
