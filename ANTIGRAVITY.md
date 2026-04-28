@@ -48,7 +48,7 @@ Envelope authoring reference: `moos-rewrite-envelope` skill.
 
 IDE conversations are S0 substrate. Reification path: chunker-skill → `knowledge_item` chunks → pinned to session (G ingest) → downstream programs/tasks. New doctrine `.md` only when establishing a new invariant; past-round scratch and instantiation snapshots live under `dev/reference/research-archive/`.
 
-For AG specifically: diary entries are their own shape (per the moos-diary chunking rule in `kb/research/session/20260422-t172-cowork-as-occupant.md` §3.1 — per-artifact-section with umbrella `knowledge_item`).
+For AG specifically: diary entries are their own shape (per the moos-diary chunking rule reified as `derivation:t172.cowork-as-occupant` on log — per-artifact-section with umbrella `knowledge_item`).
 
 ---
 

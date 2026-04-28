@@ -105,8 +105,8 @@ A shell command becomes a script when (a) it's run more than 3 times, (b) it has
 - `moos-rewrite-envelope` — envelope shapes, gates
 - `moos-state-readback` — round-open
 - `moos-running-state-validator` — state-doc consistency (Guido's lane; co-validation)
-- `kb/research/session/20260422-t172-wolframs-court-social-topology.md` — Steinberger seat origin doctrine
-- `kb/research/session/20260424-t175-program-authoring-fabric.md` §5 — leaves as the fluid-execution boundary; relevant for tool_call / external_op design
+- `derivation:t172.wolframs-court` (on log) — Steinberger seat origin doctrine
+- `derivation:t175.program-authoring-fabric` (on log) — leaves as the fluid-execution boundary; relevant for tool_call / external_op design
 - `D:\HPZ440\start_federation.ps1` — Z440 startup script
 - `dev/scripts/ops/start_federation_laptop.ps1` — hp-laptop variant
 - `dev/scripts/sync-claude-skills.ps1` — skill sync

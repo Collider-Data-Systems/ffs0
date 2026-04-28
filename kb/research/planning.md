@@ -30,16 +30,16 @@ The state of the substrate. What it can do. What's open.
 
 11 skills mounted runtime-side. ~15 channels (Workspace × 4 × 2 + youtube + 2 local + a few legacy). Hundreds of knowledge_items pinned via WF12. 7 doctrinal claims with 7 WF21 caused-by edges. 6 reified-doctrine derivations on log.
 
-Zero clocks, zero programs, zero tasks. The only thing actually firing on a schedule is Cowork-laptop's two cron-driven routines, which predate the substrate.
+No clock instances. No scheduled programs firing. The only thing actually running on a schedule is Cowork-laptop's two cron-driven routines, which predate the substrate (scheduled-task config + skill behavior, not reified as `clock` + `program` nodes).
 
 ## What the operad gives you
 
 The types that matter for running things:
 
 - **session** — scope, purpose, occupant, host kernel, local_t. Where work happens.
-- **program** — name, target_t, status. What runs.
-- **task** — fires_at, status, parent. Atomic units.
-- **t_hook** — predicate-and-reaction, firing_state {pending, proposed, approved, rejected, applied, closed}.
+- **program** — name, target_t, status. What runs. Programs compose via WF18 `scheduled-after`.
+- **t_hook** — predicate-and-reaction. firing_state ∈ {pending, proposed, approved, rejected, applied, closed}. The atomic firing primitive.
+- **prg_task** *(deprecated since v3.9; do not use; programs compose programs directly via WF18)*
 - **clock** *(NEW v3.15, zero instances)* — cardinality, embedding, frame, density. Six canonical kinds: kernel.sweep, session.local_t, t-day, cyclic-ritual, event-driven, multi-session-disjoint.
 - **knowledge_item** — chunk pinned to channel.
 - **channel** — boundary to external. kind ∈ {filesystem, messaging, board, drive, mail, calendar, task-list, cloud-storage, vcs, project-board, video, audio}.
@@ -70,12 +70,12 @@ session:sam.<seat> has scope_pins (channel URNs)
 
 program:sam.<y>    with target_t, status
                    --runs-in--> session:sam.<seat>     (port-pair pending)
-                   --produces--> task:sam.<z1>, ...    (WF18)
+                   --scheduled-after--> program:sam.<prev>   (WF18; succession)
 
-task:sam.<z>       with fires_at (clock-tick predicate)
-                   triggers a skill the occupant agent owns
-                   skill emits HG envelopes (G-direction)
-                          and/or projects to external (F-direction)
+t_hook:sam.<z>     with predicate, firing_state, target_t
+                   --fires_at--> clock:sam.<x>          (predicate satisfaction)
+                   --reaction--> emits HG envelopes (G-direction)
+                                 and/or projects to external (F-direction)
 ```
 
 The pieces are all there. Nothing connects them yet for a real running program.
@@ -84,7 +84,7 @@ The pieces are all there. Nothing connects them yet for a real running program.
 
 - **Zero clock instances.** Need at least one: e.g., `clock:sam.weekly-mon-08` (cyclic, anchor=Mon 08:00 Europe/Amsterdam).
 - **No `program-runs-in-session` port-pair.** Programs exist as nodes but the topology link from program to session isn't typed. WF20 ceremony candidate.
-- **No `task-fires-at-clock` port-pair.** Tasks have `fires_at` as a property pointing at a t_hook (existing) but not a clock URN (new). Either extend `fires_at` semantics or add a port-pair.
+- **No `t_hook-fires-at-clock` port-pair.** `t_hook` has `fires_at` as a property pointing at a t-day target (existing) but not a clock URN (new). Either extend `fires_at` semantics or add a port-pair connecting `t_hook` to `clock`.
 - **No leaf-firing-state semantics.** v314-5 was named (firing_state enum across tool_call/external_op/compute) but never promoted. Without it, "task fires" remains conceptual.
 - **F-direction projection skills exist for ingest only** (moos-workspace-ingest is G-direction). The reverse — `program → calendar event`, `task → github issue`, `claim → website paragraph` — has no skill. Cowork-laptop's daily-digest is the closest thing (it projects email-summary state into HG, then a future skill would project HG-summary state back to a calendar/Drive surface).
 

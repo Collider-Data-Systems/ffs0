@@ -233,7 +233,7 @@ At round-close (`moos-round-close`): emit a single F-direction sweep so the boar
 - `grammar_fragment:v313-7-group-type` (proposed) — group type for Owner Role=group
 - `grammar_fragment:v313-8-channel-kind-vcs` (proposed) — dedicated VCS + project-board kinds
 - `grammar_fragment:v313-9-owns-port-pair` (proposed) — WF01 owns/owned-by for group → downstream
-- `kb/research/session/20260422-t172-cowork-as-occupant.md` §3 — chunking discipline (applies to issues + comments too)
+- `derivation:t172.cowork-as-occupant` (on log) — chunking discipline (applies to issues + comments too)
 - `~/.claude/plans/valiant-kindling-sunrise.md` §2 — adjunction F ⊣ G framing
 
 ## Skill status

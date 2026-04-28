@@ -36,7 +36,7 @@ The skill is invokable from any persona seat (read-only, no actor required for q
 
 ## The N-invariant checklist (round-15+)
 
-Per §9.4.1 of `kb/research/spec/09-governance-and-audit.md`. Run each check; report PASS/FAIL/N/A per invariant. The checklist grows monotonically per substrate-evolution cycle.
+Per `ki:spec.section-09-governance-and-audit` (on log; round-14/15 §9 chapter umbrella) + `derivation:guido.section-09-governance-and-audit`. Run each check; report PASS/FAIL/N/A per invariant. The checklist grows monotonically per substrate-evolution cycle.
 
 ### A.1 §M11 session-liveness
 
@@ -165,7 +165,7 @@ Currently FINDINGS expected on hp-laptop: `channel:local.moos-footage.kind="fs"`
 
 ```bash
 # 1. Fleet snapshot (hp-laptop + Z440 federation)
-curl -sS http://192.168.1.13:9000/healthz | jq '.kernels'  # router cascade
+curl -sS http://<router-host>:9000/healthz | jq '.kernels'  # router cascade (Z440 LAN: 192.168.1.13)
 curl -sS http://localhost:8000/healthz                       # hp-laptop primary
 
 # 2. For each kernel, walk the N invariants. Record PASS/FAIL/N/A.
@@ -228,7 +228,7 @@ Single round-vehicle comment:
 
 ## Cross-references
 
-- §9.4.1 of `kb/research/spec/09-governance-and-audit.md` — the canonical N-invariant table.
+- `ki:spec.section-09-governance-and-audit` + `derivation:guido.section-09-governance-and-audit` (both on log) — the canonical N-invariant table source.
 - `dev/claude-skills/moos-running-state-validator/SKILL.md` — single-doc consistency companion.
 - `dev/claude-skills/moos-state-readback/SKILL.md` — fleet-snapshot starter; run before this skill at round-open.
 - `dev/scripts/ops/Test-MoosFederation.ps1` — Steinberger's harness; provides the preflight register for A.1+A.4.

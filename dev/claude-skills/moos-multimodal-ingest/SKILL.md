@@ -120,9 +120,9 @@ Slug from filename + perceptual-hash prefix (8 hex chars) ensures uniqueness in 
 
 - `moos-workspace-ingest` — text-bearing G-ingest companion; same envelope shape, different sources
 - `moos-rewrite-envelope` — envelope shapes, gates, immutability
-- `kb/research/moos-diary/20260421-t171-multimodal-diary-personas.md` — Moos persona origin + diary lane doctrine
-- `kb/research/session/20260422-t172-cowork-as-occupant.md` §3 — chunking discipline (text variant; parallel applies here)
-- `kb/research/session/20260424-t175-program-authoring-fabric.md` §4 — substrate property doctrine (post-v3.14)
+- `derivation:t171.multimodal-diary-personas` (on log) — Moos persona origin + diary lane doctrine
+- `derivation:t172.cowork-as-occupant` (on log) — chunking discipline (text variant; parallel applies here)
+- `derivation:t175.program-authoring-fabric` (on log) — substrate property doctrine (post-v3.14)
 
 ## Status
 
