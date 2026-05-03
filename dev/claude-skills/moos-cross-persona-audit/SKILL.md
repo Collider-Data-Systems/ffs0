@@ -1,6 +1,6 @@
 ---
 name: moos-cross-persona-audit
-description: Multi-persona / multi-kernel / contribution-log audit for round-close ritual. Walks the N-invariant checklist (§9 governance) across both kernels via federation router, verifies emit-target adherence, port↔URN consistency, single-occupant invariant, derivation-citation coherence, schema-bump backfill completeness, enum-value canonicalisation. Distinct from `moos-running-state-validator` (single-doc-vs-state consistency) and `moos-state-readback` (fleet snapshot one-shot). Trigger phrases: "round close", "cross-persona audit", "audit dry run", "did the round drift", "verify emit-target on N", "WF21 acyclicity check", "post-bump backfill audit", "kind enum drift".
+description: Multi-persona / multi-kernel / contribution-log audit at round close. Walks the N-invariant checklist (§9 governance) across both kernels via federation router; verifies emit-target adherence, port↔URN consistency, single-occupant invariant, derivation-citation coherence, schema-bump completeness, enum-value drift detection. Distinct from `moos-running-state-validator` (single-doc-vs-state consistency) and `moos-state-readback` (fleet snapshot one-shot). Trigger phrases: "round close", "cross-persona audit", "audit dry run", "did the round drift", "verify emit-target on N", "WF21 acyclicity check", "post-bump completeness check", "kind enum drift".
 ---
 
 # moos-cross-persona-audit
