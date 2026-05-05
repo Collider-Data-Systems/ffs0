@@ -1,13 +1,22 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.15.0",
-  "t_day": 175,
+  "version": "3.16.0",
+  "t_day": 185,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md. T=173 round-12 v3.13.0: four promoted grammar_fragments materialized into ontology — v313-6 (WF02 delegates-to/delegated-by additional port pair for role→role capability delegation), v313-7 (new S2 `group` node type — collective principal, extends principalTypes from {user, agent} to {user, agent, group}), v313-8 (channel.kind enum expansion: +calendar, +task-list, +cloud-storage, +vcs, +project-board), v313-9 (WF01 owns/owned-by additional port pair — group|user source owning kernel|session|purpose|program|channel|agent targets). WF19 has-occupant tgt_types extends to include `group` (session occupancy by a collective principal). See kb/research/session/20260422-t172-wolframs-court-social-topology.md §3 + T=173 batch on Z440 kernel 0 log_seq 285-288 (WF20 promotion ceremony for the 4 fragments).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "dev/reference/research-archive/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "3.16.0",
+      "date": "2026-05-05",
+      "round": "round-16 (T=185)",
+      "fragments_promoted": [
+        "d22-1-session-has-purpose"
+      ],
+      "summary": "Round-16 ceremony promotes the long-deferred D22.1 grammar_fragment: WF19 additional_port_pair `has-purpose / purpose-of-session` (src: session, tgt: purpose, cardinality: many-to-one with rotation). Reifies the session's why as a typed graph edge. Round-10 doctrine seed (kb/research/session/20260419-t169-session-generalization.md, since archived) finally lands. Enables: every session has-purpose exactly one purpose at any instant; repurposing = MUTATE target_urn; sessions whose `(purpose × occupant × scope)` evaluation is null-on-purpose can be recognized as not-needing-to-exist. T=185 cleanup pass uses this to anchor the kernel-bound `hp-laptop.primary` and the active IDE-environment sessions to their explicit purposes."
+    },
     {
       "version": "3.15.0",
       "date": "2026-04-26",
@@ -4137,6 +4146,19 @@
           "description": "§M20 session workspace anchor — mounted tools. Session binds to agent nodes that the session's occupant can invoke under WF02 capability scope. Multiple mounted tools per session allowed. Distinguishes the session's invokable-tools-list (topology) from its occupant (who is actually driving right now). When combined with agent.invocation_protocol (v3.12) this gives the session a full tool-library shape compatible with MCP client, LangGraph, CrewAI, etc.",
           "added_in_version": "3.12.0",
           "promotes_fragment": "urn:moos:grammar_fragment:d20-1-session-mounts-tool"
+        },
+        {
+          "src_port": "has-purpose",
+          "tgt_port": "purpose-of-session",
+          "src_types": [
+            "session"
+          ],
+          "tgt_types": [
+            "purpose"
+          ],
+          "description": "§M-purpose session has-purpose anchor. Session has at most one active purpose at any instant; repurposing = MUTATE of the LINK target_urn (atomic; preserves session identity per CI-3). Reifies the session's why as a typed graph edge instead of routing through WF18 program composition. Round-10 doctrine seed; promoted T=185 round-16 ceremony.",
+          "added_in_version": "3.16.0",
+          "promotes_fragment": "urn:moos:grammar_fragment:d22-1-session-has-purpose"
         }
       ],
       "authority": "kernel",
