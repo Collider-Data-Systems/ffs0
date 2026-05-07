@@ -16,6 +16,7 @@ Operational tools — delegation, checkpointing, graph audits.
 - `export_t200plus_projection.jl` — folded-state DOT/SVG exporter for T200+ graph lenses.
 - `google_calendar_projection.jl` — F-direction planning adapter from folded HG state to Google Calendar event payloads. It writes a reviewable JSON plan and does not perform OAuth or cloud writes.
 - `google_calendar_writer.jl` — explicit OAuth boundary writer for applying an approved Google Calendar projection plan. Defaults to dry-run/check modes; real writes require local gitignored OAuth files and `--mode write`.
+- `session_context_projection.jl` — F-direction planning adapter from folded HG state to a session context pack for IDE, agent, or harness handoff. It writes reviewable JSON and Markdown, and does not edit IDE config or emit rewrites.
 
 ### T200+ Projection Exporter
 
@@ -33,6 +34,23 @@ $env:MOOS_PROJECTION_PRESET='temporal-calendar'
 ```
 
 The preset can still be narrowed with `MOOS_PROJECTION_WFS`, `MOOS_PROJECTION_TYPES`, `MOOS_PROJECTION_PORTS`, `MOOS_PROJECTION_MATCH`, `MOOS_PROJECTION_ROOT`, and `MOOS_PROJECTION_OUT`.
+
+Session-occasion implementation frame lens:
+
+```powershell
+$env:MOOS_PROJECTION_PRESET='session-occasion'
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\export_t200plus_projection.jl
+```
+
+The preset roots at `derivation:guido.t187-session-occasion-implementation-frame` and emits `tmp/projections/session_occasion_frame.dot` plus SVG when Graphviz is available.
+
+### Session Context Projection Pack
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\session_context_projection.jl
+```
+
+The adapter emits `tmp/projections/session_context/current_session.json` and `tmp/projections/session_context/current_session.md`. This is a dry F-direction pack: HG stays authoritative, and the output can be passed to VS Code, another agent, or a harness as a session header. Use `--session-urn`, `--actor-urn`, `--focus`, and `--skill-limit` to narrow the occasion and the projected affordance pack.
 
 ### Google Calendar Projection Plan
 

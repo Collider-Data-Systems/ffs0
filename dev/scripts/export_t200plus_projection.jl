@@ -12,6 +12,7 @@ const PRESET_ALIASES = Dict(
 const PRESET = get(PRESET_ALIASES, RAW_PRESET, RAW_PRESET)
 const PRESETS = Dict(
     "default" => Dict(
+        "MOOS_PROJECTION_LABEL" => "T200+ Tiny Data Collider folded-state projection",
         "MOOS_PROJECTION_ROOT" => "urn:moos:program:sam.t200plus.tiny-data-collider-federation",
         "MOOS_PROJECTION_OUT" => "tmp/projections/t200plus_visual_projection",
         "MOOS_PROJECTION_RADIUS" => "2",
@@ -23,6 +24,7 @@ const PRESETS = Dict(
         "MOOS_PROJECTION_INCLUDE_VISUAL_LENS" => "true"
     ),
     "temporal-calendar" => Dict(
+        "MOOS_PROJECTION_LABEL" => "T200+ temporal/calendar folded-state projection",
         "MOOS_PROJECTION_ROOT" => "urn:moos:program:sam.t200plus.temporal-projection-fabric",
         "MOOS_PROJECTION_OUT" => "tmp/projections/t200plus_temporal_calendar",
         "MOOS_PROJECTION_RADIUS" => "2",
@@ -32,6 +34,18 @@ const PRESETS = Dict(
         "MOOS_PROJECTION_MATCH" => "calendar|T200|temporal|time|clock|t-local|purpose",
         "MOOS_PROJECTION_INCLUDE_OWNERS" => "true",
         "MOOS_PROJECTION_INCLUDE_VISUAL_LENS" => "true"
+    ),
+    "session-occasion" => Dict(
+        "MOOS_PROJECTION_LABEL" => "T187 session-occasion implementation frame",
+        "MOOS_PROJECTION_ROOT" => "urn:moos:derivation:guido.t187-session-occasion-implementation-frame",
+        "MOOS_PROJECTION_OUT" => "tmp/projections/session_occasion_frame",
+        "MOOS_PROJECTION_RADIUS" => "2",
+        "MOOS_PROJECTION_WFS" => "WF12,WF18,WF20,WF21",
+        "MOOS_PROJECTION_TYPES" => "claim,derivation,grammar_fragment,knowledge_item,pattern,program,purpose,session,system_instruction,workflow",
+        "MOOS_PROJECTION_PORTS" => "causes,caused-by,composes,composed-by,consumes,consumed-by,produces,produced-by,provides-kb,provided-by,grammar-promotes,grammar-promoted-by",
+        "MOOS_PROJECTION_MATCH" => "session|occasion|affordance|keep|purpose|program|workflow|grammar|z440",
+        "MOOS_PROJECTION_INCLUDE_OWNERS" => "true",
+        "MOOS_PROJECTION_INCLUDE_VISUAL_LENS" => "false"
     )
 )
 
@@ -73,6 +87,7 @@ const MATCH_PATTERN = strip(get(ENV, "MOOS_PROJECTION_MATCH", preset_value("MOOS
 const MATCH_REGEX = isempty(MATCH_PATTERN) ? nothing : Regex(MATCH_PATTERN, "i")
 const INCLUDE_OWNERS = env_bool("MOOS_PROJECTION_INCLUDE_OWNERS", true)
 const INCLUDE_VISUAL_LENS = env_bool("MOOS_PROJECTION_INCLUDE_VISUAL_LENS", true)
+const PROJECTION_LABEL = get(ENV, "MOOS_PROJECTION_LABEL", preset_value("MOOS_PROJECTION_LABEL", "mo:os folded-state projection"))
 const VISUAL_LENS_URN = "urn:moos:program:sam.t200plus.visual-projection-lens"
 const VIEW_FILTER_URN = "urn:moos:view_filter:sam.t200plus-visual-projection-lens"
 
@@ -268,7 +283,7 @@ svg_path = string(OUT_BASE, ".svg")
 
 open(dot_path, "w") do io
     println(io, "digraph t200plus_projection {")
-    graph_label = string("T200+ Tiny Data Collider folded-state projection\\n", filter_summary())
+    graph_label = string(PROJECTION_LABEL, "\\n", filter_summary())
     println(io, "  graph [rankdir=LR, bgcolor=\"#ffffff\", pad=0.3, nodesep=0.45, ranksep=0.75, labelloc=\"t\", label=\"", dot_escape(graph_label), "\"];" )
     println(io, "  node [shape=box, style=filled, fontname=\"Segoe UI\", fontsize=10, margin=0.08];")
     println(io, "  edge [fontname=\"Segoe UI\", fontsize=8, arrowsize=0.7];")

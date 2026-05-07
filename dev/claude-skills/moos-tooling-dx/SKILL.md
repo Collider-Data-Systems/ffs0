@@ -1,6 +1,6 @@
 ---
 name: moos-tooling-dx
-description: Tooling + developer-experience work for Steinberger's seat (`session:sam.steinberger-seat`; emit-target `kernel:hp-z440.primary` :8000/:8080 today; opens-on `kernel:hp-z440.menno` :8001/:9001 as future §M9 topology metadata). Use when reasoning about IDE attach (VSCode + Antigravity + Claude Desktop + Cursor), MCP wiring (SSE vs stdio, port assignments, transport correctness), shell-script reification (PowerShell sync scripts, federation startup), keybinding ergonomics, agent-harness shape (CLI as tool protocol per §M20), or DX failure modes (bad envelope shapes, validator errors, sandbox boundaries). Trigger phrases: ".vscode/mcp.json", "MCP transport", "stdio sidecar", "PowerShell here-string", "keybinding chord", "skill routing", "harness pattern", "tool ergonomics", "DX gap". Companion to `moos-rewrite-envelope` (envelope shape) and `moos-running-state-validator` (state-doc consistency).
+description: Tooling + developer-experience work for Steinberger's seat (`session:sam.steinberger-seat`; emit-target `kernel:hp-z440.primary` :8000/:8080 today; opens-on `kernel:hp-z440.menno` :8001/:9001 as future §M9 topology metadata). Use when reasoning about IDE attach (VSCode + Antigravity + Claude Desktop + Cursor), MCP wiring (SSE vs stdio, port assignments, transport correctness), shell-script reification (PowerShell sync scripts, federation startup), keybinding ergonomics, agent-harness shape (CLI as tool protocol per §M20), session context projection, or DX failure modes (bad envelope shapes, validator errors, sandbox boundaries). Trigger phrases: ".vscode/mcp.json", "MCP transport", "stdio sidecar", "PowerShell here-string", "keybinding chord", "skill routing", "harness pattern", "session context pack", "tool ergonomics", "DX gap". Companion to `moos-session-context-projection` (session packs), `moos-rewrite-envelope` (envelope shape), and `moos-running-state-validator` (state-doc consistency).
 ---
 
 # moos-tooling-dx
@@ -11,6 +11,7 @@ Steinberger's working surface for tooling, IDE attachment, and developer-experie
 
 - A friction point with IDE / MCP / sandbox boundaries (e.g. "stdio sidecar stale state", "Claude Desktop can't reach :8000", "VSCode MCP wiring broken")
 - A repeatable shell command or workflow that should be a script (e.g. "every round-open we run these 5 commands")
+- A session context pack or projection writer needs IDE/MCP/harness plumbing after the dry planner is reviewed
 - A keybinding / chord that would save N seconds × M invocations across the lattice
 - A new skill scaffolding question ("what's the shape of a SKILL.md frontmatter?")
 - A federation-startup or kernel-restart workflow needing scripting
@@ -103,6 +104,7 @@ A shell command becomes a script when (a) it's run more than 3 times, (b) it has
 ## Cross-references
 
 - `moos-rewrite-envelope` — envelope shapes, gates
+- `moos-session-context-projection` — dry session context packs for IDE / agent / harness handoff
 - `moos-state-readback` — round-open
 - `moos-running-state-validator` — state-doc consistency (Guido's lane; co-validation)
 - `derivation:t172.wolframs-court` (on log) — Steinberger seat origin doctrine
