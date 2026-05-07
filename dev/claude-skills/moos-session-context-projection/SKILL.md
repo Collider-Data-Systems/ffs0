@@ -63,7 +63,7 @@ The planner scans `dev/claude-skills`, the local VS Code extension directory, an
 - **Harnesses**: pass `handoff.session_header` so emitted envelopes carry the right actor and `session_urn`.
 - **VS Code extensions**: use the ranked extension list as the concrete IDE affordance surface for this occasion.
 - **MCP servers**: use the server list to decide which tool surfaces belong in the session, without leaking header or environment values.
-- **Visual analysis**: pair this pack with `export_t200plus_projection.jl` or a narrower future graph lens rooted at the session, purpose, pattern, workflow, or grammar_fragment.
+- **Visual analysis**: pair this pack with `export_t200plus_projection.jl` for DOT/SVG and `graph_artifact_projection.jl` for engineering summaries rooted at the session, purpose, pattern, workflow, grammar_fragment, or a multi-root artifact set.
 
 ## Guardrails
 

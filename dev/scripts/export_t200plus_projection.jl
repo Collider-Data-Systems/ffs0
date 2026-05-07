@@ -38,6 +38,7 @@ const PRESETS = Dict(
     "session-occasion" => Dict(
         "MOOS_PROJECTION_LABEL" => "T187 session-occasion implementation frame",
         "MOOS_PROJECTION_ROOT" => "urn:moos:derivation:guido.t187-session-occasion-implementation-frame",
+        "MOOS_PROJECTION_ROOTS" => "urn:moos:derivation:guido.t187-session-occasion-implementation-frame;urn:moos:system_instruction:framework.session-occasion-lingo;urn:moos:grammar_fragment:v317-1-occasion-type;urn:moos:pattern:session-affordance-pack;urn:moos:workflow:z440-session-continuity-reconciliation",
         "MOOS_PROJECTION_OUT" => "tmp/projections/session_occasion_frame",
         "MOOS_PROJECTION_RADIUS" => "2",
         "MOOS_PROJECTION_WFS" => "WF12,WF18,WF20,WF21",
@@ -78,6 +79,7 @@ end
 
 const BASE_URL = get(ENV, "MOOS_BASE_URL", "http://localhost:8000")
 const ROOT_URN = get(ENV, "MOOS_PROJECTION_ROOT", preset_value("MOOS_PROJECTION_ROOT"))
+const ROOT_URNS_RAW = get(ENV, "MOOS_PROJECTION_ROOTS", preset_value("MOOS_PROJECTION_ROOTS", ROOT_URN))
 const OUT_BASE = get(ENV, "MOOS_PROJECTION_OUT", preset_value("MOOS_PROJECTION_OUT"))
 const RADIUS = parse(Int, get(ENV, "MOOS_PROJECTION_RADIUS", preset_value("MOOS_PROJECTION_RADIUS", "2")))
 const WF_FILTER = env_set("MOOS_PROJECTION_WFS", "WF18,WF21")
@@ -90,6 +92,16 @@ const INCLUDE_VISUAL_LENS = env_bool("MOOS_PROJECTION_INCLUDE_VISUAL_LENS", true
 const PROJECTION_LABEL = get(ENV, "MOOS_PROJECTION_LABEL", preset_value("MOOS_PROJECTION_LABEL", "mo:os folded-state projection"))
 const VISUAL_LENS_URN = "urn:moos:program:sam.t200plus.visual-projection-lens"
 const VIEW_FILTER_URN = "urn:moos:view_filter:sam.t200plus-visual-projection-lens"
+
+function root_urns()
+    roots = Set{String}()
+    for part in split(ROOT_URNS_RAW, ';')
+        item = strip(part)
+        !isempty(item) && push!(roots, String(item))
+    end
+    isempty(roots) && !isempty(ROOT_URN) && push!(roots, ROOT_URN)
+    return roots
+end
 
 function fetch_json(path::AbstractString)
     url = string(rstrip(BASE_URL, '/'), path)
@@ -214,7 +226,7 @@ for node in nodes
     nodes_by_urn[string(node.urn)] = node
 end
 
-forced_urns = Set{String}([ROOT_URN])
+forced_urns = root_urns()
 if INCLUDE_VISUAL_LENS
     push!(forced_urns, VISUAL_LENS_URN)
     push!(forced_urns, VIEW_FILTER_URN)

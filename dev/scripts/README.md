@@ -14,6 +14,7 @@ Operational tools — delegation, checkpointing, graph audits.
 
 - `debug_schema.py` — debug KB schema
 - `export_t200plus_projection.jl` — folded-state DOT/SVG exporter for T200+ graph lenses.
+- `graph_artifact_projection.jl` — dry folded-state graph artifact analyzer for newly added HG frames. It writes JSON/Markdown engineering summaries and pairs with the DOT/SVG exporter for visualization.
 - `google_calendar_projection.jl` — F-direction planning adapter from folded HG state to Google Calendar event payloads. It writes a reviewable JSON plan and does not perform OAuth or cloud writes.
 - `google_calendar_writer.jl` — explicit OAuth boundary writer for applying an approved Google Calendar projection plan. Defaults to dry-run/check modes; real writes require local gitignored OAuth files and `--mode write`.
 - `session_context_projection.jl` — F-direction planning adapter from folded HG state to a session context pack for IDE, agent, or harness handoff. It writes reviewable JSON and Markdown, and does not edit IDE config or emit rewrites.
@@ -43,6 +44,14 @@ $env:MOOS_PROJECTION_PRESET='session-occasion'
 ```
 
 The preset roots at `derivation:guido.t187-session-occasion-implementation-frame` and emits `tmp/projections/session_occasion_frame.dot` plus SVG when Graphviz is available.
+
+### Graph Artifact Engineering Projection
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\graph_artifact_projection.jl
+```
+
+The adapter emits `tmp/projections/graph_artifacts/session_occasion_engineering.json` and `.md`. It defaults to the T187 session-occasion artifact set: the derivation, session lingo instruction, proposed occasion grammar fragment, affordance-pack pattern, and Z440 continuity workflow. Use `--root-urns`, `--radius`, `--wfs`, `--ports`, `--types`, and `--match` to analyze a different graph frame.
 
 ### Session Context Projection Pack
 
