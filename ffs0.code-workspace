@@ -2,24 +2,19 @@
   "folders": [
     {
       "path": ".",
-      "name": "ffs0-private-workspace",
+      "name": "ffs0-private-workspace"
     },
     {
       "path": "../moos-kernel",
-      "name": "moos-kernel",
+      "name": "moos-kernel"
     },
     {
       "path": "../moos-router",
-      "name": "moos-router",
+      "name": "moos-router"
     },
     {
-      "path": "..",
-      "name": "hpz440-root",
-    },
-    {
-      "path": "C:/Users/hp",
-      "name": "user-home",
-    },
+      "path": "../../Downloads"
+    }
   ],
   "settings": {
     "task.allowAutomaticTasks": "off",
@@ -57,7 +52,7 @@
       "**/.git/objects/**": true,
     },
     "terminal.integrated.cwd": "${workspaceFolder:ffs0-private-workspace}",
-    "powershell.cwd": "${workspaceFolder:ffs0-private-workspace}",
+    "powershell.cwd": "ffs0-private-workspace",
   },
   "extensions": {
     "recommendations": [
