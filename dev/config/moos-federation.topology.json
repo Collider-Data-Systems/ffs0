@@ -1,8 +1,9 @@
+
 {
   "schema_version": 1,
-  "source_of_truth": "kb/superset/running-state.md federation port map, T=175 v3.14.0. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
-  "local_host": "hp-z440",
-  "expected_ontology_version": "3.14.0",
+  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=187. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
+  "local_host": "auto",
+  "expected_ontology_version": "3.16.0",
   "kernels": {
     "hp-z440.primary": {
       "urn": "urn:moos:kernel:hp-z440.primary",
@@ -11,6 +12,7 @@
       "http_lan": "http://192.168.1.13:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_server": "moos-primary",
+      "expected_ontology_version": "3.15.0",
       "seats": [
         "urn:moos:session:sam.kernel-proper",
         "urn:moos:session:sam.moos-diary",
@@ -25,6 +27,7 @@
       "http_lan": "http://192.168.1.13:8001",
       "mcp_sse_local": "http://localhost:9001/sse",
       "mcp_server": "moos-menno",
+      "expected_ontology_version": "3.15.0",
       "seats": ["urn:moos:session:sam.steinberger-seat"]
     },
     "hp-z440.lola": {
@@ -34,6 +37,7 @@
       "http_lan": "http://192.168.1.13:8002",
       "mcp_sse_local": "http://localhost:9002/sse",
       "mcp_server": "moos-lola",
+      "expected_ontology_version": "3.15.0",
       "seats": ["urn:moos:session:sam.karpathy-seat"]
     },
     "hp-z440.moos": {
@@ -43,14 +47,18 @@
       "http_lan": "http://192.168.1.13:8003",
       "mcp_sse_local": "http://localhost:9003/sse",
       "mcp_server": "moos-moos",
+      "expected_ontology_version": "3.15.0",
       "seats": []
     },
     "hp-laptop.primary": {
       "urn": "urn:moos:kernel:hp-laptop.primary",
       "host": "hp-laptop",
+      "http_local": "http://localhost:8000",
       "http_lan": "http://192.168.1.18:8000",
+      "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_sse_lan": "http://192.168.1.18:8080/sse",
       "mcp_server": "moos-hp-laptop-primary",
+      "expected_ontology_version": "3.16.0",
       "seats": [
         "urn:moos:session:sam.governance",
         "urn:moos:session:sam.laptop-cowork-workspace",
@@ -67,7 +75,8 @@
     "moos-primary": "http://localhost:8080/sse",
     "moos-menno": "http://localhost:9001/sse",
     "moos-lola": "http://localhost:9002/sse",
-    "moos-moos": "http://localhost:9003/sse"
+    "moos-moos": "http://localhost:9003/sse",
+    "moos-hp-laptop-primary": "http://localhost:8080/sse"
   },
   "personas": {
     "wolfram": {

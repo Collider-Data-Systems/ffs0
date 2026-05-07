@@ -40,11 +40,38 @@ function Get-ObjectProperty {
     $property.Value
 }
 
+function Get-NormalizedHostName {
+    $raw = if ($env:MOOS_LOCAL_HOST) { [string]$env:MOOS_LOCAL_HOST } else { [string]$env:COMPUTERNAME }
+    $hostName = $raw.Trim().ToLowerInvariant()
+    switch -Regex ($hostName) {
+        '^(hp[-_]?laptop|hplaptop|lap[-_]?sam)$' { return 'hp-laptop' }
+        '^(hp[-_]?z440|hpz440)$' { return 'hp-z440' }
+        default { return $hostName }
+    }
+}
+
+function Resolve-TopologyLocalHost {
+    param([Parameter(Mandatory)]$Topology)
+    $configured = if ($Topology.local_host) { [string]$Topology.local_host } else { 'auto' }
+    if ($configured -eq 'auto') { return Get-NormalizedHostName }
+    $configured
+}
+
 function Get-KernelUrl {
     param([Parameter(Mandatory)]$Kernel)
-    if ($Kernel.http_local) { return [string]$Kernel.http_local }
+    if ($Kernel.http_local -and $Kernel.host -eq $script:MoosLocalHost) { return [string]$Kernel.http_local }
     if ($Kernel.http_lan) { return [string]$Kernel.http_lan }
+    if ($Kernel.http_local) { return [string]$Kernel.http_local }
     throw "Kernel $($Kernel.urn) has no http_local or http_lan URL"
+}
+
+function Get-ExpectedOntologyVersion {
+    param(
+        [Parameter(Mandatory)]$Topology,
+        [Parameter(Mandatory)]$Kernel
+    )
+    if ($Kernel.expected_ontology_version) { return [string]$Kernel.expected_ontology_version }
+    [string]$Topology.expected_ontology_version
 }
 
 function Resolve-MoosPath {
@@ -89,9 +116,10 @@ function Test-KernelHealth {
     param(
         [Parameter(Mandatory)][string]$Name,
         [Parameter(Mandatory)]$Kernel,
-        [Parameter(Mandatory)][string]$ExpectedOntologyVersion
+        [Parameter(Mandatory)]$Topology
     )
     $baseUrl = Get-KernelUrl -Kernel $Kernel
+    $expectedOntologyVersion = Get-ExpectedOntologyVersion -Topology $Topology -Kernel $Kernel
     $result = [ordered]@{
         Kernel = $Name
         Url = $baseUrl
@@ -108,8 +136,8 @@ function Test-KernelHealth {
         $result.Status = [string]$health.status
         $result.Ontology = [string]$health.ontology_version
         $result.LogLen = [string]$health.log_len
-        if ($result.Ontology -ne $ExpectedOntologyVersion) {
-            $result.Error = "expected ontology $ExpectedOntologyVersion"
+        if ($expectedOntologyVersion -and $result.Ontology -ne $expectedOntologyVersion) {
+            $result.Error = "expected ontology $expectedOntologyVersion"
         }
 
         $nodeTypes = Invoke-MoosGet -BaseUrl $baseUrl -Path 'operad/node-types'
@@ -138,13 +166,29 @@ function Test-McpConfig {
         $name = $serverProperty.Name
         $expectedUrl = [string]$serverProperty.Value
         $server = Get-ObjectProperty -Object $config.servers -Name $name
-        $actualUrl = if ($server) { [string]$server.url } else { '' }
+        $alias = $null
+        if (-not $server) {
+            $alias = $config.servers.PSObject.Properties | Where-Object { [string]$_.Value.url -eq $expectedUrl } | Select-Object -First 1
+        }
+        $actualUrl = if ($server) { [string]$server.url } elseif ($alias) { [string]$alias.Value.url } else { '' }
+        $status = if ($server -and $actualUrl -eq $expectedUrl) {
+            'ok'
+        }
+        elseif ($alias) {
+            "alias:$($alias.Name)"
+        }
+        elseif ($actualUrl) {
+            'mismatch'
+        }
+        else {
+            'missing'
+        }
         [pscustomobject]@{
             Server = $name
             ExpectedUrl = $expectedUrl
             ActualUrl = $actualUrl
             TcpReachable = if ($actualUrl) { Test-TcpEndpoint -Url $actualUrl } else { $false }
-            Status = if ($actualUrl -eq $expectedUrl) { 'ok' } elseif ($actualUrl) { 'mismatch' } else { 'missing' }
+            Status = $status
         }
     }
 }
@@ -319,15 +363,17 @@ function Invoke-PostProgram {
 }
 
 $topology = Read-JsonFile -Path $TopologyPath
+$script:MoosLocalHost = Resolve-TopologyLocalHost -Topology $topology
 
 switch ($Mode) {
     'Doctor' {
         Write-Host "Topology: $TopologyPath" -ForegroundColor Cyan
         Write-Host "MCP config: $McpConfigPath" -ForegroundColor Cyan
+        Write-Host "Local host: $script:MoosLocalHost" -ForegroundColor Cyan
         Write-Host ''
         Write-Host 'Kernel health' -ForegroundColor Cyan
         $kernelResults = foreach ($kernelProperty in $topology.kernels.PSObject.Properties) {
-            Test-KernelHealth -Name $kernelProperty.Name -Kernel $kernelProperty.Value -ExpectedOntologyVersion $topology.expected_ontology_version
+            Test-KernelHealth -Name $kernelProperty.Name -Kernel $kernelProperty.Value -Topology $topology
         }
         $kernelResults | Format-Table -AutoSize
 

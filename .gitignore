@@ -28,9 +28,17 @@ dev/.papers/**/*.synctex.gz
 
 # Temp and scratch
 tmp/
+scratch/
+
+# Root-level issue/scratch captures from local review sessions
+/issue*.txt
+/issue*-comment-body.md
+/ag-laptop-issue*-comment.md
+/parse_log.py
 
 # Machine-specific IDE configs (ports differ per workstation)
 .vscode/mcp.json
+.vscode/settings.json
 *.tmp
 lost\ converstation*.txt
 tempprg.json

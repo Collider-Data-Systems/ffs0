@@ -17,6 +17,10 @@
 			"type": "sse",
 			"url": "http://localhost:9003/sse"
 		},
+		"moos-hp-laptop-primary": {
+			"type": "sse",
+			"url": "http://localhost:8080/sse"
+		},
 		"_comment_cloud": "Cloud access via Cloudflare Zero Trust — set CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET env vars",
 		"moos-kernel-cloud": {
 			"type": "sse",
