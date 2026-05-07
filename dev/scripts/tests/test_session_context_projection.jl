@@ -33,6 +33,13 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         Dict("name" => "moos-tooling-dx", "description" => "Use for IDE attach, harness patterns, and projection tooling."),
         Dict("name" => "moos-workspace-ingest", "description" => "Use for G-direction Workspace ingest."),
     ]
+    extensions = [
+        Dict("id" => "upstash.context7-mcp", "display_name" => "Context7 MCP Server", "version" => "1.0.1", "description" => "MCP documentation server", "categories" => ["AI", "Chat"], "keywords" => ["mcp"], "contributes_mcp" => true),
+        Dict("id" => "github.vscode-pull-request-github", "display_name" => "GitHub Pull Requests", "version" => "0.142.0", "description" => "GitHub PR and issue tooling", "categories" => ["SCM Providers"], "keywords" => ["github"], "contributes_mcp" => false),
+    ]
+    mcp_servers = [
+        Dict("name" => "moos-primary", "type" => "sse", "url" => "http://localhost:8080/sse", "command" => "", "arg_count" => 0, "header_names" => String[], "env_names" => String[], "source_path" => ".vscode/mcp.json.example"),
+    ]
 
     plan = SCP.plan_session_context_projection(
         nodes,
@@ -42,6 +49,9 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         focus="VS Code session projection harness",
         skill_catalog=skills,
         skill_limit=2,
+        extension_catalog=extensions,
+        extension_limit=2,
+        mcp_servers=mcp_servers,
         health=Dict("log_len" => 1079),
         generated_at="2026-05-07T15:00:00Z",
     )
@@ -57,7 +67,12 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
     recommended_names = Set(skill["name"] for skill in plan["affordance_pack"]["recommended_skills"])
     @test "moos-state-readback" in recommended_names
     @test "moos-tooling-dx" in recommended_names
+    @test plan["affordance_pack"]["available_extension_count"] == 2
+    recommended_extension_ids = Set(extension["id"] for extension in plan["affordance_pack"]["recommended_extensions"])
+    @test "upstash.context7-mcp" in recommended_extension_ids
+    @test plan["affordance_pack"]["mcp_servers"][1]["name"] == "moos-primary"
     @test occursin(session_urn, plan["handoff"]["prompt_seed"])
+    @test occursin("MCP servers", plan["handoff"]["prompt_seed"])
 
     @testset "skill frontmatter catalog" begin
         mktempdir() do dir
@@ -68,6 +83,45 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
             @test length(catalog) == 1
             @test catalog[1]["name"] == "moos-demo"
             @test occursin("testing session projection", catalog[1]["description"])
+        end
+    end
+
+    @testset "extension and MCP catalogs" begin
+        mktempdir() do dir
+            extension_dir = joinpath(dir, "upstash.context7-mcp-1.0.1")
+            mkpath(extension_dir)
+            write(joinpath(extension_dir, "package.json"), """
+            {
+                "name": "context7-mcp",
+                "displayName": "Context7 MCP Server",
+                "publisher": "Upstash",
+                "version": "1.0.1",
+                "description": "Real-time docs over MCP",
+                "categories": ["AI", "Chat"],
+                "keywords": ["mcp", "docs"],
+                "contributes": {"mcpServerDefinitionProviders": [{"id": "context7"}]}
+            }
+            """)
+            catalog = SCP.load_extension_catalog(dir)
+            @test length(catalog) == 1
+            @test catalog[1]["id"] == "upstash.context7-mcp"
+            @test catalog[1]["contributes_mcp"]
+
+            mcp_path = joinpath(dir, "mcp.json")
+            write(mcp_path, """
+            {
+                "servers": {
+                    "_comment": "ignored",
+                    "moos-primary": {"type": "sse", "url": "http://localhost:8080/sse"},
+                    "cloud": {"type": "http", "url": "https://example.invalid", "headers": {"Authorization": "secret"}}
+                }
+            }
+            """)
+            servers = SCP.load_mcp_catalog([mcp_path])
+            @test length(servers) == 2
+            cloud = only(filter(server -> server["name"] == "cloud", servers))
+            @test cloud["header_names"] == ["Authorization"]
+            @test !haskey(cloud, "headers")
         end
     end
 end

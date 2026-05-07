@@ -11,8 +11,11 @@ const DEFAULT_SESSION_URN = "urn:moos:session:sam.governance"
 const DEFAULT_ACTOR_URN = "urn:moos:agent:claude-code.hp-laptop"
 const DEFAULT_PATTERN_URN = "urn:moos:pattern:session-affordance-pack"
 const DEFAULT_SKILLS_DIR = "dev/claude-skills"
+const DEFAULT_EXTENSIONS_DIR = joinpath(homedir(), ".vscode", "extensions")
+const DEFAULT_MCP_CONFIGS = ".vscode/mcp.json.example"
 const DEFAULT_OUT_BASE = "tmp/projections/session_context/current_session"
 const DEFAULT_SKILL_LIMIT = 5
+const DEFAULT_EXTENSION_LIMIT = 8
 
 const CORE_SKILL_WEIGHTS = Dict(
     "moos-state-readback" => 7,
@@ -20,6 +23,20 @@ const CORE_SKILL_WEIGHTS = Dict(
     "moos-rewrite-envelope" => 6,
     "moos-categorical-research" => 4,
     "moos-running-state-validator" => 4,
+)
+
+const CORE_EXTENSION_WEIGHTS = Dict(
+    "anthropic.claude-code" => 9,
+    "upstash.context7-mcp" => 8,
+    "github.vscode-pull-request-github" => 7,
+    "eamodio.gitlens" => 6,
+    "github.vscode-github-actions" => 5,
+    "google.geminicodeassist" => 5,
+    "ms-vscode.vscode-chat-customizations-evaluations" => 5,
+    "ms-python.python" => 4,
+    "ms-toolsai.jupyter" => 4,
+    "golang.go" => 3,
+    "ms-vscode.powershell" => 3,
 )
 
 const STOP_WORDS = Set([
@@ -162,6 +179,16 @@ function read_frontmatter(path::AbstractString)
     return fields
 end
 
+function string_array(value)
+    value === nothing && return String[]
+    value isa AbstractString && return [String(value)]
+    try
+        return [string(item) for item in value]
+    catch
+        return String[]
+    end
+end
+
 function load_skill_catalog(skills_dir::AbstractString)
     if isempty(skills_dir) || !isdir(skills_dir)
         return Any[]
@@ -182,6 +209,91 @@ function load_skill_catalog(skills_dir::AbstractString)
     return skills
 end
 
+function extension_id(package, fallback::AbstractString)
+    publisher = lowercase(strip(string(object_value(package, :publisher, ""))))
+    name = lowercase(strip(string(object_value(package, :name, ""))))
+    if !isempty(publisher) && !isempty(name)
+        return string(publisher, ".", name)
+    end
+    return lowercase(fallback)
+end
+
+function load_extension_catalog(extensions_dir::AbstractString)
+    if isempty(extensions_dir) || !isdir(extensions_dir)
+        return Any[]
+    end
+    extensions = Any[]
+    seen = Set{String}()
+    for dir in sort(filter(isdir, readdir(extensions_dir; join=true)))
+        package_path = joinpath(dir, "package.json")
+        isfile(package_path) || continue
+        package = try
+            JSON3.read(read(package_path, String))
+        catch
+            continue
+        end
+        id = extension_id(package, basename(dir))
+        key = string(id, "@", object_value(package, :version, ""))
+        key in seen && continue
+        push!(seen, key)
+        contributes = object_value(package, :contributes, nothing)
+        push!(extensions, Dict(
+            "id" => id,
+            "name" => string(object_value(package, :name, basename(dir))),
+            "display_name" => string(object_value(package, :displayName, object_value(package, :name, basename(dir)))),
+            "publisher" => string(object_value(package, :publisher, "")),
+            "version" => string(object_value(package, :version, "")),
+            "description" => string(object_value(package, :description, "")),
+            "categories" => string_array(object_value(package, :categories, nothing)),
+            "keywords" => string_array(object_value(package, :keywords, nothing)),
+            "path" => package_path,
+            "contributes_mcp" => contributes !== nothing && object_value(contributes, :mcpServerDefinitionProviders, nothing) !== nothing,
+        ))
+    end
+    return extensions
+end
+
+function split_paths(raw::AbstractString)
+    return [String(strip(part)) for part in split(raw, ';') if !isempty(strip(part))]
+end
+
+function load_mcp_catalog(config_paths::Vector{String})
+    servers = Any[]
+    for config_path in config_paths
+        if isempty(config_path) || !isfile(config_path)
+            continue
+        end
+        config = try
+            JSON3.read(read(config_path, String))
+        catch
+            continue
+        end
+        records = object_value(config, :servers, Dict())
+        for (name, record) in pairs(records)
+            server_name = string(name)
+            startswith(server_name, "_comment") && continue
+            record isa AbstractString && continue
+            headers = object_value(record, :headers, nothing)
+            env = object_value(record, :env, nothing)
+            args = object_value(record, :args, nothing)
+            command = string(object_value(record, :command, ""))
+            server_type = string(object_value(record, :type, isempty(command) ? "" : "stdio"))
+            push!(servers, Dict(
+                "name" => server_name,
+                "type" => server_type,
+                "url" => string(object_value(record, :url, "")),
+                "command" => command,
+                "arg_count" => args === nothing ? 0 : length(args),
+                "header_names" => headers === nothing ? String[] : [string(key) for key in keys(headers)],
+                "env_names" => env === nothing ? String[] : [string(key) for key in keys(env)],
+                "source_path" => config_path,
+            ))
+        end
+    end
+    sort!(servers; by=server -> (server["source_path"], server["name"]))
+    return servers
+end
+
 function tokenize(text::AbstractString)
     normalized = replace(lowercase(text), r"[^a-z0-9]+" => " ")
     return Set([token for token in split(normalized) if length(token) > 2 && !(token in STOP_WORDS)])
@@ -197,6 +309,35 @@ function score_skill(skill, focus_tokens)
     occursin("session", haystack) && (score += 2)
     occursin("projection", haystack) && (score += 2)
     occursin("harness", haystack) && (score += 1)
+    return score
+end
+
+function score_extension(extension, focus_tokens)
+    categories = get(extension, "categories", String[])
+    keywords = get(extension, "keywords", String[])
+    id = string(extension["id"])
+    haystack = lowercase(join([
+        id,
+        string(get(extension, "display_name", "")),
+        string(get(extension, "description", "")),
+        join(categories, " "),
+        join(keywords, " "),
+    ], " "))
+    score = get(CORE_EXTENSION_WEIGHTS, id, 0)
+    for token in focus_tokens
+        occursin(token, haystack) && (score += 1)
+    end
+    occursin("mcp", haystack) && (score += 3)
+    occursin("chat", haystack) && (score += 2)
+    occursin("ai", haystack) && (score += 2)
+    occursin("github", haystack) && (score += 2)
+    get(extension, "contributes_mcp", false) && (score += 4)
+    category_set = Set(lowercase.(categories))
+    keyword_set = Set(lowercase.(keywords))
+    theme_requested = "theme" in focus_tokens || "themes" in focus_tokens
+    if !theme_requested && ("themes" in category_set || "theme" in keyword_set || occursin("theme", id))
+        score -= 8
+    end
     return score
 end
 
@@ -217,6 +358,27 @@ function rank_skills(skills; focus::AbstractString="", limit::Integer=DEFAULT_SK
     return ranked[1:min(limit, length(ranked))]
 end
 
+function rank_extensions(extensions; focus::AbstractString="", limit::Integer=DEFAULT_EXTENSION_LIMIT)
+    focus_tokens = tokenize(focus)
+    ranked = Any[]
+    for extension in extensions
+        score = score_extension(extension, focus_tokens)
+        score <= 0 && continue
+        push!(ranked, Dict(
+            "id" => string(extension["id"]),
+            "score" => score,
+            "display_name" => string(get(extension, "display_name", "")),
+            "version" => string(get(extension, "version", "")),
+            "categories" => get(extension, "categories", String[]),
+            "keywords" => get(extension, "keywords", String[]),
+            "contributes_mcp" => get(extension, "contributes_mcp", false),
+            "description" => string(get(extension, "description", "")),
+        ))
+    end
+    sort!(ranked; by=item -> (-item["score"], item["id"]))
+    return ranked[1:min(limit, length(ranked))]
+end
+
 function format_utc(dt::DateTime)
     return string(Dates.format(dt, dateformat"yyyy-mm-ddTHH:MM:SS"), "Z")
 end
@@ -227,6 +389,9 @@ function plan_session_context_projection(nodes, relations;
     focus::String="",
     skill_catalog=Any[],
     skill_limit::Integer=DEFAULT_SKILL_LIMIT,
+    extension_catalog=Any[],
+    extension_limit::Integer=DEFAULT_EXTENSION_LIMIT,
+    mcp_servers=Any[],
     health=nothing,
     generated_at::String=format_utc(now(UTC)),
     base_url::String=DEFAULT_BASE_URL,
@@ -263,6 +428,7 @@ function plan_session_context_projection(nodes, relations;
         "session context projection vscode ide agent harness julia graph visual affordance pack",
     ], " ")
     recommended = rank_skills(skill_catalog; focus=skill_focus, limit=skill_limit)
+    recommended_extensions = rank_extensions(extension_catalog; focus=skill_focus, limit=extension_limit)
 
     return Dict(
         "mode" => "plan",
@@ -285,6 +451,9 @@ function plan_session_context_projection(nodes, relations;
             "source_pattern_urn" => DEFAULT_PATTERN_URN,
             "available_skill_count" => length(skill_catalog),
             "recommended_skills" => recommended,
+            "available_extension_count" => length(extension_catalog),
+            "recommended_extensions" => recommended_extensions,
+            "mcp_servers" => mcp_servers,
         ),
         "handoff" => Dict(
             "session_header" => Dict(
@@ -295,7 +464,7 @@ function plan_session_context_projection(nodes, relations;
             "prompt_seed" => string(
                 "Use actor=", actor_urn,
                 " and session_urn=", session_urn,
-                ". Treat this chat as the current session occasion; derive skills/tools from purpose and scope before emitting rewrites."
+                ". Treat this chat as the current session occasion; derive skills, extensions, MCP servers, and tools from purpose and scope before emitting rewrites."
             ),
         ),
     )
@@ -377,6 +546,28 @@ function write_markdown(path::AbstractString, plan)
             end
         end
         println(io)
+        println(io, "## Recommended VS Code Extensions")
+        extensions = plan["affordance_pack"]["recommended_extensions"]
+        if isempty(extensions)
+            println(io, "- <none>")
+        else
+            for extension in extensions
+                marker = extension["contributes_mcp"] ? " MCP" : ""
+                println(io, "- ", extension["id"], " ", extension["version"], " (score ", extension["score"], ")", marker)
+            end
+        end
+        println(io)
+        println(io, "## MCP Servers")
+        servers = plan["affordance_pack"]["mcp_servers"]
+        if isempty(servers)
+            println(io, "- <none>")
+        else
+            for server in servers
+                location = isempty(server["url"]) ? server["command"] : server["url"]
+                println(io, "- ", server["name"], " (", server["type"], ") - ", location)
+            end
+        end
+        println(io)
         println(io, "## Handoff")
         println(io, "```text")
         println(io, plan["handoff"]["prompt_seed"])
@@ -392,6 +583,9 @@ function parse_args(argv)
         "focus" => "session context projection for VS Code, agents, harnesses, and graph visualization",
         "skills-dir" => DEFAULT_SKILLS_DIR,
         "skill-limit" => string(DEFAULT_SKILL_LIMIT),
+        "extensions-dir" => DEFAULT_EXTENSIONS_DIR,
+        "extension-limit" => string(DEFAULT_EXTENSION_LIMIT),
+        "mcp-configs" => DEFAULT_MCP_CONFIGS,
         "out-base" => DEFAULT_OUT_BASE,
         "nodes-file" => "",
         "relations-file" => "",
@@ -422,6 +616,8 @@ function main(argv=ARGS)
     options = parse_args(argv)
     nodes, relations, health = load_state(options)
     skills = load_skill_catalog(options["skills-dir"])
+    extensions = load_extension_catalog(options["extensions-dir"])
+    mcp_servers = load_mcp_catalog(split_paths(options["mcp-configs"]))
     plan = plan_session_context_projection(
         nodes,
         relations;
@@ -430,6 +626,9 @@ function main(argv=ARGS)
         focus=options["focus"],
         skill_catalog=skills,
         skill_limit=parse(Int, options["skill-limit"]),
+        extension_catalog=extensions,
+        extension_limit=parse(Int, options["extension-limit"]),
+        mcp_servers=mcp_servers,
         health=health,
         base_url=options["base-url"],
     )
@@ -441,6 +640,8 @@ function main(argv=ARGS)
     println("Wrote session context projection JSON: ", json_path)
     println("Wrote session context projection Markdown: ", markdown_path)
     println("Recommended skills: ", length(plan["affordance_pack"]["recommended_skills"]))
+    println("Recommended extensions: ", length(plan["affordance_pack"]["recommended_extensions"]))
+    println("MCP servers: ", length(plan["affordance_pack"]["mcp_servers"]))
     return 0
 end
 

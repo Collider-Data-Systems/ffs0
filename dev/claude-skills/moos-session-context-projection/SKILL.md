@@ -1,6 +1,6 @@
 ---
 name: moos-session-context-projection
-description: "Session-focused F-direction projection from HG into IDE, agent, or harness context packs. Use when making the current VS Code conversation stay aligned with the current session kernel, projecting session context to VS Code/Copilot/Claude Desktop/Cursor/agent harnesses, generating Julia session context plans, deciding which skills/prompts/tools should be mounted from a session purpose, or analyzing and visualizing newly added HG nodes. Trigger phrases: session context pack, purpose-colored occasion, affordance pack, VS Code projection, harness handoff, current session kernel, session-focused skills, visualize new graph nodes."
+description: "Session-focused F-direction projection from HG into IDE, agent, or harness context packs. Use when making the current VS Code conversation stay aligned with the current session kernel, projecting session context to VS Code/Copilot/Claude Desktop/Cursor/agent harnesses, generating Julia session context plans, deciding which skills/prompts/tools/extensions/MCP servers should be mounted from a session purpose, or analyzing and visualizing newly added HG nodes. Trigger phrases: session context pack, purpose-colored occasion, affordance pack, VS Code projection, harness handoff, current session kernel, session-focused skills, VS Code extensions, MCP servers, visualize new graph nodes."
 ---
 
 # moos-session-context-projection
@@ -17,7 +17,7 @@ The pack is dry by default. It reads state, derives context, and writes reviewab
 
 - **Occasion**: the evaluated situation at a log prefix where kernel/place, session, occupant, purpose, scope, authority path, and available operations meet.
 - **Session context pack**: the projected artifact for one occasion. It contains the session header, kernel place, occupant, purpose, scope roots, mounted tools, owners, and handoff prompt seed.
-- **Affordance pack**: the skills/prompts/tools/workflows that follow from the session's purpose and scope. Current IDE skills are transitional projections of this pack.
+- **Affordance pack**: the skills/prompts/tools/workflows/extensions/MCP servers that follow from the session's purpose and scope. Current IDE skills are transitional projections of this pack; extensions and MCP servers are concrete IDE/harness affordances.
 - **Writer**: a later explicit boundary step that takes an approved pack and installs or sends it somewhere. The first pass is planner-only.
 
 ## Current Planner
@@ -41,8 +41,12 @@ Useful options:
   --session-urn urn:moos:session:sam.governance `
   --actor-urn urn:moos:agent:claude-code.hp-laptop `
   --focus "session-focused VS Code projection and visual graph analysis" `
-  --skill-limit 5
+  --skill-limit 5 `
+  --extension-limit 8 `
+  --mcp-configs .vscode/mcp.json.example
 ```
+
+The planner scans `dev/claude-skills`, the local VS Code extension directory, and configured MCP JSON files by default. MCP headers/env values are not copied into the pack; only server names, transport type, endpoint/command shape, and header/env key names are recorded.
 
 ## Workflow
 
@@ -57,6 +61,8 @@ Useful options:
 - **VS Code / Copilot**: use the Markdown handoff as the conversation seed and the JSON as machine-readable state.
 - **Claude Desktop / Cursor / other IDEs**: pass the same pack as a session header before asking for rewrites or analysis.
 - **Harnesses**: pass `handoff.session_header` so emitted envelopes carry the right actor and `session_urn`.
+- **VS Code extensions**: use the ranked extension list as the concrete IDE affordance surface for this occasion.
+- **MCP servers**: use the server list to decide which tool surfaces belong in the session, without leaking header or environment values.
 - **Visual analysis**: pair this pack with `export_t200plus_projection.jl` or a narrower future graph lens rooted at the session, purpose, pattern, workflow, or grammar_fragment.
 
 ## Guardrails
@@ -64,6 +70,7 @@ Useful options:
 - Keep planner and writer separate, like the Google Calendar projection lane.
 - Prefer current HG state over hand-written IDE assumptions.
 - Treat `opens-on` as topology metadata and emit-target as current receiving-kernel reality until twin sync lands.
+- Treat extensions and MCP servers as projected affordances until they are reified as HG nodes or relations.
 - Do not promote `occasion` into ontology from this skill alone; the current source of truth is `grammar_fragment:v317-1-occasion-type` until review and merge.
 
 ## Companion Skills

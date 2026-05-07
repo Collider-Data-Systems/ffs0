@@ -50,7 +50,9 @@ The preset roots at `derivation:guido.t187-session-occasion-implementation-frame
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\session_context_projection.jl
 ```
 
-The adapter emits `tmp/projections/session_context/current_session.json` and `tmp/projections/session_context/current_session.md`. This is a dry F-direction pack: HG stays authoritative, and the output can be passed to VS Code, another agent, or a harness as a session header. Use `--session-urn`, `--actor-urn`, `--focus`, and `--skill-limit` to narrow the occasion and the projected affordance pack.
+The adapter emits `tmp/projections/session_context/current_session.json` and `tmp/projections/session_context/current_session.md`. This is a dry F-direction pack: HG stays authoritative, and the output can be passed to VS Code, another agent, or a harness as a session header. Use `--session-urn`, `--actor-urn`, `--focus`, `--skill-limit`, `--extensions-dir`, `--extension-limit`, and `--mcp-configs` to narrow the occasion and the projected affordance pack.
+
+By default it scans canonical mo:os skills, local VS Code extensions, and `.vscode/mcp.json.example`. MCP secrets are not copied into the output; the pack records server names, transport type, endpoints/commands, and header/env key names only.
 
 ### Google Calendar Projection Plan
 
