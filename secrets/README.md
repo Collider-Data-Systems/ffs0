@@ -38,6 +38,19 @@ Client IDs.
 Auto-generated OAuth2 token from the Gmail authentication flow.
 Refreshed automatically when expired.
 
+### `google_calendar_oauth_client.json`
+
+Google OAuth2 installed-app client credentials for the Calendar write boundary.
+The same Google login/project can be used as the Gmail login if the Calendar API
+is enabled and the requested scope is granted. Use
+`google_calendar_oauth_client.json.example` as the shape reference.
+
+### `google_calendar_token.json`
+
+Auto-generated OAuth2 token cache for `dev/scripts/google_calendar_writer.jl`.
+It carries Calendar event-write scope only:
+`https://www.googleapis.com/auth/calendar.events`.
+
 ### `gcp-service-account.json`
 
 Download from Google Cloud Console → IAM → Service Accounts → Keys
@@ -62,6 +75,20 @@ SECRETS_DIR = FACTORY_ROOT / "secrets"
 credentials_path = SECRETS_DIR / "gmail_credentials.json"
 token_path = SECRETS_DIR / "gmail_token.json"
 ```
+
+For the Google Calendar writer:
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\google_calendar_writer.jl --mode check
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\google_calendar_writer.jl --mode auth-listen
+```
+
+If the loopback listener cannot be used, fall back to `--mode auth-url` and then
+`--mode exchange-code --code '<redirect-url-or-code>'`.
+
+The real `google_calendar_oauth_client.json` and `google_calendar_token.json`
+files stay local and ignored. HG may store file-reference URNs for these paths,
+but never stores their contents.
 
 ## Security Notes
 
