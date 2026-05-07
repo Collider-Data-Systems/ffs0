@@ -51,7 +51,7 @@ The preset roots at `derivation:guido.t187-session-occasion-implementation-frame
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\graph_artifact_projection.jl
 ```
 
-The adapter emits `tmp/projections/graph_artifacts/session_occasion_engineering.json` and `.md`. It defaults to the T187 session-occasion artifact set: the derivation, session lingo instruction, proposed occasion grammar fragment, affordance-pack pattern, and Z440 continuity workflow. Use `--root-urns`, `--radius`, `--wfs`, `--ports`, `--types`, and `--match` to analyze a different graph frame.
+The adapter emits `tmp/projections/graph_artifacts/session_occasion_engineering.json` and `.md`. It defaults to the T187 session-occasion artifact set: the derivation, session lingo instruction, proposed occasion grammar fragment, affordance-pack pattern, and Z440 continuity workflow. The output includes root coverage, so explicitly requested roots that have no selected relations are visible as disconnected instead of looking topologically proven. Use `--root-urns`, `--radius`, `--wfs`, `--ports`, `--types`, and `--match` to analyze a different graph frame.
 
 ### Session Context Projection Pack
 

@@ -45,9 +45,41 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
     @test plan["node_count"] == 5
     @test plan["relation_count"] == 4
     @test plan["analysis"]["type_counts"]["grammar_fragment"] == 1
+    @test length(plan["analysis"]["root_coverage"]) == 1
+    @test plan["analysis"]["root_coverage"][1]["connected"] == true
+    @test plan["analysis"]["root_coverage"][1]["incident_relation_count"] == 4
     topics = Set(finding["topic"] for finding in plan["engineering"]["findings"])
     @test "grammar fragment proposed" in topics
     @test "workflow draft" in topics
     @test "pattern draft" in topics
     @test "session missing has-purpose in projection" in topics
+end
+
+@testset "Disconnected forced roots" begin
+    root_urn = "urn:moos:derivation:demo.frame"
+    pattern_urn = "urn:moos:pattern:session-affordance-pack"
+    nodes = [
+        Dict(:urn => root_urn, :type_id => "derivation", :properties => Dict(:name => prop("Demo frame"), :status => prop("closed"))),
+        Dict(:urn => pattern_urn, :type_id => "pattern", :properties => Dict(:name => prop("affordance pack"), :status => prop("draft"))),
+    ]
+
+    plan = GAP.plan_graph_artifact_projection(
+        nodes,
+        Any[];
+        root_urn=root_urn,
+        root_urns=[root_urn, pattern_urn],
+        radius=1,
+        wf_filter=GAP.split_set("WF18,WF21"),
+        port_filter=GAP.split_set("causes,caused-by,composes,composed-by"),
+        type_filter=GAP.split_set("derivation,pattern"),
+        match_pattern="",
+        generated_at="2026-05-07T16:00:00Z",
+    )
+
+    @test plan["node_count"] == 2
+    @test plan["relation_count"] == 0
+    @test all(entry["connected"] == false for entry in plan["analysis"]["root_coverage"])
+    topics = Set(finding["topic"] for finding in plan["engineering"]["findings"])
+    @test "pattern draft" in topics
+    @test "roots disconnected in projection" in topics
 end

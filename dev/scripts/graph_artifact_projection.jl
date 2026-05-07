@@ -202,18 +202,58 @@ function count_by(nodes, relations)
     for rel in relations
         increment!(relation_counts, string(object_value(rel, :rewrite_category, "")))
     end
-    return Dict(
+    return Dict{String, Any}(
         "type_counts" => type_counts,
         "status_counts" => status_counts,
         "relation_counts" => relation_counts,
     )
 end
 
+function root_coverage(root_urns::Vector{String}, index, selected_relations)
+    coverage = Any[]
+    for urn in root_urns
+        haskey(index, urn) || continue
+        inbound_count = 0
+        outbound_count = 0
+        categories = Set{String}()
+        ports = Set{String}()
+        for rel in selected_relations
+            src = string(object_value(rel, :src_urn, ""))
+            tgt = string(object_value(rel, :tgt_urn, ""))
+            if src == urn || tgt == urn
+                push!(categories, string(object_value(rel, :rewrite_category, "")))
+                if src == urn
+                    outbound_count += 1
+                    push!(ports, string(object_value(rel, :src_port, "")))
+                end
+                if tgt == urn
+                    inbound_count += 1
+                    push!(ports, string(object_value(rel, :tgt_port, "")))
+                end
+            end
+        end
+        node = index[urn]
+        incident_count = inbound_count + outbound_count
+        push!(coverage, Dict(
+            "urn" => urn,
+            "type_id" => string(object_value(node, :type_id, "")),
+            "title" => node_title(node),
+            "connected" => incident_count > 0,
+            "incident_relation_count" => incident_count,
+            "inbound_relation_count" => inbound_count,
+            "outbound_relation_count" => outbound_count,
+            "rewrite_categories" => sort(collect(categories)),
+            "ports" => sort(collect(ports)),
+        ))
+    end
+    return coverage
+end
+
 function outgoing_ports(relations, urn::AbstractString)
     return Set([string(object_value(rel, :src_port, "")) for rel in relations if string(object_value(rel, :src_urn, "")) == urn])
 end
 
-function engineering_findings(selected_nodes, selected_relations)
+function engineering_findings(selected_nodes, selected_relations; root_coverage=Any[])
     findings = Any[]
     for node in selected_nodes
         urn = string(object_value(node, :urn, ""))
@@ -264,6 +304,17 @@ function engineering_findings(selected_nodes, selected_relations)
             end
         end
     end
+    disconnected_roots = [entry for entry in root_coverage if !Bool(entry["connected"])]
+    if !isempty(disconnected_roots)
+        push!(findings, Dict(
+            "severity" => "gap",
+            "topic" => "roots disconnected in projection",
+            "urn" => "<multi-root>",
+            "root_urns" => [entry["urn"] for entry in disconnected_roots],
+            "detail" => "One or more explicit roots are present only because they were requested directly; no selected relation connects them inside this projected frame.",
+            "next_action" => "Widen the lens if the relations already exist, or emit/link the missing topology when the intended relation is durable.",
+        ))
+    end
     return findings
 end
 
@@ -274,7 +325,9 @@ function plan_graph_artifact_projection(nodes, relations; root_urn::String=DEFAU
     summaries = [node_summary(node) for node in selected_nodes]
     rel_summaries = [relation_summary(rel) for rel in selected_relations]
     counts = count_by(selected_nodes, selected_relations)
-    findings = engineering_findings(selected_nodes, selected_relations)
+    coverage = root_coverage(roots, index, selected_relations)
+    counts["root_coverage"] = coverage
+    findings = engineering_findings(selected_nodes, selected_relations; root_coverage=coverage)
     return Dict(
         "mode" => "plan",
         "projection_kind" => "graph_artifact_engineering",
@@ -358,6 +411,13 @@ function write_markdown(path::AbstractString, plan)
         println(io, "## Relation Counts")
         for (key, value) in sorted_pairs(plan["analysis"]["relation_counts"])
             println(io, "- ", key, ": ", value)
+        end
+        println(io)
+        println(io, "## Root Coverage")
+        for entry in plan["analysis"]["root_coverage"]
+            state = entry["connected"] ? "connected" : "disconnected"
+            categories = isempty(entry["rewrite_categories"]) ? "<none>" : join(entry["rewrite_categories"], ", ")
+            println(io, "- [", state, "] ", entry["urn"], " (", entry["type_id"], ") incident=", entry["incident_relation_count"], " categories=", categories)
         end
         println(io)
         println(io, "## Engineering Findings")
