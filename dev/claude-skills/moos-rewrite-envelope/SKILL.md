@@ -77,7 +77,7 @@ Putting `type_id` only inside `properties` yields `unknown type_id ""`. Fix: put
     "title": {"value": "...", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
     "owner_urn": {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
     "created_at": {"value": "2026-04-18T16:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-    "status": {"value": "pending", "mutability": "mutable", "authority_scope": "", "stratum_origin": 2}
+    "status": {"value": "pending", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
   }
 }
 ```
@@ -115,14 +115,25 @@ Adding new fields requires a grammar_fragment + WF20 promotion to ontology, then
 
 **Canonical MUTATE examples:**
 
+External-op lifecycle closeout (status is kernel-authority as of ontology v3.16.1):
+```json
+{
+  "rewrite_type": "MUTATE",
+  "actor": "urn:moos:kernel:hp-laptop.primary",
+  "target_urn": "urn:moos:external_op:sam.test",
+  "field": "status",
+  "new_value": "cancelled"
+}
+```
+
 Additive (field not yet on node, field IS in type spec):
 ```json
 {
   "rewrite_type": "MUTATE",
   "actor": "urn:moos:agent:claude-code.hp-z440",
-  "target_urn": "urn:moos:external_op:sam.test",
-  "field": "status",
-  "new_value": "cancelled"
+  "target_urn": "urn:moos:program:sam.example",
+  "field": "scope",
+  "new_value": "New optional scope text"
 }
 ```
 

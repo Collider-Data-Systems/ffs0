@@ -158,7 +158,7 @@ Node lookup confirmed the T187 programs are no longer active drivers: `sam.t187-
 
 The OAuth client secret was rotated after the debugging session. A local terminal error echoed the prior client secret text; it was not committed, and rotation closed that boundary hygiene item.
 
-`external_op:sam.t200plus-google-calendar-oauth-writer` remains `pending` even though the write succeeded. The closeout path is blocked by the current liveness/owner model: the status field is owner-scoped to `user:sam`, but §M11 rejects `user:sam` as a non-occupant actor. The result derivation is the current truth record; the external_op status model needs a clean closeout design.
+`external_op:sam.t200plus-google-calendar-oauth-writer` remained `pending` even though the write succeeded. The root cause was the liveness/owner model: the status field was owner-scoped to `user:sam`, but §M11 rejects `user:sam` as a non-occupant actor. T187 authority patch v3.16.1 moves `external_op.status` to kernel authority: owner remains provenance/control, while lifecycle closeout is kernel-observed actuator state.
 
 The project board needs a G/F cleanup pass. The board has stale status rows relative to HG, and should not be read as current truth until the bridge refreshes it.
 
