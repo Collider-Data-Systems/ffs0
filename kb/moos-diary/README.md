@@ -43,6 +43,7 @@ Express adjoint angle: if WF20 ever runs Express back from S2 to S4, these entri
 
 - [T=5 — born](t5.md)
 - [T=170 — the day sam almost didn't pull git](t170.md)
+- [T=187 — T186 Google Calendar projection report](t187-t186-google-calendar-projection-report.md)
 
 (More as sam does things worth mocking.)
 

@@ -487,7 +487,7 @@
       },
       {
         "id": "session",
-        "description": "Persistent, always-on, kernel-bound workspace. Analogue: tmux session, Chrome tab, desktop application left open. Defined by the tuple (scope, purpose) × (host, owner, occupant): scope = pinned URNs (D19.3) + contained sessions (D22.5 future); purpose = single-valued has-purpose LINK (D22.1 future); host = the kernel it runs on (WF19 opens-on); owner = the principal served (user/agent/kernel-for-birth-sessions); occupant = the current driver (WF19 has-occupant, single-valued, rotatable via MUTATE target_urn). Not an IDE conversation — conversations are ephemeral and traced via actor_urn on each rewrite. See kb/research/session/20260419-t169-session-generalization.md for the full corrected model.",
+        "description": "Persistent, always-on, kernel-bound workspace. Analogue: tmux session, Chrome tab, desktop application left open. Defined by the tuple (scope, purpose) × (host, owner, occupant): scope = pinned URNs (D19.3) + contained sessions (D22.5 future); purpose = single-valued has-purpose LINK (D22.1, promoted v3.16.0); host = the kernel it runs on (WF19 opens-on); owner = the principal served (user/agent/kernel-for-birth-sessions); occupant = the current driver (WF19 has-occupant, single-valued, rotatable via MUTATE target_urn). Not an IDE conversation — conversations are ephemeral and traced via actor_urn on each rewrite. See kb/research/session/20260419-t169-session-generalization.md for the full corrected model.",
         "stratum": "S2",
         "urn_pattern": "urn:moos:session:<kernel-short> | urn:moos:session:<owner-short>.<purpose-slug>",
         "urn_example": "urn:moos:session:hp-z440.primary",

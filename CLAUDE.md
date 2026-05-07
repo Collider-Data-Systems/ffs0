@@ -10,7 +10,7 @@ Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, open items, key URNs.
 
-At T=178 both kernels are live (Z440 4-kernel federation + hp-laptop primary), v3.15.0 ontology, 9 sessions occupied. `kb/research/planning.md` carries the live state summary; doctrine lives as derivations on log.
+At T=186 hp-laptop kernel is live on v3.16.0 (log_len 940, t_day 186). Z440 4-kernel federation last confirmed at v3.15.0 (T=177). 3 active sessions on hp-laptop have explicit has-purpose LINKs (D22.1 promoted T=185). No program currently has an active/running status. Kernel-bound session `session:hp-laptop.primary` has purpose but no has-occupant LINK yet. Doctrine lives as derivations on log.
 
 ---
 
@@ -21,6 +21,24 @@ Log is truth. State is derived. Nodes don't call things. Relations don't carry m
 
 ---
 
+## Session model
+
+A session is present when purpose × occupant × scope evaluate present from graph data.
+
+- **Purpose** — directional intent, represented by WF19 `has-purpose` from session to purpose.
+- **Occupant** — evaluated from ownership, capability, and in-scope rewrite categories; empty result means idle/no live occupant.
+- **Scope** — the session's WF19 `pins-urn` outbound sub-DAG, reachable through composition and causal chains.
+
+Kernel-bound sessions use the same machinery: purpose = host the substrate, occupant = evaluated from ownership/capability data, scope = admin/governance wiring. The kernel remains a stream fold; choices are predicate satisfaction over data, with side effects only at actuator leaves via channels.
+
+Node role shorthand:
+- **Anchor** — identity/where/why/who nodes: purpose, session, program, agent, user, group, role, capability, kernel, workstation, harness, compute, storage, transport_binding, endpoint, protocol, router, repository, channel, system_instruction.
+- **Gate** — predicate-and-reaction nodes: t_hook, gate, guard, watcher, reactor, view_filter.
+- **Actuator** — boundary action nodes: prg_task, external_op, twin_link.
+- **Carrier** — typed data flowing as arguments: knowledge_item, claim, derivation, calendar_event, git_issue, source_feed, shard_rule, domain_tag, classification_scheme, crosswalk, grammar_fragment.
+
+---
+
 ## Nomenclature
 
 | Use | Never use |
@@ -28,7 +46,7 @@ Log is truth. State is derived. Nodes don't call things. Relations don't carry m
 | node | object, element, vertex |
 | relation | binding, edge, wire, association |
 | rewrite | morphism, update, mutation |
-| rewrite category WF01–WF20 | named relation, UML association |
+| rewrite category WF01–WF21 | named relation, UML association |
 | property | field, payload, attribute |
 | operad | schema, grammar |
 | interaction node | transition, event, message |
@@ -40,18 +58,17 @@ Relations are truth. Properties never duplicate topology.
 
 ## Ontology
 
-`kb/superset/ontology.json` — **v3.12.0**, 52 node types, 20 WFs (WF01–WF20).
+`kb/superset/ontology.json` — **v3.16.0**, 53 node types, 21 WFs (WF01–WF21).
 Do not edit without reading running-state.md first.
 
-Notable recent bumps:
-- v3.10.0 (T=168 round 9) — WF19 extended with `has-occupant`/`is-occupant-of` port pair for §M19 session-occupancy; D19.1 grammar_fragment merged.
-- v3.11.0 (T=169 round 9.5) — `t_hook.firing_state` enum `{pending, proposed, approved, rejected, applied, closed}`.
-- v3.12.0 (T=169 round 10) — first WF20 ceremony: D19.3 `pins-urn` / D19.4 `filtered-by` / D20.1 `mounts-tool` port pairs + D20.2 `agent.invocation_protocol` enum + D19.2 `session.view_prefs` merged.
-
-v3.13 candidates (proposed, not yet promoted):
-- `channel.kind` additions: `calendar`, `task-list`, `cloud-storage`
-- `v313-6-wf02-delegates-to` — capability-delegation port pair for Wolfram's court
-- `running_host` supertype with subtypes `kernel` and `platform` (post-D22.5) — for Cowork platform-host doctrine
+Notable bumps since v3.9 baseline (T=168):
+- v3.10.0 (T=168) — WF19 `has-occupant`/`is-occupant-of` for §M19 session-occupancy.
+- v3.11.0 (T=169) — `t_hook.firing_state` lifecycle enum.
+- v3.12.0 (T=169) — first WF20 merge: D19.2/D19.3/D19.4/D20.1/D20.2 (session view_prefs, pins-urn, filtered-by, mounts-tool, agent.invocation_protocol).
+- v3.13.0 (T=173) — WF02 delegates-to, `group` node type, channel.kind expansion (+calendar, +task-list, +cloud-storage, +vcs, +project-board), WF01 owns/owned-by.
+- v3.14.0 (T=175) — `derivation` S2 node type for reifying session-internal inference.
+- v3.15.0 (T=176) — `clock` node type, WF21 causes/caused-by (acyclic), substrate properties on channel/knowledge_item, channel.kind +video/+audio.
+- v3.16.0 (T=185) — D22.1 `has-purpose`/`purpose-of-session` WF19 port-pair. Session repurposing via MUTATE.
 
 ---
 
@@ -69,18 +86,20 @@ Full envelope shape + gotchas: `moos-rewrite-envelope` skill.
 
 ---
 
-## Current sessions + personae (T=173)
+## Current sessions + personae (T=186)
+
+Active on hp-laptop now: `sam.laptop-cowork-workspace`, `sam.laptop-moos-diary`, `hp-laptop.primary`. Z440 rows below are topology memory until that federation is live again.
 
 | Persona | Agent | Session | Host kernel | Notes |
 |---|---|---|---|---|
 | Guido van Rossum | `claude-code.hp-laptop` | `sam.governance` | `hp-laptop.primary` | doctrine + audit |
-| Stephen Wolfram | `claude-code.hp-z440` | `sam.kernel-proper` | `hp-z440.primary` | kernel implementation (currently driving this conversation) |
+| Stephen Wolfram | `claude-code.hp-z440` | `sam.kernel-proper` | `hp-z440.primary` | kernel implementation |
 | Moos the Dachshund | `antigravity.hp-z440` | `sam.moos-diary` | `hp-z440.primary` | multimodal diary curation |
-| Andrej Karpathy | (pending VSCode attach) | `sam.karpathy-seat` | `hp-z440.lola` | HDC/VSA categorical bridge |
-| Peter Steinberger | (pending VSCode attach) | `sam.steinberger-seat` | `hp-z440.menno` | tooling + DX ergonomics |
+| Andrej Karpathy | `vscode.hp-z440.lola` | `sam.karpathy-seat` | `hp-z440.lola` | HDC/VSA categorical bridge |
+| Peter Steinberger | `vscode.hp-z440.menno` | `sam.steinberger-seat` | `hp-z440.menno` | tooling + DX ergonomics |
 | (Cowork substrate) | `claude-cowork.hp-{z440,hp-laptop}` | `sam.{z440,laptop}-cowork-workspace` | kernel double-duty | Google Workspace channels pinned; has-occupant fires when Desktop runs |
 
-Full topology: `derivation:t172.wolframs-court` + `derivation:t172.cowork-as-occupant` (both on log; `kb/research/planning.md` has the live state summary).
+Full topology: `derivation:t172.wolframs-court` + `derivation:t172.cowork-as-occupant` (both on log).
 
 ---
 
@@ -107,8 +126,8 @@ Current adjunctions inventory (channel nodes live, skill queued):
 
 ## Domain knowledge
 
-Invoke the `moos-domain-expert` skill for categorical/mathematical reasoning.
 Invoke `moos-rewrite-envelope` for HG envelope authoring, `moos-state-readback` for session/round opens, `moos-round-close` for end-of-round cleanup.
+Invoke `moos-categorical-research` (Karpathy seat) for categorical/HDC bridge work, `moos-cross-persona-audit` (Guido) for round-close governance.
 
 Archive material (`dev/reference/research-archive/`) is retrievable on demand: sheaves, operadic-layer lingo, pre-WF20 superset doctrine, T=168 ontology audit, session-kernel-bound FAQ, session-seating snapshots, past-round conversation summaries.
 
@@ -118,19 +137,17 @@ Archive material (`dev/reference/research-archive/`) is retrievable on demand: s
 
 ```
 kb/
-  superset/          ontology.json (S1) + running-state.md (hydration entrypoint)
-  research/
-    kernel/          t187-kernel-proper.md (M1-M20 spec)
-    session/         3 live doctrine notes (generalization, cowork-as-occupant, wolframs-court)
-    moos-diary/      active multimodal ingest zone
+  superset/              ontology.json (S1) + running-state.md (hydration entrypoint)
+  research/              live doctrine (kernel spec, session notes, moos-diary)
 dev/
-  scripts/           ops + utility scripts
+  scripts/               ops + utility scripts
+  claude-skills/         11 skill directories (synced to ~/.claude/skills/)
   reference/
-    research-archive/  retrievable: past-round scratch, shipped plans, substrate lingo, Apr 5 Workspace snapshot, seating snapshots
-secrets/             GITIGNORED (local-first)
+    research-archive/    past-round scratch, shipped plans, substrate lingo, seating snapshots
+secrets/                 GITIGNORED (local-first)
 .github/
-  instructions/      IDE-specific auto-injected context
-  prompts/           stored prompts (all IDEs)
+  instructions/          IDE-specific auto-injected context
+  prompts/               stored prompts (all IDEs)
 ```
 
 ---
