@@ -2,6 +2,8 @@
 
 Operational tools for testing, validation, and delegation.
 
+The current active projection lane is Julia-first. Older one-shot Python emitters from T164/T167/T161/v3.15 have been moved to `dev/reference/research-archive/scripts/legacy-emitters/` so they remain available as provenance without looking like current operators.
+
 ## validation/
 
 Graph and phase validation — state checking, schema debugging.
@@ -16,13 +18,19 @@ Projection-lane orchestration entrypoints. These scripts run multiple adapters t
 
 ## Loose files
 
-- `debug_schema.py` — debug KB schema
 - `export_t200plus_projection.jl` — folded-state DOT/SVG exporter for T200+ graph lenses.
+- `generate_type_map.py` — active utility for generating moos-router type-map flags from `kb/superset/ontology.json`.
 - `graph_artifact_projection.jl` — dry folded-state graph artifact analyzer for newly added HG frames. It writes JSON/Markdown engineering summaries and pairs with the DOT/SVG exporter for visualization.
 - `google_calendar_projection.jl` — F-direction planning adapter from folded HG state to Google Calendar event payloads. It writes a reviewable JSON plan and does not perform OAuth or cloud writes.
 - `google_calendar_writer.jl` — explicit OAuth boundary writer for applying an approved Google Calendar projection plan. Defaults to dry-run/check modes; real writes require local gitignored OAuth files and `--mode write`.
 - `session_context_projection.jl` — F-direction planning adapter from folded HG state to a session context pack for IDE, agent, or harness handoff. It writes reviewable JSON and Markdown, and does not edit IDE config or emit rewrites.
 - `session_pipeline_mvp_gate.jl` — dry MVP gate report for the Keep-note/session/visual-projection lane. It checks live G-ingest evidence, F session handoff output, graph-artifact analysis, static visuals, lens controls, and known gaps.
+
+## Python Status
+
+- Keep `generate_type_map.py`: still relevant for router/type-map work.
+- Keep `validation/*.py` and their `tests/test_*.py`: these are importable baseline/hydration checks with tests.
+- Historical Python emitters are archived under `dev/reference/research-archive/scripts/legacy-emitters/` and should not be used as current write paths.
 
 ## Projection Artifact Layout
 
