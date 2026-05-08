@@ -39,7 +39,7 @@ const PRESETS = Dict(
         "MOOS_PROJECTION_LABEL" => "T187 session-occasion implementation frame",
         "MOOS_PROJECTION_ROOT" => "urn:moos:derivation:guido.t187-session-occasion-implementation-frame",
         "MOOS_PROJECTION_ROOTS" => "urn:moos:derivation:guido.t187-session-occasion-implementation-frame;urn:moos:system_instruction:framework.session-occasion-lingo;urn:moos:grammar_fragment:v317-1-occasion-type;urn:moos:pattern:session-affordance-pack;urn:moos:workflow:z440-session-continuity-reconciliation",
-        "MOOS_PROJECTION_OUT" => "tmp/projections/session_occasion_frame",
+        "MOOS_PROJECTION_OUT" => "tmp/projections/session_pipeline/visual/session_occasion_frame",
         "MOOS_PROJECTION_RADIUS" => "2",
         "MOOS_PROJECTION_WFS" => "WF12,WF18,WF20,WF21",
         "MOOS_PROJECTION_TYPES" => "claim,derivation,grammar_fragment,knowledge_item,pattern,program,purpose,session,system_instruction,workflow",
@@ -215,7 +215,7 @@ function filter_summary()
         string("match=", isempty(MATCH_PATTERN) ? "*" : MATCH_PATTERN),
         string("owners=", INCLUDE_OWNERS)
     ]
-    return join(parts, " | ")
+    return join(parts, "\n")
 end
 
 nodes = fetch_json("/state/nodes")

@@ -78,6 +78,17 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test "visual lens root coverage" in names
         @test plan["lingo"]["lens"] != ""
         @test plan["renderer_candidates"][2]["name"] == "Cytoscape.js"
+        @test length(plan["pipeline_stages"]) == 4
+        @test plan["pipeline_stages"][1]["status"] == "pass"
+        @test length(plan["priority_actions"]) == 1
+
+        html_path = joinpath(dir, "index.html")
+        Gate.write_html(html_path, plan)
+        @test isfile(html_path)
+        html = read(html_path, String)
+        @test occursin("Session Pipeline MVP", html)
+        @test occursin("G-ingest", html)
+        @test occursin("Cytoscape.js", html)
     end
 end
 

@@ -7,15 +7,70 @@ using Downloads
 using JSON3
 
 const DEFAULT_BASE_URL = "http://localhost:8000"
-const DEFAULT_SESSION_PACK = "tmp/projections/session_context/current_session.json"
-const DEFAULT_GRAPH_PACK = "tmp/projections/graph_artifacts/session_occasion_engineering.json"
-const DEFAULT_DOT_PATH = "tmp/projections/session_occasion_frame.dot"
-const DEFAULT_SVG_PATH = "tmp/projections/session_occasion_frame.svg"
-const DEFAULT_OUT_BASE = "tmp/projections/mvp/session_pipeline_gate"
+const DEFAULT_SESSION_PACK = "tmp/projections/session_pipeline/session_context/current_session.json"
+const DEFAULT_GRAPH_PACK = "tmp/projections/session_pipeline/graph_artifacts/session_occasion_engineering.json"
+const DEFAULT_DOT_PATH = "tmp/projections/session_pipeline/visual/session_occasion_frame.dot"
+const DEFAULT_SVG_PATH = "tmp/projections/session_pipeline/visual/session_occasion_frame.svg"
+const DEFAULT_OUT_BASE = "tmp/projections/session_pipeline/mvp/session_pipeline_gate"
+const DEFAULT_HTML_PATH = "tmp/projections/session_pipeline/index.html"
 const DEFAULT_SESSION_URN = "urn:moos:session:sam.governance"
 const DEFAULT_ACTOR_URN = "urn:moos:agent:claude-code.hp-laptop"
 const DEFAULT_KEEP_CHANNEL_URN = "urn:moos:channel:google.keep.sam"
 const DEFAULT_KEEP_KI_URN = "urn:moos:ki:gdrive.t187-keep-session-occasion-lingo"
+
+const PIPELINE_STAGE_SPECS = [
+    Dict(
+        "id" => "g-ingest",
+        "name" => "G-ingest",
+        "short_name" => "G",
+        "description" => "Keep source material becomes HG evidence with explicit channel, knowledge_item, and WF12 topology.",
+        "gate_names" => ["G input channel", "G input knowledge item", "G input evidence topology"],
+    ),
+    Dict(
+        "id" => "f-session",
+        "name" => "F session pack",
+        "short_name" => "F/session",
+        "description" => "Folded HG state becomes a session header plus purpose-colored affordance pack for VS Code, an agent, or a harness.",
+        "gate_names" => ["F session handoff header", "session occasion topology", "session purpose color", "F affordance pack"],
+    ),
+    Dict(
+        "id" => "f-visual",
+        "name" => "F visual lens",
+        "short_name" => "F/visual",
+        "description" => "The selected graph lens becomes engineering summaries and static visual artifacts while keeping disconnected roots visible.",
+        "gate_names" => ["F graph artifact analysis", "visual lens root coverage", "static visual output", "lens flexibility controls"],
+    ),
+    Dict(
+        "id" => "operator-interface",
+        "name" => "Operator interface",
+        "short_name" => "UI",
+        "description" => "The MVP is readable as a control surface: status, lineage, checks, artifacts, and next gates are visible in one place.",
+        "gate_names" => ["interactive visual aid"],
+    ),
+]
+
+const INTERFACE_PRINCIPLES = [
+    Dict(
+        "name" => "Asset health over raw logs",
+        "source" => "Dagster asset checks and freshness patterns",
+        "application" => "Expose pass/warn/fail gates, runtime metadata, artifact paths, and next actions as structured materialization metadata.",
+    ),
+    Dict(
+        "name" => "Lineage stays first-class",
+        "source" => "Data orchestration lineage and materialization UIs",
+        "application" => "Show G-ingest, F-session, and F-visual stages separately so operators can see where evidence, context, and renderers diverge.",
+    ),
+    Dict(
+        "name" => "Graph UI needs selection semantics",
+        "source" => "Cytoscape.js element data, selectors, layouts, and tap/select events",
+        "application" => "Keep the static Graphviz artifact for review, but shape the next renderer around typed node data, style selectors, selection events, and an inspector panel.",
+    ),
+    Dict(
+        "name" => "Warnings are design signals",
+        "source" => "CI/CD quality gate practice",
+        "application" => "Treat warn as a usable MVP with named next gates, not as hidden debt or a failed run.",
+    ),
+]
 
 const RENDERER_CANDIDATES = [
     Dict(
@@ -146,6 +201,55 @@ function overall_status(gates)
     return "pass"
 end
 
+function stage_status(stage_gates)
+    statuses = Set(string(gate["status"]) for gate in stage_gates)
+    "fail" in statuses && return "fail"
+    "warn" in statuses && return "warn"
+    isempty(statuses) && return "warn"
+    return "pass"
+end
+
+function pipeline_stages(gates)
+    by_name = Dict{String, Any}()
+    for gate in gates
+        by_name[string(gate["name"])] = gate
+    end
+    stages = Any[]
+    for spec in PIPELINE_STAGE_SPECS
+        names = [string(name) for name in spec["gate_names"]]
+        selected = [by_name[name] for name in names if haskey(by_name, name)]
+        push!(stages, Dict(
+            "id" => spec["id"],
+            "name" => spec["name"],
+            "short_name" => spec["short_name"],
+            "description" => spec["description"],
+            "status" => stage_status(selected),
+            "gate_names" => names,
+            "summary" => Dict(
+                "pass" => count(gate -> string(gate["status"]) == "pass", selected),
+                "warn" => count(gate -> string(gate["status"]) == "warn", selected),
+                "fail" => count(gate -> string(gate["status"]) == "fail", selected),
+            ),
+        ))
+    end
+    return stages
+end
+
+function priority_actions(gates)
+    actions = Any[]
+    for gate in gates
+        action = strip(string(gate["next_action"]))
+        if !isempty(action) && string(gate["status"]) != "pass"
+            push!(actions, Dict(
+                "status" => gate["status"],
+                "gate" => gate["name"],
+                "action" => action,
+            ))
+        end
+    end
+    return actions
+end
+
 function array_len(obj, path::Vector{Symbol})
     value = obj
     for key in path
@@ -165,7 +269,7 @@ function context_array(plan, name::Symbol)
     return value === nothing ? Any[] : value
 end
 
-function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), graph_pack=Dict(), session_pack_path=DEFAULT_SESSION_PACK, graph_pack_path=DEFAULT_GRAPH_PACK, dot_path=DEFAULT_DOT_PATH, svg_path=DEFAULT_SVG_PATH, session_urn=DEFAULT_SESSION_URN, actor_urn=DEFAULT_ACTOR_URN, keep_channel_urn=DEFAULT_KEEP_CHANNEL_URN, keep_ki_urn=DEFAULT_KEEP_KI_URN, base_url=DEFAULT_BASE_URL, generated_at=format_utc(now(UTC)))
+function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), graph_pack=Dict(), session_pack_path=DEFAULT_SESSION_PACK, graph_pack_path=DEFAULT_GRAPH_PACK, dot_path=DEFAULT_DOT_PATH, svg_path=DEFAULT_SVG_PATH, html_path=DEFAULT_HTML_PATH, session_urn=DEFAULT_SESSION_URN, actor_urn=DEFAULT_ACTOR_URN, keep_channel_urn=DEFAULT_KEEP_CHANNEL_URN, keep_ki_urn=DEFAULT_KEEP_KI_URN, base_url=DEFAULT_BASE_URL, generated_at=format_utc(now(UTC)))
     index = nodes_by_urn(nodes)
     gates = Any[]
 
@@ -297,6 +401,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     ))
 
     status = overall_status(gates)
+    stages = pipeline_stages(gates)
     return Dict(
         "mode" => "plan",
         "projection_kind" => "session_pipeline_mvp_gate",
@@ -310,15 +415,158 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
             "graph_pack" => graph_pack_path,
             "dot" => dot_path,
             "svg" => svg_path,
+            "dashboard" => html_path,
         ),
+        "pipeline_stages" => stages,
+        "interface_principles" => INTERFACE_PRINCIPLES,
         "renderer_candidates" => RENDERER_CANDIDATES,
         "gates" => gates,
+        "priority_actions" => priority_actions(gates),
         "summary" => Dict(
             "pass" => count(g -> string(g["status"]) == "pass", gates),
             "warn" => count(g -> string(g["status"]) == "warn", gates),
             "fail" => count(g -> string(g["status"]) == "fail", gates),
         ),
     )
+end
+
+function html_escape(value)
+    text = string(value)
+    text = replace(text, "&" => "&amp;")
+    text = replace(text, "<" => "&lt;")
+    text = replace(text, ">" => "&gt;")
+    text = replace(text, "\"" => "&quot;")
+    return replace(text, "'" => "&#39;")
+end
+
+function compact_html_value(value; limit=220)
+    text = ""
+    if value isa AbstractDict
+        parts = String[]
+        for key in sort(collect(keys(value)); by=string)
+            push!(parts, string(key, "=", compact_html_value(value[key]; limit=80)))
+        end
+        text = join(parts, "; ")
+    elseif value isa AbstractVector
+        items = [compact_html_value(item; limit=80) for item in value]
+        text = join(items[1:min(length(items), 4)], ", ")
+        length(items) > 4 && (text = string(text, ", +", length(items) - 4, " more"))
+    else
+        text = string(value)
+    end
+    return length(text) > limit ? string(text[1:limit], "...") : text
+end
+
+function artifact_link(html_path::AbstractString, artifact_path::AbstractString)
+    isempty(strip(artifact_path)) && return "#"
+    base_dir = dirname(html_path)
+    return replace(relpath(artifact_path, base_dir), "\\" => "/")
+end
+
+function status_word(status)
+    status == "pass" && return "Pass"
+    status == "warn" && return "Warn"
+    status == "fail" && return "Fail"
+    return uppercase(string(status))
+end
+
+function write_html(path::AbstractString, plan)
+    dir = dirname(path)
+    !isempty(dir) && mkpath(dir)
+    stages = object_value(plan, :pipeline_stages, Any[])
+    gates = object_value(plan, :gates, Any[])
+    actions = object_value(plan, :priority_actions, Any[])
+    artifacts = object_value(plan, :artifacts, Dict())
+    summary = object_value(plan, :summary, Dict())
+    svg_path = string(object_value(artifacts, :svg, ""))
+    svg_href = artifact_link(path, svg_path)
+    open(path, "w") do io
+        println(io, "<!doctype html>")
+        println(io, "<html lang=\"en\">")
+        println(io, "<head>")
+        println(io, "<meta charset=\"utf-8\">")
+        println(io, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">")
+        println(io, "<title>mo:os Session Pipeline MVP</title>")
+        println(io, "<style>")
+        println(io, "html{font-family:Inter,Segoe UI,Arial,sans-serif;background:#f7f7f2;color:#202522}body{margin:0}.shell{max-width:1180px;margin:0 auto;padding:24px}.top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,.8fr);gap:16px;align-items:stretch}.panel,.stage,.gate,.artifact,.principle{background:#fff;border:1px solid #d9ded7;border-radius:8px;box-shadow:0 1px 2px rgba(20,30,25,.05)}.panel{padding:18px}h1{font-size:28px;line-height:1.15;margin:0 0 8px}h2{font-size:16px;margin:0 0 12px}p{line-height:1.45}.muted{color:#5f6b62}.status{display:inline-flex;align-items:center;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;text-transform:uppercase}.pass{background:#dff4df;color:#195d25}.warn{background:#fff0bd;color:#735600}.fail{background:#ffd8d3;color:#8a1f16}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.metric{border:1px solid #e3e6e0;border-radius:8px;padding:10px;background:#fafbf8}.metric strong{display:block;font-size:24px}.stageGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.stage{padding:14px;min-height:138px}.stageHead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.stageName{font-weight:800}.stageDesc{font-size:13px;color:#46524a}.gateToolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}.gateToolbar button,.linkButton{border:1px solid #ccd3cb;background:#fff;border-radius:6px;padding:7px 10px;cursor:pointer;color:#24362e;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.gateToolbar button.active{background:#24362e;color:#fff;border-color:#24362e}.gateList{display:grid;gap:8px}.gate{padding:12px}.gateTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.gateName{font-weight:750}.evidence{font-size:12px;color:#526057;margin-top:8px;word-break:break-word}.next{border-left:3px solid #c68a00;background:#fff8df;padding:8px;margin-top:8px;border-radius:4px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.artifactList,.principleList{display:grid;gap:8px}.artifact,.principle{padding:12px}.artifact a{color:#245c84;text-decoration:none;word-break:break-word}.artifact a:hover,.linkButton:hover{text-decoration:underline}.visualBox{border:1px solid #d9ded7;border-radius:8px;background:#fff;min-height:360px;overflow:auto}.visualBox object{width:100%;height:620px;display:block}.visualActions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.actions{display:grid;gap:8px}.action{border-left:4px solid #c68a00;background:#fff8df;border-radius:6px;padding:10px}.foot{margin-top:22px;font-size:12px;color:#667168}@media(max-width:900px){.top,.cols,.stageGrid{grid-template-columns:1fr}.shell{padding:16px}.visualBox object{height:420px}}")
+        println(io, "</style>")
+        println(io, "</head>")
+        println(io, "<body>")
+        println(io, "<main class=\"shell\">")
+        println(io, "<section class=\"top\">")
+        println(io, "<div class=\"panel\">")
+        println(io, "<span class=\"status ", html_escape(plan["overall_status"]), "\">", status_word(string(plan["overall_status"])), "</span>")
+        println(io, "<h1>Session Pipeline MVP</h1>")
+        println(io, "<p class=\"muted\">A dry control surface for the Keep-note G-ingest, session F-projection, and visual-lens F-projection lane. HG remains the source of truth; this page is a readable materialization of the current checks.</p>")
+        println(io, "<div class=\"summary\">")
+        println(io, "<div class=\"metric\"><strong>", html_escape(object_value(summary, :pass, 0)), "</strong><span>pass</span></div>")
+        println(io, "<div class=\"metric\"><strong>", html_escape(object_value(summary, :warn, 0)), "</strong><span>warn</span></div>")
+        println(io, "<div class=\"metric\"><strong>", html_escape(object_value(summary, :fail, 0)), "</strong><span>fail</span></div>")
+        println(io, "</div></div>")
+        health = object_value(plan, :health, Dict())
+        println(io, "<div class=\"panel\"><h2>Runtime</h2>")
+        println(io, "<p><strong>", html_escape(object_value(health, :status, "unknown")), "</strong></p>")
+        println(io, "<p class=\"muted\">ontology ", html_escape(object_value(health, :ontology_version, "")), "<br>t_day ", html_escape(object_value(health, :t_day, "")), "<br>log_len ", html_escape(object_value(health, :log_len, "")), "</p>")
+        println(io, "<p class=\"muted\">Generated ", html_escape(plan["generated_at"]), "</p></div>")
+        println(io, "</section>")
+        println(io, "<section class=\"stageGrid\">")
+        for stage in stages
+            status = string(stage["status"])
+            println(io, "<article class=\"stage\"><div class=\"stageHead\"><div><div class=\"stageName\">", html_escape(stage["name"]), "</div><div class=\"muted\">", html_escape(stage["short_name"]), "</div></div><span class=\"status ", html_escape(status), "\">", status_word(status), "</span></div><p class=\"stageDesc\">", html_escape(stage["description"]), "</p><p class=\"muted\">", html_escape(stage["summary"]["pass"]), " pass / ", html_escape(stage["summary"]["warn"]), " warn / ", html_escape(stage["summary"]["fail"]), " fail</p></article>")
+        end
+        println(io, "</section>")
+        println(io, "<section class=\"cols\">")
+        println(io, "<div class=\"panel\"><h2>Priority Actions</h2><div class=\"actions\">")
+        if isempty(actions)
+            println(io, "<p class=\"muted\">No failing or warning gates with next actions.</p>")
+        else
+            for action in actions
+                println(io, "<div class=\"action\"><span class=\"status ", html_escape(action["status"]), "\">", status_word(string(action["status"])), "</span><p><strong>", html_escape(action["gate"]), "</strong><br>", html_escape(action["action"]), "</p></div>")
+            end
+        end
+        println(io, "</div></div>")
+        println(io, "<div class=\"panel\"><h2>Artifacts</h2><div class=\"artifactList\">")
+        for key in sort(collect(keys(artifacts)); by=string)
+            artifact_path = string(artifacts[key])
+            println(io, "<div class=\"artifact\"><strong>", html_escape(key), "</strong><br><a href=\"", html_escape(artifact_link(path, artifact_path)), "\">", html_escape(artifact_path), "</a></div>")
+        end
+        println(io, "</div></div>")
+        println(io, "</section>")
+        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Visual Lens</h2>")
+        if !isempty(svg_path) && isfile(svg_path)
+            println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(svg_href), "\">Open SVG</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :dot, "")))), "\">Open DOT</a></div>")
+            println(io, "<div class=\"visualBox\"><object type=\"image/svg+xml\" data=\"", html_escape(svg_href), "\"></object></div>")
+        else
+            println(io, "<p class=\"muted\">Static SVG is not present yet. Run the session-occasion visual projection before using the visual lens panel.</p>")
+        end
+        println(io, "</section>")
+        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Gates</h2><div class=\"gateToolbar\"><button class=\"active\" data-filter=\"all\">All</button><button data-filter=\"pass\">Pass</button><button data-filter=\"warn\">Warn</button><button data-filter=\"fail\">Fail</button></div><div class=\"gateList\">")
+        for gate in gates
+            status = string(gate["status"])
+            evidence = compact_html_value(gate["evidence"])
+            println(io, "<article class=\"gate\" data-status=\"", html_escape(status), "\"><div class=\"gateTop\"><div class=\"gateName\">", html_escape(gate["name"]), "</div><span class=\"status ", html_escape(status), "\">", status_word(status), "</span></div><p>", html_escape(gate["detail"]), "</p><div class=\"evidence\">", html_escape(evidence), "</div>")
+            if !isempty(strip(string(gate["next_action"])))
+                println(io, "<div class=\"next\"><strong>Next:</strong> ", html_escape(gate["next_action"]), "</div>")
+            end
+            println(io, "</article>")
+        end
+        println(io, "</div></section>")
+        println(io, "<section class=\"cols\" style=\"margin-top:16px\">")
+        println(io, "<div class=\"panel\"><h2>Interface Principles</h2><div class=\"principleList\">")
+        for principle in plan["interface_principles"]
+            println(io, "<div class=\"principle\"><strong>", html_escape(principle["name"]), "</strong><p class=\"muted\">", html_escape(principle["source"]), "</p><p>", html_escape(principle["application"]), "</p></div>")
+        end
+        println(io, "</div></div>")
+        println(io, "<div class=\"panel\"><h2>Renderer Candidates</h2><div class=\"principleList\">")
+        for candidate in plan["renderer_candidates"]
+            println(io, "<div class=\"principle\"><strong>", html_escape(candidate["name"]), "</strong> <span class=\"muted\">", html_escape(candidate["recommendation"]), "</span><p>", html_escape(candidate["fit"]), "</p></div>")
+        end
+        println(io, "</div></div></section>")
+        println(io, "<p class=\"foot\">Generated from session_pipeline_mvp_gate.jl. This page is an artifact of the projection lane; it does not emit rewrites.</p>")
+        println(io, "</main>")
+        println(io, "<script>document.querySelectorAll('[data-filter]').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('[data-filter]').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');var f=btn.getAttribute('data-filter');document.querySelectorAll('.gate').forEach(function(g){g.style.display=(f==='all'||g.getAttribute('data-status')===f)?'block':'none'});});});</script>")
+        println(io, "</body></html>")
+    end
 end
 
 function write_markdown(path::AbstractString, plan)
@@ -361,6 +609,7 @@ function parse_args(argv)
         "dot-path" => DEFAULT_DOT_PATH,
         "svg-path" => DEFAULT_SVG_PATH,
         "out-base" => DEFAULT_OUT_BASE,
+        "html-path" => DEFAULT_HTML_PATH,
         "session-urn" => DEFAULT_SESSION_URN,
         "actor-urn" => DEFAULT_ACTOR_URN,
         "keep-channel-urn" => DEFAULT_KEEP_CHANNEL_URN,
@@ -399,6 +648,7 @@ function main(argv=ARGS)
         graph_pack_path=options["graph-pack"],
         dot_path=options["dot-path"],
         svg_path=options["svg-path"],
+        html_path=options["html-path"],
         session_urn=options["session-urn"],
         actor_urn=options["actor-urn"],
         keep_channel_urn=options["keep-channel-urn"],
@@ -407,10 +657,13 @@ function main(argv=ARGS)
     )
     json_path = string(options["out-base"], ".json")
     markdown_path = string(options["out-base"], ".md")
+    html_path = options["html-path"]
     write_json(json_path, plan)
     write_markdown(markdown_path, plan)
+    write_html(html_path, plan)
     println("Wrote MVP gate JSON: ", json_path)
     println("Wrote MVP gate Markdown: ", markdown_path)
+    println("Wrote MVP dashboard HTML: ", html_path)
     println("Overall: ", plan["overall_status"], " Pass: ", plan["summary"]["pass"], " Warn: ", plan["summary"]["warn"], " Fail: ", plan["summary"]["fail"])
     return plan["overall_status"] == "fail" ? 1 : 0
 end

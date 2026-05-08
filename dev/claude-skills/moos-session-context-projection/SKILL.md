@@ -20,6 +20,7 @@ The pack is dry by default. It reads state, derives context, and writes reviewab
 - **Affordance pack**: the skills/prompts/tools/workflows/extensions/MCP servers that follow from the session's purpose and scope. Current IDE skills are transitional projections of this pack; extensions and MCP servers are concrete IDE/harness affordances.
 - **Writer**: a later explicit boundary step that takes an approved pack and installs or sends it somewhere. The first pass is planner-only.
 - **MVP gate**: a generated dry report that checks the current G-ingest/F-projection/visual-lens lane and names pass/warn/fail gaps without emitting rewrites.
+- **Control surface**: the local HTML materialization at `tmp/projections/session_pipeline/index.html`; it is a human-readable view over the generated JSON/Markdown artifacts, not a new truth source.
 
 ## Current Planner
 
@@ -54,7 +55,7 @@ The planner scans `dev/claude-skills`, the local VS Code extension directory, an
 1. Read `kb/superset/running-state.md` first and verify `/healthz`.
 2. Generate the session context pack with the Julia planner.
 3. Inspect the JSON or Markdown pack before using it as a prompt seed or handoff.
-4. Run `dev/scripts/session_pipeline_mvp_gate.jl` when evaluating whether the current Keep-note/session/visual-projection lane is MVP-usable.
+4. Run `dev/scripts/projections/run-session-pipeline.ps1` when evaluating whether the current Keep-note/session/visual-projection lane is MVP-usable; inspect the generated control surface before using the pack as a handoff.
 5. If a tool needs to consume it automatically, build a writer as a separate explicit boundary.
 6. Reify durable results back into HG as a derivation, claim, pattern, workflow, or external_op result when the result matters beyond the current IDE session.
 

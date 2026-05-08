@@ -13,7 +13,7 @@ const DEFAULT_PATTERN_URN = "urn:moos:pattern:session-affordance-pack"
 const DEFAULT_SKILLS_DIR = "dev/claude-skills"
 const DEFAULT_EXTENSIONS_DIR = joinpath(homedir(), ".vscode", "extensions")
 const DEFAULT_MCP_CONFIGS = ".vscode/mcp.json.example"
-const DEFAULT_OUT_BASE = "tmp/projections/session_context/current_session"
+const DEFAULT_OUT_BASE = "tmp/projections/session_pipeline/session_context/current_session"
 const DEFAULT_SKILL_LIMIT = 5
 const DEFAULT_EXTENSION_LIMIT = 8
 

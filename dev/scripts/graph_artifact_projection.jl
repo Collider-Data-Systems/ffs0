@@ -15,7 +15,7 @@ const DEFAULT_ROOT_URNS = join([
     "urn:moos:pattern:session-affordance-pack",
     "urn:moos:workflow:z440-session-continuity-reconciliation",
 ], ";")
-const DEFAULT_OUT_BASE = "tmp/projections/graph_artifacts/session_occasion_engineering"
+const DEFAULT_OUT_BASE = "tmp/projections/session_pipeline/graph_artifacts/session_occasion_engineering"
 const DEFAULT_RADIUS = 2
 const DEFAULT_WFS = "WF12,WF18,WF20,WF21"
 const DEFAULT_PORTS = "causes,caused-by,composes,composed-by,consumes,consumed-by,produces,produced-by,provides-kb,provided-by,grammar-promotes,grammar-promoted-by"
