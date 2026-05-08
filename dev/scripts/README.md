@@ -18,6 +18,7 @@ Operational tools — delegation, checkpointing, graph audits.
 - `google_calendar_projection.jl` — F-direction planning adapter from folded HG state to Google Calendar event payloads. It writes a reviewable JSON plan and does not perform OAuth or cloud writes.
 - `google_calendar_writer.jl` — explicit OAuth boundary writer for applying an approved Google Calendar projection plan. Defaults to dry-run/check modes; real writes require local gitignored OAuth files and `--mode write`.
 - `session_context_projection.jl` — F-direction planning adapter from folded HG state to a session context pack for IDE, agent, or harness handoff. It writes reviewable JSON and Markdown, and does not edit IDE config or emit rewrites.
+- `session_pipeline_mvp_gate.jl` — dry MVP gate report for the Keep-note/session/visual-projection lane. It checks live G-ingest evidence, F session handoff output, graph-artifact analysis, static visuals, lens controls, and known gaps.
 
 ### T200+ Projection Exporter
 
@@ -62,6 +63,14 @@ The adapter emits `tmp/projections/graph_artifacts/session_occasion_engineering.
 The adapter emits `tmp/projections/session_context/current_session.json` and `tmp/projections/session_context/current_session.md`. This is a dry F-direction pack: HG stays authoritative, and the output can be passed to VS Code, another agent, or a harness as a session header. Use `--session-urn`, `--actor-urn`, `--focus`, `--skill-limit`, `--extensions-dir`, `--extension-limit`, and `--mcp-configs` to narrow the occasion and the projected affordance pack.
 
 By default it scans canonical mo:os skills, local VS Code extensions, and `.vscode/mcp.json.example`. MCP secrets are not copied into the output; the pack records server names, transport type, endpoints/commands, and header/env key names only.
+
+### Session Pipeline MVP Gate
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\session_pipeline_mvp_gate.jl
+```
+
+The gate emits `tmp/projections/mvp/session_pipeline_gate.json` and `.md`. It treats the current lane as a small CICD/functorial-semantics pipeline: G-ingest from Keep into HG, F-projection from folded state into session/agent/visual artifacts, and a visual lens whose scope is roots plus WF/port/type/match filters. The report is allowed to return `warn` for known MVP gaps, such as a missing durable `has-purpose` relation, disconnected forced roots, or the absence of an interactive renderer. It exits nonzero only on `fail` gates.
 
 ### Google Calendar Projection Plan
 
