@@ -10,7 +10,7 @@ Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, open items, key URNs.
 
-At T=186 hp-laptop kernel is live on v3.16.0 (log_len 940, t_day 186). Z440 4-kernel federation last confirmed at v3.15.0 (T=177). 3 active sessions on hp-laptop have explicit has-purpose LINKs (D22.1 promoted T=185). No program currently has an active/running status. Kernel-bound session `session:hp-laptop.primary` has purpose but no has-occupant LINK yet. Doctrine lives as derivations on log.
+At T=188 hp-laptop kernel is live on v3.16.1 (log_len 1080, t_day 188). Z440 4-kernel federation last confirmed at v3.15.0 (T=177). `session:sam.governance` now has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation`; the active working lane is the dry Keep/session/visual projection pipeline, not a single running HG program. Current operator report: `kb/moos-diary/t188-t187-session-pipeline-mvp-report.md`. Doctrine lives as derivations on log plus carefully chosen reports; conversations should still reify through HG chunks when they need persistence.
 
 ---
 
@@ -58,7 +58,7 @@ Relations are truth. Properties never duplicate topology.
 
 ## Ontology
 
-`kb/superset/ontology.json` — **v3.16.0**, 53 node types, 21 WFs (WF01–WF21).
+`kb/superset/ontology.json` — **v3.16.1**, 53 node types, 21 WFs (WF01–WF21).
 Do not edit without reading running-state.md first.
 
 Notable bumps since v3.9 baseline (T=168):
@@ -69,6 +69,7 @@ Notable bumps since v3.9 baseline (T=168):
 - v3.14.0 (T=175) — `derivation` S2 node type for reifying session-internal inference.
 - v3.15.0 (T=176) — `clock` node type, WF21 causes/caused-by (acyclic), substrate properties on channel/knowledge_item, channel.kind +video/+audio.
 - v3.16.0 (T=185) — D22.1 `has-purpose`/`purpose-of-session` WF19 port-pair. Session repurposing via MUTATE.
+- v3.16.1 (T=187) — authority-scope patch for kernel-authored lifecycle closeout and current projection-lane validation.
 
 ---
 
@@ -86,9 +87,9 @@ Full envelope shape + gotchas: `moos-rewrite-envelope` skill.
 
 ---
 
-## Current sessions + personae (T=186)
+## Current sessions + personae (T=188)
 
-Active on hp-laptop now: `sam.laptop-cowork-workspace`, `sam.laptop-moos-diary`, `hp-laptop.primary`. Z440 rows below are topology memory until that federation is live again.
+Active on hp-laptop now: `sam.governance`, `sam.laptop-cowork-workspace`, `sam.laptop-moos-diary`, `hp-laptop.primary`. `sam.governance` is the current Guido lane for doctrine, projection gating, and round closeout. Z440 rows below are topology memory until that federation is live again.
 
 | Persona | Agent | Session | Host kernel | Notes |
 |---|---|---|---|---|
@@ -120,7 +121,28 @@ New doctrine `.md` files only when establishing a new invariant. Past-round scra
 
 Current adjunctions inventory (channel nodes live, skill queued):
 - Google Gmail / Calendar / Drive / Tasks — `channel:google.*.sam`
+- Google Keep — `channel:google.keep.sam` + `ki:gdrive.t187-keep-session-occasion-lingo` (T187/T188 session-pipeline G-ingest)
 - Git (Collider-Data-Systems) / Social / Network — queued
+
+---
+
+## Current projection lane (T188)
+
+The local dry pipeline is the first screen for T189 projection work:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-session-pipeline.ps1
+```
+
+Outputs land under `tmp/projections/session_pipeline/`:
+
+- `session_context/current_session.{json,md}` — IDE/agent/harness session context pack.
+- `graph_artifacts/session_occasion_engineering.{json,md}` — selected HG frame with root coverage and engineering findings.
+- `visual/session_occasion_frame.{dot,svg}` — static Graphviz review artifact.
+- `mvp/session_pipeline_gate.{json,md}` — pass/warn/fail gate report.
+- `index.html` — local human-facing control surface.
+
+Latest gate after WF19 purpose anchor: `warn`, 11 pass, 2 warn, 0 fail. Remaining T189 warnings: disconnected forced visual roots and no interactive Cytoscape.js-style typed-HG inspector. Keep Graphviz for deterministic review; prototype Cytoscape.js for interactive lensing.
 
 ---
 
@@ -141,7 +163,7 @@ kb/
   research/              live doctrine (kernel spec, session notes, moos-diary)
 dev/
   scripts/               ops + utility scripts
-  claude-skills/         11 skill directories (synced to ~/.claude/skills/)
+  claude-skills/         12 skill directories (synced to ~/.claude/skills/)
   reference/
     research-archive/    past-round scratch, shipped plans, substrate lingo, seating snapshots
 secrets/                 GITIGNORED (local-first)
