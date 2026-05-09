@@ -16,6 +16,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-
 
 The dashboard is generated at `tmp/projections/session_pipeline/index.html`.
 The atlas is generated at `tmp/projections/session_pipeline/atlas/surface_context_atlas.{json,md}` and explains the JSON API, JSONL log, Git repos, Calendar, dashboard, visuals, type/relation/program surface, existing HG anchors, and pending moves.
+For the practical filesystem/dashboard/scripts/skills manual, see `dev/scripts/projections/session-pipeline-operator-manual.md`.
 
 ## Repository Role
 

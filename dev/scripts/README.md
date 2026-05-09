@@ -16,6 +16,8 @@ Operational tools — delegation, checkpointing, graph audits.
 
 Projection-lane orchestration entrypoints. These scripts run multiple adapters together and write organized local artifacts under `tmp/projections/`.
 
+The operator manual for the generated filesystem, dashboard, script stack, typed data flow, gates, and skills is `projections/session-pipeline-operator-manual.md`.
+
 ## Loose files
 
 - `export_t200plus_projection.jl` — folded-state DOT/SVG exporter for T200+ graph lenses.

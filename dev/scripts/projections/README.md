@@ -2,6 +2,8 @@
 
 This folder holds orchestration entrypoints for local projection lanes. The Julia adapters still live one level up for compatibility with existing calls and tests.
 
+For the practical filesystem/dashboard/scripts/skills guide, see `session-pipeline-operator-manual.md`.
+
 ## Session Pipeline
 
 ```powershell
