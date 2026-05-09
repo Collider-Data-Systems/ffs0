@@ -10,7 +10,7 @@ Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, open items, key URNs.
 
-At T=189 hp-laptop kernel is live on v3.16.1 (log_len 1086, t_day 189). Z440 4-kernel federation last confirmed at v3.15.0 (T=177). `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation` and now pins the Calendar/time-fabric program family; the active working lane is the Keep/session/visual/Calendar/recommendation projection pipeline, not a single running HG program. Current operator report: `kb/moos-diary/t189-recommendation-hg-projection-wrapup.md`; prior T189 report: `kb/moos-diary/t189-calendar-dashboard-organization-wrapup.md`. Doctrine lives as derivations on log plus carefully chosen reports; conversations should still reify through HG chunks when they need persistence.
+At T=189 hp-laptop kernel is live on v3.16.1 (log_len 1154, t_day 189). Z440 4-kernel federation last confirmed at v3.15.0 (T=177). `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation` and now pins the Calendar/time-fabric program family, grouped T189/T200 recommendation carriers, and 16 individual `calendar_event` observations. The active working lane is the Keep/session/visual/Calendar/recommendation projection pipeline, not a single running HG program. Current operator report: `kb/moos-diary/t189-calendar-event-public-surface-wrapup.md`; prior T189 reports: `kb/moos-diary/t189-recommendation-hg-projection-wrapup.md` and `kb/moos-diary/t189-calendar-dashboard-organization-wrapup.md`. Doctrine lives as derivations on log plus carefully chosen reports; conversations should still reify through HG chunks when they need persistence.
 
 ---
 
@@ -141,12 +141,15 @@ Outputs land under `tmp/projections/session_pipeline/`:
 - `graph_artifacts/session_occasion_engineering.{json,md}` — selected HG frame with root coverage and engineering findings.
 - `visual/session_occasion_frame.{dot,svg}` — static Graphviz session-occasion review artifact.
 - `visual/temporal_calendar_frame.{dot,svg}` — static Graphviz Calendar/time-fabric review artifact.
+- `visual/t189_recommendation_frame.{dot,svg}` — static Graphviz recommendation lens with applied Calendar event observations.
 - `calendar/calendar_time_fabric_plan.{json,md}` — Calendar projection payload plan/report.
+- `calendar/calendar_time_fabric_write_result.json` — explicit Google Calendar writer result; latest T189 run patched 16 existing events by `moos_projection_id`.
 - `recommendations/t189_t200_recommendation_hg_plan.{json,md}` — dry candidate HG nodes/relations for the five T189 recommendations and T200+ convergence.
+- `recommendations/t189_recommendation_reconciliation.{json,md}` — comparison of candidate plan against folded state; current result: 10/10 grouped nodes, 16/16 grouped safe relations, 16/16 Calendar event nodes, 16/16 Calendar session pins applied, 16 WF07 anchors deferred.
 - `mvp/session_pipeline_gate.{json,md}` — pass/warn/fail gate report.
 - `index.html` — local human-facing control surface.
 
-Latest gate after Calendar/dashboard/recommendation integration: `warn`, 13 pass, 2 warn, 0 fail. Remaining T189 warnings: disconnected forced visual roots and no interactive Cytoscape.js-style typed-HG inspector. Keep Graphviz for deterministic review; prototype Cytoscape.js for interactive lensing. Calendar G-ingest shape is now chosen as hybrid in the dry recommendation plan: individual `calendar_event` nodes plus one grouped derivation/result; WF07 source-anchor relations need operad review before APPLY.
+Latest gate after Calendar/dashboard/recommendation integration: `warn`, 18 pass, 1 warn, 0 fail. Remaining T189 warning: disconnected forced visual roots on the session-occasion lens. Keep Graphviz for deterministic review; Cytoscape.js tabs now exist for session-occasion and T189 recommendation lenses. Calendar G-ingest shape is hybrid: individual `calendar_event` nodes plus one grouped derivation/result are applied; WF07 source-anchor relations need operad review before APPLY.
 
 Kernel/application split: `moos-kernel` is the OS-facing runtime function program. `moos-router` is federation/read-routing. `ffs0` is the control/research workspace. Application groups such as `my-tiny-data-collider` run on HG through the kernels and may own websites, DNS, servers, Calendar, GitHub, and Workspace surfaces, but they are separate entities/codebases from the kernel.
 

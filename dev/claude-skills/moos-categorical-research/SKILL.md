@@ -118,6 +118,18 @@ When proposing new categorical structure, sketch which HDC operation realizes it
 
 **Output:** ADD `claim:karpathy.workspace-channel-as-cooperad-with-fg-adjunction` (text the above), ADD `derivation:karpathy.workspace-channel-cooperad-derivation` (inference_kind=hand_authored, consumes the t164 archive note, produces this claim).
 
+## Worked example: identity-stable projection surfaces
+
+T189 makes the F/G pattern concrete across Calendar, GitHub Projects, dashboards, organization profile text, and future website/DNS surfaces.
+
+**Formalism.** Each external surface is a functorial projection from the folded HG category into a surface category whose objects are rows, events, pages, files, or records. The unit/counit test is identity stability: the external object carries enough graph-derived identity that a later observation can resolve back to the same HG node or relation intent.
+
+**HG topology.** Calendar writes become `calendar_event` nodes with `date`, `t_day`, `gcal_id`, `color_label`, and status; Project rows need `HG URN`; dashboard lenses become `view_filter` candidates; application domains become `group + purpose + program + channel` families. WF19 pins keep the current session scope visible. WF07 source-anchor links remain deferred until the top-level operad declaration agrees with the port-color pair.
+
+**HDC implementation.** A future encoder can bind `(surface, external_id, hg_urn, projection_contract)` and bundle each surface's active rows/events into a similarity-searchable projection state. Drift is a low-similarity or unresolved binding, not a mystical mismatch.
+
+This is the clean categorical reading of the T200 target: many external surfaces, one graph identity discipline, explicit F planners, explicit writers, and conservative G ingest.
+
 ## Cross-references
 
 - `moos-rewrite-envelope` — envelope shapes, gates, immutability discipline
@@ -129,4 +141,4 @@ When proposing new categorical structure, sketch which HDC operation realizes it
 
 ## Status
 
-**Round-13 deliverable** (T=176). First skill authored to serve the Karpathy seat post-Phase B launch. Iterations expected as Karpathy's actual emit patterns reveal which categorical work is highest-leverage for mo:os.
+**Active through T189.** First authored as a Round-13 deliverable for Karpathy's seat; now also frames identity-stable projection surfaces, Calendar event observations, reusable lenses, and T200 convergence as an F/G adjunction problem over graph-derived identity.

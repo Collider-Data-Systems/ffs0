@@ -48,6 +48,7 @@ Express adjoint angle: if WF20 ever runs Express back from S2 to S4, these entri
 - [T=188 — T187/T188 session pipeline MVP report](t188-t187-session-pipeline-mvp-report.md)
 - [T=189 — Calendar, dashboard, organization, and boundary report](t189-calendar-dashboard-organization-wrapup.md)
 - [T=189 — Recommendation HG projection and T200 node/relation plan](t189-recommendation-hg-projection-wrapup.md)
+- [T=189 — Calendar event readback, skills, and public surfaces](t189-calendar-event-public-surface-wrapup.md)
 
 (More as sam does things worth mocking.)
 

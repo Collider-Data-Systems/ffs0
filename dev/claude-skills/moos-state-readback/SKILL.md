@@ -23,6 +23,16 @@ cd /c/Users/maass/HPlaptop/ffs0 && git status -uno # WRONG (drifts)
 
 Same for `gh` — use `gh <cmd> --repo Collider-Data-Systems/<repo-name>` rather than relying on repo auto-detection from cwd.
 
+On Windows, prefer full paths in live commands:
+
+```powershell
+git -C C:\Users\maass\HPlaptop\ffs0 status --short --branch
+Set-Location 'C:\Users\maass\HPlaptop\ffs0'
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\google_calendar_writer.jl --mode check
+```
+
+T189 caught the same class of drift with Julia: launching `dev\scripts\google_calendar_writer.jl` from `C:\Users\maass\HPlaptop` fails because the script path is repo-relative. Either `Set-Location` to `ffs0` first or pass an absolute script path.
+
 ## Cardinal rule — always qualify PR/issue numbers with repo
 
 `#29` is ambiguous when three repos have their own PR sequences. Write `moos-kernel#29` or `ffs0#33` — every time, even when the context "obviously" implies one. On multi-machine handoffs (hp-laptop, Z440), the context doesn't always carry.
@@ -105,6 +115,19 @@ gh issue view 33 --repo Collider-Data-Systems/ffs0 --comments 2>&1 | tail -80
 
 If the active handoff issue isn't `ffs0#33`, substitute the current one. `--comments` with `tail -80` gets the last round of comments from peers — claude-z440, antigravity, or whoever is handing off.
 
+### 6. Projection/public-surface readback
+
+For T189/T200 projection work, also check the public-facing surfaces that can drift:
+
+```powershell
+gh auth status
+gh repo view Collider-Data-Systems/.github --json name,isPrivate,url,defaultBranchRef
+gh project view 4 --owner Collider-Data-Systems --format json
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\google_calendar_writer.jl --mode check --out tmp/projections/session_pipeline/calendar/google_calendar_credential_check.json
+```
+
+Report GitHub Project item count, field count, and whether `HG URN` coverage is known. For Calendar, report credential/token presence and whether the writer would be a dry plan, insert, or upsert/patch path. Never print token values.
+
 ## Reporting shape
 
 After the parallel batch, synthesize a 7-line summary:
@@ -117,6 +140,7 @@ running:     header T=<day>, <in-flight note>
 kernel 0:    PID <pid> on :8000/:8080 — runtime v<X> (on disk v<Y>) [sweep: on|off]
 federation:  [Z440 only] PIDs on :8001-:8003 — <status>
 handoff:     ffs0#<N> — <M> new comments from <peer>; action queued: <yes/no>
+surfaces:    Project #4 <item-count> items / <field-count> fields; Calendar token <present|missing>; org profile <present|missing>
 ```
 
 If any row says "behind" or a version mismatch, the round opens with a pull/rebuild/restart plan, NOT with a doctrine claim.

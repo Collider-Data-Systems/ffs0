@@ -188,6 +188,44 @@ Kernel-authority MUTATE (the actor must be a kernel URN per §M12; `target_t` is
 }
 ```
 
+### T189 Calendar observation example
+
+When a Google Calendar write has already happened and is being observed back into HG, create a `calendar_event` node, then pin it into the active session with WF19. The Google event itself is not truth; this node is the graph observation of that external event.
+
+```json
+{
+  "rewrite_type": "ADD",
+  "actor": "urn:moos:agent:claude-code.hp-laptop",
+  "session_urn": "urn:moos:session:sam.governance",
+  "node_urn": "urn:moos:cal:2026-05-09.moos-example",
+  "type_id": "calendar_event",
+  "properties": {
+    "summary": {"value": "mo:os program :: example", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "date": {"value": "2026-05-09", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "t_day": {"value": 189, "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "gcal_id": {"value": "google-event-id", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "color_label": {"value": "purple", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+    "status": {"value": "confirmed", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+    "created_at": {"value": "2026-05-09T16:30:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+  }
+}
+```
+
+```json
+{
+  "rewrite_type": "LINK",
+  "actor": "urn:moos:kernel:hp-laptop.primary",
+  "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-example",
+  "src_urn": "urn:moos:session:sam.governance",
+  "src_port": "pins-urn",
+  "tgt_urn": "urn:moos:cal:2026-05-09.moos-example",
+  "tgt_port": "pinned-by-session",
+  "rewrite_category": "WF19"
+}
+```
+
+Do not apply WF07 `anchors/anchor` for Calendar source anchors until the top-level WF07 declaration and the port-color compatibility entry agree. T189 keeps those relations as deferred rows in reconciliation rather than silently applying a questionable port pair.
+
 ## UNLINK — remove a relation
 
 **Required fields:** `rewrite_type`, `actor`, `relation_urn`. `rewrite_category` is optional (resolved from existing relation). Nodes are never removed — UNLINK only removes relations.

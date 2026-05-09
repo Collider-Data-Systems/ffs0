@@ -58,6 +58,22 @@ DX work compounds because each friction claim becomes findable next time the sam
 | Restart sequence | dual-kernel race (stdio sidecar + HTTP kernel both alive) | kill all → relaunch one (Guido's T=173 fix) |
 | Heredoc parsing | `<<'EOF'` doesn't work in PowerShell | use here-string `@'...'@` (closing delim at column 0) |
 
+## T189 projection-control DX
+
+The current operator screen is `tmp/projections/session_pipeline/index.html`. Treat it as a control surface over generated artifacts, not as truth. The truth chain is:
+
+```text
+kernel log -> folded HG state -> projection artifacts -> dashboard / Calendar / GitHub / docs
+```
+
+T189 added three DX rules for projection work:
+
+- **Run from the repo root or use absolute paths.** A Calendar credential check failed once because the shell was in `C:\Users\maass\HPlaptop` while the script path was repo-relative. For projection commands, start with `Set-Location 'C:\Users\maass\HPlaptop\ffs0'` or use full paths.
+- **Keep one-shot actuators out of ignored projection folders.** Generated review artifacts belong under `tmp/projections/session_pipeline/`; apply scripts do not. If a one-shot runner is needed, use a durable `dev/scripts/ops/` tool or a temporary host command, then delete local throwaway files.
+- **Expose applied/pending/deferred separately.** The recommendation dashboard should say which rows are applied in folded state, which rows remain pending, and which rows are intentionally deferred for operad or actor review. Do not collapse those states into one vague warning.
+
+For public surfaces, use the same DX rule: organization profile, GitHub Project readme, Calendar events, dashboards, and future website/DNS plans should all carry stable graph identity or a visible path back to the HG node/program that produced them.
+
 ## Shell-script reification doctrine
 
 A shell command becomes a script when (a) it's run more than 3 times, (b) it has order-dependent steps, or (c) it touches multiple kernels. Scripts live in `dev/scripts/ops/` (operations) or `dev/scripts/` (cross-cutting utilities). Each script gets:
@@ -116,4 +132,4 @@ A shell command becomes a script when (a) it's run more than 3 times, (b) it has
 
 ## Status
 
-**Round-13 deliverable** (T=176). First skill authored to serve the Steinberger seat post-Phase B launch. Will iterate as Steinberger's actual emit patterns reveal which DX work is highest-leverage.
+**Active through T189.** First authored as a Round-13 deliverable for Steinberger's seat; now also covers projection-control DX for session pipeline, Calendar writer/upsert boundaries, public GitHub surfaces, and path-safe Windows operator commands.

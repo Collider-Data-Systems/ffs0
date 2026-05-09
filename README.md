@@ -6,7 +6,7 @@ Private portable workspace for mo:os research, ontology, projection lanes, skill
 
 Read `kb/superset/running-state.md` first. It is the hydration entrypoint for current T-day, kernel state, sessions, active lanes, and key URNs.
 
-As of T189, hp-laptop primary is live on ontology v3.16.1 with `session:sam.governance` as the active governance/projection lane. That session now pins the Calendar/time-fabric program family, and the current local pipeline projects HG state into session context, graph artifacts, static visuals, Calendar payloads, recommendation HG plans, and a local dashboard.
+As of T189, hp-laptop primary is live on ontology v3.16.1 with `session:sam.governance` as the active governance/projection lane. That session now pins the Calendar/time-fabric program family, the grouped T189/T200 recommendation carriers, and 16 individual `calendar_event` observations from the Calendar proof. The current local pipeline projects HG state into session context, graph artifacts, static visuals, Calendar payloads, recommendation HG plans, reconciliation reports, and a local dashboard.
 
 Run the current projection lane with:
 
@@ -47,13 +47,13 @@ Use the F/G boundary consistently:
 
 Default to dry planners first. Writers and API calls are actuator boundaries and should be explicit. External surfaces need graph-derived identity so they can be ingested back without guesswork.
 
-## Current T189 Priorities
+## Current T189/T200 Priorities
 
-- Validate and commit the Calendar time-fabric planner/dashboard/recommendation lane.
-- Review the hybrid Calendar G-ingest plan: 16 individual `calendar_event` nodes plus one grouped derivation/result.
-- Refresh the GitHub Project #4 bridge so active rows carry `HG URN` identity.
-- Prototype a Cytoscape.js typed-HG inspector while keeping Graphviz DOT/SVG as deterministic review artifacts.
-- Model `my-tiny-data-collider` as an application group on the HG, separate from kernel/runtime repositories.
+- Keep the session pipeline as the daily operator screen: Graphviz for deterministic review, Cytoscape.js for typed inspection, and gates that distinguish applied, pending, and deferred rows.
+- Finish the WF07 Calendar source-anchor operad cleanup so the 16 applied `calendar_event` nodes can link back to their source HG nodes without a deferred boundary.
+- Refresh GitHub Project #4 row identity so active items carry `HG URN` and board edits can become conservative G-direction rewrite candidates.
+- Grow `my-tiny-data-collider` as an application group on HG: websites, DNS, servers, Calendar, GitHub, Workspace, and content/data products as explicit external surfaces.
+- Keep public-facing organization/project content aligned with the graph while runtime repos stay focused on kernel and router substrate.
 
 ## Safety
 

@@ -552,15 +552,22 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     grouped_nodes_total = Int(object_value(rec_summary, :grouped_nodes_total, 0))
     grouped_relations_applied = Int(object_value(rec_summary, :grouped_relations_applied, 0))
     grouped_relations_total = Int(object_value(rec_summary, :grouped_relations_total, 0))
+    calendar_event_nodes_applied = Int(object_value(rec_summary, :calendar_event_nodes_applied, 0))
+    calendar_event_nodes_total = Int(object_value(rec_summary, :calendar_event_nodes_total, 0))
     calendar_event_nodes_pending = Int(object_value(rec_summary, :calendar_event_nodes_pending, 0))
+    calendar_event_relations_applied = Int(object_value(rec_summary, :calendar_event_relations_applied, 0))
+    calendar_event_relations_total = Int(object_value(rec_summary, :calendar_event_relations_total, 0))
+    calendar_event_relations_pending = Int(object_value(rec_summary, :calendar_event_relations_pending, 0))
     deferred_relations = Int(object_value(rec_summary, :deferred_relations, 0))
     grouped_nodes_ok = Bool(object_value(rec_summary, :grouped_nodes_ok, false))
     grouped_relations_ok = Bool(object_value(rec_summary, :grouped_relations_ok, false))
-    reconciliation_ok = reconciliation_exists && reconciliation_report_exists && grouped_nodes_ok && grouped_relations_ok && grouped_nodes_total > 0 && grouped_relations_total > 0
+    calendar_nodes_ok = calendar_event_nodes_total == 0 || calendar_event_nodes_pending == 0
+    calendar_relations_ok = calendar_event_relations_total == 0 || calendar_event_relations_pending == 0
+    reconciliation_ok = reconciliation_exists && reconciliation_report_exists && grouped_nodes_ok && grouped_relations_ok && calendar_nodes_ok && calendar_relations_ok && grouped_nodes_total > 0 && grouped_relations_total > 0
     push!(gates, gate(
         reconciliation_ok ? "pass" : "warn",
         "T189 recommendation reconciliation",
-        reconciliation_ok ? "The dry recommendation plan is reconciled against folded HG state: grouped nodes and safe relations are already applied." : "The recommendation plan has not been reconciled against folded HG state yet, or grouped apply rows are still pending.",
+        reconciliation_ok ? "The dry recommendation plan is reconciled against folded HG state: grouped rows plus Calendar event nodes/session pins are applied when present." : "The recommendation plan has not been reconciled against folded HG state yet, or apply-ready rows are still pending.",
         evidence=Dict(
             "reconciliation" => reconciliation_path,
             "reconciliation_exists" => reconciliation_exists,
@@ -570,22 +577,40 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
             "grouped_nodes_total" => grouped_nodes_total,
             "grouped_relations_applied" => grouped_relations_applied,
             "grouped_relations_total" => grouped_relations_total,
+            "calendar_event_nodes_applied" => calendar_event_nodes_applied,
+            "calendar_event_nodes_total" => calendar_event_nodes_total,
+            "calendar_event_nodes_pending" => calendar_event_nodes_pending,
+            "calendar_event_relations_applied" => calendar_event_relations_applied,
+            "calendar_event_relations_total" => calendar_event_relations_total,
+            "calendar_event_relations_pending" => calendar_event_relations_pending,
         ),
-        next_action=reconciliation_ok ? "" : "Run t189_recommendation_reconciliation.jl after the recommendation HG plan, then inspect grouped pending rows before any further APPLY work.",
+        next_action=reconciliation_ok ? "" : "Run t189_recommendation_reconciliation.jl after the recommendation HG plan, then inspect pending rows before any further APPLY work.",
     ))
 
-    deferred_boundaries_ok = reconciliation_exists && calendar_event_nodes_pending > 0 && deferred_relations > 0
+    deferred_boundaries_ok = reconciliation_exists && deferred_relations > 0 && (calendar_event_nodes_total > 0 || calendar_event_nodes_pending > 0)
+    deferred_detail = if deferred_boundaries_ok && calendar_event_nodes_pending == 0
+        "Calendar event nodes and session pins are applied; WF07 source-anchor relations remain explicitly deferred for operad review."
+    elseif deferred_boundaries_ok
+        "Calendar event nodes and WF07 anchor relations remain explicitly pending/deferred instead of being silently applied."
+    else
+        "Deferred Calendar/WF07 boundaries are not visible in the reconciliation artifact."
+    end
     push!(gates, gate(
         deferred_boundaries_ok ? "pass" : "warn",
         "deferred apply boundaries",
-        deferred_boundaries_ok ? "Calendar event nodes and WF07 anchor relations remain explicitly pending/deferred instead of being silently applied." : "Deferred Calendar/WF07 boundaries are not visible in the reconciliation artifact.",
+        deferred_detail,
         evidence=Dict(
+            "calendar_event_nodes_applied" => calendar_event_nodes_applied,
+            "calendar_event_nodes_total" => calendar_event_nodes_total,
             "calendar_event_nodes_pending" => calendar_event_nodes_pending,
+            "calendar_event_relations_applied" => calendar_event_relations_applied,
+            "calendar_event_relations_total" => calendar_event_relations_total,
+            "calendar_event_relations_pending" => calendar_event_relations_pending,
             "deferred_relations" => deferred_relations,
             "grouped_nodes_ok" => grouped_nodes_ok,
             "grouped_relations_ok" => grouped_relations_ok,
         ),
-        next_action=deferred_boundaries_ok ? "" : "Keep Calendar-event nodes, WF07 anchors, and board repair out of live APPLY batches until the next explicit actor/operad review step.",
+        next_action=deferred_boundaries_ok ? "" : "Keep WF07 anchors and board repair out of live APPLY batches until the next explicit actor/operad review step.",
     ))
 
     filters = object_value(graph_pack, :filters, Dict())

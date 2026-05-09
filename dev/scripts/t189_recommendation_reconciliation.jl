@@ -164,7 +164,12 @@ function reconcile(plan, nodes, relations; health=Dict(), generated_at::String=f
     counts["deferred_relation_total"] = length(deferred_rows)
     grouped_nodes_ok = get(counts, "node_grouped_total", 0) > 0 && get(counts, "node_grouped_pending", 0) == 0
     grouped_relations_ok = get(counts, "relation_grouped-safe_total", 0) > 0 && get(counts, "relation_grouped-safe_pending", 0) == 0
+    calendar_nodes_applied = get(counts, "node_calendar-event_applied", 0)
+    calendar_nodes_total = get(counts, "node_calendar-event_total", 0)
     calendar_nodes_pending = get(counts, "node_calendar-event_pending", 0)
+    calendar_relations_applied = get(counts, "relation_calendar-event_applied", 0)
+    calendar_relations_total = get(counts, "relation_calendar-event_total", 0)
+    calendar_relations_pending = get(counts, "relation_calendar-event_pending", 0)
     deferred_relation_total = get(counts, "deferred_relation_total", 0)
 
     return Dict(
@@ -179,7 +184,14 @@ function reconcile(plan, nodes, relations; health=Dict(), generated_at::String=f
             "grouped_nodes_total" => get(counts, "node_grouped_total", 0),
             "grouped_relations_applied" => get(counts, "relation_grouped-safe_applied", 0),
             "grouped_relations_total" => get(counts, "relation_grouped-safe_total", 0),
+            "calendar_event_nodes_applied" => calendar_nodes_applied,
+            "calendar_event_nodes_total" => calendar_nodes_total,
             "calendar_event_nodes_pending" => calendar_nodes_pending,
+            "calendar_event_nodes_ok" => calendar_nodes_total > 0 && calendar_nodes_pending == 0,
+            "calendar_event_relations_applied" => calendar_relations_applied,
+            "calendar_event_relations_total" => calendar_relations_total,
+            "calendar_event_relations_pending" => calendar_relations_pending,
+            "calendar_event_relations_ok" => calendar_relations_total > 0 && calendar_relations_pending == 0,
             "deferred_relations" => deferred_relation_total,
             "grouped_nodes_ok" => grouped_nodes_ok,
             "grouped_relations_ok" => grouped_relations_ok,
@@ -205,7 +217,8 @@ function write_markdown(path::AbstractString, report)
         println(io, "## Summary")
         println(io, "- Grouped nodes: ", summary["grouped_nodes_applied"], "/", summary["grouped_nodes_total"], " applied")
         println(io, "- Grouped safe relations: ", summary["grouped_relations_applied"], "/", summary["grouped_relations_total"], " applied")
-        println(io, "- Calendar event nodes pending: ", summary["calendar_event_nodes_pending"])
+        println(io, "- Calendar event nodes: ", summary["calendar_event_nodes_applied"], "/", summary["calendar_event_nodes_total"], " applied")
+        println(io, "- Calendar event session pins: ", summary["calendar_event_relations_applied"], "/", summary["calendar_event_relations_total"], " applied")
         println(io, "- Deferred relations: ", summary["deferred_relations"])
         println(io)
         println(io, "## Pending Calendar Event Nodes")
@@ -218,6 +231,18 @@ function write_markdown(path::AbstractString, report)
             end
         end
         println(io)
+
+        println(io, "## Pending Calendar Event Session Pins")
+        pending_pins = [row for row in report["relations"] if row["bucket"] == "calendar-event" && row["status"] == "pending"]
+        if isempty(pending_pins)
+            println(io, "- <none>")
+        else
+            for row in pending_pins
+                println(io, "- `", row["rewrite_category"], "` ", row["src_port"], " -> ", row["tgt_port"], ": `", row["src_urn"], "` -> `", row["tgt_urn"], "`")
+            end
+        end
+        println(io)
+
         println(io, "## Deferred Relations")
         if isempty(report["deferred_relations"])
             println(io, "- <none>")

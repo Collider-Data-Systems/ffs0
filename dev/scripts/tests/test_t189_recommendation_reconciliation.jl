@@ -26,7 +26,12 @@ const Recon = T189RecommendationReconciliation
     @test report["summary"]["grouped_nodes_total"] == 1
     @test report["summary"]["grouped_relations_applied"] == 1
     @test report["summary"]["grouped_relations_total"] == 1
+    @test report["summary"]["calendar_event_nodes_applied"] == 0
+    @test report["summary"]["calendar_event_nodes_total"] == 1
     @test report["summary"]["calendar_event_nodes_pending"] == 1
+    @test report["summary"]["calendar_event_relations_applied"] == 0
+    @test report["summary"]["calendar_event_relations_total"] == 1
+    @test report["summary"]["calendar_event_relations_pending"] == 1
     @test report["summary"]["deferred_relations"] == 1
     @test report["summary"]["grouped_nodes_ok"] == true
     @test report["summary"]["grouped_relations_ok"] == true
@@ -42,7 +47,9 @@ const Recon = T189RecommendationReconciliation
         Recon.write_markdown(path, report)
         text = read(path, String)
         @test occursin("Grouped nodes: 1/1 applied", text)
-        @test occursin("Calendar event nodes pending: 1", text)
+        @test occursin("Calendar event nodes: 0/1 applied", text)
+        @test occursin("Pending Calendar Event Nodes", text)
+        @test occursin("Pending Calendar Event Session Pins", text)
         @test occursin("Deferred Relations", text)
     end
 end

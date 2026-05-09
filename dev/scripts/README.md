@@ -23,6 +23,7 @@ Projection-lane orchestration entrypoints. These scripts run multiple adapters t
 - `graph_artifact_projection.jl` — dry folded-state graph artifact analyzer for newly added HG frames. It writes JSON/Markdown engineering summaries and pairs with the DOT/SVG exporter for visualization.
 - `calendar_time_fabric_projection.jl` — F-direction planner that turns a recent graph artifact into Google Calendar payloads, mapping HG identity, T-day anchor, node type/status, and relation context into visible Calendar events.
 - `t189_t200_recommendation_projection.jl` — dry planner that turns the five T189 recommendations into candidate HG nodes/relations and T200+ recommendation artifacts without applying rewrites.
+- `t189_recommendation_reconciliation.jl` — dry reconciliation adapter that compares the T189/T200 recommendation plan to folded HG state and reports grouped rows, Calendar event rows, session pins, and WF07-deferred relations separately.
 - `google_calendar_projection.jl` — F-direction planning adapter from folded HG state to Google Calendar event payloads. It writes a reviewable JSON plan and does not perform OAuth or cloud writes.
 - `google_calendar_writer.jl` — explicit OAuth boundary writer for applying an approved Google Calendar projection plan. Defaults to dry-run/check modes; real writes require local gitignored OAuth files and `--mode write`.
 - `session_context_projection.jl` — F-direction planning adapter from folded HG state to a session context pack for IDE, agent, or harness handoff. It writes reviewable JSON and Markdown, and does not edit IDE config or emit rewrites.
@@ -106,7 +107,7 @@ By default it scans canonical mo:os skills, local VS Code extensions, and `.vsco
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\session_pipeline_mvp_gate.jl
 ```
 
-The gate emits `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`, `.md`, and the HTML dashboard at `tmp/projections/session_pipeline/index.html`. It treats the current lane as a small CICD/functorial-semantics pipeline: G-ingest from Keep into HG, F-projection from folded state into session/agent/visual artifacts, Calendar time-fabric projection payloads, and visual lenses whose scope is roots plus WF/port/type/match filters. The report is allowed to return `warn` for known MVP gaps, such as a missing durable `has-purpose` relation, disconnected forced roots, or the absence of an interactive renderer. It exits nonzero only on `fail` gates.
+The gate emits `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`, `.md`, and the HTML dashboard at `tmp/projections/session_pipeline/index.html`. It treats the current lane as a small CICD/functorial-semantics pipeline: G-ingest from Keep into HG, F-projection from folded state into session/agent/visual artifacts, Calendar time-fabric projection payloads, recommendation reconciliation, and visual lenses whose scope is roots plus WF/port/type/match filters. The report is allowed to return `warn` for known MVP gaps, such as disconnected forced roots under a deliberately narrow lens. It exits nonzero only on `fail` gates.
 
 ### Google Calendar Projection Plan
 
@@ -131,6 +132,14 @@ The adapter reads the current session graph artifact and emits `tmp/projections/
 ```
 
 The adapter reads the ontology plus the Calendar time-fabric plan/write result and emits `tmp/projections/session_pipeline/recommendations/t189_t200_recommendation_hg_plan.json` plus a Markdown report. It is planner-only: the output chooses a hybrid Calendar G-ingest shape, models the five T189 recommendations as candidate HG nodes/relations, and projects T200+ recommendations as node/relation work rather than applying them.
+
+### T189 Recommendation Reconciliation
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\t189_recommendation_reconciliation.jl --base-url http://localhost:8000
+```
+
+The adapter compares the recommendation plan to folded HG state and emits `tmp/projections/session_pipeline/recommendations/t189_recommendation_reconciliation.json` plus Markdown. Current T189 semantics distinguish four surfaces: grouped purpose/program/view_filter/group rows, individual `calendar_event` nodes, WF19 session pins for those events, and WF07 source-anchor relations that remain deferred until the operad declaration is repaired.
 
 ### Google Calendar OAuth Writer
 

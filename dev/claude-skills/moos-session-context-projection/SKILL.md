@@ -21,6 +21,8 @@ The pack is dry by default. It reads state, derives context, and writes reviewab
 - **Writer**: a later explicit boundary step that takes an approved pack and installs or sends it somewhere. The first pass is planner-only.
 - **MVP gate**: a generated dry report that checks the current G-ingest/F-projection/visual-lens lane and names pass/warn/fail gaps without emitting rewrites.
 - **Control surface**: the local HTML materialization at `tmp/projections/session_pipeline/index.html`; it is a human-readable view over the generated JSON/Markdown artifacts, not a new truth source.
+- **Reconciliation**: the comparison between a dry recommendation plan and folded HG state. It must name applied, pending, and deferred rows separately.
+- **Lens**: a reusable selection rule over roots, radius, node types, WFs, ports, and match predicates. A lens may later become a `view_filter`, but the generated artifact is still only a projection.
 
 ## Current Planner
 
@@ -55,9 +57,25 @@ The planner scans `dev/claude-skills`, the local VS Code extension directory, an
 1. Read `kb/superset/running-state.md` first and verify `/healthz`.
 2. Generate the session context pack with the Julia planner.
 3. Inspect the JSON or Markdown pack before using it as a prompt seed or handoff.
-4. Run `dev/scripts/projections/run-session-pipeline.ps1` when evaluating whether the current Keep-note/session/visual-projection lane is MVP-usable; inspect the generated control surface before using the pack as a handoff.
-5. If a tool needs to consume it automatically, build a writer as a separate explicit boundary.
-6. Reify durable results back into HG as a derivation, claim, pattern, workflow, or external_op result when the result matters beyond the current IDE session.
+4. Run `dev/scripts/projections/run-session-pipeline.ps1` when evaluating whether the current Keep-note/session/visual/Calendar/recommendation lane is MVP-usable; inspect the generated control surface before using the pack as a handoff.
+5. Treat Calendar, GitHub Project rows, organization profile text, dashboards, websites, and DNS plans as external projection surfaces with graph-derived identity.
+6. If a tool needs to consume or publish the projection automatically, build a writer as a separate explicit boundary.
+7. Reify durable results back into HG as a derivation, claim, pattern, workflow, `calendar_event`, or external_op result when the result matters beyond the current IDE session.
+
+## Current Session Pipeline
+
+The T189/T200 lane regenerates a complete local projection pack:
+
+1. Session context pack.
+2. Session-occasion graph artifact.
+3. T189 recommendation graph artifact.
+4. Session-occasion, temporal-calendar, and T189 recommendation DOT/SVG lenses.
+5. Calendar time-fabric JSON/Markdown plan.
+6. T189/T200 recommendation HG plan.
+7. Recommendation reconciliation against folded HG state.
+8. MVP gate and dashboard with Graphviz plus Cytoscape.js inspector tabs.
+
+Calendar writer actions are explicit actuator steps. The writer is an upsert keyed by `moos_projection_id`: rerunning the plan should patch existing Google Calendar events rather than insert duplicates. HG-side Calendar readback is separate: individual `calendar_event` nodes and session pins can be applied while WF07 source-anchor relations remain deferred until the operad declaration is resolved.
 
 ## Projection Targets
 
@@ -67,6 +85,8 @@ The planner scans `dev/claude-skills`, the local VS Code extension directory, an
 - **VS Code extensions**: use the ranked extension list as the concrete IDE affordance surface for this occasion.
 - **MCP servers**: use the server list to decide which tool surfaces belong in the session, without leaking header or environment values.
 - **Visual analysis**: pair this pack with `export_t200plus_projection.jl` for DOT/SVG and `graph_artifact_projection.jl` for engineering summaries rooted at the session, purpose, pattern, workflow, grammar_fragment, or a multi-root artifact set.
+- **Google Calendar**: use `calendar_time_fabric_projection.jl` for the dry plan and `google_calendar_writer.jl` only for the explicit write/upsert boundary.
+- **GitHub organization/project**: project public-facing readmes and Project #4 status from HG carriers; do not treat board rows as rewrite intents until `HG URN` coverage is reliable.
 
 ## Guardrails
 
@@ -75,6 +95,7 @@ The planner scans `dev/claude-skills`, the local VS Code extension directory, an
 - Treat `opens-on` as topology metadata and emit-target as current receiving-kernel reality until twin sync lands.
 - Treat extensions and MCP servers as projected affordances until they are reified as HG nodes or relations.
 - Do not promote `occasion` into ontology from this skill alone; the current source of truth is `grammar_fragment:v317-1-occasion-type` until review and merge.
+- Keep `calendar_event` observations distinct from Google Calendar write results: the former are HG nodes, the latter are external API effects.
 
 ## Companion Skills
 

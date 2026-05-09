@@ -43,7 +43,7 @@ try {
             "--radius" "2" `
             "--wfs" "WF01,WF18,WF19,WF21" `
             "--ports" "causes,caused-by,composes,composed-by,filtered-by,filters-session,owns,owned-by,pinned-by-session,pins-urn" `
-            "--types" "derivation,group,program,purpose,session,view_filter" `
+            "--types" "calendar_event,derivation,group,program,purpose,session,view_filter" `
             "--match" "t189|t200|calendar|github|cytoscape|my-tiny-data-collider|convergence|governance|application" `
             "--out-base" "tmp/projections/session_pipeline/graph_artifacts/t189_recommendation_engineering"
     }

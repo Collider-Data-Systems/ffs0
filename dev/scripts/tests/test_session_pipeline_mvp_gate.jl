@@ -98,7 +98,7 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         write(calendar_report_path, "# Calendar report\n")
         write(recommendation_plan_path, "{\"candidate_node_count\":8,\"selected_t189_recommendations\":[{},{},{},{},{}]}\n")
         write(recommendation_report_path, "# Recommendation report\n")
-        write(reconciliation_path, "{\"summary\":{\"grouped_nodes_applied\":10,\"grouped_nodes_total\":10,\"grouped_relations_applied\":16,\"grouped_relations_total\":16,\"calendar_event_nodes_pending\":16,\"deferred_relations\":16,\"grouped_nodes_ok\":true,\"grouped_relations_ok\":true}}\n")
+        write(reconciliation_path, "{\"summary\":{\"grouped_nodes_applied\":10,\"grouped_nodes_total\":10,\"grouped_relations_applied\":16,\"grouped_relations_total\":16,\"calendar_event_nodes_applied\":16,\"calendar_event_nodes_total\":16,\"calendar_event_nodes_pending\":0,\"calendar_event_relations_applied\":16,\"calendar_event_relations_total\":16,\"calendar_event_relations_pending\":0,\"deferred_relations\":16,\"grouped_nodes_ok\":true,\"grouped_relations_ok\":true}}\n")
         write(reconciliation_report_path, "# Reconciliation report\n")
         plan = Gate.plan_mvp_gate(
             nodes,
