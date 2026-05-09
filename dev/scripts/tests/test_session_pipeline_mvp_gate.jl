@@ -47,6 +47,13 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         :projection_kind => "graph_artifact_engineering",
         :node_count => 4,
         :relation_count => 3,
+        :nodes => [
+            Dict(:urn => "urn:moos:derivation:demo", :type_id => "derivation", :title => "Demo derivation", :status => "closed"),
+            Dict(:urn => "urn:moos:claim:demo", :type_id => "claim", :title => "Demo claim", :status => "open"),
+        ],
+        :relations => [
+            Dict(:urn => "urn:moos:rel:demo.causes.claim", :rewrite_category => "WF21", :src_urn => "urn:moos:derivation:demo", :src_port => "causes", :tgt_urn => "urn:moos:claim:demo", :tgt_port => "caused-by"),
+        ],
         :root_urns => ["urn:moos:derivation:demo"],
         :filters => Dict(:wfs => ["WF21"], :ports => ["causes"], :types => ["claim"], :match => "session"),
         :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:derivation:demo", :connected => true)]),
@@ -87,9 +94,9 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         )
 
         @test plan["projection_kind"] == "session_pipeline_mvp_gate"
-        @test plan["overall_status"] == "warn"
+        @test plan["overall_status"] == "pass"
         @test plan["summary"]["fail"] == 0
-        @test plan["summary"]["warn"] == 1
+        @test plan["summary"]["warn"] == 0
         names = Set(gate["name"] for gate in plan["gates"])
         @test "G input channel" in names
         @test "F session handoff header" in names
@@ -100,10 +107,12 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test plan["lingo"]["Calendar_projection"] != ""
         @test plan["lingo"]["Recommendation_projection"] != ""
         @test plan["renderer_candidates"][2]["name"] == "Cytoscape.js"
+        @test plan["interactive_inspector"]["node_count"] == 2
+        @test plan["interactive_inspector"]["relation_count"] == 1
         @test length(plan["pipeline_stages"]) == 4
         @test plan["pipeline_stages"][1]["status"] == "pass"
         @test plan["pipeline_stages"][3]["summary"]["pass"] == 6
-        @test length(plan["priority_actions"]) == 1
+        @test isempty(plan["priority_actions"])
 
         html_path = joinpath(dir, "index.html")
         Gate.write_html(html_path, plan)
@@ -113,6 +122,8 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test occursin("G-ingest", html)
         @test occursin("Calendar Time-Fabric", html)
         @test occursin("HG Recommendations", html)
+        @test occursin("Interactive HG Inspector", html)
+        @test occursin("inspectorData", html)
         @test occursin("Cytoscape.js", html)
     end
 end

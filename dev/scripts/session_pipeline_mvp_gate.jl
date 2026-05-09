@@ -310,6 +310,64 @@ function selected_recommendation_count(path::AbstractString)
     end
 end
 
+function compact_label(text; fallback="")
+    clean = strip(replace(string(text), r"\s+" => " "))
+    isempty(clean) && (clean = string(fallback))
+    length(clean) <= 36 && return clean
+    return string(clean[1:33], "...")
+end
+
+function graph_inspector_payload(graph_pack)
+    nodes = collect(object_value(graph_pack, :nodes, Any[]))
+    relations = collect(object_value(graph_pack, :relations, Any[]))
+    cy_nodes = Any[]
+    cy_edges = Any[]
+    for node in nodes
+        urn = string(object_value(node, :urn, ""))
+        isempty(urn) && continue
+        title = string(object_value(node, :title, urn))
+        push!(cy_nodes, Dict(
+            "data" => Dict(
+                "id" => urn,
+                "urn" => urn,
+                "label" => compact_label(title; fallback=urn),
+                "title" => title,
+                "type_id" => string(object_value(node, :type_id, "unknown")),
+                "status" => string(object_value(node, :status, "")),
+            ),
+        ))
+    end
+    for (index, relation) in enumerate(relations)
+        src = string(object_value(relation, :src_urn, ""))
+        tgt = string(object_value(relation, :tgt_urn, ""))
+        (isempty(src) || isempty(tgt)) && continue
+        urn = string(object_value(relation, :urn, string("rel:", index)))
+        push!(cy_edges, Dict(
+            "data" => Dict(
+                "id" => urn,
+                "urn" => urn,
+                "source" => src,
+                "target" => tgt,
+                "label" => string(object_value(relation, :rewrite_category, "")),
+                "rewrite_category" => string(object_value(relation, :rewrite_category, "")),
+                "src_port" => string(object_value(relation, :src_port, "")),
+                "tgt_port" => string(object_value(relation, :tgt_port, "")),
+            ),
+        ))
+    end
+    return Dict(
+        "renderer" => "Cytoscape.js",
+        "node_count" => length(cy_nodes),
+        "relation_count" => length(cy_edges),
+        "elements" => vcat(cy_nodes, cy_edges),
+    )
+end
+
+function json_literal(value)
+    text = sprint(io -> JSON3.write(io, value))
+    return replace(text, "</" => "<\\/")
+end
+
 function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), graph_pack=Dict(), session_pack_path=DEFAULT_SESSION_PACK, graph_pack_path=DEFAULT_GRAPH_PACK, dot_path=DEFAULT_DOT_PATH, svg_path=DEFAULT_SVG_PATH, temporal_dot_path=DEFAULT_TEMPORAL_DOT_PATH, temporal_svg_path=DEFAULT_TEMPORAL_SVG_PATH, calendar_plan_path=DEFAULT_CALENDAR_PLAN_PATH, calendar_report_path=DEFAULT_CALENDAR_REPORT_PATH, calendar_write_result_path=DEFAULT_CALENDAR_WRITE_RESULT_PATH, recommendation_plan_path=DEFAULT_RECOMMENDATION_PLAN_PATH, recommendation_report_path=DEFAULT_RECOMMENDATION_REPORT_PATH, html_path=DEFAULT_HTML_PATH, session_urn=DEFAULT_SESSION_URN, actor_urn=DEFAULT_ACTOR_URN, keep_channel_urn=DEFAULT_KEEP_CHANNEL_URN, keep_ki_urn=DEFAULT_KEEP_KI_URN, base_url=DEFAULT_BASE_URL, generated_at=format_utc(now(UTC)))
     index = nodes_by_urn(nodes)
     gates = Any[]
@@ -459,12 +517,14 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         next_action=has_lens_controls ? "" : "Promote the lens spec to a shared JSON or view_filter-backed adapter.",
     ))
 
+    inspector = graph_inspector_payload(graph_pack)
+    inspector_ready = inspector["node_count"] > 0 && inspector["relation_count"] > 0
     push!(gates, gate(
-        "warn",
+        inspector_ready ? "pass" : "warn",
         "interactive visual aid",
-        "The MVP has deterministic DOT/SVG, but not yet an interactive browser/IDE graph surface.",
-        evidence=Dict("recommended_next_renderer" => "Cytoscape.js", "context7_candidates_checked" => [candidate["name"] for candidate in RENDERER_CANDIDATES]),
-        next_action="Keep Graphviz as the static review artifact; prototype Cytoscape.js when node selection, filtering, and inspector panels become the bottleneck.",
+        inspector_ready ? "The dashboard embeds a Cytoscape.js typed graph element set with selection inspector data." : "The MVP has deterministic DOT/SVG, but not yet enough graph element data for an interactive browser/IDE graph surface.",
+        evidence=Dict("renderer" => "Cytoscape.js", "node_count" => inspector["node_count"], "relation_count" => inspector["relation_count"], "context7_candidates_checked" => [candidate["name"] for candidate in RENDERER_CANDIDATES]),
+        next_action=inspector_ready ? "" : "Keep Graphviz as the static review artifact; prototype Cytoscape.js when node selection, filtering, and inspector panels become the bottleneck.",
     ))
 
     status = overall_status(gates)
@@ -494,6 +554,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         "pipeline_stages" => stages,
         "interface_principles" => INTERFACE_PRINCIPLES,
         "renderer_candidates" => RENDERER_CANDIDATES,
+        "interactive_inspector" => inspector,
         "gates" => gates,
         "priority_actions" => priority_actions(gates),
         "summary" => Dict(
@@ -556,6 +617,8 @@ function write_html(path::AbstractString, plan)
     svg_href = artifact_link(path, svg_path)
     temporal_svg_path = string(object_value(artifacts, :temporal_calendar_svg, ""))
     temporal_svg_href = artifact_link(path, temporal_svg_path)
+    inspector = object_value(plan, :interactive_inspector, Dict("elements" => Any[], "node_count" => 0, "relation_count" => 0))
+    inspector_json = json_literal(inspector)
     open(path, "w") do io
         println(io, "<!doctype html>")
         println(io, "<html lang=\"en\">")
@@ -565,6 +628,7 @@ function write_html(path::AbstractString, plan)
         println(io, "<title>mo:os Session Pipeline MVP</title>")
         println(io, "<style>")
         println(io, "html{font-family:Inter,Segoe UI,Arial,sans-serif;background:#f7f7f2;color:#202522}body{margin:0}.shell{max-width:1180px;margin:0 auto;padding:24px}.top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,.8fr);gap:16px;align-items:stretch}.panel,.stage,.gate,.artifact,.principle{background:#fff;border:1px solid #d9ded7;border-radius:8px;box-shadow:0 1px 2px rgba(20,30,25,.05)}.panel{padding:18px}h1{font-size:28px;line-height:1.15;margin:0 0 8px}h2{font-size:16px;margin:0 0 12px}p{line-height:1.45}.muted{color:#5f6b62}.status{display:inline-flex;align-items:center;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;text-transform:uppercase}.pass{background:#dff4df;color:#195d25}.warn{background:#fff0bd;color:#735600}.fail{background:#ffd8d3;color:#8a1f16}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.metric{border:1px solid #e3e6e0;border-radius:8px;padding:10px;background:#fafbf8}.metric strong{display:block;font-size:24px}.stageGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.stage{padding:14px;min-height:138px}.stageHead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.stageName{font-weight:800}.stageDesc{font-size:13px;color:#46524a}.gateToolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}.gateToolbar button,.linkButton{border:1px solid #ccd3cb;background:#fff;border-radius:6px;padding:7px 10px;cursor:pointer;color:#24362e;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.gateToolbar button.active{background:#24362e;color:#fff;border-color:#24362e}.gateList{display:grid;gap:8px}.gate{padding:12px}.gateTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.gateName{font-weight:750}.evidence{font-size:12px;color:#526057;margin-top:8px;word-break:break-word}.next{border-left:3px solid #c68a00;background:#fff8df;padding:8px;margin-top:8px;border-radius:4px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.artifactList,.principleList{display:grid;gap:8px}.artifact,.principle{padding:12px}.artifact a{color:#245c84;text-decoration:none;word-break:break-word}.artifact a:hover,.linkButton:hover{text-decoration:underline}.visualBox{border:1px solid #d9ded7;border-radius:8px;background:#fff;min-height:360px;overflow:auto}.visualBox object{width:100%;min-width:1080px;height:680px;display:block}.visualActions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.actions{display:grid;gap:8px}.action{border-left:4px solid #c68a00;background:#fff8df;border-radius:6px;padding:10px}.foot{margin-top:22px;font-size:12px;color:#667168}@media(max-width:900px){.top,.cols,.stageGrid{grid-template-columns:1fr}.shell{padding:16px}.visualBox object{height:560px}}")
+        println(io, ".inspectorGrid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);gap:12px}.cyBox{height:560px;border:1px solid #d9ded7;border-radius:8px;background:#fcfdf9}.inspectPane{border:1px solid #d9ded7;border-radius:8px;background:#fff;padding:12px;min-height:160px;overflow:auto}.inspectTitle{font-weight:800;margin-bottom:8px}.inspectMeta{font-size:12px;color:#526057;word-break:break-word}@media(max-width:900px){.inspectorGrid{grid-template-columns:1fr}.cyBox{height:460px}}")
         println(io, "</style>")
         println(io, "</head>")
         println(io, "<body>")
@@ -628,6 +692,9 @@ function write_html(path::AbstractString, plan)
         println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_plan, "")))), "\">Open Recommendation Plan</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_report, "")))), "\">Open Recommendation Report</a></div>")
         println(io, "<p class=\"muted\">Dry candidate nodes and relations for the five T189 recommendations plus the T200+ convergence arc. This panel is a projection surface; it does not apply rewrites.</p>")
         println(io, "</section>")
+        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Interactive HG Inspector</h2>")
+        println(io, "<div class=\"inspectorGrid\"><div id=\"cy\" class=\"cyBox\"></div><div class=\"inspectPane\"><div class=\"inspectTitle\" id=\"inspectTitle\">No selection</div><div class=\"inspectMeta\" id=\"inspectMeta\">", html_escape(inspector["node_count"]), " nodes / ", html_escape(inspector["relation_count"]), " relations</div></div></div>")
+        println(io, "</section>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Gates</h2><div class=\"gateToolbar\"><button class=\"active\" data-filter=\"all\">All</button><button data-filter=\"pass\">Pass</button><button data-filter=\"warn\">Warn</button><button data-filter=\"fail\">Fail</button></div><div class=\"gateList\">")
         for gate in gates
             status = string(gate["status"])
@@ -653,6 +720,9 @@ function write_html(path::AbstractString, plan)
         println(io, "<p class=\"foot\">Generated from session_pipeline_mvp_gate.jl. This page is an artifact of the projection lane; it does not emit rewrites.</p>")
         println(io, "</main>")
         println(io, "<script>document.querySelectorAll('[data-filter]').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('[data-filter]').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');var f=btn.getAttribute('data-filter');document.querySelectorAll('.gate').forEach(function(g){g.style.display=(f==='all'||g.getAttribute('data-status')===f)?'block':'none'});});});</script>")
+        println(io, "<script src=\"https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js\"></script>")
+        println(io, "<script id=\"inspectorData\" type=\"application/json\">", inspector_json, "</script>")
+        println(io, "<script>(function(){var raw=document.getElementById('inspectorData');var title=document.getElementById('inspectTitle');var meta=document.getElementById('inspectMeta');var data=raw?JSON.parse(raw.textContent):{elements:[]};function esc(v){return String(v==null?'':v).replace(/[&<>\"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]})}function show(d){title.textContent=d.title||d.label||d.urn||'Selection';meta.innerHTML='<strong>'+esc(d.type_id||d.rewrite_category||'relation')+'</strong><br>'+esc(d.urn||d.id||'')+'<br>'+esc(d.status||'')+(d.src_port?'<br>'+esc(d.src_port)+' / '+esc(d.tgt_port):'')}if(!window.cytoscape){title.textContent='Cytoscape.js unavailable';return}var cy=cytoscape({container:document.getElementById('cy'),elements:data.elements,layout:{name:'cose',animate:false,fit:true,padding:32},style:[{selector:'node',style:{'label':'data(label)','font-size':10,'text-wrap':'wrap','text-max-width':110,'background-color':'#6f7f73','color':'#24362e','text-valign':'bottom','text-halign':'center','width':34,'height':34}},{selector:'node[type_id = \"claim\"]',style:{'background-color':'#4c78a8'}},{selector:'node[type_id = \"derivation\"]',style:{'background-color':'#7b61a8'}},{selector:'node[type_id = \"knowledge_item\"]',style:{'background-color':'#54a24b'}},{selector:'node[type_id = \"program\"]',style:{'background-color':'#9c755f'}},{selector:'node[type_id = \"purpose\"]',style:{'background-color':'#b279a2'}},{selector:'node[type_id = \"view_filter\"]',style:{'background-color':'#72b7b2'}},{selector:'node[type_id = \"group\"]',style:{'background-color':'#eeca3b'}},{selector:'edge',style:{'label':'data(label)','font-size':9,'curve-style':'bezier','target-arrow-shape':'triangle','line-color':'#9da8a0','target-arrow-color':'#9da8a0','width':1.4,'color':'#526057','text-background-color':'#fff','text-background-opacity':0.8}},{selector:':selected',style:{'border-width':3,'border-color':'#202522','line-color':'#202522','target-arrow-color':'#202522'}}]});cy.on('tap','node, edge',function(evt){show(evt.target.data())});cy.ready(function(){cy.fit(null,32)});})();</script>")
         println(io, "</body></html>")
     end
 end
