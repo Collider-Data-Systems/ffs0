@@ -6,7 +6,7 @@ Private portable workspace for mo:os research, ontology, projection lanes, skill
 
 Read `kb/superset/running-state.md` first. It is the hydration entrypoint for current T-day, kernel state, sessions, active lanes, and key URNs.
 
-As of T189, hp-laptop primary is live on ontology v3.16.1 with `session:sam.governance` as the active governance/projection lane. That session now pins the Calendar/time-fabric program family, the grouped T189/T200 recommendation carriers, and 16 individual `calendar_event` observations from the Calendar proof. The current local pipeline projects HG state into session context, graph artifacts, static visuals, Calendar payloads, recommendation HG plans, reconciliation reports, and a local dashboard.
+As of T189, hp-laptop primary is live on ontology v3.16.1 with `session:sam.governance` as the active governance/projection lane. That session now pins the Calendar/time-fabric program family, the grouped T189/T200 recommendation carriers, 16 individual `calendar_event` observations from the Calendar proof, and the `program:sam.t189.surface-context-atlas` carrier. The current local pipeline projects HG state into session context, graph artifacts, static visuals, Calendar payloads, recommendation HG plans, reconciliation reports, a surface context atlas, and a local dashboard.
 
 Run the current projection lane with:
 
@@ -15,6 +15,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-
 ```
 
 The dashboard is generated at `tmp/projections/session_pipeline/index.html`.
+The atlas is generated at `tmp/projections/session_pipeline/atlas/surface_context_atlas.{json,md}` and explains the JSON API, JSONL log, Git repos, Calendar, dashboard, visuals, type/relation/program surface, existing HG anchors, and pending moves.
 
 ## Repository Role
 

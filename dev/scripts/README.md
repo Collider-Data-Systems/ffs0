@@ -24,6 +24,7 @@ Projection-lane orchestration entrypoints. These scripts run multiple adapters t
 - `calendar_time_fabric_projection.jl` — F-direction planner that turns a recent graph artifact into Google Calendar payloads, mapping HG identity, T-day anchor, node type/status, and relation context into visible Calendar events.
 - `t189_t200_recommendation_projection.jl` — dry planner that turns the five T189 recommendations into candidate HG nodes/relations and T200+ recommendation artifacts without applying rewrites.
 - `t189_recommendation_reconciliation.jl` — dry reconciliation adapter that compares the T189/T200 recommendation plan to folded HG state and reports grouped rows, Calendar event rows, session pins, and WF07-deferred relations separately.
+- `surface_context_atlas.jl` — generated operator/agent atlas that explains the live JSON API, JSONL log, Git repos, Google Calendar projection, dashboard, visual lenses, type/relation/program surface, known HG anchors, and pending moves in one JSON/Markdown artifact.
 - `google_calendar_projection.jl` — F-direction planning adapter from folded HG state to Google Calendar event payloads. It writes a reviewable JSON plan and does not perform OAuth or cloud writes.
 - `google_calendar_writer.jl` — explicit OAuth boundary writer for applying an approved Google Calendar projection plan. Defaults to dry-run/check modes; real writes require local gitignored OAuth files and `--mode write`.
 - `session_context_projection.jl` — F-direction planning adapter from folded HG state to a session context pack for IDE, agent, or harness handoff. It writes reviewable JSON and Markdown, and does not edit IDE config or emit rewrites.
@@ -43,6 +44,7 @@ Session-pipeline artifacts are grouped under the gitignored local directory `tmp
 - `graph_artifacts/` — graph engineering JSON/Markdown for the selected lens.
 - `calendar/` — Calendar time-fabric projection plans, reports, and explicit writer results.
 - `recommendations/` — dry candidate HG plans for T189/T200 continuation work.
+- `atlas/` — generated JSON/Markdown surface context atlas for human and agent orientation across HG, files, Git, Calendar, dashboard, and visual surfaces.
 - `visual/` — DOT/SVG static visual renderings.
 - `mvp/` — generated MVP gate JSON/Markdown.
 - `index.html` — human-readable control surface for the lane.
@@ -55,7 +57,7 @@ Older projection files may still exist directly under `tmp/projections/`; treat 
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-session-pipeline.ps1
 ```
 
-The runner regenerates the current Keep-note/session/visual lane and writes `tmp/projections/session_pipeline/index.html`. The HTML page is the MVP operator surface: it shows the G-ingest/F-session/F-visual stages, pass/warn/fail gates, runtime metadata, artifact links, the static visual lens, Calendar time-fabric artifacts, recommendation HG artifacts, and the next actions for warning gates. It is generated locally and does not emit rewrites.
+The runner regenerates the current Keep-note/session/visual lane and writes `tmp/projections/session_pipeline/index.html`. The HTML page is the MVP operator surface: it shows the G-ingest/F-session/F-visual stages, pass/warn/fail gates, runtime metadata, artifact links, the static visual lens, Calendar time-fabric artifacts, recommendation HG artifacts, the surface context atlas, and the next actions for warning gates. It is generated locally and does not emit rewrites.
 
 ### T200+ Projection Exporter
 
@@ -108,6 +110,14 @@ By default it scans canonical mo:os skills, local VS Code extensions, and `.vsco
 ```
 
 The gate emits `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`, `.md`, and the HTML dashboard at `tmp/projections/session_pipeline/index.html`. It treats the current lane as a small CICD/functorial-semantics pipeline: G-ingest from Keep into HG, F-projection from folded state into session/agent/visual artifacts, Calendar time-fabric projection payloads, recommendation reconciliation, and visual lenses whose scope is roots plus WF/port/type/match filters. The report is allowed to return `warn` for known MVP gaps, such as disconnected forced roots under a deliberately narrow lens. It exits nonzero only on `fail` gates.
+
+### Surface Context Atlas
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\surface_context_atlas.jl --base-url http://localhost:8000
+```
+
+The atlas emits `tmp/projections/session_pipeline/atlas/surface_context_atlas.json` plus Markdown. It is the explanatory table of contents for the lane: what is authoritative JSON/JSONL/HG state, what is a local Git/dashboard/visual projection, what Google Calendar mirrors, which existing category/UI/application anchors are visible, and which pending moves are deliberately held for review.
 
 ### Google Calendar Projection Plan
 

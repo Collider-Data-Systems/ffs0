@@ -23,6 +23,8 @@ const DEFAULT_RECOMMENDATION_PLAN_PATH = "tmp/projections/session_pipeline/recom
 const DEFAULT_RECOMMENDATION_REPORT_PATH = "tmp/projections/session_pipeline/recommendations/t189_t200_recommendation_hg_plan.md"
 const DEFAULT_RECONCILIATION_PATH = "tmp/projections/session_pipeline/recommendations/t189_recommendation_reconciliation.json"
 const DEFAULT_RECONCILIATION_REPORT_PATH = "tmp/projections/session_pipeline/recommendations/t189_recommendation_reconciliation.md"
+const DEFAULT_ATLAS_PATH = "tmp/projections/session_pipeline/atlas/surface_context_atlas.json"
+const DEFAULT_ATLAS_REPORT_PATH = "tmp/projections/session_pipeline/atlas/surface_context_atlas.md"
 const DEFAULT_ONE_SHOT_APPLY_SCRIPT = "tmp/projections/session_pipeline/recommendations/apply_t189_grouped.ps1"
 const DEFAULT_OUT_BASE = "tmp/projections/session_pipeline/mvp/session_pipeline_gate"
 const DEFAULT_HTML_PATH = "tmp/projections/session_pipeline/index.html"
@@ -58,7 +60,7 @@ const PIPELINE_STAGE_SPECS = [
         "name" => "Operator interface",
         "short_name" => "UI",
         "description" => "The MVP is readable as a control surface: status, lineage, checks, artifacts, and next gates are visible in one place.",
-        "gate_names" => ["interactive visual aid", "one-shot apply script cleanup"],
+        "gate_names" => ["interactive visual aid", "surface context atlas", "one-shot apply script cleanup"],
     ),
 ]
 
@@ -391,7 +393,7 @@ function json_literal(value)
     return replace(text, "</" => "<\\/")
 end
 
-function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), graph_pack=Dict(), t189_graph_pack=Dict(), session_pack_path=DEFAULT_SESSION_PACK, graph_pack_path=DEFAULT_GRAPH_PACK, t189_graph_pack_path=DEFAULT_T189_GRAPH_PACK, dot_path=DEFAULT_DOT_PATH, svg_path=DEFAULT_SVG_PATH, temporal_dot_path=DEFAULT_TEMPORAL_DOT_PATH, temporal_svg_path=DEFAULT_TEMPORAL_SVG_PATH, t189_dot_path=DEFAULT_T189_DOT_PATH, t189_svg_path=DEFAULT_T189_SVG_PATH, calendar_plan_path=DEFAULT_CALENDAR_PLAN_PATH, calendar_report_path=DEFAULT_CALENDAR_REPORT_PATH, calendar_write_result_path=DEFAULT_CALENDAR_WRITE_RESULT_PATH, recommendation_plan_path=DEFAULT_RECOMMENDATION_PLAN_PATH, recommendation_report_path=DEFAULT_RECOMMENDATION_REPORT_PATH, reconciliation_path=DEFAULT_RECONCILIATION_PATH, reconciliation_report_path=DEFAULT_RECONCILIATION_REPORT_PATH, one_shot_apply_script_path=DEFAULT_ONE_SHOT_APPLY_SCRIPT, html_path=DEFAULT_HTML_PATH, session_urn=DEFAULT_SESSION_URN, actor_urn=DEFAULT_ACTOR_URN, keep_channel_urn=DEFAULT_KEEP_CHANNEL_URN, keep_ki_urn=DEFAULT_KEEP_KI_URN, base_url=DEFAULT_BASE_URL, generated_at=format_utc(now(UTC)))
+function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), graph_pack=Dict(), t189_graph_pack=Dict(), session_pack_path=DEFAULT_SESSION_PACK, graph_pack_path=DEFAULT_GRAPH_PACK, t189_graph_pack_path=DEFAULT_T189_GRAPH_PACK, dot_path=DEFAULT_DOT_PATH, svg_path=DEFAULT_SVG_PATH, temporal_dot_path=DEFAULT_TEMPORAL_DOT_PATH, temporal_svg_path=DEFAULT_TEMPORAL_SVG_PATH, t189_dot_path=DEFAULT_T189_DOT_PATH, t189_svg_path=DEFAULT_T189_SVG_PATH, calendar_plan_path=DEFAULT_CALENDAR_PLAN_PATH, calendar_report_path=DEFAULT_CALENDAR_REPORT_PATH, calendar_write_result_path=DEFAULT_CALENDAR_WRITE_RESULT_PATH, recommendation_plan_path=DEFAULT_RECOMMENDATION_PLAN_PATH, recommendation_report_path=DEFAULT_RECOMMENDATION_REPORT_PATH, reconciliation_path=DEFAULT_RECONCILIATION_PATH, reconciliation_report_path=DEFAULT_RECONCILIATION_REPORT_PATH, atlas_path=DEFAULT_ATLAS_PATH, atlas_report_path=DEFAULT_ATLAS_REPORT_PATH, one_shot_apply_script_path=DEFAULT_ONE_SHOT_APPLY_SCRIPT, html_path=DEFAULT_HTML_PATH, session_urn=DEFAULT_SESSION_URN, actor_urn=DEFAULT_ACTOR_URN, keep_channel_urn=DEFAULT_KEEP_CHANNEL_URN, keep_ki_urn=DEFAULT_KEEP_KI_URN, base_url=DEFAULT_BASE_URL, generated_at=format_utc(now(UTC)))
     index = nodes_by_urn(nodes)
     gates = Any[]
 
@@ -644,6 +646,19 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         next_action=inspector_ready ? "" : "Regenerate both graph artifact packs before relying on the interactive inspector.",
     ))
 
+    atlas_exists = isfile(atlas_path)
+    atlas_report_exists = isfile(atlas_report_path)
+    atlas = safe_read_json(atlas_path)
+    atlas_surfaces = length(object_value(atlas, :surfaces, Any[]))
+    atlas_pending = length(object_value(atlas, :pending_moves, Any[]))
+    push!(gates, gate(
+        atlas_exists && atlas_report_exists && atlas_surfaces >= 6 && atlas_pending >= 5 ? "pass" : "warn",
+        "surface context atlas",
+        atlas_exists && atlas_report_exists ? "The dashboard has a generated atlas explaining JSON, JSONL, Git, Calendar, dashboard, visual, type/relation/program, and pending-move surfaces." : "The surface context atlas is missing from the generated projection artifacts.",
+        evidence=Dict("atlas" => atlas_path, "atlas_exists" => atlas_exists, "atlas_report" => atlas_report_path, "atlas_report_exists" => atlas_report_exists, "surface_count" => atlas_surfaces, "pending_move_count" => atlas_pending),
+        next_action=atlas_exists && atlas_report_exists && atlas_surfaces >= 6 && atlas_pending >= 5 ? "" : "Run surface_context_atlas.jl after the first MVP gate pass, then regenerate the dashboard.",
+    ))
+
     status = overall_status(gates)
     stages = pipeline_stages(gates)
     return Dict(
@@ -671,6 +686,8 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
             "recommendation_hg_report" => recommendation_report_path,
             "recommendation_reconciliation" => reconciliation_path,
             "recommendation_reconciliation_report" => reconciliation_report_path,
+            "surface_context_atlas" => atlas_path,
+            "surface_context_atlas_report" => atlas_report_path,
             "dashboard" => html_path,
         ),
         "pipeline_stages" => stages,
@@ -838,6 +855,10 @@ function write_html(path::AbstractString, plan)
         println(io, "</div>")
         println(io, "<div class=\"inspectorGrid\"><div id=\"cy\" class=\"cyBox\"></div><div class=\"inspectPane\"><div class=\"inspectTitle\" id=\"inspectTitle\">No selection</div><div class=\"inspectMeta\" id=\"inspectMeta\">", html_escape(inspector["node_count"]), " nodes / ", html_escape(inspector["relation_count"]), " relations</div></div></div>")
         println(io, "</section>")
+        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Surface Context Atlas</h2>")
+        println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas, "")))), "\">Open Atlas JSON</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas_report, "")))), "\">Open Atlas Report</a></div>")
+        println(io, "<p class=\"muted\">Explanatory map for JSON API, JSONL log, Git repositories, Google Calendar, dashboard, visuals, node types, relation families, IRL/external programs, existing HG anchors, and next-round moves. Use this as the human/agent table of contents before changing projections.</p>")
+        println(io, "</section>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Gates</h2><div class=\"gateToolbar\"><button class=\"active\" data-filter=\"all\">All</button><button data-filter=\"pass\">Pass</button><button data-filter=\"warn\">Warn</button><button data-filter=\"fail\">Fail</button></div><div class=\"gateList\">")
         for gate in gates
             status = string(gate["status"])
@@ -922,6 +943,8 @@ function parse_args(argv)
         "recommendation-report-path" => DEFAULT_RECOMMENDATION_REPORT_PATH,
         "reconciliation-path" => DEFAULT_RECONCILIATION_PATH,
         "reconciliation-report-path" => DEFAULT_RECONCILIATION_REPORT_PATH,
+        "atlas-path" => DEFAULT_ATLAS_PATH,
+        "atlas-report-path" => DEFAULT_ATLAS_REPORT_PATH,
         "one-shot-apply-script-path" => DEFAULT_ONE_SHOT_APPLY_SCRIPT,
         "out-base" => DEFAULT_OUT_BASE,
         "html-path" => DEFAULT_HTML_PATH,
@@ -977,6 +1000,8 @@ function main(argv=ARGS)
         recommendation_report_path=options["recommendation-report-path"],
         reconciliation_path=options["reconciliation-path"],
         reconciliation_report_path=options["reconciliation-report-path"],
+        atlas_path=options["atlas-path"],
+        atlas_report_path=options["atlas-report-path"],
         one_shot_apply_script_path=options["one-shot-apply-script-path"],
         html_path=options["html-path"],
         session_urn=options["session-urn"],

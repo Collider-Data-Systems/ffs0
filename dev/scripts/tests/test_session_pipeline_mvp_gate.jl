@@ -87,6 +87,8 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         recommendation_report_path = joinpath(dir, "recommendation_plan.md")
         reconciliation_path = joinpath(dir, "reconciliation.json")
         reconciliation_report_path = joinpath(dir, "reconciliation.md")
+        atlas_path = joinpath(dir, "surface_context_atlas.json")
+        atlas_report_path = joinpath(dir, "surface_context_atlas.md")
         one_shot_apply_script_path = joinpath(dir, "apply_t189_grouped.ps1")
         write(dot_path, "digraph g {}")
         write(svg_path, "<svg></svg>")
@@ -100,6 +102,8 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         write(recommendation_report_path, "# Recommendation report\n")
         write(reconciliation_path, "{\"summary\":{\"grouped_nodes_applied\":10,\"grouped_nodes_total\":10,\"grouped_relations_applied\":16,\"grouped_relations_total\":16,\"calendar_event_nodes_applied\":16,\"calendar_event_nodes_total\":16,\"calendar_event_nodes_pending\":0,\"calendar_event_relations_applied\":16,\"calendar_event_relations_total\":16,\"calendar_event_relations_pending\":0,\"deferred_relations\":16,\"grouped_nodes_ok\":true,\"grouped_relations_ok\":true}}\n")
         write(reconciliation_report_path, "# Reconciliation report\n")
+        write(atlas_path, "{\"projection_kind\":\"surface_context_atlas\",\"surfaces\":[{},{},{},{},{},{}],\"pending_moves\":[{},{},{},{},{}]}\n")
+        write(atlas_report_path, "# Surface Context Atlas\n")
         plan = Gate.plan_mvp_gate(
             nodes,
             relations;
@@ -119,6 +123,8 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
             recommendation_report_path=recommendation_report_path,
             reconciliation_path=reconciliation_path,
             reconciliation_report_path=reconciliation_report_path,
+            atlas_path=atlas_path,
+            atlas_report_path=atlas_report_path,
             one_shot_apply_script_path=one_shot_apply_script_path,
             generated_at="2026-05-08T11:30:00Z",
         )
@@ -136,6 +142,7 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test "T189 recommendation lens" in names
         @test "T189 recommendation reconciliation" in names
         @test "deferred apply boundaries" in names
+        @test "surface context atlas" in names
         @test "one-shot apply script cleanup" in names
         @test plan["lingo"]["lens"] != ""
         @test plan["lingo"]["reconciliation"] != ""
@@ -162,6 +169,8 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test occursin("Visual Lenses", html)
         @test occursin("T189 Recommendations", html)
         @test occursin("Open Reconciliation", html)
+        @test occursin("Surface Context Atlas", html)
+        @test occursin("Open Atlas Report", html)
         @test occursin("Interactive HG Inspector", html)
         @test occursin("inspectorData", html)
         @test occursin("inspectorsData", html)
@@ -198,6 +207,8 @@ end
         graph_pack=graph_pack,
         dot_path="missing.dot",
         svg_path="missing.svg",
+        atlas_path="missing-atlas.json",
+        atlas_report_path="missing-atlas.md",
         generated_at="2026-05-08T11:30:00Z",
     )
 

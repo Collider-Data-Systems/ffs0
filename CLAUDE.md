@@ -10,7 +10,7 @@ Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, open items, key URNs.
 
-At T=189 hp-laptop kernel is live on v3.16.1 (log_len 1154, t_day 189). Z440 4-kernel federation last confirmed at v3.15.0 (T=177). `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation` and now pins the Calendar/time-fabric program family, grouped T189/T200 recommendation carriers, and 16 individual `calendar_event` observations. The active working lane is the Keep/session/visual/Calendar/recommendation projection pipeline, not a single running HG program. Current operator report: `kb/moos-diary/t189-calendar-event-public-surface-wrapup.md`; prior T189 reports: `kb/moos-diary/t189-recommendation-hg-projection-wrapup.md` and `kb/moos-diary/t189-calendar-dashboard-organization-wrapup.md`. Doctrine lives as derivations on log plus carefully chosen reports; conversations should still reify through HG chunks when they need persistence.
+At T=189 hp-laptop kernel is live on v3.16.1 (log_len 1160, t_day 189). Z440 4-kernel federation last confirmed at v3.15.0 (T=177). `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation` and now pins the Calendar/time-fabric program family, grouped T189/T200 recommendation carriers, 16 individual `calendar_event` observations, and `program:sam.t189.surface-context-atlas`. The active working lane is the Keep/session/visual/Calendar/recommendation/atlas projection pipeline, not a single running HG program. Current operator report: `kb/moos-diary/t189-surface-context-atlas-wrapup.md`; prior T189 reports: `kb/moos-diary/t189-calendar-event-public-surface-wrapup.md`, `kb/moos-diary/t189-recommendation-hg-projection-wrapup.md`, and `kb/moos-diary/t189-calendar-dashboard-organization-wrapup.md`. Doctrine lives as derivations on log plus carefully chosen reports; conversations should still reify through HG chunks when they need persistence.
 
 ---
 
@@ -87,7 +87,7 @@ Full envelope shape + gotchas: `moos-rewrite-envelope` skill.
 
 ---
 
-## Current sessions + personae (T=188)
+## Current sessions + personae (T=189)
 
 Active on hp-laptop now: `sam.governance`, `sam.laptop-cowork-workspace`, `sam.laptop-moos-diary`, `hp-laptop.primary`. `sam.governance` is the current Guido lane for doctrine, projection gating, and round closeout. Z440 rows below are topology memory until that federation is live again.
 
@@ -146,10 +146,11 @@ Outputs land under `tmp/projections/session_pipeline/`:
 - `calendar/calendar_time_fabric_write_result.json` — explicit Google Calendar writer result; latest T189 run patched 16 existing events by `moos_projection_id`.
 - `recommendations/t189_t200_recommendation_hg_plan.{json,md}` — dry candidate HG nodes/relations for the five T189 recommendations and T200+ convergence.
 - `recommendations/t189_recommendation_reconciliation.{json,md}` — comparison of candidate plan against folded state; current result: 10/10 grouped nodes, 16/16 grouped safe relations, 16/16 Calendar event nodes, 16/16 Calendar session pins applied, 16 WF07 anchors deferred.
+- `atlas/surface_context_atlas.{json,md}` — generated table of contents for JSON API, JSONL log, Git repos, Calendar, dashboard, visuals, type/relation/program surfaces, existing HG anchors, step-by-step HG use, and pending moves.
 - `mvp/session_pipeline_gate.{json,md}` — pass/warn/fail gate report.
 - `index.html` — local human-facing control surface.
 
-Latest gate after Calendar/dashboard/recommendation integration: `warn`, 18 pass, 1 warn, 0 fail. Remaining T189 warning: disconnected forced visual roots on the session-occasion lens. Keep Graphviz for deterministic review; Cytoscape.js tabs now exist for session-occasion and T189 recommendation lenses. Calendar G-ingest shape is hybrid: individual `calendar_event` nodes plus one grouped derivation/result are applied; WF07 source-anchor relations need operad review before APPLY.
+Latest gate after atlas integration: `warn`, 19 pass, 1 warn, 0 fail. Remaining T189 warning: disconnected forced visual roots on the session-occasion lens. Keep Graphviz for deterministic review; Cytoscape.js tabs now exist for session-occasion and T189 recommendation lenses. Calendar G-ingest shape is hybrid: individual `calendar_event` nodes plus one grouped derivation/result are applied; WF07 source-anchor relations need operad review before APPLY.
 
 Kernel/application split: `moos-kernel` is the OS-facing runtime function program. `moos-router` is federation/read-routing. `ffs0` is the control/research workspace. Application groups such as `my-tiny-data-collider` run on HG through the kernels and may own websites, DNS, servers, Calendar, GitHub, and Workspace surfaces, but they are separate entities/codebases from the kernel.
 

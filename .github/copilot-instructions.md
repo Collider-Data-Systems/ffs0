@@ -10,7 +10,7 @@ All three repos at `github.com/Collider-Data-Systems/*` since T=172.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, personae seatings, key URNs.
 
-Current T189 hp-laptop state: kernel `hp-laptop.primary` is live on `ontology_version=3.16.1`, `t_day=189`, `log_len=1154`. `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation` and now pins the Calendar/time-fabric program family, grouped T189/T200 recommendation carriers, and 16 individual `calendar_event` observations. The active working lane is the Keep/session/visual/Calendar/recommendation projection pipeline; latest report is `kb/moos-diary/t189-calendar-event-public-surface-wrapup.md`.
+Current T189 hp-laptop state: kernel `hp-laptop.primary` is live on `ontology_version=3.16.1`, `t_day=189`, `log_len=1160`. `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation` and now pins the Calendar/time-fabric program family, grouped T189/T200 recommendation carriers, 16 individual `calendar_event` observations, and `program:sam.t189.surface-context-atlas`. The active working lane is the Keep/session/visual/Calendar/recommendation/atlas projection pipeline; latest report is `kb/moos-diary/t189-surface-context-atlas-wrapup.md`.
 
 For projection work, run the local pipeline before making claims about MVP status:
 
@@ -18,7 +18,7 @@ For projection work, run the local pipeline before making claims about MVP statu
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-session-pipeline.ps1
 ```
 
-Outputs land under `tmp/projections/session_pipeline/`: session context pack, graph engineering reports, session-occasion DOT/SVG, temporal/calendar DOT/SVG, T189 recommendation DOT/SVG, Calendar time-fabric plan/report/write-result, recommendation HG plan/report, reconciliation report, MVP gate, and `index.html` control surface. Current expected gate is `warn` with 18 pass, 1 warn, 0 fail; remaining warning is disconnected forced graph roots on the session-occasion lens. Cytoscape.js inspector tabs are present for session occasion and T189 recommendations.
+Outputs land under `tmp/projections/session_pipeline/`: session context pack, graph engineering reports, session-occasion DOT/SVG, temporal/calendar DOT/SVG, T189 recommendation DOT/SVG, Calendar time-fabric plan/report/write-result, recommendation HG plan/report, reconciliation report, surface context atlas JSON/Markdown, MVP gate, and `index.html` control surface. Current expected gate is `warn` with 19 pass, 1 warn, 0 fail; remaining warning is disconnected forced graph roots on the session-occasion lens. Cytoscape.js inspector tabs are present for session occasion and T189 recommendations.
 
 Kernel/application split: `moos-kernel` is the OS-facing runtime function program; `moos-router` is federation routing; application domains such as `my-tiny-data-collider` are HG groups/program families that run through the kernels and may project to websites, DNS, Calendar, GitHub, Workspace, and servers. Keep those entities/codebases separate.
 

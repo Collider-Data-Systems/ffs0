@@ -17,6 +17,8 @@ The runner regenerates the current Keep-note/session/visual/Calendar/recommendat
 5. Calendar time-fabric JSON/Markdown projection plan.
 6. T189/T200 recommendation HG JSON/Markdown projection plan.
 7. T189 recommendation reconciliation JSON/Markdown.
-8. MVP gate JSON/Markdown and `tmp/projections/session_pipeline/index.html`.
+8. First MVP gate pass, so the atlas can cite the gate result.
+9. Surface context atlas JSON/Markdown.
+10. Final MVP gate JSON/Markdown and `tmp/projections/session_pipeline/index.html`, regenerated with atlas links.
 
-It is dry: it reads the folded HG state and writes local artifacts, but does not emit rewrites or call external writers. The Calendar plan is writer-compatible, but real Google Calendar writes remain an explicit actuator step through `google_calendar_writer.jl`. The recommendation plan is also dry: it proposes candidate HG nodes/relations, while reconciliation says what is already applied, pending, or deferred in folded state.
+It is dry: it reads the folded HG state and writes local artifacts, but does not emit rewrites or call external writers. The Calendar plan is writer-compatible, but real Google Calendar writes remain an explicit actuator step through `google_calendar_writer.jl`. The recommendation plan is also dry: it proposes candidate HG nodes/relations, while reconciliation says what is already applied, pending, or deferred in folded state. The atlas is explanatory glue for the operator and agents: JSON/JSONL/Git/Calendar/dashboard/visual/type surfaces are presented together with their trust boundaries and pending HG moves.

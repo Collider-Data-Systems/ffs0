@@ -70,6 +70,10 @@ try {
 
     Invoke-Step "Session pipeline MVP gate" { & $Julia "dev\scripts\session_pipeline_mvp_gate.jl" "--base-url" $BaseUrl }
 
+    Invoke-Step "Surface context atlas" { & $Julia "dev\scripts\surface_context_atlas.jl" "--base-url" $BaseUrl }
+
+    Invoke-Step "Session pipeline MVP gate with atlas" { & $Julia "dev\scripts\session_pipeline_mvp_gate.jl" "--base-url" $BaseUrl }
+
     Write-Host ""
     Write-Host "Dashboard: tmp\projections\session_pipeline\index.html"
 } finally {
