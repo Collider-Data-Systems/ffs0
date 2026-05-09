@@ -58,38 +58,68 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         :filters => Dict(:wfs => ["WF21"], :ports => ["causes"], :types => ["claim"], :match => "session"),
         :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:derivation:demo", :connected => true)]),
     )
+    t189_graph_pack = Dict(
+        :projection_kind => "graph_artifact_engineering",
+        :node_count => 8,
+        :relation_count => 8,
+        :nodes => [
+            Dict(:urn => "urn:moos:purpose:t189", :type_id => "purpose", :title => "T189 convergence", :status => "open"),
+            Dict(:urn => "urn:moos:program:t189", :type_id => "program", :title => "T189 program", :status => "draft"),
+        ],
+        :relations => [
+            Dict(:urn => "urn:moos:rel:t189", :rewrite_category => "WF18", :src_urn => "urn:moos:purpose:t189", :src_port => "composes", :tgt_urn => "urn:moos:program:t189", :tgt_port => "composed-by"),
+        ],
+        :root_urns => ["urn:moos:purpose:t189"],
+        :filters => Dict(:wfs => ["WF18", "WF19"], :ports => ["composes", "pins-urn"], :types => ["purpose", "program"], :match => "t189"),
+        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:purpose:t189", :connected => true)]),
+    )
 
     mktempdir() do dir
         dot_path = joinpath(dir, "frame.dot")
         svg_path = joinpath(dir, "frame.svg")
         temporal_dot_path = joinpath(dir, "temporal.dot")
         temporal_svg_path = joinpath(dir, "temporal.svg")
+        t189_dot_path = joinpath(dir, "t189.dot")
+        t189_svg_path = joinpath(dir, "t189.svg")
         calendar_plan_path = joinpath(dir, "calendar_plan.json")
         calendar_report_path = joinpath(dir, "calendar_plan.md")
         recommendation_plan_path = joinpath(dir, "recommendation_plan.json")
         recommendation_report_path = joinpath(dir, "recommendation_plan.md")
+        reconciliation_path = joinpath(dir, "reconciliation.json")
+        reconciliation_report_path = joinpath(dir, "reconciliation.md")
+        one_shot_apply_script_path = joinpath(dir, "apply_t189_grouped.ps1")
         write(dot_path, "digraph g {}")
         write(svg_path, "<svg></svg>")
         write(temporal_dot_path, "digraph temporal {}")
         write(temporal_svg_path, "<svg></svg>")
+        write(t189_dot_path, "digraph t189 {}")
+        write(t189_svg_path, "<svg></svg>")
         write(calendar_plan_path, "{\"event_count\":2,\"events\":[{},{}]}\n")
         write(calendar_report_path, "# Calendar report\n")
         write(recommendation_plan_path, "{\"candidate_node_count\":8,\"selected_t189_recommendations\":[{},{},{},{},{}]}\n")
         write(recommendation_report_path, "# Recommendation report\n")
+        write(reconciliation_path, "{\"summary\":{\"grouped_nodes_applied\":10,\"grouped_nodes_total\":10,\"grouped_relations_applied\":16,\"grouped_relations_total\":16,\"calendar_event_nodes_pending\":16,\"deferred_relations\":16,\"grouped_nodes_ok\":true,\"grouped_relations_ok\":true}}\n")
+        write(reconciliation_report_path, "# Reconciliation report\n")
         plan = Gate.plan_mvp_gate(
             nodes,
             relations;
             health=Dict(:status => "ok", :ontology_version => "3.16.1", :t_day => 188, :log_len => 1079),
             session_pack=session_pack,
             graph_pack=graph_pack,
+            t189_graph_pack=t189_graph_pack,
             dot_path=dot_path,
             svg_path=svg_path,
             temporal_dot_path=temporal_dot_path,
             temporal_svg_path=temporal_svg_path,
+            t189_dot_path=t189_dot_path,
+            t189_svg_path=t189_svg_path,
             calendar_plan_path=calendar_plan_path,
             calendar_report_path=calendar_report_path,
             recommendation_plan_path=recommendation_plan_path,
             recommendation_report_path=recommendation_report_path,
+            reconciliation_path=reconciliation_path,
+            reconciliation_report_path=reconciliation_report_path,
+            one_shot_apply_script_path=one_shot_apply_script_path,
             generated_at="2026-05-08T11:30:00Z",
         )
 
@@ -103,15 +133,22 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test "visual lens root coverage" in names
         @test "Calendar time-fabric artifacts" in names
         @test "T189/T200 recommendation artifacts" in names
+        @test "T189 recommendation lens" in names
+        @test "T189 recommendation reconciliation" in names
+        @test "deferred apply boundaries" in names
+        @test "one-shot apply script cleanup" in names
         @test plan["lingo"]["lens"] != ""
+        @test plan["lingo"]["reconciliation"] != ""
         @test plan["lingo"]["Calendar_projection"] != ""
         @test plan["lingo"]["Recommendation_projection"] != ""
         @test plan["renderer_candidates"][2]["name"] == "Cytoscape.js"
         @test plan["interactive_inspector"]["node_count"] == 2
         @test plan["interactive_inspector"]["relation_count"] == 1
+        @test length(plan["interactive_inspectors"]) == 2
+        @test plan["interactive_inspectors"][2]["label"] == "T189 Recommendations"
         @test length(plan["pipeline_stages"]) == 4
         @test plan["pipeline_stages"][1]["status"] == "pass"
-        @test plan["pipeline_stages"][3]["summary"]["pass"] == 6
+        @test plan["pipeline_stages"][3]["summary"]["pass"] == 9
         @test isempty(plan["priority_actions"])
 
         html_path = joinpath(dir, "index.html")
@@ -122,8 +159,12 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test occursin("G-ingest", html)
         @test occursin("Calendar Time-Fabric", html)
         @test occursin("HG Recommendations", html)
+        @test occursin("Visual Lenses", html)
+        @test occursin("T189 Recommendations", html)
+        @test occursin("Open Reconciliation", html)
         @test occursin("Interactive HG Inspector", html)
         @test occursin("inspectorData", html)
+        @test occursin("inspectorsData", html)
         @test occursin("Cytoscape.js", html)
     end
 end

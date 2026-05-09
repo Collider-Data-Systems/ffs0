@@ -9,15 +9,21 @@ using JSON3
 const DEFAULT_BASE_URL = "http://localhost:8000"
 const DEFAULT_SESSION_PACK = "tmp/projections/session_pipeline/session_context/current_session.json"
 const DEFAULT_GRAPH_PACK = "tmp/projections/session_pipeline/graph_artifacts/session_occasion_engineering.json"
+const DEFAULT_T189_GRAPH_PACK = "tmp/projections/session_pipeline/graph_artifacts/t189_recommendation_engineering.json"
 const DEFAULT_DOT_PATH = "tmp/projections/session_pipeline/visual/session_occasion_frame.dot"
 const DEFAULT_SVG_PATH = "tmp/projections/session_pipeline/visual/session_occasion_frame.svg"
 const DEFAULT_TEMPORAL_DOT_PATH = "tmp/projections/session_pipeline/visual/temporal_calendar_frame.dot"
 const DEFAULT_TEMPORAL_SVG_PATH = "tmp/projections/session_pipeline/visual/temporal_calendar_frame.svg"
+const DEFAULT_T189_DOT_PATH = "tmp/projections/session_pipeline/visual/t189_recommendation_frame.dot"
+const DEFAULT_T189_SVG_PATH = "tmp/projections/session_pipeline/visual/t189_recommendation_frame.svg"
 const DEFAULT_CALENDAR_PLAN_PATH = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json"
 const DEFAULT_CALENDAR_REPORT_PATH = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.md"
 const DEFAULT_CALENDAR_WRITE_RESULT_PATH = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_write_result.json"
 const DEFAULT_RECOMMENDATION_PLAN_PATH = "tmp/projections/session_pipeline/recommendations/t189_t200_recommendation_hg_plan.json"
 const DEFAULT_RECOMMENDATION_REPORT_PATH = "tmp/projections/session_pipeline/recommendations/t189_t200_recommendation_hg_plan.md"
+const DEFAULT_RECONCILIATION_PATH = "tmp/projections/session_pipeline/recommendations/t189_recommendation_reconciliation.json"
+const DEFAULT_RECONCILIATION_REPORT_PATH = "tmp/projections/session_pipeline/recommendations/t189_recommendation_reconciliation.md"
+const DEFAULT_ONE_SHOT_APPLY_SCRIPT = "tmp/projections/session_pipeline/recommendations/apply_t189_grouped.ps1"
 const DEFAULT_OUT_BASE = "tmp/projections/session_pipeline/mvp/session_pipeline_gate"
 const DEFAULT_HTML_PATH = "tmp/projections/session_pipeline/index.html"
 const DEFAULT_SESSION_URN = "urn:moos:session:sam.governance"
@@ -45,14 +51,14 @@ const PIPELINE_STAGE_SPECS = [
         "name" => "F visual lens",
         "short_name" => "F/visual",
         "description" => "The selected graph lenses become engineering summaries, static visual artifacts, Calendar payloads, and recommendation HG plans while keeping disconnected roots visible.",
-        "gate_names" => ["F graph artifact analysis", "visual lens root coverage", "static visual output", "Calendar time-fabric artifacts", "T189/T200 recommendation artifacts", "lens flexibility controls"],
+        "gate_names" => ["F graph artifact analysis", "T189 recommendation lens", "visual lens root coverage", "static visual output", "Calendar time-fabric artifacts", "T189/T200 recommendation artifacts", "T189 recommendation reconciliation", "deferred apply boundaries", "lens flexibility controls"],
     ),
     Dict(
         "id" => "operator-interface",
         "name" => "Operator interface",
         "short_name" => "UI",
         "description" => "The MVP is readable as a control surface: status, lineage, checks, artifacts, and next gates are visible in one place.",
-        "gate_names" => ["interactive visual aid"],
+        "gate_names" => ["interactive visual aid", "one-shot apply script cleanup"],
     ),
 ]
 
@@ -111,6 +117,7 @@ const LINGO = Dict(
     "F_projection" => "HG folded state -> external/session artifact. For this lane: session context pack, graph engineering report, DOT/SVG visual aid.",
     "Calendar_projection" => "HG graph artifact -> Google Calendar payloads. Calendar is a visible projection surface; the graph remains source of truth.",
     "Recommendation_projection" => "Approved T189 recommendations -> dry candidate HG nodes/relations. This is a plan surface, not an APPLY batch.",
+    "reconciliation" => "A comparison of a dry plan against folded HG state: applied, pending, and deferred rows are named explicitly.",
     "lens" => "A typed view functor: roots + radius + WF/port/type/predicate filters + authority/session context -> selected subgraph.",
     "scope" => "The domain of a lens: explicit roots plus reachable topology under chosen relation families. Session pins and view_filter nodes are durable scope carriers.",
     "visual_aid" => "A renderer of a lens result, not a truth source. DOT/SVG is the current static renderer; Cytoscape.js is the likely next interactive renderer.",
@@ -310,6 +317,20 @@ function selected_recommendation_count(path::AbstractString)
     end
 end
 
+function safe_read_json(path::AbstractString)
+    isfile(path) || return Dict{String, Any}()
+    try
+        return read_json(path)
+    catch
+        return Dict{String, Any}()
+    end
+end
+
+function reconciliation_summary(path::AbstractString)
+    report = safe_read_json(path)
+    return object_value(report, :summary, Dict{String, Any}())
+end
+
 function compact_label(text; fallback="")
     clean = strip(replace(string(text), r"\s+" => " "))
     isempty(clean) && (clean = string(fallback))
@@ -317,7 +338,7 @@ function compact_label(text; fallback="")
     return string(clean[1:33], "...")
 end
 
-function graph_inspector_payload(graph_pack)
+function graph_inspector_payload(graph_pack; id="lens", label="Lens")
     nodes = collect(object_value(graph_pack, :nodes, Any[]))
     relations = collect(object_value(graph_pack, :relations, Any[]))
     cy_nodes = Any[]
@@ -356,6 +377,8 @@ function graph_inspector_payload(graph_pack)
         ))
     end
     return Dict(
+        "id" => id,
+        "label" => label,
         "renderer" => "Cytoscape.js",
         "node_count" => length(cy_nodes),
         "relation_count" => length(cy_edges),
@@ -368,7 +391,7 @@ function json_literal(value)
     return replace(text, "</" => "<\\/")
 end
 
-function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), graph_pack=Dict(), session_pack_path=DEFAULT_SESSION_PACK, graph_pack_path=DEFAULT_GRAPH_PACK, dot_path=DEFAULT_DOT_PATH, svg_path=DEFAULT_SVG_PATH, temporal_dot_path=DEFAULT_TEMPORAL_DOT_PATH, temporal_svg_path=DEFAULT_TEMPORAL_SVG_PATH, calendar_plan_path=DEFAULT_CALENDAR_PLAN_PATH, calendar_report_path=DEFAULT_CALENDAR_REPORT_PATH, calendar_write_result_path=DEFAULT_CALENDAR_WRITE_RESULT_PATH, recommendation_plan_path=DEFAULT_RECOMMENDATION_PLAN_PATH, recommendation_report_path=DEFAULT_RECOMMENDATION_REPORT_PATH, html_path=DEFAULT_HTML_PATH, session_urn=DEFAULT_SESSION_URN, actor_urn=DEFAULT_ACTOR_URN, keep_channel_urn=DEFAULT_KEEP_CHANNEL_URN, keep_ki_urn=DEFAULT_KEEP_KI_URN, base_url=DEFAULT_BASE_URL, generated_at=format_utc(now(UTC)))
+function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), graph_pack=Dict(), t189_graph_pack=Dict(), session_pack_path=DEFAULT_SESSION_PACK, graph_pack_path=DEFAULT_GRAPH_PACK, t189_graph_pack_path=DEFAULT_T189_GRAPH_PACK, dot_path=DEFAULT_DOT_PATH, svg_path=DEFAULT_SVG_PATH, temporal_dot_path=DEFAULT_TEMPORAL_DOT_PATH, temporal_svg_path=DEFAULT_TEMPORAL_SVG_PATH, t189_dot_path=DEFAULT_T189_DOT_PATH, t189_svg_path=DEFAULT_T189_SVG_PATH, calendar_plan_path=DEFAULT_CALENDAR_PLAN_PATH, calendar_report_path=DEFAULT_CALENDAR_REPORT_PATH, calendar_write_result_path=DEFAULT_CALENDAR_WRITE_RESULT_PATH, recommendation_plan_path=DEFAULT_RECOMMENDATION_PLAN_PATH, recommendation_report_path=DEFAULT_RECOMMENDATION_REPORT_PATH, reconciliation_path=DEFAULT_RECONCILIATION_PATH, reconciliation_report_path=DEFAULT_RECONCILIATION_REPORT_PATH, one_shot_apply_script_path=DEFAULT_ONE_SHOT_APPLY_SCRIPT, html_path=DEFAULT_HTML_PATH, session_urn=DEFAULT_SESSION_URN, actor_urn=DEFAULT_ACTOR_URN, keep_channel_urn=DEFAULT_KEEP_CHANNEL_URN, keep_ki_urn=DEFAULT_KEEP_KI_URN, base_url=DEFAULT_BASE_URL, generated_at=format_utc(now(UTC)))
     index = nodes_by_urn(nodes)
     gates = Any[]
 
@@ -462,6 +485,19 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         next_action=graph_kind_ok && node_count > 0 && relation_count > 0 && length(root_coverage) > 0 ? "" : "Regenerate graph_artifact_projection.jl and inspect root filters.",
     ))
 
+    t189_graph_kind_ok = string(object_value(t189_graph_pack, :projection_kind, "")) == "graph_artifact_engineering"
+    t189_node_count = Int(object_value(t189_graph_pack, :node_count, 0))
+    t189_relation_count = Int(object_value(t189_graph_pack, :relation_count, 0))
+    t189_root_coverage = object_value(object_value(t189_graph_pack, :analysis, Dict()), :root_coverage, Any[])
+    t189_disconnected = [entry for entry in t189_root_coverage if !Bool(object_value(entry, :connected, false))]
+    push!(gates, gate(
+        t189_graph_kind_ok && t189_node_count >= 8 && t189_relation_count >= 8 && isempty(t189_disconnected) ? "pass" : "warn",
+        "T189 recommendation lens",
+        t189_graph_kind_ok && t189_node_count > 0 ? "The grouped recommendation apply has a dedicated graph artifact lens." : "The grouped recommendation apply is not visible through a dedicated graph artifact lens yet.",
+        evidence=Dict("graph_pack" => t189_graph_pack_path, "nodes" => t189_node_count, "relations" => t189_relation_count, "root_count" => length(t189_root_coverage), "disconnected_root_count" => length(t189_disconnected)),
+        next_action=t189_graph_kind_ok && t189_node_count >= 8 && t189_relation_count >= 8 && isempty(t189_disconnected) ? "" : "Regenerate the T189 recommendation graph artifact with roots for session, purpose, derivation, view_filter, and application group.",
+    ))
+
     disconnected = [entry for entry in root_coverage if !Bool(object_value(entry, :connected, false))]
     push!(gates, gate(
         isempty(disconnected) ? "pass" : "warn",
@@ -475,12 +511,14 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     svg_exists = isfile(svg_path)
     temporal_dot_exists = isfile(temporal_dot_path)
     temporal_svg_exists = isfile(temporal_svg_path)
+    t189_dot_exists = isfile(t189_dot_path)
+    t189_svg_exists = isfile(t189_svg_path)
     push!(gates, gate(
-        dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists ? "pass" : "warn",
+        dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists && t189_dot_exists && t189_svg_exists ? "pass" : "warn",
         "static visual output",
-        dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists ? "Session-occasion and temporal/calendar DOT/SVG visual artifacts exist." : "One or more static visual artifacts are missing.",
-        evidence=Dict("dot_path" => dot_path, "dot_exists" => dot_exists, "svg_path" => svg_path, "svg_exists" => svg_exists, "temporal_dot_path" => temporal_dot_path, "temporal_dot_exists" => temporal_dot_exists, "temporal_svg_path" => temporal_svg_path, "temporal_svg_exists" => temporal_svg_exists),
-        next_action=dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists ? "" : "Run export_t200plus_projection.jl for both session-occasion and temporal-calendar presets; install Graphviz if SVG is missing.",
+        dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists && t189_dot_exists && t189_svg_exists ? "Session-occasion, temporal/calendar, and T189 recommendation DOT/SVG visual artifacts exist." : "One or more static visual artifacts are missing.",
+        evidence=Dict("dot_path" => dot_path, "dot_exists" => dot_exists, "svg_path" => svg_path, "svg_exists" => svg_exists, "temporal_dot_path" => temporal_dot_path, "temporal_dot_exists" => temporal_dot_exists, "temporal_svg_path" => temporal_svg_path, "temporal_svg_exists" => temporal_svg_exists, "t189_dot_path" => t189_dot_path, "t189_dot_exists" => t189_dot_exists, "t189_svg_path" => t189_svg_path, "t189_svg_exists" => t189_svg_exists),
+        next_action=dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists && t189_dot_exists && t189_svg_exists ? "" : "Run export_t200plus_projection.jl for session-occasion, temporal-calendar, and t189-recommendations presets; install Graphviz if SVG is missing.",
     ))
 
     calendar_plan_exists = isfile(calendar_plan_path)
@@ -507,6 +545,49 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         next_action=recommendation_plan_exists && recommendation_report_exists && recommendation_nodes > 0 && selected_recommendations == 5 ? "" : "Run t189_t200_recommendation_projection.jl after the Calendar projection so the next sprint has candidate HG nodes/relations to inspect.",
     ))
 
+    reconciliation_exists = isfile(reconciliation_path)
+    reconciliation_report_exists = isfile(reconciliation_report_path)
+    rec_summary = reconciliation_summary(reconciliation_path)
+    grouped_nodes_applied = Int(object_value(rec_summary, :grouped_nodes_applied, 0))
+    grouped_nodes_total = Int(object_value(rec_summary, :grouped_nodes_total, 0))
+    grouped_relations_applied = Int(object_value(rec_summary, :grouped_relations_applied, 0))
+    grouped_relations_total = Int(object_value(rec_summary, :grouped_relations_total, 0))
+    calendar_event_nodes_pending = Int(object_value(rec_summary, :calendar_event_nodes_pending, 0))
+    deferred_relations = Int(object_value(rec_summary, :deferred_relations, 0))
+    grouped_nodes_ok = Bool(object_value(rec_summary, :grouped_nodes_ok, false))
+    grouped_relations_ok = Bool(object_value(rec_summary, :grouped_relations_ok, false))
+    reconciliation_ok = reconciliation_exists && reconciliation_report_exists && grouped_nodes_ok && grouped_relations_ok && grouped_nodes_total > 0 && grouped_relations_total > 0
+    push!(gates, gate(
+        reconciliation_ok ? "pass" : "warn",
+        "T189 recommendation reconciliation",
+        reconciliation_ok ? "The dry recommendation plan is reconciled against folded HG state: grouped nodes and safe relations are already applied." : "The recommendation plan has not been reconciled against folded HG state yet, or grouped apply rows are still pending.",
+        evidence=Dict(
+            "reconciliation" => reconciliation_path,
+            "reconciliation_exists" => reconciliation_exists,
+            "reconciliation_report" => reconciliation_report_path,
+            "reconciliation_report_exists" => reconciliation_report_exists,
+            "grouped_nodes_applied" => grouped_nodes_applied,
+            "grouped_nodes_total" => grouped_nodes_total,
+            "grouped_relations_applied" => grouped_relations_applied,
+            "grouped_relations_total" => grouped_relations_total,
+        ),
+        next_action=reconciliation_ok ? "" : "Run t189_recommendation_reconciliation.jl after the recommendation HG plan, then inspect grouped pending rows before any further APPLY work.",
+    ))
+
+    deferred_boundaries_ok = reconciliation_exists && calendar_event_nodes_pending > 0 && deferred_relations > 0
+    push!(gates, gate(
+        deferred_boundaries_ok ? "pass" : "warn",
+        "deferred apply boundaries",
+        deferred_boundaries_ok ? "Calendar event nodes and WF07 anchor relations remain explicitly pending/deferred instead of being silently applied." : "Deferred Calendar/WF07 boundaries are not visible in the reconciliation artifact.",
+        evidence=Dict(
+            "calendar_event_nodes_pending" => calendar_event_nodes_pending,
+            "deferred_relations" => deferred_relations,
+            "grouped_nodes_ok" => grouped_nodes_ok,
+            "grouped_relations_ok" => grouped_relations_ok,
+        ),
+        next_action=deferred_boundaries_ok ? "" : "Keep Calendar-event nodes, WF07 anchors, and board repair out of live APPLY batches until the next explicit actor/operad review step.",
+    ))
+
     filters = object_value(graph_pack, :filters, Dict())
     has_lens_controls = length(object_value(graph_pack, :root_urns, Any[])) > 0 && haskey(filters, :wfs) && haskey(filters, :ports) && haskey(filters, :types)
     push!(gates, gate(
@@ -517,14 +598,25 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         next_action=has_lens_controls ? "" : "Promote the lens spec to a shared JSON or view_filter-backed adapter.",
     ))
 
-    inspector = graph_inspector_payload(graph_pack)
-    inspector_ready = inspector["node_count"] > 0 && inspector["relation_count"] > 0
+    one_shot_apply_script_exists = isfile(one_shot_apply_script_path)
+    push!(gates, gate(
+        one_shot_apply_script_exists ? "warn" : "pass",
+        "one-shot apply script cleanup",
+        one_shot_apply_script_exists ? "The ignored one-shot grouped apply script still exists under tmp; it is not a projection artifact." : "No ignored one-shot grouped apply script remains under the generated projection tree.",
+        evidence=Dict("one_shot_apply_script" => one_shot_apply_script_path, "exists" => one_shot_apply_script_exists),
+        next_action=one_shot_apply_script_exists ? "Delete or archive the already-run apply script outside tmp/projections before treating the dashboard as the projection surface." : "",
+    ))
+
+    inspector = graph_inspector_payload(graph_pack; id="session-occasion", label="Session Occasion")
+    t189_inspector = graph_inspector_payload(t189_graph_pack; id="t189-recommendations", label="T189 Recommendations")
+    inspectors = Any[inspector, t189_inspector]
+    inspector_ready = inspector["node_count"] > 0 && inspector["relation_count"] > 0 && t189_inspector["node_count"] > 0 && t189_inspector["relation_count"] > 0
     push!(gates, gate(
         inspector_ready ? "pass" : "warn",
         "interactive visual aid",
-        inspector_ready ? "The dashboard embeds a Cytoscape.js typed graph element set with selection inspector data." : "The MVP has deterministic DOT/SVG, but not yet enough graph element data for an interactive browser/IDE graph surface.",
-        evidence=Dict("renderer" => "Cytoscape.js", "node_count" => inspector["node_count"], "relation_count" => inspector["relation_count"], "context7_candidates_checked" => [candidate["name"] for candidate in RENDERER_CANDIDATES]),
-        next_action=inspector_ready ? "" : "Keep Graphviz as the static review artifact; prototype Cytoscape.js when node selection, filtering, and inspector panels become the bottleneck.",
+        inspector_ready ? "The dashboard embeds Cytoscape.js typed element sets for both the session-occasion lens and the T189 recommendation lens." : "The dashboard does not yet have enough graph element data for both interactive browser/IDE graph lenses.",
+        evidence=Dict("renderer" => "Cytoscape.js", "lens_count" => length(inspectors), "session_nodes" => inspector["node_count"], "session_relations" => inspector["relation_count"], "t189_nodes" => t189_inspector["node_count"], "t189_relations" => t189_inspector["relation_count"], "context7_candidates_checked" => [candidate["name"] for candidate in RENDERER_CANDIDATES]),
+        next_action=inspector_ready ? "" : "Regenerate both graph artifact packs before relying on the interactive inspector.",
     ))
 
     status = overall_status(gates)
@@ -540,21 +632,27 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         "artifacts" => Dict(
             "session_pack" => session_pack_path,
             "graph_pack" => graph_pack_path,
+            "t189_graph_pack" => t189_graph_pack_path,
             "dot" => dot_path,
             "svg" => svg_path,
             "temporal_calendar_dot" => temporal_dot_path,
             "temporal_calendar_svg" => temporal_svg_path,
+            "t189_recommendation_dot" => t189_dot_path,
+            "t189_recommendation_svg" => t189_svg_path,
             "calendar_time_fabric_plan" => calendar_plan_path,
             "calendar_time_fabric_report" => calendar_report_path,
             "calendar_time_fabric_write_result" => calendar_write_result_path,
             "recommendation_hg_plan" => recommendation_plan_path,
             "recommendation_hg_report" => recommendation_report_path,
+            "recommendation_reconciliation" => reconciliation_path,
+            "recommendation_reconciliation_report" => reconciliation_report_path,
             "dashboard" => html_path,
         ),
         "pipeline_stages" => stages,
         "interface_principles" => INTERFACE_PRINCIPLES,
         "renderer_candidates" => RENDERER_CANDIDATES,
         "interactive_inspector" => inspector,
+        "interactive_inspectors" => inspectors,
         "gates" => gates,
         "priority_actions" => priority_actions(gates),
         "summary" => Dict(
@@ -617,8 +715,12 @@ function write_html(path::AbstractString, plan)
     svg_href = artifact_link(path, svg_path)
     temporal_svg_path = string(object_value(artifacts, :temporal_calendar_svg, ""))
     temporal_svg_href = artifact_link(path, temporal_svg_path)
-    inspector = object_value(plan, :interactive_inspector, Dict("elements" => Any[], "node_count" => 0, "relation_count" => 0))
+    t189_svg_path = string(object_value(artifacts, :t189_recommendation_svg, ""))
+    t189_svg_href = artifact_link(path, t189_svg_path)
+    inspectors = collect(object_value(plan, :interactive_inspectors, Any[object_value(plan, :interactive_inspector, Dict("elements" => Any[], "node_count" => 0, "relation_count" => 0))]))
+    inspector = isempty(inspectors) ? Dict("elements" => Any[], "node_count" => 0, "relation_count" => 0) : inspectors[1]
     inspector_json = json_literal(inspector)
+    inspectors_json = json_literal(inspectors)
     open(path, "w") do io
         println(io, "<!doctype html>")
         println(io, "<html lang=\"en\">")
@@ -629,6 +731,7 @@ function write_html(path::AbstractString, plan)
         println(io, "<style>")
         println(io, "html{font-family:Inter,Segoe UI,Arial,sans-serif;background:#f7f7f2;color:#202522}body{margin:0}.shell{max-width:1180px;margin:0 auto;padding:24px}.top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,.8fr);gap:16px;align-items:stretch}.panel,.stage,.gate,.artifact,.principle{background:#fff;border:1px solid #d9ded7;border-radius:8px;box-shadow:0 1px 2px rgba(20,30,25,.05)}.panel{padding:18px}h1{font-size:28px;line-height:1.15;margin:0 0 8px}h2{font-size:16px;margin:0 0 12px}p{line-height:1.45}.muted{color:#5f6b62}.status{display:inline-flex;align-items:center;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;text-transform:uppercase}.pass{background:#dff4df;color:#195d25}.warn{background:#fff0bd;color:#735600}.fail{background:#ffd8d3;color:#8a1f16}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.metric{border:1px solid #e3e6e0;border-radius:8px;padding:10px;background:#fafbf8}.metric strong{display:block;font-size:24px}.stageGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.stage{padding:14px;min-height:138px}.stageHead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.stageName{font-weight:800}.stageDesc{font-size:13px;color:#46524a}.gateToolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}.gateToolbar button,.linkButton{border:1px solid #ccd3cb;background:#fff;border-radius:6px;padding:7px 10px;cursor:pointer;color:#24362e;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.gateToolbar button.active{background:#24362e;color:#fff;border-color:#24362e}.gateList{display:grid;gap:8px}.gate{padding:12px}.gateTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.gateName{font-weight:750}.evidence{font-size:12px;color:#526057;margin-top:8px;word-break:break-word}.next{border-left:3px solid #c68a00;background:#fff8df;padding:8px;margin-top:8px;border-radius:4px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.artifactList,.principleList{display:grid;gap:8px}.artifact,.principle{padding:12px}.artifact a{color:#245c84;text-decoration:none;word-break:break-word}.artifact a:hover,.linkButton:hover{text-decoration:underline}.visualBox{border:1px solid #d9ded7;border-radius:8px;background:#fff;min-height:360px;overflow:auto}.visualBox object{width:100%;min-width:1080px;height:680px;display:block}.visualActions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.actions{display:grid;gap:8px}.action{border-left:4px solid #c68a00;background:#fff8df;border-radius:6px;padding:10px}.foot{margin-top:22px;font-size:12px;color:#667168}@media(max-width:900px){.top,.cols,.stageGrid{grid-template-columns:1fr}.shell{padding:16px}.visualBox object{height:560px}}")
         println(io, ".inspectorGrid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);gap:12px}.cyBox{height:560px;border:1px solid #d9ded7;border-radius:8px;background:#fcfdf9}.inspectPane{border:1px solid #d9ded7;border-radius:8px;background:#fff;padding:12px;min-height:160px;overflow:auto}.inspectTitle{font-weight:800;margin-bottom:8px}.inspectMeta{font-size:12px;color:#526057;word-break:break-word}@media(max-width:900px){.inspectorGrid{grid-template-columns:1fr}.cyBox{height:460px}}")
+        println(io, ".visualPair{display:grid;grid-template-columns:1fr 1fr;gap:14px}.visualPanel{min-width:0}.visualTitle{font-weight:800;margin:0 0 8px}.lensTabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.lensTabs button{border:1px solid #ccd3cb;background:#fff;border-radius:6px;padding:7px 10px;cursor:pointer;color:#24362e}.lensTabs button.active{background:#24362e;color:#fff;border-color:#24362e}@media(max-width:900px){.visualPair{grid-template-columns:1fr}}")
         println(io, "</style>")
         println(io, "</head>")
         println(io, "<body>")
@@ -672,13 +775,22 @@ function write_html(path::AbstractString, plan)
         end
         println(io, "</div></div>")
         println(io, "</section>")
-        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Visual Lens</h2>")
+        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Visual Lenses</h2><div class=\"visualPair\">")
+        println(io, "<div class=\"visualPanel\"><p class=\"visualTitle\">Session Occasion</p>")
         if !isempty(svg_path) && isfile(svg_path)
             println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(svg_href), "\">Open SVG</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :dot, "")))), "\">Open DOT</a></div>")
             println(io, "<div class=\"visualBox\"><object type=\"image/svg+xml\" data=\"", html_escape(svg_href), "\"></object></div>")
         else
-            println(io, "<p class=\"muted\">Static SVG is not present yet. Run the session-occasion visual projection before using the visual lens panel.</p>")
+            println(io, "<p class=\"muted\">Session-occasion SVG is not present yet.</p>")
         end
+        println(io, "</div><div class=\"visualPanel\"><p class=\"visualTitle\">T189 Recommendations</p>")
+        if !isempty(t189_svg_path) && isfile(t189_svg_path)
+            println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(t189_svg_href), "\">Open SVG</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :t189_recommendation_dot, "")))), "\">Open DOT</a></div>")
+            println(io, "<div class=\"visualBox\"><object type=\"image/svg+xml\" data=\"", html_escape(t189_svg_href), "\"></object></div>")
+        else
+            println(io, "<p class=\"muted\">T189 recommendation SVG is not present yet.</p>")
+        end
+        println(io, "</div></div>")
         println(io, "</section>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Calendar Time-Fabric</h2>")
         println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_plan, "")))), "\">Open Calendar Plan</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_report, "")))), "\">Open Calendar Report</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_write_result, "")))), "\">Open Write Result</a><a class=\"linkButton\" href=\"", html_escape(temporal_svg_href), "\">Open Temporal SVG</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :temporal_calendar_dot, "")))), "\">Open Temporal DOT</a></div>")
@@ -689,10 +801,16 @@ function write_html(path::AbstractString, plan)
         end
         println(io, "</section>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>HG Recommendations</h2>")
-        println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_plan, "")))), "\">Open Recommendation Plan</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_report, "")))), "\">Open Recommendation Report</a></div>")
-        println(io, "<p class=\"muted\">Dry candidate nodes and relations for the five T189 recommendations plus the T200+ convergence arc. This panel is a projection surface; it does not apply rewrites.</p>")
+        println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_plan, "")))), "\">Open Recommendation Plan</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_report, "")))), "\">Open Recommendation Report</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_reconciliation, "")))), "\">Open Reconciliation</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_reconciliation_report, "")))), "\">Open Reconciliation Report</a></div>")
+        println(io, "<p class=\"muted\">Dry candidate nodes and relations for the five T189 recommendations plus the T200+ convergence arc, reconciled against folded HG state. This panel is a projection surface; it does not apply rewrites.</p>")
         println(io, "</section>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Interactive HG Inspector</h2>")
+        println(io, "<div class=\"lensTabs\" id=\"lensTabs\">")
+        for (index, lens) in enumerate(inspectors)
+            active = index == 1 ? " active" : ""
+            println(io, "<button class=\"", active, "\" data-lens=\"", index - 1, "\">", html_escape(object_value(lens, :label, string("Lens ", index))), " <span class=\"muted\">", html_escape(object_value(lens, :node_count, 0)), "/", html_escape(object_value(lens, :relation_count, 0)), "</span></button>")
+        end
+        println(io, "</div>")
         println(io, "<div class=\"inspectorGrid\"><div id=\"cy\" class=\"cyBox\"></div><div class=\"inspectPane\"><div class=\"inspectTitle\" id=\"inspectTitle\">No selection</div><div class=\"inspectMeta\" id=\"inspectMeta\">", html_escape(inspector["node_count"]), " nodes / ", html_escape(inspector["relation_count"]), " relations</div></div></div>")
         println(io, "</section>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Gates</h2><div class=\"gateToolbar\"><button class=\"active\" data-filter=\"all\">All</button><button data-filter=\"pass\">Pass</button><button data-filter=\"warn\">Warn</button><button data-filter=\"fail\">Fail</button></div><div class=\"gateList\">")
@@ -722,7 +840,8 @@ function write_html(path::AbstractString, plan)
         println(io, "<script>document.querySelectorAll('[data-filter]').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('[data-filter]').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');var f=btn.getAttribute('data-filter');document.querySelectorAll('.gate').forEach(function(g){g.style.display=(f==='all'||g.getAttribute('data-status')===f)?'block':'none'});});});</script>")
         println(io, "<script src=\"https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js\"></script>")
         println(io, "<script id=\"inspectorData\" type=\"application/json\">", inspector_json, "</script>")
-        println(io, "<script>(function(){var raw=document.getElementById('inspectorData');var title=document.getElementById('inspectTitle');var meta=document.getElementById('inspectMeta');var data=raw?JSON.parse(raw.textContent):{elements:[]};function esc(v){return String(v==null?'':v).replace(/[&<>\"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]})}function show(d){title.textContent=d.title||d.label||d.urn||'Selection';meta.innerHTML='<strong>'+esc(d.type_id||d.rewrite_category||'relation')+'</strong><br>'+esc(d.urn||d.id||'')+'<br>'+esc(d.status||'')+(d.src_port?'<br>'+esc(d.src_port)+' / '+esc(d.tgt_port):'')}if(!window.cytoscape){title.textContent='Cytoscape.js unavailable';return}var cy=cytoscape({container:document.getElementById('cy'),elements:data.elements,layout:{name:'cose',animate:false,fit:true,padding:32},style:[{selector:'node',style:{'label':'data(label)','font-size':10,'text-wrap':'wrap','text-max-width':110,'background-color':'#6f7f73','color':'#24362e','text-valign':'bottom','text-halign':'center','width':34,'height':34}},{selector:'node[type_id = \"claim\"]',style:{'background-color':'#4c78a8'}},{selector:'node[type_id = \"derivation\"]',style:{'background-color':'#7b61a8'}},{selector:'node[type_id = \"knowledge_item\"]',style:{'background-color':'#54a24b'}},{selector:'node[type_id = \"program\"]',style:{'background-color':'#9c755f'}},{selector:'node[type_id = \"purpose\"]',style:{'background-color':'#b279a2'}},{selector:'node[type_id = \"view_filter\"]',style:{'background-color':'#72b7b2'}},{selector:'node[type_id = \"group\"]',style:{'background-color':'#eeca3b'}},{selector:'edge',style:{'label':'data(label)','font-size':9,'curve-style':'bezier','target-arrow-shape':'triangle','line-color':'#9da8a0','target-arrow-color':'#9da8a0','width':1.4,'color':'#526057','text-background-color':'#fff','text-background-opacity':0.8}},{selector:':selected',style:{'border-width':3,'border-color':'#202522','line-color':'#202522','target-arrow-color':'#202522'}}]});cy.on('tap','node, edge',function(evt){show(evt.target.data())});cy.ready(function(){cy.fit(null,32)});})();</script>")
+        println(io, "<script id=\"inspectorsData\" type=\"application/json\">", inspectors_json, "</script>")
+        println(io, raw"""<script>(function(){var raw=document.getElementById('inspectorsData');var title=document.getElementById('inspectTitle');var meta=document.getElementById('inspectMeta');var buttons=document.querySelectorAll('[data-lens]');var lenses=raw?JSON.parse(raw.textContent):[];var cy=null;function esc(v){return String(v==null?'':v).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}function show(d){title.textContent=d.title||d.label||d.urn||'Selection';meta.innerHTML='<strong>'+esc(d.type_id||d.rewrite_category||'relation')+'</strong><br>'+esc(d.urn||d.id||'')+'<br>'+esc(d.status||'')+(d.src_port?'<br>'+esc(d.src_port)+' / '+esc(d.tgt_port):'')}function activate(index){buttons.forEach(function(btn){btn.classList.toggle('active',Number(btn.getAttribute('data-lens'))===index)});var data=lenses[index]||{label:'Lens',elements:[],node_count:0,relation_count:0};title.textContent=data.label||'Lens';meta.innerHTML=esc(data.node_count||0)+' nodes / '+esc(data.relation_count||0)+' relations';if(!window.cytoscape){title.textContent='Cytoscape.js unavailable';return}if(cy){cy.destroy()}cy=cytoscape({container:document.getElementById('cy'),elements:data.elements||[],layout:{name:'cose',animate:false,fit:true,padding:32},style:[{selector:'node',style:{'label':'data(label)','font-size':10,'text-wrap':'wrap','text-max-width':110,'background-color':'#6f7f73','color':'#24362e','text-valign':'bottom','text-halign':'center','width':34,'height':34}},{selector:'node[type_id = "claim"]',style:{'background-color':'#4c78a8'}},{selector:'node[type_id = "derivation"]',style:{'background-color':'#7b61a8'}},{selector:'node[type_id = "knowledge_item"]',style:{'background-color':'#54a24b'}},{selector:'node[type_id = "program"]',style:{'background-color':'#9c755f'}},{selector:'node[type_id = "purpose"]',style:{'background-color':'#b279a2'}},{selector:'node[type_id = "view_filter"]',style:{'background-color':'#72b7b2'}},{selector:'node[type_id = "group"]',style:{'background-color':'#eeca3b'}},{selector:'edge',style:{'label':'data(label)','font-size':9,'curve-style':'bezier','target-arrow-shape':'triangle','line-color':'#9da8a0','target-arrow-color':'#9da8a0','width':1.4,'color':'#526057','text-background-color':'#fff','text-background-opacity':0.8}},{selector:':selected',style:{'border-width':3,'border-color':'#202522','line-color':'#202522','target-arrow-color':'#202522'}}]});cy.on('tap','node, edge',function(evt){show(evt.target.data())});cy.ready(function(){cy.fit(null,32)});}buttons.forEach(function(btn){btn.addEventListener('click',function(){activate(Number(btn.getAttribute('data-lens'))||0)})});activate(0);})();</script>""")
         println(io, "</body></html>")
     end
 end
@@ -737,7 +856,7 @@ function write_markdown(path::AbstractString, plan)
         println(io, "Base URL: ", plan["base_url"])
         println(io, "Overall: ", uppercase(plan["overall_status"]))
         println(io)
-        println(io, "This is a dry gate report for the T188 Keep-note/session/visual-projection lane. It does not emit rewrites or write to external systems.")
+        println(io, "This is a dry gate report for the T189 Keep/session/visual/Calendar/recommendation projection lane. It does not emit rewrites or write to external systems.")
         println(io)
         println(io, "## Lingo")
         for key in sort(collect(keys(plan["lingo"])))
@@ -764,15 +883,21 @@ function parse_args(argv)
         "base-url" => DEFAULT_BASE_URL,
         "session-pack" => DEFAULT_SESSION_PACK,
         "graph-pack" => DEFAULT_GRAPH_PACK,
+        "t189-graph-pack" => DEFAULT_T189_GRAPH_PACK,
         "dot-path" => DEFAULT_DOT_PATH,
         "svg-path" => DEFAULT_SVG_PATH,
         "temporal-dot-path" => DEFAULT_TEMPORAL_DOT_PATH,
         "temporal-svg-path" => DEFAULT_TEMPORAL_SVG_PATH,
+        "t189-dot-path" => DEFAULT_T189_DOT_PATH,
+        "t189-svg-path" => DEFAULT_T189_SVG_PATH,
         "calendar-plan-path" => DEFAULT_CALENDAR_PLAN_PATH,
         "calendar-report-path" => DEFAULT_CALENDAR_REPORT_PATH,
         "calendar-write-result-path" => DEFAULT_CALENDAR_WRITE_RESULT_PATH,
         "recommendation-plan-path" => DEFAULT_RECOMMENDATION_PLAN_PATH,
         "recommendation-report-path" => DEFAULT_RECOMMENDATION_REPORT_PATH,
+        "reconciliation-path" => DEFAULT_RECONCILIATION_PATH,
+        "reconciliation-report-path" => DEFAULT_RECONCILIATION_REPORT_PATH,
+        "one-shot-apply-script-path" => DEFAULT_ONE_SHOT_APPLY_SCRIPT,
         "out-base" => DEFAULT_OUT_BASE,
         "html-path" => DEFAULT_HTML_PATH,
         "session-urn" => DEFAULT_SESSION_URN,
@@ -803,23 +928,31 @@ function main(argv=ARGS)
     health = isempty(options["health-file"]) ? fetch_json(options["base-url"], "/healthz") : read_json(options["health-file"])
     session_pack = read_json(options["session-pack"])
     graph_pack = read_json(options["graph-pack"])
+    t189_graph_pack = safe_read_json(options["t189-graph-pack"])
     plan = plan_mvp_gate(
         nodes,
         relations;
         health=health,
         session_pack=session_pack,
         graph_pack=graph_pack,
+        t189_graph_pack=t189_graph_pack,
         session_pack_path=options["session-pack"],
         graph_pack_path=options["graph-pack"],
+        t189_graph_pack_path=options["t189-graph-pack"],
         dot_path=options["dot-path"],
         svg_path=options["svg-path"],
         temporal_dot_path=options["temporal-dot-path"],
         temporal_svg_path=options["temporal-svg-path"],
+        t189_dot_path=options["t189-dot-path"],
+        t189_svg_path=options["t189-svg-path"],
         calendar_plan_path=options["calendar-plan-path"],
         calendar_report_path=options["calendar-report-path"],
         calendar_write_result_path=options["calendar-write-result-path"],
         recommendation_plan_path=options["recommendation-plan-path"],
         recommendation_report_path=options["recommendation-report-path"],
+        reconciliation_path=options["reconciliation-path"],
+        reconciliation_report_path=options["reconciliation-report-path"],
+        one_shot_apply_script_path=options["one-shot-apply-script-path"],
         html_path=options["html-path"],
         session_urn=options["session-urn"],
         actor_urn=options["actor-urn"],

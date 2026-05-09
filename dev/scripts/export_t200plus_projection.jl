@@ -47,6 +47,19 @@ const PRESETS = Dict(
         "MOOS_PROJECTION_MATCH" => "session|occasion|affordance|keep|purpose|program|workflow|grammar|z440",
         "MOOS_PROJECTION_INCLUDE_OWNERS" => "true",
         "MOOS_PROJECTION_INCLUDE_VISUAL_LENS" => "false"
+    ),
+    "t189-recommendations" => Dict(
+        "MOOS_PROJECTION_LABEL" => "T189 recommendation grouped apply lens",
+        "MOOS_PROJECTION_ROOT" => "urn:moos:purpose:sam.t189-t200plus-time-fabric-convergence",
+        "MOOS_PROJECTION_ROOTS" => "urn:moos:session:sam.governance;urn:moos:purpose:sam.t189-t200plus-time-fabric-convergence;urn:moos:derivation:guido.t189-calendar-event-g-ingest-decision;urn:moos:view_filter:sam.t189-time-fabric-session-lens;urn:moos:group:my-tiny-data-collider",
+        "MOOS_PROJECTION_OUT" => "tmp/projections/session_pipeline/visual/t189_recommendation_frame",
+        "MOOS_PROJECTION_RADIUS" => "2",
+        "MOOS_PROJECTION_WFS" => "WF01,WF18,WF19,WF21",
+        "MOOS_PROJECTION_TYPES" => "derivation,group,program,purpose,session,view_filter",
+        "MOOS_PROJECTION_PORTS" => "causes,caused-by,composes,composed-by,filtered-by,filters-session,owns,owned-by,pinned-by-session,pins-urn",
+        "MOOS_PROJECTION_MATCH" => "t189|t200|calendar|github|cytoscape|my-tiny-data-collider|convergence|governance|application",
+        "MOOS_PROJECTION_INCLUDE_OWNERS" => "true",
+        "MOOS_PROJECTION_INCLUDE_VISUAL_LENS" => "false"
     )
 )
 
@@ -160,6 +173,7 @@ function node_style(type_id::AbstractString, urn::AbstractString)
         "calendar_event" => ("#ffe8ef", "#a7355d"),
         "clock" => ("#e1f4f2", "#287a72"),
         "repository" => ("#f0eadf", "#7b6650"),
+        "group" => ("#fff5cf", "#8f7b22"),
         "user" => ("#eeeeee", "#666666"),
         "view_filter" => ("#ffe3c2", "#b86b14")
     )
@@ -175,6 +189,8 @@ function edge_style(category::AbstractString)
         return "#7a4aa0", "dashed"
     elseif category == "WF01"
         return "#666666", "dotted"
+    elseif category == "WF19"
+        return "#287a72", "solid"
     end
     return "#999999", "solid"
 end
