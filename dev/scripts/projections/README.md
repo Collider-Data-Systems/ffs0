@@ -8,11 +8,14 @@ This folder holds orchestration entrypoints for local projection lanes. The Juli
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-session-pipeline.ps1
 ```
 
-The runner regenerates the current Keep-note/session/visual lane:
+The runner regenerates the current Keep-note/session/visual/Calendar/recommendation lane:
 
 1. Session context pack.
 2. Graph artifact engineering report.
 3. Session-occasion DOT/SVG visual lens.
-4. MVP gate JSON/Markdown and `tmp/projections/session_pipeline/index.html`.
+4. Temporal/calendar DOT/SVG visual lens.
+5. Calendar time-fabric JSON/Markdown projection plan.
+6. T189/T200 recommendation HG JSON/Markdown projection plan.
+7. MVP gate JSON/Markdown and `tmp/projections/session_pipeline/index.html`.
 
-It is dry: it reads the folded HG state and writes local artifacts, but does not emit rewrites or call external writers.
+It is dry: it reads the folded HG state and writes local artifacts, but does not emit rewrites or call external writers. The Calendar plan is writer-compatible, but real Google Calendar writes remain an explicit actuator step through `google_calendar_writer.jl`. The recommendation plan is also dry: it proposes candidate HG nodes/relations for review before any apply batch.

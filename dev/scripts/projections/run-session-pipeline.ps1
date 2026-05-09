@@ -17,6 +17,7 @@ if ([string]::IsNullOrWhiteSpace($Julia)) {
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..\..")
 $oldPreset = $env:MOOS_PROJECTION_PRESET
 $oldBaseUrl = $env:MOOS_BASE_URL
+$oldOut = $env:MOOS_PROJECTION_OUT
 
 function Invoke-Step {
     param(
@@ -39,6 +40,15 @@ try {
     $env:MOOS_BASE_URL = $BaseUrl
     Invoke-Step "Session occasion visual projection" { & $Julia "dev\scripts\export_t200plus_projection.jl" }
 
+    $env:MOOS_PROJECTION_PRESET = "temporal-calendar"
+    $env:MOOS_PROJECTION_OUT = "tmp/projections/session_pipeline/visual/temporal_calendar_frame"
+    Invoke-Step "Temporal calendar visual projection" { & $Julia "dev\scripts\export_t200plus_projection.jl" }
+
+    $health = Invoke-RestMethod -Uri "$BaseUrl/healthz" -TimeoutSec 5
+    Invoke-Step "Calendar time-fabric projection" { & $Julia "dev\scripts\calendar_time_fabric_projection.jl" "--anchor-t" ([string]$health.t_day) }
+
+    Invoke-Step "T189/T200 recommendation HG projection" { & $Julia "dev\scripts\t189_t200_recommendation_projection.jl" }
+
     Invoke-Step "Session pipeline MVP gate" { & $Julia "dev\scripts\session_pipeline_mvp_gate.jl" "--base-url" $BaseUrl }
 
     Write-Host ""
@@ -46,5 +56,10 @@ try {
 } finally {
     $env:MOOS_PROJECTION_PRESET = $oldPreset
     $env:MOOS_BASE_URL = $oldBaseUrl
+    if ($null -eq $oldOut) {
+        Remove-Item Env:MOOS_PROJECTION_OUT -ErrorAction SilentlyContinue
+    } else {
+        $env:MOOS_PROJECTION_OUT = $oldOut
+    }
     Pop-Location
 }

@@ -55,8 +55,20 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
     mktempdir() do dir
         dot_path = joinpath(dir, "frame.dot")
         svg_path = joinpath(dir, "frame.svg")
+        temporal_dot_path = joinpath(dir, "temporal.dot")
+        temporal_svg_path = joinpath(dir, "temporal.svg")
+        calendar_plan_path = joinpath(dir, "calendar_plan.json")
+        calendar_report_path = joinpath(dir, "calendar_plan.md")
+        recommendation_plan_path = joinpath(dir, "recommendation_plan.json")
+        recommendation_report_path = joinpath(dir, "recommendation_plan.md")
         write(dot_path, "digraph g {}")
         write(svg_path, "<svg></svg>")
+        write(temporal_dot_path, "digraph temporal {}")
+        write(temporal_svg_path, "<svg></svg>")
+        write(calendar_plan_path, "{\"event_count\":2,\"events\":[{},{}]}\n")
+        write(calendar_report_path, "# Calendar report\n")
+        write(recommendation_plan_path, "{\"candidate_node_count\":8,\"selected_t189_recommendations\":[{},{},{},{},{}]}\n")
+        write(recommendation_report_path, "# Recommendation report\n")
         plan = Gate.plan_mvp_gate(
             nodes,
             relations;
@@ -65,6 +77,12 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
             graph_pack=graph_pack,
             dot_path=dot_path,
             svg_path=svg_path,
+            temporal_dot_path=temporal_dot_path,
+            temporal_svg_path=temporal_svg_path,
+            calendar_plan_path=calendar_plan_path,
+            calendar_report_path=calendar_report_path,
+            recommendation_plan_path=recommendation_plan_path,
+            recommendation_report_path=recommendation_report_path,
             generated_at="2026-05-08T11:30:00Z",
         )
 
@@ -76,10 +94,15 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test "G input channel" in names
         @test "F session handoff header" in names
         @test "visual lens root coverage" in names
+        @test "Calendar time-fabric artifacts" in names
+        @test "T189/T200 recommendation artifacts" in names
         @test plan["lingo"]["lens"] != ""
+        @test plan["lingo"]["Calendar_projection"] != ""
+        @test plan["lingo"]["Recommendation_projection"] != ""
         @test plan["renderer_candidates"][2]["name"] == "Cytoscape.js"
         @test length(plan["pipeline_stages"]) == 4
         @test plan["pipeline_stages"][1]["status"] == "pass"
+        @test plan["pipeline_stages"][3]["summary"]["pass"] == 6
         @test length(plan["priority_actions"]) == 1
 
         html_path = joinpath(dir, "index.html")
@@ -88,6 +111,8 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         html = read(html_path, String)
         @test occursin("Session Pipeline MVP", html)
         @test occursin("G-ingest", html)
+        @test occursin("Calendar Time-Fabric", html)
+        @test occursin("HG Recommendations", html)
         @test occursin("Cytoscape.js", html)
     end
 end

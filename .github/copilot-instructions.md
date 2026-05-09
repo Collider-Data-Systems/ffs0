@@ -10,7 +10,7 @@ All three repos at `github.com/Collider-Data-Systems/*` since T=172.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, personae seatings, key URNs.
 
-Current T188 hp-laptop state: kernel `hp-laptop.primary` is live on `ontology_version=3.16.1`, `t_day=188`, `log_len=1080`. `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation`. The active working lane is the dry Keep/session/visual projection pipeline; latest report is `kb/moos-diary/t188-t187-session-pipeline-mvp-report.md`.
+Current T189 hp-laptop state: kernel `hp-laptop.primary` is live on `ontology_version=3.16.1`, `t_day=189`, `log_len=1086`. `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation` and now pins the Calendar/time-fabric program family. The active working lane is the Keep/session/visual/Calendar/recommendation projection pipeline; latest report is `kb/moos-diary/t189-recommendation-hg-projection-wrapup.md`.
 
 For projection work, run the local pipeline before making claims about MVP status:
 
@@ -18,7 +18,9 @@ For projection work, run the local pipeline before making claims about MVP statu
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-session-pipeline.ps1
 ```
 
-Outputs land under `tmp/projections/session_pipeline/`: session context pack, graph engineering report, DOT/SVG visual, MVP gate, and `index.html` control surface. Current expected gate is `warn` with no failures; remaining warnings are disconnected forced graph roots and no interactive Cytoscape.js-style inspector.
+Outputs land under `tmp/projections/session_pipeline/`: session context pack, graph engineering report, session-occasion DOT/SVG, temporal/calendar DOT/SVG, Calendar time-fabric plan/report, recommendation HG plan/report, MVP gate, and `index.html` control surface. Current expected gate is `warn` with 13 pass, 2 warn, 0 fail; remaining warnings are disconnected forced graph roots and no interactive Cytoscape.js-style inspector.
+
+Kernel/application split: `moos-kernel` is the OS-facing runtime function program; `moos-router` is federation routing; application domains such as `my-tiny-data-collider` are HG groups/program families that run through the kernels and may project to websites, DNS, Calendar, GitHub, Workspace, and servers. Keep those entities/codebases separate.
 
 Round-level context from prior rounds lives under `dev/reference/research-archive/` — retrieve explicitly when needed. `kb/research/` is reserved for live doctrine only (T=173 pivot).
 

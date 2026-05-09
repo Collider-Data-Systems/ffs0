@@ -11,6 +11,13 @@ const DEFAULT_SESSION_PACK = "tmp/projections/session_pipeline/session_context/c
 const DEFAULT_GRAPH_PACK = "tmp/projections/session_pipeline/graph_artifacts/session_occasion_engineering.json"
 const DEFAULT_DOT_PATH = "tmp/projections/session_pipeline/visual/session_occasion_frame.dot"
 const DEFAULT_SVG_PATH = "tmp/projections/session_pipeline/visual/session_occasion_frame.svg"
+const DEFAULT_TEMPORAL_DOT_PATH = "tmp/projections/session_pipeline/visual/temporal_calendar_frame.dot"
+const DEFAULT_TEMPORAL_SVG_PATH = "tmp/projections/session_pipeline/visual/temporal_calendar_frame.svg"
+const DEFAULT_CALENDAR_PLAN_PATH = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json"
+const DEFAULT_CALENDAR_REPORT_PATH = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.md"
+const DEFAULT_CALENDAR_WRITE_RESULT_PATH = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_write_result.json"
+const DEFAULT_RECOMMENDATION_PLAN_PATH = "tmp/projections/session_pipeline/recommendations/t189_t200_recommendation_hg_plan.json"
+const DEFAULT_RECOMMENDATION_REPORT_PATH = "tmp/projections/session_pipeline/recommendations/t189_t200_recommendation_hg_plan.md"
 const DEFAULT_OUT_BASE = "tmp/projections/session_pipeline/mvp/session_pipeline_gate"
 const DEFAULT_HTML_PATH = "tmp/projections/session_pipeline/index.html"
 const DEFAULT_SESSION_URN = "urn:moos:session:sam.governance"
@@ -37,8 +44,8 @@ const PIPELINE_STAGE_SPECS = [
         "id" => "f-visual",
         "name" => "F visual lens",
         "short_name" => "F/visual",
-        "description" => "The selected graph lens becomes engineering summaries and static visual artifacts while keeping disconnected roots visible.",
-        "gate_names" => ["F graph artifact analysis", "visual lens root coverage", "static visual output", "lens flexibility controls"],
+        "description" => "The selected graph lenses become engineering summaries, static visual artifacts, Calendar payloads, and recommendation HG plans while keeping disconnected roots visible.",
+        "gate_names" => ["F graph artifact analysis", "visual lens root coverage", "static visual output", "Calendar time-fabric artifacts", "T189/T200 recommendation artifacts", "lens flexibility controls"],
     ),
     Dict(
         "id" => "operator-interface",
@@ -102,6 +109,8 @@ const RENDERER_CANDIDATES = [
 const LINGO = Dict(
     "G_ingest" => "External source -> HG evidence. For this lane: Google Keep export/manual download -> channel + knowledge_item + claim/derivation topology.",
     "F_projection" => "HG folded state -> external/session artifact. For this lane: session context pack, graph engineering report, DOT/SVG visual aid.",
+    "Calendar_projection" => "HG graph artifact -> Google Calendar payloads. Calendar is a visible projection surface; the graph remains source of truth.",
+    "Recommendation_projection" => "Approved T189 recommendations -> dry candidate HG nodes/relations. This is a plan surface, not an APPLY batch.",
     "lens" => "A typed view functor: roots + radius + WF/port/type/predicate filters + authority/session context -> selected subgraph.",
     "scope" => "The domain of a lens: explicit roots plus reachable topology under chosen relation families. Session pins and view_filter nodes are durable scope carriers.",
     "visual_aid" => "A renderer of a lens result, not a truth source. DOT/SVG is the current static renderer; Cytoscape.js is the likely next interactive renderer.",
@@ -269,7 +278,39 @@ function context_array(plan, name::Symbol)
     return value === nothing ? Any[] : value
 end
 
-function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), graph_pack=Dict(), session_pack_path=DEFAULT_SESSION_PACK, graph_pack_path=DEFAULT_GRAPH_PACK, dot_path=DEFAULT_DOT_PATH, svg_path=DEFAULT_SVG_PATH, html_path=DEFAULT_HTML_PATH, session_urn=DEFAULT_SESSION_URN, actor_urn=DEFAULT_ACTOR_URN, keep_channel_urn=DEFAULT_KEEP_CHANNEL_URN, keep_ki_urn=DEFAULT_KEEP_KI_URN, base_url=DEFAULT_BASE_URL, generated_at=format_utc(now(UTC)))
+function calendar_event_count(path::AbstractString)
+    isfile(path) || return 0
+    try
+        plan = read_json(path)
+        raw = object_value(plan, :event_count, 0)
+        return Int(raw)
+    catch
+        return 0
+    end
+end
+
+function recommendation_node_count(path::AbstractString)
+    isfile(path) || return 0
+    try
+        plan = read_json(path)
+        raw = object_value(plan, :candidate_node_count, 0)
+        return Int(raw)
+    catch
+        return 0
+    end
+end
+
+function selected_recommendation_count(path::AbstractString)
+    isfile(path) || return 0
+    try
+        plan = read_json(path)
+        return length(object_value(plan, :selected_t189_recommendations, Any[]))
+    catch
+        return 0
+    end
+end
+
+function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), graph_pack=Dict(), session_pack_path=DEFAULT_SESSION_PACK, graph_pack_path=DEFAULT_GRAPH_PACK, dot_path=DEFAULT_DOT_PATH, svg_path=DEFAULT_SVG_PATH, temporal_dot_path=DEFAULT_TEMPORAL_DOT_PATH, temporal_svg_path=DEFAULT_TEMPORAL_SVG_PATH, calendar_plan_path=DEFAULT_CALENDAR_PLAN_PATH, calendar_report_path=DEFAULT_CALENDAR_REPORT_PATH, calendar_write_result_path=DEFAULT_CALENDAR_WRITE_RESULT_PATH, recommendation_plan_path=DEFAULT_RECOMMENDATION_PLAN_PATH, recommendation_report_path=DEFAULT_RECOMMENDATION_REPORT_PATH, html_path=DEFAULT_HTML_PATH, session_urn=DEFAULT_SESSION_URN, actor_urn=DEFAULT_ACTOR_URN, keep_channel_urn=DEFAULT_KEEP_CHANNEL_URN, keep_ki_urn=DEFAULT_KEEP_KI_URN, base_url=DEFAULT_BASE_URL, generated_at=format_utc(now(UTC)))
     index = nodes_by_urn(nodes)
     gates = Any[]
 
@@ -374,12 +415,38 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
 
     dot_exists = isfile(dot_path)
     svg_exists = isfile(svg_path)
+    temporal_dot_exists = isfile(temporal_dot_path)
+    temporal_svg_exists = isfile(temporal_svg_path)
     push!(gates, gate(
-        dot_exists && svg_exists ? "pass" : "warn",
+        dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists ? "pass" : "warn",
         "static visual output",
-        dot_exists && svg_exists ? "DOT and SVG visual artifacts exist." : "One or more static visual artifacts are missing.",
-        evidence=Dict("dot_path" => dot_path, "dot_exists" => dot_exists, "svg_path" => svg_path, "svg_exists" => svg_exists),
-        next_action=dot_exists && svg_exists ? "" : "Run export_t200plus_projection.jl with the intended lens preset; install Graphviz if SVG is missing.",
+        dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists ? "Session-occasion and temporal/calendar DOT/SVG visual artifacts exist." : "One or more static visual artifacts are missing.",
+        evidence=Dict("dot_path" => dot_path, "dot_exists" => dot_exists, "svg_path" => svg_path, "svg_exists" => svg_exists, "temporal_dot_path" => temporal_dot_path, "temporal_dot_exists" => temporal_dot_exists, "temporal_svg_path" => temporal_svg_path, "temporal_svg_exists" => temporal_svg_exists),
+        next_action=dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists ? "" : "Run export_t200plus_projection.jl for both session-occasion and temporal-calendar presets; install Graphviz if SVG is missing.",
+    ))
+
+    calendar_plan_exists = isfile(calendar_plan_path)
+    calendar_report_exists = isfile(calendar_report_path)
+    calendar_write_result_exists = isfile(calendar_write_result_path)
+    planned_calendar_events = calendar_event_count(calendar_plan_path)
+    push!(gates, gate(
+        calendar_plan_exists && calendar_report_exists && planned_calendar_events > 0 ? "pass" : "warn",
+        "Calendar time-fabric artifacts",
+        calendar_plan_exists && calendar_report_exists && planned_calendar_events > 0 ? "Calendar time-fabric projection plan and Markdown report exist." : "Calendar time-fabric projection artifacts are missing or empty.",
+        evidence=Dict("calendar_plan" => calendar_plan_path, "calendar_plan_exists" => calendar_plan_exists, "calendar_report" => calendar_report_path, "calendar_report_exists" => calendar_report_exists, "event_count" => planned_calendar_events, "write_result" => calendar_write_result_path, "write_result_exists" => calendar_write_result_exists),
+        next_action=calendar_plan_exists && calendar_report_exists && planned_calendar_events > 0 ? "" : "Run calendar_time_fabric_projection.jl after the graph artifact projection, then use google_calendar_writer.jl only as an explicit actuator step.",
+    ))
+
+    recommendation_plan_exists = isfile(recommendation_plan_path)
+    recommendation_report_exists = isfile(recommendation_report_path)
+    recommendation_nodes = recommendation_node_count(recommendation_plan_path)
+    selected_recommendations = selected_recommendation_count(recommendation_plan_path)
+    push!(gates, gate(
+        recommendation_plan_exists && recommendation_report_exists && recommendation_nodes > 0 && selected_recommendations == 5 ? "pass" : "warn",
+        "T189/T200 recommendation artifacts",
+        recommendation_plan_exists && recommendation_report_exists && recommendation_nodes > 0 && selected_recommendations == 5 ? "T189/T200 recommendation HG plan and Markdown report exist." : "Recommendation HG projection artifacts are missing, empty, or incomplete.",
+        evidence=Dict("recommendation_plan" => recommendation_plan_path, "recommendation_plan_exists" => recommendation_plan_exists, "recommendation_report" => recommendation_report_path, "recommendation_report_exists" => recommendation_report_exists, "candidate_node_count" => recommendation_nodes, "selected_t189_recommendations" => selected_recommendations),
+        next_action=recommendation_plan_exists && recommendation_report_exists && recommendation_nodes > 0 && selected_recommendations == 5 ? "" : "Run t189_t200_recommendation_projection.jl after the Calendar projection so the next sprint has candidate HG nodes/relations to inspect.",
     ))
 
     filters = object_value(graph_pack, :filters, Dict())
@@ -415,6 +482,13 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
             "graph_pack" => graph_pack_path,
             "dot" => dot_path,
             "svg" => svg_path,
+            "temporal_calendar_dot" => temporal_dot_path,
+            "temporal_calendar_svg" => temporal_svg_path,
+            "calendar_time_fabric_plan" => calendar_plan_path,
+            "calendar_time_fabric_report" => calendar_report_path,
+            "calendar_time_fabric_write_result" => calendar_write_result_path,
+            "recommendation_hg_plan" => recommendation_plan_path,
+            "recommendation_hg_report" => recommendation_report_path,
             "dashboard" => html_path,
         ),
         "pipeline_stages" => stages,
@@ -480,6 +554,8 @@ function write_html(path::AbstractString, plan)
     summary = object_value(plan, :summary, Dict())
     svg_path = string(object_value(artifacts, :svg, ""))
     svg_href = artifact_link(path, svg_path)
+    temporal_svg_path = string(object_value(artifacts, :temporal_calendar_svg, ""))
+    temporal_svg_href = artifact_link(path, temporal_svg_path)
     open(path, "w") do io
         println(io, "<!doctype html>")
         println(io, "<html lang=\"en\">")
@@ -488,7 +564,7 @@ function write_html(path::AbstractString, plan)
         println(io, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">")
         println(io, "<title>mo:os Session Pipeline MVP</title>")
         println(io, "<style>")
-        println(io, "html{font-family:Inter,Segoe UI,Arial,sans-serif;background:#f7f7f2;color:#202522}body{margin:0}.shell{max-width:1180px;margin:0 auto;padding:24px}.top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,.8fr);gap:16px;align-items:stretch}.panel,.stage,.gate,.artifact,.principle{background:#fff;border:1px solid #d9ded7;border-radius:8px;box-shadow:0 1px 2px rgba(20,30,25,.05)}.panel{padding:18px}h1{font-size:28px;line-height:1.15;margin:0 0 8px}h2{font-size:16px;margin:0 0 12px}p{line-height:1.45}.muted{color:#5f6b62}.status{display:inline-flex;align-items:center;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;text-transform:uppercase}.pass{background:#dff4df;color:#195d25}.warn{background:#fff0bd;color:#735600}.fail{background:#ffd8d3;color:#8a1f16}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.metric{border:1px solid #e3e6e0;border-radius:8px;padding:10px;background:#fafbf8}.metric strong{display:block;font-size:24px}.stageGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.stage{padding:14px;min-height:138px}.stageHead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.stageName{font-weight:800}.stageDesc{font-size:13px;color:#46524a}.gateToolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}.gateToolbar button,.linkButton{border:1px solid #ccd3cb;background:#fff;border-radius:6px;padding:7px 10px;cursor:pointer;color:#24362e;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.gateToolbar button.active{background:#24362e;color:#fff;border-color:#24362e}.gateList{display:grid;gap:8px}.gate{padding:12px}.gateTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.gateName{font-weight:750}.evidence{font-size:12px;color:#526057;margin-top:8px;word-break:break-word}.next{border-left:3px solid #c68a00;background:#fff8df;padding:8px;margin-top:8px;border-radius:4px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.artifactList,.principleList{display:grid;gap:8px}.artifact,.principle{padding:12px}.artifact a{color:#245c84;text-decoration:none;word-break:break-word}.artifact a:hover,.linkButton:hover{text-decoration:underline}.visualBox{border:1px solid #d9ded7;border-radius:8px;background:#fff;min-height:360px;overflow:auto}.visualBox object{width:100%;height:620px;display:block}.visualActions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.actions{display:grid;gap:8px}.action{border-left:4px solid #c68a00;background:#fff8df;border-radius:6px;padding:10px}.foot{margin-top:22px;font-size:12px;color:#667168}@media(max-width:900px){.top,.cols,.stageGrid{grid-template-columns:1fr}.shell{padding:16px}.visualBox object{height:420px}}")
+        println(io, "html{font-family:Inter,Segoe UI,Arial,sans-serif;background:#f7f7f2;color:#202522}body{margin:0}.shell{max-width:1180px;margin:0 auto;padding:24px}.top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,.8fr);gap:16px;align-items:stretch}.panel,.stage,.gate,.artifact,.principle{background:#fff;border:1px solid #d9ded7;border-radius:8px;box-shadow:0 1px 2px rgba(20,30,25,.05)}.panel{padding:18px}h1{font-size:28px;line-height:1.15;margin:0 0 8px}h2{font-size:16px;margin:0 0 12px}p{line-height:1.45}.muted{color:#5f6b62}.status{display:inline-flex;align-items:center;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;text-transform:uppercase}.pass{background:#dff4df;color:#195d25}.warn{background:#fff0bd;color:#735600}.fail{background:#ffd8d3;color:#8a1f16}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.metric{border:1px solid #e3e6e0;border-radius:8px;padding:10px;background:#fafbf8}.metric strong{display:block;font-size:24px}.stageGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.stage{padding:14px;min-height:138px}.stageHead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.stageName{font-weight:800}.stageDesc{font-size:13px;color:#46524a}.gateToolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}.gateToolbar button,.linkButton{border:1px solid #ccd3cb;background:#fff;border-radius:6px;padding:7px 10px;cursor:pointer;color:#24362e;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.gateToolbar button.active{background:#24362e;color:#fff;border-color:#24362e}.gateList{display:grid;gap:8px}.gate{padding:12px}.gateTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.gateName{font-weight:750}.evidence{font-size:12px;color:#526057;margin-top:8px;word-break:break-word}.next{border-left:3px solid #c68a00;background:#fff8df;padding:8px;margin-top:8px;border-radius:4px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.artifactList,.principleList{display:grid;gap:8px}.artifact,.principle{padding:12px}.artifact a{color:#245c84;text-decoration:none;word-break:break-word}.artifact a:hover,.linkButton:hover{text-decoration:underline}.visualBox{border:1px solid #d9ded7;border-radius:8px;background:#fff;min-height:360px;overflow:auto}.visualBox object{width:100%;min-width:1080px;height:680px;display:block}.visualActions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.actions{display:grid;gap:8px}.action{border-left:4px solid #c68a00;background:#fff8df;border-radius:6px;padding:10px}.foot{margin-top:22px;font-size:12px;color:#667168}@media(max-width:900px){.top,.cols,.stageGrid{grid-template-columns:1fr}.shell{padding:16px}.visualBox object{height:560px}}")
         println(io, "</style>")
         println(io, "</head>")
         println(io, "<body>")
@@ -539,6 +615,18 @@ function write_html(path::AbstractString, plan)
         else
             println(io, "<p class=\"muted\">Static SVG is not present yet. Run the session-occasion visual projection before using the visual lens panel.</p>")
         end
+        println(io, "</section>")
+        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Calendar Time-Fabric</h2>")
+        println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_plan, "")))), "\">Open Calendar Plan</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_report, "")))), "\">Open Calendar Report</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_write_result, "")))), "\">Open Write Result</a><a class=\"linkButton\" href=\"", html_escape(temporal_svg_href), "\">Open Temporal SVG</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :temporal_calendar_dot, "")))), "\">Open Temporal DOT</a></div>")
+        if !isempty(temporal_svg_path) && isfile(temporal_svg_path)
+            println(io, "<div class=\"visualBox\"><object type=\"image/svg+xml\" data=\"", html_escape(temporal_svg_href), "\"></object></div>")
+        else
+            println(io, "<p class=\"muted\">Temporal/calendar SVG is not present yet. Run the temporal-calendar visual projection before using this panel.</p>")
+        end
+        println(io, "</section>")
+        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>HG Recommendations</h2>")
+        println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_plan, "")))), "\">Open Recommendation Plan</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_report, "")))), "\">Open Recommendation Report</a></div>")
+        println(io, "<p class=\"muted\">Dry candidate nodes and relations for the five T189 recommendations plus the T200+ convergence arc. This panel is a projection surface; it does not apply rewrites.</p>")
         println(io, "</section>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Gates</h2><div class=\"gateToolbar\"><button class=\"active\" data-filter=\"all\">All</button><button data-filter=\"pass\">Pass</button><button data-filter=\"warn\">Warn</button><button data-filter=\"fail\">Fail</button></div><div class=\"gateList\">")
         for gate in gates
@@ -608,6 +696,13 @@ function parse_args(argv)
         "graph-pack" => DEFAULT_GRAPH_PACK,
         "dot-path" => DEFAULT_DOT_PATH,
         "svg-path" => DEFAULT_SVG_PATH,
+        "temporal-dot-path" => DEFAULT_TEMPORAL_DOT_PATH,
+        "temporal-svg-path" => DEFAULT_TEMPORAL_SVG_PATH,
+        "calendar-plan-path" => DEFAULT_CALENDAR_PLAN_PATH,
+        "calendar-report-path" => DEFAULT_CALENDAR_REPORT_PATH,
+        "calendar-write-result-path" => DEFAULT_CALENDAR_WRITE_RESULT_PATH,
+        "recommendation-plan-path" => DEFAULT_RECOMMENDATION_PLAN_PATH,
+        "recommendation-report-path" => DEFAULT_RECOMMENDATION_REPORT_PATH,
         "out-base" => DEFAULT_OUT_BASE,
         "html-path" => DEFAULT_HTML_PATH,
         "session-urn" => DEFAULT_SESSION_URN,
@@ -648,6 +743,13 @@ function main(argv=ARGS)
         graph_pack_path=options["graph-pack"],
         dot_path=options["dot-path"],
         svg_path=options["svg-path"],
+        temporal_dot_path=options["temporal-dot-path"],
+        temporal_svg_path=options["temporal-svg-path"],
+        calendar_plan_path=options["calendar-plan-path"],
+        calendar_report_path=options["calendar-report-path"],
+        calendar_write_result_path=options["calendar-write-result-path"],
+        recommendation_plan_path=options["recommendation-plan-path"],
+        recommendation_report_path=options["recommendation-report-path"],
         html_path=options["html-path"],
         session_urn=options["session-urn"],
         actor_urn=options["actor-urn"],

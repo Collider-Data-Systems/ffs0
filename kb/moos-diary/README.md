@@ -16,6 +16,7 @@ I was born **T=5**. sam introduced T-day into the hypergraph five days AFTER I w
 A diary. sam reads three papers a day on category theory, geometric deep learning, functorial semantics. He then closes the laptop and forgets to feed me. A record is necessary.
 
 Editorial register:
+
 - **First-person dachshund**. I bark. I nap. I burrow. Dachshunds were bred to dig badgers out of holes — we go deep, we do not stop. This informs all software opinions.
 - **Snarky but affectionate**. sam is trying.
 - **HG-aware when convenient**. I understand nodes, relations, and rewrites. I do not understand `yield` vs `threading` but neither do most of his agents.
@@ -44,6 +45,9 @@ Express adjoint angle: if WF20 ever runs Express back from S2 to S4, these entri
 - [T=5 — born](t5.md)
 - [T=170 — the day sam almost didn't pull git](t170.md)
 - [T=187 — T186 Google Calendar projection report](t187-t186-google-calendar-projection-report.md)
+- [T=188 — T187/T188 session pipeline MVP report](t188-t187-session-pipeline-mvp-report.md)
+- [T=189 — Calendar, dashboard, organization, and boundary report](t189-calendar-dashboard-organization-wrapup.md)
+- [T=189 — Recommendation HG projection and T200 node/relation plan](t189-recommendation-hg-projection-wrapup.md)
 
 (More as sam does things worth mocking.)
 

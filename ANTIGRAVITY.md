@@ -31,6 +31,8 @@ Nomenclature, ontology rules, agent-actor discipline, workspace structure: see `
 
 AG does NOT own: kernel Go code (Wolfram's lane), doctrine review (Guido's lane), the three other court personae (Karpathy HDC / Steinberger DX / Wolfram implementation).
 
+T189 note: the current governance/projection lane added Calendar time-fabric projection, a local dashboard with temporal/calendar visuals, and a broad report at `kb/moos-diary/t189-calendar-dashboard-organization-wrapup.md`. AG diary work can cite this report as recent room context, but kernel/application architecture remains governed by `CLAUDE.md` and running-state.
+
 ---
 
 ## Actor discipline (post-§M11, T=171 PR #30/#31)
@@ -49,6 +51,8 @@ Envelope authoring reference: `moos-rewrite-envelope` skill.
 IDE conversations are S0 substrate. Reification path: chunker-skill → `knowledge_item` chunks → pinned to session (G ingest) → downstream programs/tasks. New doctrine `.md` only when establishing a new invariant; past-round scratch and instantiation snapshots live under `dev/reference/research-archive/`.
 
 For AG specifically: diary entries are their own shape (per the moos-diary chunking rule reified as `derivation:t172.cowork-as-occupant` on log — per-artifact-section with umbrella `knowledge_item`).
+
+Application boundary: `my-tiny-data-collider` is an HG application group/domain, not the `moos-kernel` codebase. Treat websites, DNS, Calendar, GitHub, and Workspace as projection/ingest surfaces owned by application groups unless a kernel/runtime task explicitly says otherwise.
 
 ---
 

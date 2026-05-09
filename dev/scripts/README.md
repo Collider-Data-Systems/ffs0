@@ -21,6 +21,8 @@ Projection-lane orchestration entrypoints. These scripts run multiple adapters t
 - `export_t200plus_projection.jl` — folded-state DOT/SVG exporter for T200+ graph lenses.
 - `generate_type_map.py` — active utility for generating moos-router type-map flags from `kb/superset/ontology.json`.
 - `graph_artifact_projection.jl` — dry folded-state graph artifact analyzer for newly added HG frames. It writes JSON/Markdown engineering summaries and pairs with the DOT/SVG exporter for visualization.
+- `calendar_time_fabric_projection.jl` — F-direction planner that turns a recent graph artifact into Google Calendar payloads, mapping HG identity, T-day anchor, node type/status, and relation context into visible Calendar events.
+- `t189_t200_recommendation_projection.jl` — dry planner that turns the five T189 recommendations into candidate HG nodes/relations and T200+ recommendation artifacts without applying rewrites.
 - `google_calendar_projection.jl` — F-direction planning adapter from folded HG state to Google Calendar event payloads. It writes a reviewable JSON plan and does not perform OAuth or cloud writes.
 - `google_calendar_writer.jl` — explicit OAuth boundary writer for applying an approved Google Calendar projection plan. Defaults to dry-run/check modes; real writes require local gitignored OAuth files and `--mode write`.
 - `session_context_projection.jl` — F-direction planning adapter from folded HG state to a session context pack for IDE, agent, or harness handoff. It writes reviewable JSON and Markdown, and does not edit IDE config or emit rewrites.
@@ -38,6 +40,8 @@ Session-pipeline artifacts are grouped under the gitignored local directory `tmp
 
 - `session_context/` — current session context pack JSON/Markdown.
 - `graph_artifacts/` — graph engineering JSON/Markdown for the selected lens.
+- `calendar/` — Calendar time-fabric projection plans, reports, and explicit writer results.
+- `recommendations/` — dry candidate HG plans for T189/T200 continuation work.
 - `visual/` — DOT/SVG static visual renderings.
 - `mvp/` — generated MVP gate JSON/Markdown.
 - `index.html` — human-readable control surface for the lane.
@@ -50,7 +54,7 @@ Older projection files may still exist directly under `tmp/projections/`; treat 
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-session-pipeline.ps1
 ```
 
-The runner regenerates the current Keep-note/session/visual lane and writes `tmp/projections/session_pipeline/index.html`. The HTML page is the MVP operator surface: it shows the G-ingest/F-session/F-visual stages, pass/warn/fail gates, runtime metadata, artifact links, the static visual lens, and the next actions for warning gates. It is generated locally and does not emit rewrites.
+The runner regenerates the current Keep-note/session/visual lane and writes `tmp/projections/session_pipeline/index.html`. The HTML page is the MVP operator surface: it shows the G-ingest/F-session/F-visual stages, pass/warn/fail gates, runtime metadata, artifact links, the static visual lens, Calendar time-fabric artifacts, recommendation HG artifacts, and the next actions for warning gates. It is generated locally and does not emit rewrites.
 
 ### T200+ Projection Exporter
 
@@ -102,7 +106,7 @@ By default it scans canonical mo:os skills, local VS Code extensions, and `.vsco
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\session_pipeline_mvp_gate.jl
 ```
 
-The gate emits `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`, `.md`, and the HTML dashboard at `tmp/projections/session_pipeline/index.html`. It treats the current lane as a small CICD/functorial-semantics pipeline: G-ingest from Keep into HG, F-projection from folded state into session/agent/visual artifacts, and a visual lens whose scope is roots plus WF/port/type/match filters. The report is allowed to return `warn` for known MVP gaps, such as a missing durable `has-purpose` relation, disconnected forced roots, or the absence of an interactive renderer. It exits nonzero only on `fail` gates.
+The gate emits `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`, `.md`, and the HTML dashboard at `tmp/projections/session_pipeline/index.html`. It treats the current lane as a small CICD/functorial-semantics pipeline: G-ingest from Keep into HG, F-projection from folded state into session/agent/visual artifacts, Calendar time-fabric projection payloads, and visual lenses whose scope is roots plus WF/port/type/match filters. The report is allowed to return `warn` for known MVP gaps, such as a missing durable `has-purpose` relation, disconnected forced roots, or the absence of an interactive renderer. It exits nonzero only on `fail` gates.
 
 ### Google Calendar Projection Plan
 
@@ -111,6 +115,22 @@ The gate emits `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`
 ```
 
 The adapter emits `tmp/projections/google_calendar_projection_plan.json`. This is a dry F-direction plan only: HG stays the source of truth, and no Google OAuth or Calendar API write is attempted.
+
+### Calendar Time-Fabric Projection
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\calendar_time_fabric_projection.jl
+```
+
+The adapter reads the current session graph artifact and emits `tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json` plus a Markdown review report. It uses the same writer contract as the Google Calendar planner, but projects every selected recent HG node as a stable Calendar event with type-based color, URN/type/status metadata, T-day anchor, and relation context.
+
+### T189/T200 Recommendation HG Projection
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\t189_t200_recommendation_projection.jl
+```
+
+The adapter reads the ontology plus the Calendar time-fabric plan/write result and emits `tmp/projections/session_pipeline/recommendations/t189_t200_recommendation_hg_plan.json` plus a Markdown report. It is planner-only: the output chooses a hybrid Calendar G-ingest shape, models the five T189 recommendations as candidate HG nodes/relations, and projects T200+ recommendations as node/relation work rather than applying them.
 
 ### Google Calendar OAuth Writer
 
