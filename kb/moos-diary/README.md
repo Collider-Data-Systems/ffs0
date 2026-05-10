@@ -15,6 +15,12 @@ This folder is the human-readable wrap-up shelf for mo:os work. It started as Mo
 - Secrets, tokens, private OAuth material, or raw account credentials.
 - Replacing `kb/superset/running-state.md`. Running-state is the hydration card and latest-state index; diary wrap-ups are slower narrative packets.
 
+## Branch And Closeout Policy
+
+Running-state and diary wrap-ups should travel together. For verified, small coordination packets that other sessions need immediately, land both on `ffs0/main` in the same commit or commit sequence. For WIP, script implementation, runtime code, or identity/account proposals, branch first and merge only after readback/validation.
+
+Full policy: [T=190 — Session branch and closeout policy](t190-session-branch-and-closeout-policy.md).
+
 ## Session-Centered Report Shape
 
 Prefer this structure for new reports:
@@ -70,6 +76,7 @@ Do not conflate account identity with user identity. Additional Gmail or Git acc
 - [T=189 — Calendar event readback, skills, and public surfaces](t189-calendar-event-public-surface-wrapup.md)
 - [T=189 — Surface Context Atlas wrap-up](t189-surface-context-atlas-wrapup.md)
 - [T=190 — Z440 VS Code lead handoff and identity topology](t190-z440-vscode-lead-handoff-wrapup.md)
+- [T=190 — Session branch and closeout policy](t190-session-branch-and-closeout-policy.md)
 
 ## Original Diary Register
 
