@@ -70,6 +70,7 @@ Do not conflate account identity with user identity. Additional Gmail or Git acc
 - [T=189 — Calendar event readback, skills, and public surfaces](t189-calendar-event-public-surface-wrapup.md)
 - [T=189 — Surface Context Atlas wrap-up](t189-surface-context-atlas-wrapup.md)
 - [T=190 — Z440 VS Code lead handoff and identity topology](t190-z440-vscode-lead-handoff-wrapup.md)
+- [T=190 — Z440 projection finish pass](t190-z440-projection-finish-wrapup.md)
 
 ## Original Diary Register
 
