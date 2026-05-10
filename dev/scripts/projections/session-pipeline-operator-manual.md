@@ -73,6 +73,8 @@ Examples:
 - `atlas/surface_context_atlas.json` is the high-level table of contents for all surfaces and pending moves.
 - `mvp/session_pipeline_gate.json` is the structured gate report.
 
+The atlas also reads `dev/config/session-affordance-map.json` and `dev/config/moos-federation.topology.json`. The affordance map is source-controlled planning data for team IDE/harness setup, session-to-skill affordances, the four planned Google Workspace test bundles, Cloudflare/domain/DNS planning, and GitHub Project identity policy. The topology config contributes current kernel/router/persona and Cloudflare hostname facts. These are projection configs, not HG truth: use them to generate reviewable operator context, then emit reviewed rewrites or external writes through the normal explicit boundaries.
+
 ### `.md`
 
 Markdown files are human-readable reports paired with the JSON. Open them when you want the gist without spelunking through fields.
@@ -244,6 +246,14 @@ The scripts are the source machinery. The generated `tmp` tree is output; `dev/s
 - `t189_recommendation_reconciliation.jl` compares candidate recommendation plans with folded HG state.
 - `surface_context_atlas.jl` creates the atlas across JSON, JSONL, Git, Calendar, dashboard, visuals, anchors, and pending moves.
 - `session_pipeline_mvp_gate.jl` creates the pass/warn/fail gate report and dashboard.
+
+### Source Configs
+
+- `dev/config/moos-federation.topology.json` is the source config for kernels, routers, personas, emit targets, MCP endpoints, Cloudflare tunnel metadata, public hostnames for `my-tiny-data-collider.nl`, and the current public network routes that projection reports should compare against.
+- `dev/config/z440-session-desktops.json` maps Z440 Windows desktops to durable mo:os sessions and startup app surfaces.
+- `dev/config/session-affordance-map.json` maps sessions to current IDE/harness affordances, skills, prompts, MCP servers, planned multi-account Workspace channels, observed Cloudflare One Access applications, Cloudflare/domain/DNS guardrails, and GitHub identity guardrails.
+
+These configs help project context into IDEs and dashboards. They do not replace folded HG state, and they should not contain secrets.
 
 ### Other script areas
 

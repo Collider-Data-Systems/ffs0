@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "status": "planned",
+  "source_of_truth": "Folded HG state remains truth. This file is a projection config for team IDE setup, skills, prompts, MCP affordances, and planned test Workspace channels.",
+  "guardrails": [
+    "Do not model Gmail or GitHub accounts as kernel user principals.",
+    "Keep real email addresses, OAuth client files, and tokens outside git.",
+    "Use this file to plan and display affordances; emit HG rewrites only from reviewed payloads.",
+    "Treat opens-on as topology metadata and emit-target as current receiving-kernel reality until twin sync exists."
+  ],
+  "sessions": [
+    {
+      "key": "z440-vscode-lead",
+      "host": "hp-z440",
+      "desktop": 1,
+      "session_urn": "urn:moos:session:sam.z440-vscode-projection-lead",
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.primary",
+      "emit_kernel": "urn:moos:kernel:hp-z440.primary",
+      "mcp_server": "moos-primary",
+      "workspace": "ffs0.code-workspace",
+      "harnesses": ["VS Code", "Copilot"],
+      "prompts": [".github/prompts/z440-vscode-t190-finish-today.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "skills": ["moos-session-context-projection", "moos-tooling-dx", "moos-state-readback", "moos-github-project-bridge"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona z440-vscode-lead", "dev/scripts/projections/run-session-pipeline.ps1"]
+    },
+    {
+      "key": "wolfram-kernel-proper",
+      "host": "hp-z440",
+      "desktop": 2,
+      "session_urn": "urn:moos:session:sam.kernel-proper",
+      "actor_urn": "urn:moos:agent:claude-code.hp-z440",
+      "emit_kernel": "urn:moos:kernel:hp-z440.primary",
+      "mcp_server": "moos-primary",
+      "workspace": "moos-kernel",
+      "harnesses": ["Claude Code", "VS Code"],
+      "prompts": [".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "skills": ["moos-rewrite-envelope", "moos-state-readback"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona wolfram", "go test ./..."]
+    },
+    {
+      "key": "steinberger-tooling-dx",
+      "host": "hp-z440",
+      "desktop": 3,
+      "session_urn": "urn:moos:session:sam.steinberger-seat",
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.menno",
+      "emit_kernel": "urn:moos:kernel:hp-z440.primary",
+      "opens_on_kernel": "urn:moos:kernel:hp-z440.menno",
+      "mcp_server": "moos-primary",
+      "topology_mcp_server": "moos-menno",
+      "workspace": "moos-router-feat-type-map-routing",
+      "harnesses": ["VS Code", "Copilot"],
+      "prompts": [".github/prompts/delegate-vscode-t166-overhaul.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "skills": ["moos-tooling-dx", "moos-session-context-projection", "moos-running-state-validator"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona steinberger", "go test ./..."]
+    },
+    {
+      "key": "karpathy-research",
+      "host": "hp-z440",
+      "desktop": 4,
+      "session_urn": "urn:moos:session:sam.karpathy-seat",
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.lola",
+      "emit_kernel": "urn:moos:kernel:hp-z440.primary",
+      "opens_on_kernel": "urn:moos:kernel:hp-z440.lola",
+      "mcp_server": "moos-primary",
+      "topology_mcp_server": "moos-lola",
+      "workspace": "ffs0.code-workspace",
+      "harnesses": ["VS Code", "Copilot"],
+      "prompts": [".github/prompts/delegate-vscode-t166-overhaul.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "skills": ["moos-categorical-research", "moos-session-context-projection", "moos-state-readback"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona karpathy", "dev/scripts/projections/run-session-pipeline.ps1"]
+    },
+    {
+      "key": "moos-diary-z440",
+      "host": "hp-z440",
+      "desktop": 5,
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "actor_urn": "urn:moos:agent:antigravity.hp-z440",
+      "emit_kernel": "urn:moos:kernel:hp-z440.primary",
+      "mcp_server": "moos-primary",
+      "workspace": "ffs0.code-workspace",
+      "harnesses": ["Antigravity"],
+      "prompts": [".github/prompts/delegate-ag-t166-overhaul.prompt.md"],
+      "skills": ["moos-multimodal-ingest", "moos-state-readback"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona moos"]
+    },
+    {
+      "key": "guido-governance",
+      "host": "hp-laptop",
+      "session_urn": "urn:moos:session:sam.governance",
+      "actor_urn": "urn:moos:agent:claude-code.hp-laptop",
+      "emit_kernel": "urn:moos:kernel:hp-laptop.primary",
+      "mcp_server": "moos-hp-laptop-primary",
+      "workspace": "ffs0.code-workspace",
+      "harnesses": ["Claude Code", "VS Code", "Copilot"],
+      "prompts": [".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "skills": ["moos-state-readback", "moos-round-close", "moos-running-state-validator", "moos-cross-persona-audit", "moos-rewrite-envelope"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona guido", "dev/scripts/projections/run-session-pipeline.ps1"]
+    },
+    {
+      "key": "cowork-laptop-workspace",
+      "host": "hp-laptop",
+      "session_urn": "urn:moos:session:sam.laptop-cowork-workspace",
+      "actor_urn": "urn:moos:agent:claude-cowork.hp-laptop",
+      "emit_kernel": "urn:moos:kernel:hp-laptop.primary",
+      "mcp_server": "moos-hp-laptop-primary",
+      "workspace": "Google Workspace surfaces",
+      "harnesses": ["Claude Desktop", "Cowork"],
+      "prompts": [".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "skills": ["moos-workspace-ingest", "moos-state-readback"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona cowork-laptop"]
+    },
+    {
+      "key": "ag-laptop-diary",
+      "host": "hp-laptop",
+      "session_urn": "urn:moos:session:sam.laptop-moos-diary",
+      "actor_urn": "urn:moos:agent:antigravity.hp-laptop",
+      "emit_kernel": "urn:moos:kernel:hp-laptop.primary",
+      "mcp_server": "moos-hp-laptop-primary",
+      "workspace": "ffs0.code-workspace",
+      "harnesses": ["Antigravity"],
+      "prompts": [".github/prompts/delegate-ag-t166-overhaul.prompt.md"],
+      "skills": ["moos-multimodal-ingest", "moos-state-readback"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona ag-laptop"]
+    }
+  ],
+  "multi_workspace_testbed": {
+    "status": "planned",
+    "purpose_urn": "urn:moos:purpose:sam.multi-workspace-cloud-testbed",
+    "program_urn": "urn:moos:program:sam.t190.multi-workspace-cloud-testbed",
+    "owner_group_urn": "urn:moos:group:sam",
+    "credential_policy": "Account-to-slug mapping, OAuth clients, and tokens stay outside git. This config only names planned channel URNs.",
+    "workspaces": [
+      {
+        "slug": "test-a",
+        "display_name": "Test Workspace A",
+        "channels": [
+          {"service": "gmail", "kind": "mail", "channel_urn": "urn:moos:channel:google.gmail.test-a", "status": "planned"},
+          {"service": "calendar", "kind": "calendar", "channel_urn": "urn:moos:channel:google.calendar.test-a", "status": "planned"},
+          {"service": "drive", "kind": "cloud-storage", "channel_urn": "urn:moos:channel:google.drive.test-a", "status": "planned"},
+          {"service": "tasks", "kind": "task-list", "channel_urn": "urn:moos:channel:google.tasks.test-a", "status": "planned"}
+        ]
+      },
+      {
+        "slug": "test-b",
+        "display_name": "Test Workspace B",
+        "channels": [
+          {"service": "gmail", "kind": "mail", "channel_urn": "urn:moos:channel:google.gmail.test-b", "status": "planned"},
+          {"service": "calendar", "kind": "calendar", "channel_urn": "urn:moos:channel:google.calendar.test-b", "status": "planned"},
+          {"service": "drive", "kind": "cloud-storage", "channel_urn": "urn:moos:channel:google.drive.test-b", "status": "planned"},
+          {"service": "tasks", "kind": "task-list", "channel_urn": "urn:moos:channel:google.tasks.test-b", "status": "planned"}
+        ]
+      },
+      {
+        "slug": "test-c",
+        "display_name": "Test Workspace C",
+        "channels": [
+          {"service": "gmail", "kind": "mail", "channel_urn": "urn:moos:channel:google.gmail.test-c", "status": "planned"},
+          {"service": "calendar", "kind": "calendar", "channel_urn": "urn:moos:channel:google.calendar.test-c", "status": "planned"},
+          {"service": "drive", "kind": "cloud-storage", "channel_urn": "urn:moos:channel:google.drive.test-c", "status": "planned"},
+          {"service": "tasks", "kind": "task-list", "channel_urn": "urn:moos:channel:google.tasks.test-c", "status": "planned"}
+        ]
+      },
+      {
+        "slug": "test-d",
+        "display_name": "Test Workspace D",
+        "channels": [
+          {"service": "gmail", "kind": "mail", "channel_urn": "urn:moos:channel:google.gmail.test-d", "status": "planned"},
+          {"service": "calendar", "kind": "calendar", "channel_urn": "urn:moos:channel:google.calendar.test-d", "status": "planned"},
+          {"service": "drive", "kind": "cloud-storage", "channel_urn": "urn:moos:channel:google.drive.test-d", "status": "planned"},
+          {"service": "tasks", "kind": "task-list", "channel_urn": "urn:moos:channel:google.tasks.test-d", "status": "planned"}
+        ]
+      }
+    ]
+  },
+  "network_identity": {
+    "status": "inventory-first",
+    "provider": "cloudflare",
+    "domain": "my-tiny-data-collider.nl",
+    "topology_source": "dev/config/moos-federation.topology.json",
+    "dashboard_observation": {
+      "status": "seen-in-browser",
+      "account_label": "my-tiny-data-collider",
+      "zone_label": "my-tiny-data-collider.nl",
+      "local_only_fields": ["cloudflare_account_id", "dashboard_url", "login_email"]
+    },
+    "access_applications": {
+      "status": "seen-in-browser",
+      "source": "Cloudflare One / Access controls / Applications",
+      "applications": [
+        {"name": "moos-api", "application_url": "api.my-tiny-data-collider.nl", "hostname_role": "api", "type": "self-hosted", "total_domains": 1, "policies_assigned": 1},
+        {"name": "moos-kernel", "application_url": "kernel.my-tiny-data-collider.nl", "hostname_role": "kernel", "type": "self-hosted", "total_domains": 1, "policies_assigned": 1}
+      ],
+      "local_only_fields": ["cloudflare_account_id", "dashboard_url", "login_email", "application_ids", "policy_ids"]
+    },
+    "dns_policy": "Inventory Cloudflare zone, DNS records, tunnel routes, and hostname bindings first. Do not write DNS records or tunnel config from projection planners.",
+    "expected_hostnames": [
+      {"role": "root", "hostname": "my-tiny-data-collider.nl", "surface": "website"},
+      {"role": "www", "hostname": "www.my-tiny-data-collider.nl", "surface": "website"},
+      {"role": "api", "hostname": "api.my-tiny-data-collider.nl", "surface": "kernel-rest"},
+      {"role": "kernel", "hostname": "kernel.my-tiny-data-collider.nl", "surface": "kernel-sse"}
+    ],
+    "planned_surfaces": [
+      {"role": "cloudflare-zone", "surface_urn": "urn:moos:channel:cloudflare.zone.my-tiny-data-collider-nl", "status": "planned"},
+      {"role": "dns-zone", "surface_urn": "urn:moos:channel:dns.zone.my-tiny-data-collider-nl", "status": "planned"},
+      {"role": "public-root-domain", "surface_urn": "urn:moos:channel:domain.my-tiny-data-collider-nl", "status": "planned"}
+    ]
+  },
+  "github_identity": {
+    "status": "inventory-first",
+    "org": "Collider-Data-Systems",
+    "project_number": 4,
+    "project_urn": "urn:moos:channel:github.project.mo-os",
+    "org_channel_urn": "urn:moos:channel:github.collider-data-systems",
+    "hg_urn_coverage": {
+      "known_populated": 31,
+      "known_total": 57,
+      "ambiguous_rows": 4,
+      "legacy_non_urn_rows": 2,
+      "source": "kb/superset/running-state.md T190 Z440 handoff entries"
+    },
+    "sync_policy": "Inventory and HG URN repair only. Do not G-sync Project Status into HG until row identity is reliable."
+  }
+}
