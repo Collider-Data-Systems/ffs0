@@ -81,13 +81,19 @@ The shared VS Code prompt was revised to make the next agent do five things in o
 
 The prompt also names the identity rule: account surfaces are channels, agents are delegates, sessions are occasions, and groups carry ownership scope.
 
+## Z440 finish pass
+
+Z440 VS Code executed the prompt after pulling the hp-laptop handoff through commit `781f756`. The remaining local work was protected on branch `z440/t190-projection-finish` before edits. The projection runner was then made host-aware rather than memory-dependent: with no explicit session arguments it checks the live kernel, resolves Z440 primary to `session:sam.z440-vscode-projection-lead` and `agent:vscode.hp-z440.primary`, and uses `http://localhost:9000` as the read-only projection URL for shared graph lenses when the local router is available.
+
+That keeps the sovereignty line intact. The session is resolved on Z440 primary, while the graph artifacts and MVP gate can still see hp-laptop governance roots through the federated read surface. No HG rewrites or external writes were emitted in this finish pass.
+
 ## Deferred items
 
-- Finish the Z440 projection pipeline WIP on a branch and record the final gate result.
 - Continue Project #4 `HG URN` repair only where identity is unambiguous.
 - Decide whether repeated session-lens shapes should become durable `view_filter` carriers.
 - Design account/person/family identity carefully before adding non-Sam IRL people as authority-bearing nodes.
 - Reserve Z440 Ethernet `192.168.1.11` in DHCP for MAC `90:E2:BA:14:81:DA`.
+- Resolve or deliberately keep the two current session-pipeline warnings: disconnected forced roots on the session-occasion lens, and pending Calendar-event recommendation rows.
 
 ## Validation
 
@@ -95,5 +101,8 @@ The prompt also names the identity rule: account surfaces are channels, agents a
 - Relation readback: all four intended relations returned present via `/state/relations/src/...`.
 - GitHub Project #4 readback: 31/57 rows have populated `HG URN` fields.
 - ffs0 closeout commit before this report: `1f17c7b chore: close t190 z440 handoff`.
+- Z440 finish branch: `z440/t190-projection-finish`.
+- No-argument Z440 runner: `run-session-pipeline.ps1` selected `session:sam.z440-vscode-projection-lead`, actor `agent:vscode.hp-z440.primary`, Julia `C:\Users\hp\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe`, and projection read URL `http://localhost:9000`.
+- Final MVP gate after atlas: `warn`, 18 pass, 2 warn, 0 fail; dashboard `tmp/projections/session_pipeline/index.html`.
 
-The remaining work is not blocked. It is now cleanly queued for Z440 VS Code with a shared prompt and explicit branch discipline.
+The remaining work is not blocked. It is now cleanly queued with a working Z440 no-argument pipeline, explicit branch discipline, and the remaining warnings named rather than hidden.

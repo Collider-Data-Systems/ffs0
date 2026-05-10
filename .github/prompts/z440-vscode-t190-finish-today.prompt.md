@@ -75,6 +75,7 @@ Do not G-sync Project #4 status or emit account/person rewrites until row identi
    ```powershell
    powershell -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\projections\run-session-pipeline.ps1
    ```
+   On Z440, the no-argument runner should resolve the VS Code lead session from primary and use the local router as the read-only projection surface when available.
 2. Use Julia/Graphviz on Z440 as already installed. If packages are missing, install only the minimum needed for the existing pipeline.
 3. Bring Z440 WIP in `dev/scripts/projections/run-session-pipeline.ps1` and `ffs0.code-workspace` to a clean, reviewable state, preserving hp-laptop compatibility.
 4. Final gate should be `warn` or better with zero `fail`. Record pass/warn/fail counts and the dashboard path under `tmp/projections/session_pipeline/index.html`.
