@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "host": "hp-z440",
+  "purpose": "Map Windows 11 virtual desktops to durable mo:os sessions so Z440 can reopen into the same work surface it was closed from.",
+  "windows_11_note": "Desktop assignment requires an optional virtual desktop helper. Without it, Start-Z440SessionDesktops.ps1 launches only desktop 1 apps and leaves desktop 2+ as a readable session map.",
+  "desktops": [
+    {
+      "index": 1,
+      "name": "z440-vscode-projection-lead",
+      "session_urn": "urn:moos:session:sam.z440-vscode-projection-lead",
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.primary",
+      "kernel": "urn:moos:kernel:hp-z440.primary",
+      "intent": "Four-monitor VS Code lead cockpit: finish projection pipeline, inspect dashboard/graphs, keep ffs0 reviewable.",
+      "startup": true,
+      "apps": [
+        {
+          "label": "VS Code ffs0 workspace",
+          "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
+          "args": ["${ffs0}\\ffs0.code-workspace"],
+          "working_directory": "${ffs0}"
+        },
+        {
+          "label": "Chrome session pipeline dashboard",
+          "exe": "%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe",
+          "args": ["file:///${ffs0_forward}/tmp/projections/session_pipeline/index.html"]
+        },
+        {
+          "label": "Explorer projection artifacts",
+          "exe": "explorer.exe",
+          "args": ["${ffs0}\\tmp\\projections\\session_pipeline"]
+        },
+        {
+          "label": "Windows Terminal ffs0",
+          "exe": "wt.exe",
+          "args": ["-d", "${ffs0}"]
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "name": "kernel-proper",
+      "session_urn": "urn:moos:session:sam.kernel-proper",
+      "actor_urn": "urn:moos:agent:claude-code.hp-z440",
+      "kernel": "urn:moos:kernel:hp-z440.primary",
+      "intent": "Kernel/runtime implementation lane for moos-kernel and live federation terminals.",
+      "startup": false,
+      "apps": [
+        {
+          "label": "Windows Terminal moos-kernel",
+          "exe": "wt.exe",
+          "args": ["-d", "${hpz440}\\moos-kernel"]
+        },
+        {
+          "label": "VS Code moos-kernel",
+          "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
+          "args": ["${hpz440}\\moos-kernel"]
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "name": "steinberger-tooling-dx",
+      "session_urn": "urn:moos:session:sam.steinberger-seat",
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.menno",
+      "kernel": "urn:moos:kernel:hp-z440.menno",
+      "intent": "Tooling, DX, MCP, router, and Windows startup ergonomics lane. Emits to primary until twin sync exists.",
+      "startup": false,
+      "apps": [
+        {
+          "label": "VS Code router feature worktree",
+          "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
+          "args": ["${hpz440}\\moos-router-feat-type-map-routing"]
+        },
+        {
+          "label": "Windows Terminal router feature worktree",
+          "exe": "wt.exe",
+          "args": ["-d", "${hpz440}\\moos-router-feat-type-map-routing"]
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "name": "karpathy-lola-research",
+      "session_urn": "urn:moos:session:sam.karpathy-seat",
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.lola",
+      "kernel": "urn:moos:kernel:hp-z440.lola",
+      "intent": "Categorical, HDC/VSA, graph semantics, and lens reasoning lane. Emits to primary until twin sync exists.",
+      "startup": false,
+      "apps": [
+        {
+          "label": "VS Code ffs0 research workspace",
+          "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
+          "args": ["${ffs0}\\ffs0.code-workspace"]
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "name": "moos-diary",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "actor_urn": "urn:moos:agent:antigravity.hp-z440",
+      "kernel": "urn:moos:kernel:hp-z440.primary",
+      "intent": "Diary, multimodal, and observation lane for visual/media context.",
+      "startup": false,
+      "apps": [
+        {
+          "label": "Antigravity ffs0 workspace",
+          "exe": "%LOCALAPPDATA%\\Programs\\antigravity\\Antigravity.exe",
+          "args": ["${ffs0}\\ffs0.code-workspace"]
+        }
+      ]
+    }
+  ]
+}
