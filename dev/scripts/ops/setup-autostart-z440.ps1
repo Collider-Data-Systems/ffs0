@@ -26,17 +26,13 @@ Write-Host "Registering autostart tasks for Z440..."
 # 1. Federation (kernels + router)
 Set-AutostartTask 'moos-kernel-autostart' 'powershell.exe' '-ExecutionPolicy Bypass -WindowStyle Hidden -File D:\HPZ440\start_federation.ps1'
 
-# 2. Antigravity
-Set-AutostartTask 'antigravity-autostart' 'C:\Users\hp\AppData\Local\Programs\antigravity\Antigravity.exe' '"D:\HPZ440\ffs0\ffs0.code-workspace"'
+# 2. Windows 11 session desktops (apps + per-desktop mo:os session map)
+Set-AutostartTask 'moos-session-desktops-autostart' 'powershell.exe' '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File D:\HPZ440\ffs0\dev\scripts\ops\Start-Z440SessionDesktops.ps1'
 
-# 3. VS Code
-Set-AutostartTask 'vscode-autostart' 'C:\Users\hp\AppData\Local\Programs\Microsoft VS Code\Code.exe' '"D:\HPZ440\ffs0\ffs0.code-workspace"'
-
-# 4. Chrome
-Set-AutostartTask 'chrome-autostart' 'C:\Program Files\Google\Chrome\Application\chrome.exe' $null
-
-# 5. Claude (Store app via explorer)
-Set-AutostartTask 'claude-autostart' 'C:\Windows\explorer.exe' 'shell:AppsFolder\Claude_pzs8sxrjxfjjc!Claude'
+# Retire the older one-app-per-task launchers. The session desktop launcher owns app startup now.
+foreach ($legacyTask in @('antigravity-autostart', 'vscode-autostart', 'chrome-autostart', 'claude-autostart')) {
+    Unregister-ScheduledTask -TaskName $legacyTask -Confirm:$false -ErrorAction SilentlyContinue
+}
 
 Write-Host ""
 Write-Host "Done. Verify with: Get-ScheduledTask | Where-Object TaskName -match 'autostart' | ft TaskName,State"
