@@ -1,53 +1,54 @@
 
 {
   "schema_version": 1,
-  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=187. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
+  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=190. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
   "local_host": "auto",
-  "expected_ontology_version": "3.16.0",
+  "expected_ontology_version": "3.16.1",
   "kernels": {
     "hp-z440.primary": {
       "urn": "urn:moos:kernel:hp-z440.primary",
       "host": "hp-z440",
       "http_local": "http://localhost:8000",
-      "http_lan": "http://192.168.1.13:8000",
+      "http_lan": "http://192.168.1.11:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_server": "moos-primary",
-      "expected_ontology_version": "3.15.0",
+      "expected_ontology_version": "3.16.1",
       "seats": [
         "urn:moos:session:sam.kernel-proper",
         "urn:moos:session:sam.moos-diary",
         "urn:moos:session:sam.z440-cowork-workspace",
-        "urn:moos:session:sam.mvp-delivery"
+        "urn:moos:session:sam.mvp-delivery",
+        "urn:moos:session:sam.z440-vscode-projection-lead"
       ]
     },
     "hp-z440.menno": {
       "urn": "urn:moos:kernel:hp-z440.menno",
       "host": "hp-z440",
       "http_local": "http://localhost:8001",
-      "http_lan": "http://192.168.1.13:8001",
+      "http_lan": "http://192.168.1.11:8001",
       "mcp_sse_local": "http://localhost:9001/sse",
       "mcp_server": "moos-menno",
-      "expected_ontology_version": "3.15.0",
+      "expected_ontology_version": "3.16.1",
       "seats": ["urn:moos:session:sam.steinberger-seat"]
     },
     "hp-z440.lola": {
       "urn": "urn:moos:kernel:hp-z440.lola",
       "host": "hp-z440",
       "http_local": "http://localhost:8002",
-      "http_lan": "http://192.168.1.13:8002",
+      "http_lan": "http://192.168.1.11:8002",
       "mcp_sse_local": "http://localhost:9002/sse",
       "mcp_server": "moos-lola",
-      "expected_ontology_version": "3.15.0",
+      "expected_ontology_version": "3.16.1",
       "seats": ["urn:moos:session:sam.karpathy-seat"]
     },
     "hp-z440.moos": {
       "urn": "urn:moos:kernel:hp-z440.moos",
       "host": "hp-z440",
       "http_local": "http://localhost:8003",
-      "http_lan": "http://192.168.1.13:8003",
+      "http_lan": "http://192.168.1.11:8003",
       "mcp_sse_local": "http://localhost:9003/sse",
       "mcp_server": "moos-moos",
-      "expected_ontology_version": "3.15.0",
+      "expected_ontology_version": "3.16.1",
       "seats": []
     },
     "hp-laptop.primary": {
@@ -58,7 +59,7 @@
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_sse_lan": "http://192.168.1.18:8080/sse",
       "mcp_server": "moos-hp-laptop-primary",
-      "expected_ontology_version": "3.16.0",
+      "expected_ontology_version": "3.16.1",
       "seats": [
         "urn:moos:session:sam.governance",
         "urn:moos:session:sam.laptop-cowork-workspace",
@@ -69,7 +70,32 @@
   "router": {
     "name": "moos-router",
     "http_local": "http://localhost:9000",
-    "http_lan": "http://192.168.1.13:9000"
+    "http_lan": "http://192.168.1.11:9000"
+  },
+  "routers": {
+    "hp-z440": {
+      "host": "hp-z440",
+      "http_local": "http://localhost:9000",
+      "http_lan": "http://192.168.1.11:9000",
+      "peers": ["http://192.168.1.18:9000"]
+    },
+    "hp-laptop": {
+      "host": "hp-laptop",
+      "http_local": "http://localhost:9000",
+      "http_lan": "http://192.168.1.18:9000",
+      "peers": ["http://192.168.1.11:9000"]
+    }
+  },
+  "cloudflare": {
+    "tunnel_id": "3b748eb8-9032-4e9f-a20c-a06d494e9b58",
+    "startup_bat": "C:/Users/maass/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/moos-tunnel.bat",
+    "config_path": "C:/Users/maass/.cloudflared/config.yml",
+    "hostnames": {
+      "api": "api.my-tiny-data-collider.nl",
+      "kernel": "kernel.my-tiny-data-collider.nl",
+      "root": "my-tiny-data-collider.nl",
+      "www": "www.my-tiny-data-collider.nl"
+    }
   },
   "mcp_servers": {
     "moos-primary": "http://localhost:8080/sse",
@@ -115,6 +141,14 @@
       "opens_on_kernel": "hp-z440.primary",
       "emit_kernel": "hp-z440.primary",
       "mcp_server": "moos-primary"
+    },
+    "z440-vscode-lead": {
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-vscode-projection-lead",
+      "opens_on_kernel": "hp-z440.primary",
+      "emit_kernel": "hp-z440.primary",
+      "mcp_server": "moos-primary",
+      "requires_explicit_session_urn": true
     },
     "guido": {
       "actor_urn": "urn:moos:agent:claude-code.hp-laptop",

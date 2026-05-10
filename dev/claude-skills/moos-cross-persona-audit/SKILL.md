@@ -165,7 +165,7 @@ Currently FINDINGS expected on hp-laptop: `channel:local.moos-footage.kind="fs"`
 
 ```bash
 # 1. Fleet snapshot (hp-laptop + Z440 federation)
-curl -sS http://<router-host>:9000/healthz | jq '.kernels'  # router cascade (Z440 LAN: 192.168.1.13)
+curl -sS http://<router-host>:9000/healthz | jq '.kernels'  # router cascade (Z440 LAN: 192.168.1.11)
 curl -sS http://localhost:8000/healthz                       # hp-laptop primary
 
 # 2. For each kernel, walk the N invariants. Record PASS/FAIL/N/A.

@@ -3,7 +3,7 @@ param(
     [ValidateSet('Doctor', 'Start', 'VerifyPersona', 'PostProgram')]
     [string]$Mode = 'Doctor',
 
-    [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'cowork-z440', 'guido', 'cowork-laptop', 'ag-laptop')]
+    [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'cowork-z440', 'z440-vscode-lead', 'guido', 'cowork-laptop', 'ag-laptop')]
     [string]$Persona,
 
     [string]$PayloadPath,
@@ -63,6 +63,14 @@ function Get-KernelUrl {
     if ($Kernel.http_lan) { return [string]$Kernel.http_lan }
     if ($Kernel.http_local) { return [string]$Kernel.http_local }
     throw "Kernel $($Kernel.urn) has no http_local or http_lan URL"
+}
+
+function Get-RouterUrl {
+    param([Parameter(Mandatory)]$Router)
+    if ($Router.http_local -and $Router.host -eq $script:MoosLocalHost) { return [string]$Router.http_local }
+    if ($Router.http_lan) { return [string]$Router.http_lan }
+    if ($Router.http_local) { return [string]$Router.http_local }
+    throw 'Router has no http_local or http_lan URL'
 }
 
 function Get-ExpectedOntologyVersion {
@@ -149,6 +157,79 @@ function Test-KernelHealth {
     }
 
     [pscustomobject]$result
+}
+
+function Test-RouterHealth {
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)]$Router
+    )
+    $baseUrl = Get-RouterUrl -Router $Router
+    $result = [ordered]@{
+        Router = $Name
+        Url = $baseUrl
+        Status = 'unknown'
+        Kernels = 0
+        Peers = if ($Router.peers) { ($Router.peers -join ', ') } else { '' }
+        Error = ''
+    }
+
+    try {
+        $health = Invoke-MoosGet -BaseUrl $baseUrl -Path 'healthz'
+        $result.Status = [string]$health.status
+        $result.Kernels = @($health.kernels).Count
+    }
+    catch {
+        $result.Status = 'error'
+        $result.Error = $_.Exception.Message
+    }
+
+    [pscustomobject]$result
+}
+
+function Test-RouterNode {
+    param(
+        [Parameter(Mandatory)][string]$RouterName,
+        [Parameter(Mandatory)]$Router,
+        [Parameter(Mandatory)][string]$NodeUrn
+    )
+    $baseUrl = Get-RouterUrl -Router $Router
+    $result = [ordered]@{
+        Router = $RouterName
+        Url = $baseUrl
+        Node = $NodeUrn
+        Status = 'unknown'
+        NodeStatus = ''
+        Error = ''
+    }
+
+    try {
+        $nodePath = 'state/nodes/' + [uri]::EscapeDataString($NodeUrn)
+        $node = Invoke-MoosGet -BaseUrl $baseUrl -Path $nodePath
+        $result.Status = 'ok'
+        $statusProperty = $node.properties.PSObject.Properties['status']
+        if ($statusProperty) { $result.NodeStatus = [string]$statusProperty.Value.value }
+    }
+    catch {
+        $result.Status = 'missing'
+        $result.Error = $_.Exception.Message
+    }
+
+    [pscustomobject]$result
+}
+
+function Test-CloudflareTopology {
+    param([Parameter(Mandatory)]$Cloudflare)
+    $startup = if ($Cloudflare.startup_bat) { [string]$Cloudflare.startup_bat } else { '' }
+    $config = if ($Cloudflare.config_path) { [string]$Cloudflare.config_path } else { '' }
+    [pscustomobject]@{
+        TunnelId = [string]$Cloudflare.tunnel_id
+        StartupBat = $startup
+        StartupExists = if ($startup) { Test-Path $startup } else { $false }
+        ConfigPath = $config
+        ConfigExists = if ($config) { Test-Path $config } else { $false }
+        Hostnames = if ($Cloudflare.hostnames) { ($Cloudflare.hostnames.PSObject.Properties.Value -join ', ') } else { '' }
+    }
 }
 
 function Test-McpConfig {
@@ -376,6 +457,35 @@ switch ($Mode) {
             Test-KernelHealth -Name $kernelProperty.Name -Kernel $kernelProperty.Value -Topology $topology
         }
         $kernelResults | Format-Table -AutoSize
+
+        Write-Host ''
+        if ($topology.PSObject.Properties['routers']) {
+            Write-Host 'Router federation' -ForegroundColor Cyan
+            $routerResults = foreach ($routerProperty in $topology.routers.PSObject.Properties) {
+                Test-RouterHealth -Name $routerProperty.Name -Router $routerProperty.Value
+            }
+            $routerResults | Format-Table -AutoSize
+
+            Write-Host ''
+            Write-Host 'Federated node lookup' -ForegroundColor Cyan
+            $probeUrns = @(
+                'urn:moos:session:sam.governance',
+                'urn:moos:session:sam.z440-vscode-projection-lead'
+            )
+            $nodeResults = foreach ($routerProperty in $topology.routers.PSObject.Properties) {
+                foreach ($probeUrn in $probeUrns) {
+                    Test-RouterNode -RouterName $routerProperty.Name -Router $routerProperty.Value -NodeUrn $probeUrn
+                }
+            }
+            $nodeResults | Format-Table -AutoSize
+
+            Write-Host ''
+        }
+        if ($topology.PSObject.Properties['cloudflare']) {
+            Write-Host 'Cloudflare tunnel metadata' -ForegroundColor Cyan
+            Test-CloudflareTopology -Cloudflare $topology.cloudflare | Format-Table -AutoSize
+            Write-Host ''
+        }
 
         Write-Host ''
         Write-Host 'MCP config' -ForegroundColor Cyan

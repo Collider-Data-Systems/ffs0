@@ -25,6 +25,6 @@ try {
 
 Write-Host ""
 Write-Host "Laptop kernel up. MCP: http://localhost:8080/sse" -ForegroundColor Green
-Write-Host "Secondaries (menno/lola/moos) are on Z440 (192.168.1.13) — no action needed." -ForegroundColor Gray
+Write-Host "Secondaries (menno/lola/moos) are on Z440 (192.168.1.11) — no action needed." -ForegroundColor Gray
 Write-Host ""
 Write-Host "VS Code: refresh MCP servers in Chat Customizations." -ForegroundColor Cyan
