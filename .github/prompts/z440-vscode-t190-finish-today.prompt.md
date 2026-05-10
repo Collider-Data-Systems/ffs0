@@ -12,7 +12,7 @@ This is a session-centered finish pass. Treat the IDE conversation as S0 substra
 ## First Screen
 
 1. Read `kb/superset/running-state.md` first.
-2. Read `kb/moos-diary/README.md` and `kb/moos-diary/t190-z440-vscode-lead-handoff-wrapup.md`. The diary folder now groups 3-5 running-state sprints into readable session wrap-ups for all agents/personae.
+2. Read `kb/moos-diary/README.md`, `kb/moos-diary/t190-z440-vscode-lead-handoff-wrapup.md`, and `kb/moos-diary/t190-session-branch-and-closeout-policy.md`. The diary folder now groups 3-5 running-state sprints into readable session wrap-ups for all agents/personae.
 3. Check repo state before changing anything:
    ```powershell
    git -C D:\HPZ440\ffs0 status --short --branch
@@ -84,7 +84,8 @@ Do not G-sync Project #4 status or emit account/person rewrites until row identi
 
 ## Branch Rules
 
-- `ffs0` is shared across hp-laptop and Z440. Use a branch for Z440 edits to shared scripts, workspace files, docs, prompts, or running-state.
+- `ffs0/main` is the coordination trunk for verified state packets. Running-state and moos-diary closeouts should land together there when the packet is small, verified, and needed by other sessions immediately.
+- Use a branch for Z440 WIP, projection scripts, workspace files, large docs, identity/account proposals, or anything that cannot be verified in one sitting.
 - `moos-router` is already on `feat/type-map-routing`; keep router changes on that branch unless Sam says otherwise.
 - `moos-kernel` stays on `master` for readback only. Create a focused branch before any runtime code change.
 - Never commit `secrets/`, `.vscode/mcp.json`, generated binaries, or ignored `tmp/` outputs.
@@ -96,7 +97,7 @@ Before calling it done:
 1. Update `kb/superset/running-state.md` with the Z440 projection result and any remaining warnings.
 2. Update `kb/moos-diary/` with a session-centered wrap-up if the result changes the handoff picture.
 3. Commit only intentional files with a focused message.
-4. Push the branch, or push `main` only if Sam explicitly chose a direct shared-state commit.
+4. Push `ffs0/main` for a verified coordination packet; push your branch for WIP or implementation work.
 5. Report back with: branch/commit, Doctor result, persona result, pipeline gate result, Project #4 identity coverage, and any deferred items.
 
 Finish this today; keep the changes small and operational.
