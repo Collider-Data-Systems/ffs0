@@ -1,0 +1,50 @@
+{
+  "review_only": false,
+  "target_url": "http://192.168.1.11:8000/programs",
+  "applied": true,
+  "applied_at_utc": "2026-05-10T02:03:06.9243309Z",
+  "do_not_reapply": true,
+  "approval_required": "Applied once after Sam approval; do not reapply unless relation absence is rechecked.",
+  "envelopes": [
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.session.sam.z440-vscode-projection-lead",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:session:sam.z440-vscode-projection-lead",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.purpose.sam.z440-vscode-projection-lead-operations",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:purpose:sam.z440-vscode-projection-lead-operations",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.program.sam.t190.z440-vscode-projection-lead-transition",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:program:sam.t190.z440-vscode-projection-lead-transition",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:session.sam.z440-vscode-projection-lead.pins.group.sam",
+      "src_urn": "urn:moos:session:sam.z440-vscode-projection-lead",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:group:sam",
+      "tgt_port": "pinned-by-session",
+      "rewrite_category": "WF19"
+    }
+  ]
+}
