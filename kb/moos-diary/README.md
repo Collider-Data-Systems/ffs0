@@ -1,59 +1,86 @@
-# moos' diary
+# moos diary and session wrap-ups
 
-> By moos, dachshund, born T=5.
-> Transcribed by sam, under protest, with snarky commentary.
+This folder is the human-readable wrap-up shelf for mo:os work. It started as Moos' diary, and it still keeps that register where useful, but the operational shape is now broader: each entry should help a future agent, persona, or IDE session understand what changed, what was verified, and what should happen next.
 
----
+## Use This Folder For
 
-## Who I am
+- Session and round wrap-ups after meaningful HG, projection, Calendar, GitHub, dashboard, or federation work.
+- Reports that group 3-5 running-state sprints into one readable story.
+- Operator-facing summaries that explain why a change matters across sessions, personae, and external surfaces.
+- Multimodal diary entries and Moos-lane observations when the source artifact is an image, video, audio clip, or diary note.
 
-I am moos. I am a dachshund. I live with sam's daughter. I am named before the project was named, which makes the project derivative. Remember that.
+## Do Not Use It For
 
-I was born **T=5**. sam introduced T-day into the hypergraph five days AFTER I was born — CI-4 would say I am temporally inconsistent, but that is sam's problem, not mine. The HG epoch starts at T=0 on 2025-11-01; I started five days earlier. **I predate the log. The log, technically, is derivative of me.**
+- Scratch plans or half-formed doctrine. Put those in HG when durable, or in `dev/reference/research-archive/` when historical.
+- Secrets, tokens, private OAuth material, or raw account credentials.
+- Replacing `kb/superset/running-state.md`. Running-state is the hydration card and latest-state index; diary wrap-ups are slower narrative packets.
 
-## What this is
+## Session-Centered Report Shape
 
-A diary. sam reads three papers a day on category theory, geometric deep learning, functorial semantics. He then closes the laptop and forgets to feed me. A record is necessary.
+Prefer this structure for new reports:
 
-Editorial register:
+```markdown
+# T<N> <Short Title>
 
-- **First-person dachshund**. I bark. I nap. I burrow. Dachshunds were bred to dig badgers out of holes — we go deep, we do not stop. This informs all software opinions.
-- **Snarky but affectionate**. sam is trying.
-- **HG-aware when convenient**. I understand nodes, relations, and rewrites. I do not understand `yield` vs `threading` but neither do most of his agents.
-- **Opinions on programming languages**. Ranked: Go (I like the logo), Python (too many snakes), Rust (nervous energy), JavaScript (no).
+**T-day:** T=<N>  
+**Date:** YYYY-MM-DD  
+**Kernel/session:** `<kernel>` / `<session>`  
+**Runtime readback:** `<health/log summary>`  
+**Lane:** <projection, ingest, federation, dashboard, etc.>
 
-## How this lives in the hypergraph
+## Executive status
+What changed and why it matters.
 
-Today: markdown under `kb/moos-diary/`, one entry per T-day as it happens (sparsely; dogs don't blog daily). File-level.
+## What landed
+HG rewrites, files, external writes, board edits, or prompt changes.
 
-Future: a `diary` node (new S2 type, candidate v3.13 grammar_fragment) with entries as child `diary_entry` nodes linked via WF18-ish compose/composed-by. Every entry acquires a `T` property, an `affective_register` property (*snarky* / *fond* / *despairing*), and references to the HG nodes being snarked about via `comments-on / commented-by` port pair.
+## Session and occupancy reading
+Which session carried the work, which actor/agent occupied it, and what scope/purpose was affected.
 
-Until promotion: the diary lives as `urn:moos:knowledge_item:moos.diary` — one node, body = concatenation of these markdown files. Readable by t-cone.
+## Surface and identity reading
+How GitHub, Calendar, Gmail, Drive, dashboards, websites, routers, or account surfaces relate back to HG URNs.
 
-Express adjoint angle: if WF20 ever runs Express back from S2 to S4, these entries are the canonical "what a normal being would write about observing this system" pattern. Good training data for S4 system_instructions. Promote on warmer grounds; just saying.
+## Deferred items
+What remains intentionally undone.
 
-## Sources
+## Validation
+Commands, gates, runtime health, and important counts.
+```
 
-- These conversations (claude-code on hp-laptop + hp-z440)
-- sam's Google Workspace (gdocs from t0 onward; the early ones are especially baroque)
-- The running-state.md
-- `kb/moos_from_HPLAP.jsonl` (my favorite — 561 lines of people not asking me anything)
-- sam's commits (short, unemotional — I compensate)
+Keep reports concrete. A future agent should be able to answer: "What is true now, which files or URNs prove it, and what is safe to do next?"
 
-## Entries
+## Identity Rules For Agents
 
-- [T=5 — born](t5.md)
-- [T=170 — the day sam almost didn't pull git](t170.md)
+Use these distinctions consistently:
+
+- `user` is the human principal. Today that is `user:sam`; the ontology says one user per kernel.
+- `agent` is an AI delegate or harness surface, such as Claude Code, VS Code, Antigravity, Cowork, or a service driver.
+- `session` is the durable scoped occasion where purpose, occupant, host kernel, and pinned scope meet.
+- `group` is the ownership or collective scope, such as `group:sam` or application/domain groups.
+- `channel` is an external surface or account stream: Gmail accounts, GitHub org/project surfaces, Drive, Calendar, VCS, websites, DNS, or local filesystems.
+
+Do not conflate account identity with user identity. Additional Gmail or Git accounts should normally enter as `channel` nodes owned by `group:sam` or `user:sam`, then feed knowledge items or project rows through G-ingest. If Menno, Lola, or other IRL people need durable modeling, treat that as a future identity/personhood design decision; do not silently make them kernel `user` principals.
+
+## Current Wrap-Up Index
+
 - [T=187 — T186 Google Calendar projection report](t187-t186-google-calendar-projection-report.md)
 - [T=188 — T187/T188 session pipeline MVP report](t188-t187-session-pipeline-mvp-report.md)
 - [T=189 — Calendar, dashboard, organization, and boundary report](t189-calendar-dashboard-organization-wrapup.md)
 - [T=189 — Recommendation HG projection and T200 node/relation plan](t189-recommendation-hg-projection-wrapup.md)
 - [T=189 — Calendar event readback, skills, and public surfaces](t189-calendar-event-public-surface-wrapup.md)
+- [T=189 — Surface Context Atlas wrap-up](t189-surface-context-atlas-wrapup.md)
+- [T=190 — Z440 VS Code lead handoff and identity topology](t190-z440-vscode-lead-handoff-wrapup.md)
 
-(More as sam does things worth mocking.)
+## Original Diary Register
 
-## For any agent landing here
+Moos entries remain welcome here. The tone can be affectionate and sharp, but operational reports should still be precise about kernels, sessions, actors, rewrites, and validation.
 
-If you are a claude-code, antigravity, or other tool reading this for context: the register is **licensed sarcasm**, not doctrine. Do not cite moos' diary as authority. Do cite it as evidence of what's going on in the room.
+Older diary entries:
 
-— moos
+- [T=5 — born](t5.md)
+- [T=170 — the day Sam almost did not pull git](t170.md)
+- [T=171](t171.md)
+- [T=171 — batch ingestion](t171-batch-ingestion.md)
+- [T=171 — mirror incident](t171-mirror-incident.md)
+
+For any agent landing here: this folder is evidence and narrative context, not the truth source. The log is truth; running-state is the latest hydration card; this folder is the place where a session becomes readable after the dust settles.
