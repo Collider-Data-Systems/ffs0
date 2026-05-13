@@ -1,0 +1,285 @@
+{
+  "review_only": false,
+  "target_url": "http://localhost:8000/programs",
+  "target_kernel": "urn:moos:kernel:hp-laptop.primary",
+  "persona": "guido",
+  "applied": true,
+  "applied_at_utc": "2026-05-13T16:13:22Z",
+  "do_not_reapply": true,
+  "readback": {
+    "health": {"status": "ok", "ontology_version": "3.16.1", "t_day": 193, "log_len": 1184},
+    "resolved_nodes": [
+      "urn:moos:workstation:hpprodesk",
+      "urn:moos:kernel:hpprodesk.primary",
+      "urn:moos:agent:vscode.hpprodesk.primary",
+      "urn:moos:purpose:sam.hpprodesk-workstation-bootstrap",
+      "urn:moos:session:sam.hpprodesk-setup",
+      "urn:moos:program:sam.t193.hpprodesk-topology-materialization"
+    ],
+    "session_relation_count": 9,
+    "group_hpprodesk_ownership_count": 6,
+    "workstation_host_relation_count": 1
+  },
+  "approval_basis": "Sam requested start implementation after reviewing the HP ProDesk social-topology inventory. This batch implements only the topology-safe HP ProDesk mirror on hp-laptop primary: no Geurt user, no account channel, no secrets.",
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "node_urn": "urn:moos:workstation:hpprodesk",
+      "type_id": "workstation",
+      "properties": {
+        "hostname": {"value": "hpprodesk", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "os": {"value": "windows", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "arch": {"value": "amd64", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "created_at": {"value": "2026-05-13T16:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "windows_hostname": {"value": "DESKTOP-3FC7C3F", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "lan_ipv4": {"value": "172.29.0.32/26", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "node_urn": "urn:moos:kernel:hpprodesk.primary",
+      "type_id": "kernel",
+      "properties": {
+        "version": {"value": "1.0.0", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "status": {"value": "active", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "created_at": {"value": "2026-05-13T16:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "ontology_version": {"value": "3.16.1", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "http_lan": {"value": "http://172.29.0.32:8000", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "mcp_sse_lan": {"value": "http://172.29.0.32:8080/sse", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-code.hp-laptop",
+      "session_urn": "urn:moos:session:sam.governance",
+      "node_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+      "type_id": "agent",
+      "properties": {
+        "name": {"value": "VS Code Copilot (HP ProDesk)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "delegate_type": {"value": "ide", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "owner_urn": {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "created_at": {"value": "2026-05-13T16:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "transport_type": {"value": "mcp-sse", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "invocation_protocol": {"value": "mcp", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "board_id": {"value": "AGENT-VSCODE-HPPRODESK", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "status": {"value": "idle", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-code.hp-laptop",
+      "session_urn": "urn:moos:session:sam.governance",
+      "node_urn": "urn:moos:purpose:sam.hpprodesk-workstation-bootstrap",
+      "type_id": "purpose",
+      "properties": {
+        "subject_urn": {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "target_state": {"value": "Bring HP ProDesk into the shared mo:os topology as a third workstation with local primary kernel, VS Code agent, setup session, and projection-ready scope, while keeping Geurt and account identity proposal-only.", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "status": {"value": "open", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "started_at": {"value": "2026-05-13T16:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-code.hp-laptop",
+      "session_urn": "urn:moos:session:sam.governance",
+      "node_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "type_id": "session",
+      "properties": {
+        "started_at": {"value": "2026-05-13T16:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "owner_urn": {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "status": {"value": "active", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "local_t": {"value": 0, "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "text": {"value": "HP ProDesk VS Code setup session. Topology-only materialization; Geurt and account identity remain proposal-only until a later identity/account decision.", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-code.hp-laptop",
+      "session_urn": "urn:moos:session:sam.governance",
+      "node_urn": "urn:moos:program:sam.t193.hpprodesk-topology-materialization",
+      "type_id": "program",
+      "properties": {
+        "title": {"value": "T193 HP ProDesk topology materialization", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "owner_urn": {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "status": {"value": "active", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "scope": {"value": "Mirror the proved HP ProDesk local primary into hp-laptop shared governance HG: workstation, primary kernel, VS Code agent, setup session, purpose, ownership, session pins, and purpose-program carrier. No Geurt user, no account channel, no secrets.", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "starts_t": {"value": 193, "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "target_t": {"value": 193, "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "created_at": {"value": "2026-05-13T16:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.workstation.hpprodesk",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:workstation:hpprodesk",
+      "tgt_port": "child",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.kernel.hpprodesk-primary",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:kernel:hpprodesk.primary",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.agent.vscode.hpprodesk-primary",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.purpose.sam.hpprodesk-workstation-bootstrap",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:purpose:sam.hpprodesk-workstation-bootstrap",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.session.sam.hpprodesk-setup",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.program.sam.t193.hpprodesk-topology-materialization",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:program:sam.t193.hpprodesk-topology-materialization",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:workstation.hpprodesk.hosts.kernel.hpprodesk-primary",
+      "src_urn": "urn:moos:workstation:hpprodesk",
+      "src_port": "hosts",
+      "tgt_urn": "urn:moos:kernel:hpprodesk.primary",
+      "tgt_port": "hosted-on",
+      "rewrite_category": "WF03"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-code.hp-laptop",
+      "session_urn": "urn:moos:session:sam.governance",
+      "relation_urn": "urn:moos:rel:purpose.sam.hpprodesk-workstation-bootstrap.composes.program.sam.t193.hpprodesk-topology-materialization",
+      "src_urn": "urn:moos:purpose:sam.hpprodesk-workstation-bootstrap",
+      "src_port": "composes",
+      "tgt_urn": "urn:moos:program:sam.t193.hpprodesk-topology-materialization",
+      "tgt_port": "composed-by",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.hpprodesk-setup.opens-on.kernel.hpprodesk-primary",
+      "src_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "src_port": "opens-on",
+      "tgt_urn": "urn:moos:kernel:hpprodesk.primary",
+      "tgt_port": "occupied-by",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.hpprodesk-setup.has-purpose.purpose.sam.hpprodesk-workstation-bootstrap",
+      "src_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "src_port": "has-purpose",
+      "tgt_urn": "urn:moos:purpose:sam.hpprodesk-workstation-bootstrap",
+      "tgt_port": "purpose-of-session",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.hpprodesk-setup.has-occupant.agent.vscode.hpprodesk-primary",
+      "src_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "src_port": "has-occupant",
+      "tgt_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+      "tgt_port": "is-occupant-of",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.hpprodesk-setup.pins.group.sam",
+      "src_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:group:sam",
+      "tgt_port": "pinned-by-session",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.hpprodesk-setup.pins.workstation.hpprodesk",
+      "src_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:workstation:hpprodesk",
+      "tgt_port": "pinned-by-session",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.hpprodesk-setup.pins.kernel.hpprodesk-primary",
+      "src_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:kernel:hpprodesk.primary",
+      "tgt_port": "pinned-by-session",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.hpprodesk-setup.pins.agent.vscode.hpprodesk-primary",
+      "src_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+      "tgt_port": "pinned-by-session",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.hpprodesk-setup.pins.purpose.sam.hpprodesk-workstation-bootstrap",
+      "src_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:purpose:sam.hpprodesk-workstation-bootstrap",
+      "tgt_port": "pinned-by-session",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.hpprodesk-setup.pins.program.sam.t193.hpprodesk-topology-materialization",
+      "src_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:program:sam.t193.hpprodesk-topology-materialization",
+      "tgt_port": "pinned-by-session",
+      "rewrite_category": "WF19"
+    }
+  ]
+}

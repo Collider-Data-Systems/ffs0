@@ -4,7 +4,7 @@
 **Date:** 2026-05-13
 **Workstation:** HP ProDesk at Geurt's place, Windows host `DESKTOP-3FC7C3F`
 **Scope:** social/topology inventory and proposal only
-**Apply status:** no HG rewrites applied from this report
+**Apply status:** inventory was read-only; follow-up topology-safe implementation applied on hp-laptop primary at `2026-05-13T16:13:22Z`
 
 ## Status
 
@@ -13,6 +13,20 @@ This report records the read-only HP ProDesk inventory and revises the identity 
 That fact matters, but it should not automatically create an authority-bearing `user` node. Under the current ontology, `user` is a human principal with kernel authority semantics, not a general identity/account record. External account identity should enter first as a channel/account surface or as a knowledge item until Sam approves a stronger identity model.
 
 This file is a projection/readback document. The source of truth remains the JSONL logs and live HTTP state.
+
+## Implementation Follow-Up
+
+After this inventory, Sam requested implementation. Hp-laptop primary applied `dev/scripts/ops/t193-hpprodesk-topology-materialization.program.json` through the `guido` persona.
+
+The apply was deliberately limited to topology-safe HP ProDesk materialization:
+
+- New shared-HG nodes: `workstation:hpprodesk`, `kernel:hpprodesk.primary`, `agent:vscode.hpprodesk.primary`, `purpose:sam.hpprodesk-workstation-bootstrap`, `session:sam.hpprodesk-setup`, and `program:sam.t193.hpprodesk-topology-materialization`.
+- New wiring: `group:sam` ownership, WF03 workstation hosting, WF18 purpose-program composition, and WF19 session `opens-on`, `has-purpose`, `has-occupant`, and `pins-urn` relations.
+- Runtime readback after apply: `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=1184`.
+
+The identity decision remains unchanged: no `user:geurt`, no `group:geurt`, no Gmail/auth/account channel, and no secret or raw account identifier was added.
+
+The HP ProDesk local kernel then received its own session-layer bootstrap through `dev/scripts/ops/t193-hpprodesk-local-session-bootstrap.program.json`. That batch preserved the existing 5-line seed graph, added local `group:sam`, `agent:vscode.hpprodesk.primary`, `purpose:sam.hpprodesk-workstation-bootstrap`, `session:sam.hpprodesk-setup`, and `program:sam.t193.hpprodesk-topology-materialization`, then wired ownership and WF19 session relations. Local HP ProDesk readback after apply: `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=26`; `VerifyPersona -Persona hpprodesk-vscode` passes.
 
 ## Readback
 
