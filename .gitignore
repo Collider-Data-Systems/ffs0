@@ -39,6 +39,7 @@ scratch/
 # Machine-specific IDE configs (ports differ per workstation)
 .vscode/mcp.json
 .vscode/settings.json
+*.local.code-workspace
 *.tmp
 lost\ converstation*.txt
 tempprg.json

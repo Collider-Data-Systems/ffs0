@@ -13,10 +13,8 @@
       "name": "moos-router"
     },
     {
-      "path": "${userHome}/Downloads"
-    },
-    {
-      "path": "../moos-router-feat-type-map-routing"
+      "path": "${userHome}/Downloads",
+      "name": "Downloads"
     }
   ],
   "settings": {

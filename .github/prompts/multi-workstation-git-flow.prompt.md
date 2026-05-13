@@ -71,6 +71,11 @@ Examples: `z440/t190-projection-finish`, `guido/t190-project-urn-repair`, `hp-la
 - `C:\Users\maass\HPlaptop\.github\skills`
 - `secrets/` (except approved templates/docs)
 - ephemeral logs/state under `data/` and `dev/`
+- `*.local.code-workspace` for workstation-specific VS Code folders, extra worktrees, or temporary local surfaces.
+
+## Shared Workspace File
+
+`ffs0.code-workspace` is the portable base workspace. Keep it limited to repo-stable folders such as `ffs0`, sibling `moos-kernel`, sibling `moos-router`, and `${userHome}/Downloads`. Do not add local-only worktrees such as temporary router feature checkouts to this tracked file. Put those in an ignored `*.local.code-workspace` file on the workstation that needs them.
 
 ## Runtime Repos
 
