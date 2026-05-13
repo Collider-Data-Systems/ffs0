@@ -3,7 +3,7 @@
 **T-day:** T=193
 **Date:** 2026-05-13
 **Kernel/session:** `hp-laptop.primary` / `session:sam.governance` as the coordinating lane; `hpprodesk.primary` / `session:sam.hpprodesk-setup` as the planned third-workstation lane
-**Runtime readback:** no HP ProDesk HG rewrites applied in this closeout; hp-laptop `ffs0/main` is clean and pushed at `0725b48` before this diary follow-up
+**Runtime readback:** HP ProDesk local primary now reports `/healthz` green from the `hpprodesk` seed log; no HP ProDesk HG rewrites have been applied yet
 **Lane:** HP ProDesk workstation bring-up, topology correction, prompt handoff, and ffs0 trunk policy
 
 ## Executive Status
@@ -11,6 +11,28 @@
 The recent T193 period turned the loose "HP Pro is in reach" idea into a concrete HP ProDesk bootstrap packet. The new workstation is now named consistently as `hpprodesk`, with planned kernel `urn:moos:kernel:hpprodesk.primary`, setup session `urn:moos:session:sam.hpprodesk-setup`, purpose `urn:moos:purpose:sam.hpprodesk-workstation-bootstrap`, and VS Code agent `urn:moos:agent:vscode.hpprodesk.primary`.
 
 The practical result is that the HP ProDesk-side VS Code/Copilot can now pull `ffs0/main`, read the shared bootstrap prompt, and continue from a topology file that already knows the current LAN facts: HP ProDesk at `172.29.0.32`, hp-laptop at `172.29.0.38`, and Z440 kept in consideration as the historical/offline workstation at `192.168.1.11`.
+
+## HP ProDesk Local Readback Projection
+
+This section is a projection/readback packet, not a new source of truth. The source of truth for runtime state remains the sovereign JSONL logs plus live `/healthz` readback; this diary records what the HP ProDesk VS Code session observed so the next agent can hydrate without replaying the whole terminal transcript.
+
+Current HP ProDesk readback:
+
+- Hostname: `DESKTOP-3FC7C3F`, normalized by `Test-MoosFederation.ps1` to `hpprodesk`.
+- Windows user: `desktop-3fc7c3f\geurt`.
+- IPv4: `172.29.0.32/26` on `Ethernet`.
+- Local repo parent: `C:\Users\Geurt\CDS`.
+- `ffs0`: `main@6647d47` (`docs: fix HP ProDesk seed identity`).
+- `moos-kernel`: `master@b5935e0`.
+- `moos-router`: `master@18212eb`.
+- Go toolchain: `go1.26.3 windows/amd64`.
+- `moos-kernel` tests/build: `go test ./...` passed and `moos-kernel.exe` rebuilt locally.
+- Local kernel command used the corrected identity: `--seed --seed-user sam --seed-ws hpprodesk`.
+- Local `/healthz`: `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=5`.
+- Active `moos.jsonl` contains `workstation:hpprodesk` and `kernel:hpprodesk.primary`; the earlier bad `hp-laptop` seed log was preserved as `moos.hp-laptop-seed-misfire.20260513-161015.jsonl`.
+- Hp-laptop is reachable at `172.29.0.38`: kernel `:8000` reports `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=1160`; router `:9000` reports `status=ok` and marks Z440 `192.168.1.11` down.
+
+No branch was created for this update because the repo policy makes verified `ffs0` admin/readback packets direct-to-main work. No `moos-kernel` or `moos-router` source code changed, and no HG rewrites were applied.
 
 ## What Landed
 
@@ -22,6 +44,8 @@ Recent `ffs0/main` commits in this arc:
 - `aa4b18e docs: make ffs0 trunk-first admin repo`
 - `6f46e80 chore: make ffs0 workspace portable`
 - `0725b48 config: add HP ProDesk topology`
+- `1904859 docs: wrap T193 HP ProDesk bootstrap`
+- `6647d47 docs: fix HP ProDesk seed identity`
 
 Files now carrying the HP ProDesk handoff:
 
@@ -59,9 +83,17 @@ Validation for the `0725b48` config packet:
 
 Post-wrapup HP ProDesk readback caught one concrete prompt bug: the kernel start example still used plain `--seed`, which would have defaulted `--seed-ws` to `hp-laptop`. The prompt now explicitly passes `--seed-user sam` and `--seed-ws hpprodesk`.
 
+Validation for the HP ProDesk-side local readback:
+
+- `ffs0` was reconciled to `main@6647d47`; the only prior local prompt edit was restored because the same fix was upstream.
+- `moos-kernel` tests passed and `moos-kernel.exe` rebuilt locally.
+- The local primary kernel started with `--seed-ws hpprodesk`, replayed 5 rewrites, and returned `/healthz` green.
+- Active `moos.jsonl` was checked for bad `workstation:hp-laptop` / `kernel:hp-laptop` seed refs.
+- Hp-laptop `172.29.0.38:8000` and router `172.29.0.38:9000` returned healthy readbacks.
+
 ## Next Moves
 
-- On HP ProDesk, pull `ffs0/main`, open `ffs0.code-workspace`, and use `.github/prompts/hppro-vscode-t193-bootstrap.prompt.md` as the local Copilot prompt.
-- Build and start one HP ProDesk primary kernel against `kb/superset/ontology.json`, then report `/healthz` before applying HG rewrites.
-- After HP ProDesk health is real, prepare a reviewed `moos-rewrite-envelope` batch for the workstation/kernel/session/purpose/occupant topology.
+- Prepare a reviewed `moos-rewrite-envelope` batch for the HP ProDesk workstation/kernel/session/purpose/occupant topology.
+- After Sam approves the batch, apply it to the intended receiving kernel and re-run persona/topology verification.
+- Keep HP ProDesk to one primary kernel until the setup session is represented in HG and restart-stable.
 - When back at the Z440, run the federation doctor and reconcile all three workstations together.
