@@ -11,6 +11,7 @@ $ErrorActionPreference = "Stop"
 
 if ([string]::IsNullOrWhiteSpace($Julia)) {
     $juliaCandidates = @(
+        "C:\Users\Geurt\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe",
         "C:\Users\hp\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe",
         "C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe",
         "julia"
@@ -60,6 +61,11 @@ function Resolve-SessionContext {
             SessionUrn = "urn:moos:session:sam.z440-vscode-projection-lead"
             ActorUrn = "urn:moos:agent:vscode.hp-z440.primary"
             Focus = "Z440 VS Code projection lead parity, federated readback, Julia pipeline, dashboard gate review, and Project #4 HG URN repair"
+        },
+        [pscustomobject]@{
+            SessionUrn = "urn:moos:session:sam.hpprodesk-setup"
+            ActorUrn = "urn:moos:agent:vscode.hpprodesk.primary"
+            Focus = "HP ProDesk workstation bootstrap, session wiring readback, projection pipeline, and router peer readiness"
         }
     )
 

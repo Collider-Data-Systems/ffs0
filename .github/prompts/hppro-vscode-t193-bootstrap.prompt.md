@@ -1,5 +1,4 @@
 ---
-mode: agent
 description: "Use when: bootstrapping VS Code/Copilot on HP ProDesk as the T193 third mo:os workstation."
 ---
 
@@ -123,6 +122,43 @@ Invoke-RestMethod http://<hp-laptop-ip>:9000/healthz | ConvertTo-Json -Depth 8
 
 Only after both machines are reachable should you propose edits to `dev/config/moos-federation.topology.json` for HP ProDesk router peering.
 
+## State And Projection Routine
+
+Run the same readback discipline used on hp-laptop before claiming the workstation is wired:
+
+```powershell
+git -C "$env:USERPROFILE\CDS\ffs0" fetch origin --prune
+git -C "$env:USERPROFILE\CDS\ffs0" status --short --branch
+git -C "$env:USERPROFILE\CDS\moos-kernel" fetch origin --prune
+git -C "$env:USERPROFILE\CDS\moos-kernel" status --short --branch
+git -C "$env:USERPROFILE\CDS\moos-router" fetch origin --prune
+git -C "$env:USERPROFILE\CDS\moos-router" status --short --branch
+Invoke-RestMethod http://localhost:8000/healthz | ConvertTo-Json -Depth 8
+Get-NetTCPConnection -State Listen -LocalPort 8000,8080,9000 -ErrorAction SilentlyContinue |
+   Select-Object LocalAddress,LocalPort,OwningProcess
+```
+
+The projection pipeline is the machine-wiring view. Run it only after the local kernel is healthy. If Julia is not installed, report that projection regeneration is skipped.
+
+Before the reviewed HG setup batch is applied, `session:sam.hpprodesk-setup` may not exist yet; in that case do not invent a session pack. Report that the projection routine is blocked on the reviewed HG batch.
+
+After `session:sam.hpprodesk-setup` exists, regenerate the local projection pack from the ffs0 root:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass `
+   -File dev\scripts\projections\run-session-pipeline.ps1 `
+   -BaseUrl http://localhost:8000 `
+   -SessionUrn urn:moos:session:sam.hpprodesk-setup `
+   -ActorUrn urn:moos:agent:vscode.hpprodesk.primary `
+   -Focus "HP ProDesk workstation bootstrap, session wiring readback, projection pipeline, and router peer readiness"
+```
+
+Inspect and report:
+
+- `tmp/projections/session_pipeline/session_context/current_session.md`
+- `tmp/projections/session_pipeline/mvp/session_pipeline_gate.md`
+- `tmp/projections/session_pipeline/index.html`
+
 ## HG Batch Shape For Later Review
 
 Do not apply this automatically. Once hostname/IP and local health are known, prepare a reviewed batch with these intended facts:
@@ -151,6 +187,7 @@ Repos: <paths and branch status>
 Kernel build/test: <pass/fail>
 Local /healthz: <status, ontology_version, t_day, log_len>
 hp-laptop reachability: <8000/9000 result>
+Projection routine: <ran/skipped/blocked, gate status if ran>
 Z440: intentionally offline/unreachable for this step
 Recommended next apply/config step: <one sentence>
 ```

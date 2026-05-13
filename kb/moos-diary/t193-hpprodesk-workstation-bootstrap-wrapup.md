@@ -91,6 +91,8 @@ Validation for the HP ProDesk-side local readback:
 - Active `moos.jsonl` was checked for bad `workstation:hp-laptop` / `kernel:hp-laptop` seed refs.
 - Hp-laptop `172.29.0.38:8000` and router `172.29.0.38:9000` returned healthy readbacks.
 
+Follow-up projection check confirmed hp-laptop's session pipeline is current enough to use as the HP ProDesk routine template: local runner result remains `warn`, 18 pass, 2 warn, 0 fail, with the known warnings on visual lens root coverage and T189 recommendation reconciliation. The HP ProDesk bootstrap prompt now includes the same state-readback and projection routine, and `run-session-pipeline.ps1` can recognize `session:sam.hpprodesk-setup` / `agent:vscode.hpprodesk.primary` once the reviewed HG setup batch exists.
+
 ## Next Moves
 
 - Prepare a reviewed `moos-rewrite-envelope` batch for the HP ProDesk workstation/kernel/session/purpose/occupant topology.
