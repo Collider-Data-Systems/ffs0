@@ -3,7 +3,7 @@ param(
     [ValidateSet('Doctor', 'Start', 'VerifyPersona', 'PostProgram')]
     [string]$Mode = 'Doctor',
 
-    [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'cowork-z440', 'z440-vscode-lead', 'guido', 'cowork-laptop', 'ag-laptop')]
+    [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'cowork-z440', 'z440-vscode-lead', 'guido', 'cowork-laptop', 'ag-laptop', 'hpprodesk-vscode')]
     [string]$Persona,
 
     [string]$PayloadPath,
@@ -46,6 +46,7 @@ function Get-NormalizedHostName {
     switch -Regex ($hostName) {
         '^(hp[-_]?laptop|hplaptop|lap[-_]?sam)$' { return 'hp-laptop' }
         '^(hp[-_]?z440|hpz440)$' { return 'hp-z440' }
+        '^(hp[-_]?prodesk|hpprodesk|desktop[-_]?3fc7c3f)$' { return 'hpprodesk' }
         default { return $hostName }
     }
 }

@@ -1,7 +1,7 @@
 
 {
   "schema_version": 1,
-  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=190. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
+  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=193 for HP ProDesk bring-up. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
   "local_host": "auto",
   "expected_ontology_version": "3.16.1",
   "kernels": {
@@ -55,9 +55,9 @@
       "urn": "urn:moos:kernel:hp-laptop.primary",
       "host": "hp-laptop",
       "http_local": "http://localhost:8000",
-      "http_lan": "http://192.168.1.18:8000",
+      "http_lan": "http://172.29.0.38:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
-      "mcp_sse_lan": "http://192.168.1.18:8080/sse",
+      "mcp_sse_lan": "http://172.29.0.38:8080/sse",
       "mcp_server": "moos-hp-laptop-primary",
       "expected_ontology_version": "3.16.1",
       "seats": [
@@ -65,25 +65,42 @@
         "urn:moos:session:sam.laptop-cowork-workspace",
         "urn:moos:session:sam.laptop-moos-diary"
       ]
+    },
+    "hpprodesk.primary": {
+      "urn": "urn:moos:kernel:hpprodesk.primary",
+      "host": "hpprodesk",
+      "http_local": "http://localhost:8000",
+      "http_lan": "http://172.29.0.32:8000",
+      "mcp_sse_local": "http://localhost:8080/sse",
+      "mcp_sse_lan": "http://172.29.0.32:8080/sse",
+      "mcp_server": "moos-hpprodesk-primary",
+      "expected_ontology_version": "3.16.1",
+      "seats": ["urn:moos:session:sam.hpprodesk-setup"]
     }
   },
   "router": {
     "name": "moos-router",
     "http_local": "http://localhost:9000",
-    "http_lan": "http://192.168.1.11:9000"
+    "http_lan": "http://172.29.0.38:9000"
   },
   "routers": {
     "hp-z440": {
       "host": "hp-z440",
       "http_local": "http://localhost:9000",
       "http_lan": "http://192.168.1.11:9000",
-      "peers": ["http://192.168.1.18:9000"]
+      "peers": ["http://172.29.0.38:9000", "http://172.29.0.32:9000"]
     },
     "hp-laptop": {
       "host": "hp-laptop",
       "http_local": "http://localhost:9000",
-      "http_lan": "http://192.168.1.18:9000",
-      "peers": ["http://192.168.1.11:9000"]
+      "http_lan": "http://172.29.0.38:9000",
+      "peers": ["http://172.29.0.32:9000", "http://192.168.1.11:9000"]
+    },
+    "hpprodesk": {
+      "host": "hpprodesk",
+      "http_local": "http://localhost:9000",
+      "http_lan": "http://172.29.0.32:9000",
+      "peers": ["http://172.29.0.38:9000", "http://192.168.1.11:9000"]
     }
   },
   "cloudflare": {
@@ -102,7 +119,8 @@
     "moos-menno": "http://localhost:9001/sse",
     "moos-lola": "http://localhost:9002/sse",
     "moos-moos": "http://localhost:9003/sse",
-    "moos-hp-laptop-primary": "http://localhost:8080/sse"
+    "moos-hp-laptop-primary": "http://localhost:8080/sse",
+    "moos-hpprodesk-primary": "http://localhost:8080/sse"
   },
   "personas": {
     "wolfram": {
@@ -170,6 +188,14 @@
       "opens_on_kernel": "hp-laptop.primary",
       "emit_kernel": "hp-laptop.primary",
       "mcp_server": "moos-hp-laptop-primary"
+    },
+    "hpprodesk-vscode": {
+      "actor_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+      "session_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "opens_on_kernel": "hpprodesk.primary",
+      "emit_kernel": "hpprodesk.primary",
+      "mcp_server": "moos-hpprodesk-primary",
+      "requires_explicit_session_urn": true
     }
   },
   "scripts": {

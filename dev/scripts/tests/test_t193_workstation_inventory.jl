@@ -45,9 +45,9 @@ end
         inventory = Inventory.plan_inventory(
             log_state=state,
             topology=topology,
-            reachable_hosts=["hp-laptop", "hppro"],
+            reachable_hosts=["hp-laptop", "hpprodesk"],
             offline_hosts=["hp-z440"],
-            planned_hosts=["hppro"],
+            planned_hosts=["hpprodesk"],
             generated_at="2026-05-13T13:54:00Z",
             t_day="193",
         )
@@ -58,9 +58,9 @@ end
         hosts = Dict(row["host"] => row for row in inventory["host_matrix"])
         @test hosts["hp-laptop"]["status"] == "reachable-now"
         @test hosts["hp-z440"]["status"] == "offline-now"
-        @test hosts["hppro"]["status"] == "reachable-now"
-        @test hosts["hppro"]["present_in_hg"] == false
-        @test inventory["hppro_candidates"][1]["kernel_urn"] == "urn:moos:kernel:hppro.primary"
+        @test hosts["hpprodesk"]["status"] == "reachable-now"
+        @test hosts["hpprodesk"]["present_in_hg"] == false
+        @test inventory["workstation_candidates"][1]["kernel_urn"] == "urn:moos:kernel:hpprodesk.primary"
         requested = Dict(row["type_id"] => row for row in inventory["requested_type_inventory"])
         @test requested["workstation"]["count"] == 2
         @test requested["program"]["nodes"][1]["status"] == "active"
@@ -76,8 +76,8 @@ end
         markdown = read(md_path, String)
         @test occursin("T193 Workstation Inventory", markdown)
         @test occursin("How To Read This", markdown)
-        @test occursin("HP Pro Candidate", markdown)
-        @test occursin("urn:moos:kernel:hppro.primary", markdown)
+        @test occursin("HP ProDesk Candidate", markdown)
+        @test occursin("urn:moos:kernel:hpprodesk.primary", markdown)
         @test occursin("Z440", markdown)
     end
 end

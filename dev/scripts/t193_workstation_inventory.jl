@@ -355,7 +355,7 @@ function host_matrix(nodes, topology, reachable_hosts, offline_hosts, planned_ho
     return rows
 end
 
-function hppro_candidate(host::AbstractString)
+function workstation_candidate(host::AbstractString)
     safe_host = lowercase(replace(strip(host), r"[^A-Za-z0-9-]" => "-"))
     return Dict(
         "host" => safe_host,
@@ -371,20 +371,20 @@ end
 
 function recommended_sequence()
     return [
-        Dict("step" => 1, "header" => "Confirm HP Pro identity", "detail" => "On the HP Pro, record hostname, LAN IPv4, Windows user path, architecture, and whether Go/PowerShell/Git are ready."),
+        Dict("step" => 1, "header" => "Confirm HP ProDesk identity", "detail" => "On the HP ProDesk, record hostname, LAN IPv4, Windows user path, architecture, and whether Go/PowerShell/Git are ready."),
         Dict("step" => 2, "header" => "Clone or refresh repos", "detail" => "Bring ffs0, moos-kernel, and moos-router to the intended branches without changing hp-laptop or Z440 state."),
-        Dict("step" => 3, "header" => "Start one primary kernel", "detail" => "Build moos-kernel and start only the HP Pro primary kernel against ontology v3.16.1 and a persistent local JSONL log."),
+        Dict("step" => 3, "header" => "Start one primary kernel", "detail" => "Build moos-kernel and start only the HP ProDesk primary kernel against ontology v3.16.1 and a persistent local JSONL log."),
         Dict("step" => 4, "header" => "Run local health", "detail" => "Require /healthz to report status ok, ontology_version 3.16.1, current t_day, and a stable log_len after restart."),
-        Dict("step" => 5, "header" => "Add topology config", "detail" => "After HP Pro health is real, add it to moos-federation.topology.json and run Doctor from hp-laptop with Z440 marked offline if needed."),
+        Dict("step" => 5, "header" => "Add topology config", "detail" => "After HP ProDesk health is real, add it to moos-federation.topology.json and run Doctor from hp-laptop with Z440 marked offline if needed."),
         Dict("step" => 6, "header" => "Apply reviewed HG batch", "detail" => "Only after the concrete hostname/IP is known, apply workstation, kernel, purpose, session, opens-on, has-purpose, has-occupant, and group ownership rewrites."),
         Dict("step" => 7, "header" => "Reconcile Z440 later", "detail" => "When back at the Z440, wake it, run Doctor, and compare all three workstations before moving persona seats or adding twin kernels."),
     ]
 end
 
-function plan_inventory(; log_state, topology=Dict{String, Any}(), reachable_hosts=["hp-laptop", "hppro"], offline_hosts=["hp-z440"], planned_hosts=["hppro"], generated_at=format_utc(now(UTC)), t_day="193")
+function plan_inventory(; log_state, topology=Dict{String, Any}(), reachable_hosts=["hp-laptop", "hpprodesk"], offline_hosts=["hp-z440"], planned_hosts=["hpprodesk"], generated_at=format_utc(now(UTC)), t_day="193")
     nodes = log_state["nodes"]
     relations = log_state["relations"]
-    candidates = [hppro_candidate(host) for host in planned_hosts]
+    candidates = [workstation_candidate(host) for host in planned_hosts]
     return Dict(
         "mode" => "plan",
         "projection_kind" => "t193_workstation_inventory",
@@ -396,14 +396,14 @@ function plan_inventory(; log_state, topology=Dict{String, Any}(), reachable_hos
             "max_log_seq" => log_state["max_log_seq"],
             "topology_config" => DEFAULT_TOPOLOGY,
         ),
-        "operating_assumption" => "Consider hp-laptop, HP Pro, and HP Z440 together; run only the reachable machines now. Z440 being offline should not block HP Pro bootstrap.",
+        "operating_assumption" => "Consider hp-laptop, HP ProDesk, and HP Z440 together; run only the reachable machines now. Z440 being offline should not block HP ProDesk bootstrap.",
         "how_to_read" => [
             "The host matrix combines folded JSONL workstation nodes with the source-controlled topology config.",
             "Raw node status properties are listed as observed properties; session presence is evaluated from WF19 opens-on, has-purpose, has-occupant, and live kernel health.",
-            "HP Pro rows are candidate planning rows until hostname, LAN IP, and first /healthz readback are real.",
+            "HP ProDesk rows are candidate planning rows until hostname, LAN IP, and first /healthz readback are real.",
         ],
         "host_matrix" => host_matrix(nodes, topology, reachable_hosts, offline_hosts, planned_hosts),
-        "hppro_candidates" => candidates,
+        "workstation_candidates" => candidates,
         "node_type_counts" => count_by_field(nodes, "type_id"),
         "rewrite_counts" => log_state["rewrite_counts"],
         "requested_type_inventory" => requested_type_inventory(nodes),
@@ -412,8 +412,8 @@ function plan_inventory(; log_state, topology=Dict{String, Any}(), reachable_hos
         "configured_personas" => configured_persona_rows(topology),
         "recommended_sequence" => recommended_sequence(),
         "guardrails" => [
-            "Do not model HP Pro as a Z440 replacement; it is a third workstation.",
-            "Do not add HP Pro twin kernels until the primary kernel is healthy and restart-stable.",
+            "Do not model HP ProDesk as a Z440 replacement; it is a third workstation.",
+            "Do not add HP ProDesk twin kernels until the primary kernel is healthy and restart-stable.",
             "Do not emit HG rewrites from this inventory. Use a reviewed envelope batch after hostname/IP readback.",
             "Keep Z440 in topology consideration even while it is offline.",
         ],
@@ -447,9 +447,9 @@ function write_markdown(path::AbstractString, inventory)
         end
         println(io)
 
-        println(io, "## HP Pro Candidate")
+        println(io, "## HP ProDesk Candidate")
         println(io)
-        for row in inventory["hppro_candidates"]
+        for row in inventory["workstation_candidates"]
             println(io, "- Host: `", row["host"], "`")
             println(io, "- Workstation: `", row["workstation_urn"], "`")
             println(io, "- Kernel: `", row["kernel_urn"], "`")
@@ -508,9 +508,9 @@ function parse_args(argv)
         "topology" => DEFAULT_TOPOLOGY,
         "out" => DEFAULT_OUT,
         "markdown-out" => DEFAULT_MARKDOWN_OUT,
-        "reachable-hosts" => "hp-laptop,hppro",
+        "reachable-hosts" => "hp-laptop,hpprodesk",
         "offline-hosts" => "hp-z440",
-        "planned-hosts" => "hppro",
+        "planned-hosts" => "hpprodesk",
         "t-day" => "193",
     )
     i = 1

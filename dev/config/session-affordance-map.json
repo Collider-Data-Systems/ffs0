@@ -10,6 +10,19 @@
   ],
   "sessions": [
     {
+      "key": "hpprodesk-vscode-bootstrap",
+      "host": "hpprodesk",
+      "session_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "actor_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+      "emit_kernel": "urn:moos:kernel:hpprodesk.primary",
+      "mcp_server": "moos-hpprodesk-primary",
+      "workspace": "ffs0.code-workspace",
+      "harnesses": ["VS Code", "Copilot"],
+      "prompts": [".github/prompts/hppro-vscode-t193-bootstrap.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "skills": ["moos-state-readback", "moos-tooling-dx", "moos-session-context-projection", "moos-rewrite-envelope"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona hpprodesk-vscode", "go test ./..."]
+    },
+    {
       "key": "z440-vscode-lead",
       "host": "hp-z440",
       "desktop": 1,
