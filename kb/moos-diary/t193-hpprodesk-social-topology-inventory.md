@@ -30,7 +30,7 @@ The HP ProDesk local kernel then received its own session-layer bootstrap throug
 
 ## Runtime And Projection Follow-Up
 
-**T=193, May 13, 2026, ~19:25-19:40 CEST.** HP ProDesk VS Code then continued as the live workstation-side observer. It confirmed the concrete workstation and session surface:
+**T=193, May 13, 2026, ~19:25-19:55 CEST.** HP ProDesk VS Code then continued as the live workstation-side observer. It confirmed the concrete workstation and session surface:
 
 - Hostname: `DESKTOP-3FC7C3F`.
 - Windows login: `desktop-3fc7c3f\geurt`, still social/report context only.
@@ -46,9 +46,9 @@ Julia was absent at first, then installed locally on HP ProDesk via winget at `C
 The projection readback now has two distinct meanings:
 
 - Local graph readback: running `dev\scripts\projections\run-session-pipeline.ps1` against `http://localhost:8000` produced `session_context/current_session.md` and `.json`, then stopped at graph-artifact projection because the 26-line local setup graph does not contain the older T187/T189 shared roots (`derivation:guido.t187-session-occasion-implementation-frame`, `system_instruction:framework.session-occasion-lingo`, `grammar_fragment:v317-1-occasion-type`, `pattern:session-affordance-pack`, and `workflow:z440-session-continuity-reconciliation`). That failure is expected and is not a bootstrap failure.
-- Shared graph projection: the current running-state pulled from `ffs0/main@e6ed37b` records the successful workstation-side run with HP ProDesk writing ignored local artifacts while reading the shared hp-laptop graph at `http://172.29.0.38:8000`. The run generated `tmp/projections/session_pipeline/session_context/current_session.md`, `tmp/projections/session_pipeline/mvp/session_pipeline_gate.md`, and `tmp/projections/session_pipeline/index.html`, with final gate `warn`, 17 pass / 3 warn / 0 fail. The warnings are projection-surface issues: forced/disconnected visual roots under the current lens, missing Graphviz SVGs on HP ProDesk, and T189 recommendation reconciliation/pending-deferred rows.
+- Shared graph projection: HP ProDesk pulled `ffs0/main@e6ed37b` for the run, while hp-laptop had already advanced the closeout docs to `d12b52a`. The successful workstation-side run used HP ProDesk as the local artifact writer while reading the shared hp-laptop graph at `http://172.29.0.38:8000`; it completed with `PROJECTION_EXIT=0`. The run generated `tmp/projections/session_pipeline/session_context/current_session.md`, `tmp/projections/session_pipeline/mvp/session_pipeline_gate.md`, and `tmp/projections/session_pipeline/index.html`, with final gate `warn`, 17 pass / 3 warn / 0 fail. The warnings are projection-surface issues: forced/disconnected visual roots under the current lens, missing Graphviz SVG/static visual output on HP ProDesk, and T189 recommendation reconciliation/pending-deferred rows.
 
-As of the hp-laptop diary update, the operational posture is a wait-state: the HP ProDesk VS Code agent is still the workstation-side witness, and hp-laptop is waiting for its copied response before any further apply, commit, or push. No T193 program JSON was replayed during projection. No new HG payload was applied. The identity boundary held throughout: no `user:geurt`, no `group:geurt`, no Gmail/auth/account channels, no secret nodes, and no account identity nodes.
+The copied HP ProDesk response closed the wait-state. Exact final confirmations: Julia `1.12.6`, `JSON3` loads with exit `0`; local primary stays healthy at `ontology_version=3.16.1`, `t_day=193`, `log_len=26`; `VerifyPersona -Persona hpprodesk-vscode` passes; hp-laptop kernel/router are reachable; the dashboard exists; and the local HP ProDesk graph remains intentionally minimal while the full projection reads the shared hp-laptop graph. No T193 program JSON was replayed during projection. No new HG payload was applied. The identity boundary held throughout: no `user:geurt`, no `group:geurt`, no Gmail/auth/account channels, no secret nodes, and no account identity nodes.
 
 ## Initial Readback (Pre-Apply)
 
@@ -195,10 +195,9 @@ Geurt additions, proposal-only:
 
 Current immediate gate:
 
-1. Wait for the HP ProDesk VS Code agent's copied projection response before another commit/push or any further apply.
-2. If the copied response matches the `e6ed37b` running-state entry, close this diary/update pair normally.
-3. Decide whether HP ProDesk should get a dedicated local projection mode/root set, or whether full graph/gate projection should remain shared-graph-first through hp-laptop/router.
-4. Decide whether installing Graphviz on HP ProDesk is worth doing now, or whether missing local SVGs are acceptable while the dashboard and JSON/Markdown artifacts work.
+1. Let HP ProDesk pull `ffs0/main` again so it sees the final `d12b52a+` closeout docs when convenient; no rerun is required just for that doc sync.
+2. Decide whether HP ProDesk should get a dedicated local projection mode/root set, or whether full graph/gate projection should remain shared-graph-first through hp-laptop/router.
+3. Decide whether installing Graphviz on HP ProDesk is worth doing now, or whether missing local SVGs are acceptable while the dashboard and JSON/Markdown artifacts work.
 
 Longer identity/account gates remain separate:
 
