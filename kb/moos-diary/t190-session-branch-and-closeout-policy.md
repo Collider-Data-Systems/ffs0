@@ -1,15 +1,17 @@
-# T190 Session Branch And Closeout Policy
+# T190/T193 ffs0 Admin Trunk And Closeout Policy
 
 **T-day:** T=190  
 **Date:** 2026-05-10  
 **Scope:** `ffs0`, `moos-kernel`, `moos-router`, sessions, workstations, and shared handoff docs  
-**Decision:** verified coordination packets land on `ffs0/main`; WIP and runtime code use branches
+**Decision:** `ffs0/main` is the normal admin/control trunk; runtime code uses engineering branches
+
+**T193 correction:** Sam clarified that `ffs0` is a private KB/admin/dev-control repo, not the runtime product. It should not accumulate stale feature branches for ordinary setup prompts, running-state packets, inventory planners, or workstation handoffs. `moos-kernel` and `moos-router` remain the code repos with stricter branch discipline.
 
 ## Short rule
 
-`kb/superset/running-state.md` and `kb/moos-diary/` belong together. When a session closes a verified state change, commit the running-state update, diary wrap-up, prompt/apply records, and small handoff docs together on the same branch. If the result is already verified and other sessions need it now, that branch should normally be `ffs0/main`.
+`ffs0/main` is the live admin trunk. `kb/superset/running-state.md`, `kb/moos-diary/`, shared prompts, setup packets, topology notes, and small validated dev helpers should land there when they are useful to the next workstation or session.
 
-Branches are still right for unfinished work, code changes, large script edits, uncertain ontology/account proposals, and anything that may collide with another workstation.
+Branches in `ffs0` are exceptional. Use them only for unfinished work, untested/risky script changes, large reorganizations, unresolved identity/account semantics, or temporary conflict protection. Merge or fast-forward back to `main` quickly once verified.
 
 ## Why this is the rule
 
@@ -26,22 +28,22 @@ all three travel together
 
 ## ffs0 policy
 
-Use `ffs0/main` as the coordination trunk for small verified state packets:
+Use `ffs0/main` as the normal branch for private admin/control state:
 
 - Running-state updates that describe live, verified runtime or repo state.
 - Moos-diary/session wrap-ups that explain those updates.
 - Shared prompts that another session needs immediately.
+- Setup/checklist scripts and dry inventory planners with focused tests.
 - Small apply records or review records that document already-applied HG batches.
 - Tiny ops/topology doc fixes after live verification.
 
-Create a branch first when:
+Create a temporary `ffs0` branch only when:
 
-- Editing scripts or workspace files beyond a small documented fix.
-- Building or changing projection pipelines.
+- You cannot finish and verify in one sitting.
+- Editing scripts or projection pipelines without passing focused tests yet.
 - Writing proposals whose semantics are not yet approved.
 - Updating many files or touching generated artifacts.
-- Working on Z440 while hp-laptop may also be committing.
-- You cannot finish and verify in one sitting.
+- Protecting local workstation differences such as `ffs0.code-workspace` until they are made portable or intentionally left local.
 
 Recommended ffs0 branch names:
 
@@ -104,18 +106,19 @@ IRL people such as Menno and Lola should not silently become kernel `user` princ
 
 ## Practical closeout checklist
 
-For a verified ffs0 coordination packet:
+For a normal verified ffs0 admin packet:
 
 1. Update `kb/superset/running-state.md` with the hot fact.
 2. Add or update `kb/moos-diary/<tday>-<lane>-wrapup.md` when the work spans more than one sprint or changes handoff assumptions.
-3. Update shared prompts/apply records if another session needs the handoff.
-4. Commit those together on `ffs0/main` if the packet is verified and small.
+3. Update shared prompts, setup packets, or apply records if another session needs the handoff.
+4. Commit those together on `ffs0/main` when verified.
 5. Push immediately so other sessions can hydrate from the same branch.
 
-For WIP or code:
+For exceptional ffs0 WIP:
 
-1. Branch first.
+1. Branch only for the unresolved part.
 2. Keep running-state updates provisional until verified.
-3. Merge or fast-forward the coordination packet only after tests/readback pass.
+3. Merge or fast-forward back to `main` after tests/readback pass.
+4. Delete stale ffs0 feature branches once their content is on `main`.
 
-This keeps the system boring in the right place: truth in logs, hydration on `ffs0/main`, work-in-progress on branches, and runtime code behind engineering discipline.
+This keeps the system boring in the right place: truth in logs, hydration on `ffs0/main`, rare ffs0 WIP branches, and runtime code behind engineering discipline.

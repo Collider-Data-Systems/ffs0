@@ -1,27 +1,36 @@
 ---
-description: "Use when setting up or reviewing multi-workstation git flow, local-vs-portable paths, and branch handoff between machines."
+description: "Use when setting up or reviewing ffs0 trunk-first admin flow, multi-workstation paths, and runtime repo branch discipline."
 ---
 
-# Multi-Workstation Git Flow
+# ffs0 Trunk-First Admin Flow
 
-Use `ffs0/main` as the coordination trunk for verified state packets, and use normal git branches for WIP, substantial edits, and runtime code. Keep machine-specific customization local.
+Use `ffs0/main` as the normal working branch for private admin/control state. `ffs0` stores KB, running-state, prompts, handoff packets, projection planners, operator reports, and local setup docs. It is not the runtime product repository. Avoid feature-branch ceremony here unless work is genuinely unfinished, risky, or conflicting.
+
+Use normal engineering branches in `moos-kernel` and `moos-router`, because those are the runtime codebases downloaded and run by workstations.
 
 The durable policy lives at `kb/moos-diary/t190-session-branch-and-closeout-policy.md`.
 
-## Coordination Trunk Rule
+## ffs0 Main Rule
 
-`kb/superset/running-state.md` and `kb/moos-diary/` should travel together. When a session closes a verified state change, commit the running-state update, diary wrap-up, prompt/apply records, and small handoff docs together on the same branch.
+`ffs0/main` is the live admin trunk. When a verified admin packet is useful to the next workstation or session, land it on `main` and push it promptly.
 
-If the packet is verified, small, and needed by other sessions now, that branch should normally be `ffs0/main`.
+These belong on `main` by default:
 
-Use a branch first when the work is unfinished, touches scripts/workspace files substantially, changes runtime code, proposes ontology/account semantics, or may collide with another workstation.
+- `kb/superset/running-state.md` hydration updates.
+- `kb/moos-diary/` wrap-ups and policy notes.
+- Shared prompts under `.github/prompts/`.
+- Setup/checklist scripts and dry inventory planners with tests.
+- Reviewed topology/readback docs and apply records.
+- Small operational fixes that make the next workstation hydrate correctly.
+
+Branches in `ffs0` are exceptional. Use one only when the work cannot be finished and verified in the current sitting, may break the projection pipeline, has unresolved semantics, or must preserve conflicting local workspace state.
 
 ## Scope Split
 
 - `C:\Users\maass\HPlaptop\.github` is workstation-local customization.
 - `ffs0/.github` is repository-shared customization and travels with branches.
 
-## Portable In Branches
+## Portable In ffs0
 
 - `kb/`
 - `dev/`
@@ -36,17 +45,18 @@ Use a branch first when the work is unfinished, touches scripts/workspace files 
 - Hot running-state updates backed by live readback.
 - Moos-diary/session wrap-ups that explain those updates.
 - Shared prompts needed by another workstation/session immediately.
+- Setup/checklist scripts and dry planners with focused validation.
 - Apply records for already-approved and already-verified HG batches.
 - Tiny topology/docs corrections after verification.
 
-## Branch First
+## ffs0 Branch Only When
 
-- Projection pipeline or script implementation work.
-- Workspace file changes such as `ffs0.code-workspace`.
-- Large doc reorganizations.
-- Account/person/identity proposals.
-- Any `moos-kernel` runtime code change.
-- Any `moos-router` route behavior change.
+- The work is unfinished and you must leave the machine.
+- A script or projection change is not yet tested.
+- A large doc reorganization may collide with another workstation.
+- Account/person/identity semantics are unresolved.
+- A workspace file such as `ffs0.code-workspace` is machine-sensitive and not yet made portable.
+- You need a temporary conflict shelf while syncing from another workstation.
 
 Suggested branch names:
 
@@ -54,7 +64,7 @@ Suggested branch names:
 - `z440/t<N>-<lane>`
 - `<persona>/t<N>-<lane>` when the persona matters more than the machine
 
-Examples: `z440/t190-projection-finish`, `guido/t190-project-urn-repair`, `hp-laptop/t190-calendar-readback`.
+Examples: `z440/t190-projection-finish`, `guido/t190-project-urn-repair`, `hp-laptop/t190-calendar-readback`. Merge or fast-forward these back to `main` quickly once verified; do not keep stale ffs0 feature branches around as alternate truth lanes.
 
 ## Local Only
 
@@ -73,17 +83,17 @@ A session is not a git branch. A session is the HG occasion: purpose, occupant, 
 
 ## Basic Handoff Commands
 
-For verified ffs0 coordination packets:
+For normal ffs0 admin packets:
 
 1. `git switch main`
 2. `git fetch --all --prune`
 3. `git pull --ff-only`
-4. Edit running-state, diary wrap-up, prompts/apply records together.
+4. Edit running-state, diary wrap-up, prompts, setup packets, or apply records together.
 5. `git add <paths>`
 6. `git commit -m "docs: <summary>"`
 7. `git push`
 
-For WIP or implementation branches:
+For exceptional ffs0 WIP branches:
 
 1. `git switch main`
 2. `git fetch --all --prune`
@@ -92,6 +102,8 @@ For WIP or implementation branches:
 5. `git add <paths>`
 6. `git commit -m "<type>: <summary>"`
 7. `git push -u origin HEAD`
-8. On next workstation: `git fetch` then `git switch <branch-name>`
+8. On next workstation: `git fetch` then `git switch <branch-name>` only if the branch is intentionally still WIP.
+
+After verification, fast-forward or merge the packet back to `main`, push `main`, and delete the stale branch.
 
 If a push rejects, stop and rehydrate. Do not force-push shared coordination branches.

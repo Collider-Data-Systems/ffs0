@@ -84,8 +84,8 @@ Do not G-sync Project #4 status or emit account/person rewrites until row identi
 
 ## Branch Rules
 
-- `ffs0/main` is the coordination trunk for verified state packets. Running-state and moos-diary closeouts should land together there when the packet is small, verified, and needed by other sessions immediately.
-- Use a branch for Z440 WIP, projection scripts, workspace files, large docs, identity/account proposals, or anything that cannot be verified in one sitting.
+- `ffs0/main` is now the normal branch for private admin/control state. Verified running-state, diary, shared prompts, setup packets, topology notes, and focused dry planners should land there promptly.
+- Use an `ffs0` branch only for unresolved WIP, risky untested changes, large reorganizations, or temporary conflict protection. Merge or fast-forward back to `main` quickly once verified.
 - `moos-router` is already on `feat/type-map-routing`; keep router changes on that branch unless Sam says otherwise.
 - `moos-kernel` stays on `master` for readback only. Create a focused branch before any runtime code change.
 - Never commit `secrets/`, `.vscode/mcp.json`, generated binaries, or ignored `tmp/` outputs.

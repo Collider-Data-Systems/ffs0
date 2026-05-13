@@ -17,9 +17,9 @@ This folder is the human-readable wrap-up shelf for mo:os work. It started as Mo
 
 ## Branch And Closeout Policy
 
-Running-state and diary wrap-ups should travel together. For verified, small coordination packets that other sessions need immediately, land both on `ffs0/main` in the same commit or commit sequence. For WIP, script implementation, runtime code, or identity/account proposals, branch first and merge only after readback/validation.
+`ffs0/main` is the normal branch for private admin/control state. Running-state, diary wrap-ups, shared prompts, setup packets, topology notes, and focused dry planners should land there once verified, because the next workstation should hydrate without branch ceremony. Use `ffs0` branches only for unresolved WIP, risky untested changes, large reorganizations, or temporary conflict protection. Runtime code still follows branch discipline in `moos-kernel` and `moos-router`.
 
-Full policy: [T=190 — Session branch and closeout policy](t190-session-branch-and-closeout-policy.md).
+Full policy: [T=190/T193 — ffs0 admin trunk and closeout policy](t190-session-branch-and-closeout-policy.md).
 
 ## Session-Centered Report Shape
 
@@ -76,7 +76,7 @@ Do not conflate account identity with user identity. Additional Gmail or Git acc
 - [T=189 — Calendar event readback, skills, and public surfaces](t189-calendar-event-public-surface-wrapup.md)
 - [T=189 — Surface Context Atlas wrap-up](t189-surface-context-atlas-wrapup.md)
 - [T=190 — Z440 VS Code lead handoff and identity topology](t190-z440-vscode-lead-handoff-wrapup.md)
-- [T=190 — Session branch and closeout policy](t190-session-branch-and-closeout-policy.md)
+- [T=190/T193 — ffs0 admin trunk and closeout policy](t190-session-branch-and-closeout-policy.md)
 - [T=190 — Z440 projection finish pass](t190-z440-projection-finish-wrapup.md)
 - [T=190 — Z440 Windows 11 session desktops](t190-z440-windows-session-desktops-wrapup.md)
 
