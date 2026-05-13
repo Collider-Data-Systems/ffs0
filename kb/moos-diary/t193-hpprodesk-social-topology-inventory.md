@@ -3,8 +3,8 @@
 **T-day:** T=193
 **Date:** 2026-05-13
 **Workstation:** HP ProDesk at Geurt's place, Windows host `DESKTOP-3FC7C3F`
-**Scope:** social/topology inventory and proposal only
-**Apply status:** inventory was read-only; follow-up topology-safe implementation applied on hp-laptop primary at `2026-05-13T16:13:22Z`
+**Scope:** social/topology inventory, implementation readback, and projection closeout
+**Apply status:** inventory was read-only; follow-up topology-safe implementation applied on hp-laptop primary at `2026-05-13T16:13:22Z`; HP ProDesk local session bootstrap applied at `2026-05-13T16:17:53Z`; later projection work was read-only and applied no HG payloads
 
 ## Status
 
@@ -28,15 +28,39 @@ The identity decision remains unchanged: no `user:geurt`, no `group:geurt`, no G
 
 The HP ProDesk local kernel then received its own session-layer bootstrap through `dev/scripts/ops/t193-hpprodesk-local-session-bootstrap.program.json`. That batch preserved the existing 5-line seed graph, added local `group:sam`, `agent:vscode.hpprodesk.primary`, `purpose:sam.hpprodesk-workstation-bootstrap`, `session:sam.hpprodesk-setup`, and `program:sam.t193.hpprodesk-topology-materialization`, then wired ownership and WF19 session relations. Local HP ProDesk readback after apply: `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=26`; `VerifyPersona -Persona hpprodesk-vscode` passes.
 
-## Readback
+## Runtime And Projection Follow-Up
 
-Repository state on HP ProDesk:
+**T=193, May 13, 2026, ~19:25-19:40 CEST.** HP ProDesk VS Code then continued as the live workstation-side observer. It confirmed the concrete workstation and session surface:
+
+- Hostname: `DESKTOP-3FC7C3F`.
+- Windows login: `desktop-3fc7c3f\geurt`, still social/report context only.
+- Ethernet IPv4: `172.29.0.32/26`.
+- Local repository root: `C:\Users\Geurt\CDS`.
+- HP ProDesk local primary: `http://localhost:8000/healthz = {status: ok, ontology_version: 3.16.1, t_day: 193, log_len: 26}`.
+- Active local log: `moos-kernel/moos.jsonl`, 26 lines.
+- Persona verification: `Test-MoosFederation.ps1 -Mode VerifyPersona -Persona hpprodesk-vscode` passes for `agent:vscode.hpprodesk.primary`, `session:sam.hpprodesk-setup`, local emit kernel, local MCP, `has-occupant`, `opens-on`, and receiving-kernel session checks.
+- hp-laptop reachability from HP ProDesk: `172.29.0.38:8000=True`, `172.29.0.38:9000=True`; hp-laptop primary reports `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=1184`, and hp-laptop router reports `status=ok`, `kernels=2`.
+
+Julia was absent at first, then installed locally on HP ProDesk via winget at `C:\Users\Geurt\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe`. `julia version 1.12.6` and `using JSON3` passed. This was a local workstation tooling install only; it did not edit repo files or HG state.
+
+The projection readback now has two distinct meanings:
+
+- Local graph readback: running `dev\scripts\projections\run-session-pipeline.ps1` against `http://localhost:8000` produced `session_context/current_session.md` and `.json`, then stopped at graph-artifact projection because the 26-line local setup graph does not contain the older T187/T189 shared roots (`derivation:guido.t187-session-occasion-implementation-frame`, `system_instruction:framework.session-occasion-lingo`, `grammar_fragment:v317-1-occasion-type`, `pattern:session-affordance-pack`, and `workflow:z440-session-continuity-reconciliation`). That failure is expected and is not a bootstrap failure.
+- Shared graph projection: the current running-state pulled from `ffs0/main@e6ed37b` records the successful workstation-side run with HP ProDesk writing ignored local artifacts while reading the shared hp-laptop graph at `http://172.29.0.38:8000`. The run generated `tmp/projections/session_pipeline/session_context/current_session.md`, `tmp/projections/session_pipeline/mvp/session_pipeline_gate.md`, and `tmp/projections/session_pipeline/index.html`, with final gate `warn`, 17 pass / 3 warn / 0 fail. The warnings are projection-surface issues: forced/disconnected visual roots under the current lens, missing Graphviz SVGs on HP ProDesk, and T189 recommendation reconciliation/pending-deferred rows.
+
+As of the hp-laptop diary update, the operational posture is a wait-state: the HP ProDesk VS Code agent is still the workstation-side witness, and hp-laptop is waiting for its copied response before any further apply, commit, or push. No T193 program JSON was replayed during projection. No new HG payload was applied. The identity boundary held throughout: no `user:geurt`, no `group:geurt`, no Gmail/auth/account channels, no secret nodes, and no account identity nodes.
+
+## Initial Readback (Pre-Apply)
+
+This section preserves the initial read-only inventory before the shared topology and local session-layer batches were applied. Later sections above supersede it for current runtime status.
+
+Initial repository state on HP ProDesk:
 
 - `ffs0`: `main...origin/main`, `9a54dfe tools: add HP ProDesk projection routine`.
 - `moos-kernel`: `master...origin/master`, `b5935e0 Document T189 calendar event projection status`.
 - `moos-router`: `master...origin/master`, `18212eb Merge pull request #1 from Collider-Data-Systems/docs/round-12-readme`.
 
-Runtime health:
+Initial runtime health:
 
 - HP ProDesk local kernel `http://localhost:8000/healthz`: `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=5`.
 - hp-laptop kernel `http://172.29.0.38:8000/healthz`: `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=1160`.
@@ -44,7 +68,7 @@ Runtime health:
 
 Z440 remains part of topology, but it is not required to be online for this HP ProDesk inventory.
 
-## Local HP ProDesk HG State
+## Initial Local HP ProDesk HG State
 
 The local HP ProDesk log is a 5-entry seed graph:
 
@@ -54,9 +78,9 @@ The local HP ProDesk log is a 5-entry seed graph:
 - WF01 `user:sam --owns/child--> workstation:hpprodesk`
 - WF03 `workstation:hpprodesk --hosts/hosted-on--> kernel:hpprodesk.primary`
 
-That is locally real. It is not yet the shared governance HG shape.
+That was locally real at the inventory checkpoint. It became the substrate for the later local session-layer bootstrap described above.
 
-## hp-laptop Shared HG Inventory
+## Initial hp-laptop Shared HG Inventory
 
 hp-laptop is currently the richer shared governance read surface:
 
@@ -135,9 +159,9 @@ If the system needs account identity distinct from mailbox ingestion, propose a 
 
 If `user` needs a future property extension, keep it modest: `display_name` or `status` might be safe owner-scoped properties. Auth identity should still live as a channel/account node linked or pinned through topology.
 
-## Revised HP ProDesk Batch Shape
+## Historical HP ProDesk Batch Shape
 
-Do not apply automatically. Prepare as a reviewed `moos-rewrite-envelope` batch after Sam chooses the identity/account shape.
+The core topology shape below was later split into the two reviewed apply records named above: one shared hp-laptop topology mirror and one HP ProDesk local session-layer bootstrap. Do not reapply those JSON payloads. The identity-evidence/account parts remain proposal-only.
 
 Core HP ProDesk topology:
 
@@ -169,11 +193,17 @@ Geurt additions, proposal-only:
 
 ## Next Gate
 
-Before applying anything, Sam should choose:
+Current immediate gate:
+
+1. Wait for the HP ProDesk VS Code agent's copied projection response before another commit/push or any further apply.
+2. If the copied response matches the `e6ed37b` running-state entry, close this diary/update pair normally.
+3. Decide whether HP ProDesk should get a dedicated local projection mode/root set, or whether full graph/gate projection should remain shared-graph-first through hp-laptop/router.
+4. Decide whether installing Graphviz on HP ProDesk is worth doing now, or whether missing local SVGs are acceptable while the dashboard and JSON/Markdown artifacts work.
+
+Longer identity/account gates remain separate:
 
 1. Is the HP ProDesk account identity just readback evidence, or should it become a durable channel/account surface?
 2. Is the Gmail/Google setting a mailbox/workspace channel (`channel:google.gmail.<slug>`) or an auth-account surface that needs a small grammar/model extension?
 3. Should Geurt remain report-only/knowledge-item context, or become a group/place container?
-4. Which receiving kernel should get the reviewed HP ProDesk topology batch?
 
-Until those choices are made, the safe state is: HP ProDesk is locally seeded and healthy; shared HG should treat HP ProDesk and Geurt/Gmail identity as proposal-only.
+Until those choices are made, the safe state is: HP ProDesk is operationally seated as a workstation/kernel/session/agent surface; local HP ProDesk graph remains intentionally minimal; full projection reads the shared hp-laptop graph; Geurt/Gmail identity stays report-only or proposal-only.
