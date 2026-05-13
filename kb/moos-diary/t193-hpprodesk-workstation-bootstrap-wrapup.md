@@ -57,6 +57,8 @@ Validation for the `0725b48` config packet:
 - `git diff --check` passed.
 - `ffs0` was clean and up to date with `origin/main` before this diary/running-state follow-up.
 
+Post-wrapup HP ProDesk readback caught one concrete prompt bug: the kernel start example still used plain `--seed`, which would have defaulted `--seed-ws` to `hp-laptop`. The prompt now explicitly passes `--seed-user sam` and `--seed-ws hpprodesk`.
+
 ## Next Moves
 
 - On HP ProDesk, pull `ffs0/main`, open `ffs0.code-workspace`, and use `.github/prompts/hppro-vscode-t193-bootstrap.prompt.md` as the local Copilot prompt.

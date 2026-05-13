@@ -99,7 +99,9 @@ The first technical goal is one HP ProDesk primary kernel only. Do not add HP Pr
    --log "$env:USERPROFILE\CDS\moos-kernel\moos.jsonl" `
      --listen :8000 `
      --mcp-addr :8080 `
-     --seed
+       --seed `
+       --seed-user sam `
+       --seed-ws hpprodesk
    ```
 3. Verify local health:
    ```powershell
