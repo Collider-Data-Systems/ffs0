@@ -105,6 +105,7 @@ $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..\..")
 $oldPreset = $env:MOOS_PROJECTION_PRESET
 $oldBaseUrl = $env:MOOS_BASE_URL
 $oldOut = $env:MOOS_PROJECTION_OUT
+$oldContextAgents = $env:MOOS_PROJECTION_CONTEXT_AGENT_URNS
 
 function Invoke-Step {
     param(
@@ -137,7 +138,7 @@ try {
             "--harness-evidence" $HarnessEvidence `
             "--focus" $Focus
     }
-    Invoke-Step "Graph artifact projection" { & $Julia "dev\scripts\graph_artifact_projection.jl" "--base-url" $ProjectionBaseUrl }
+    Invoke-Step "Graph artifact projection" { & $Julia "dev\scripts\graph_artifact_projection.jl" "--base-url" $ProjectionBaseUrl "--context-agent-urns" $ActorUrn }
     Invoke-Step "Temporal calendar graph artifact projection" {
         & $Julia "dev\scripts\graph_artifact_projection.jl" `
             "--base-url" $ProjectionBaseUrl `
@@ -148,6 +149,7 @@ try {
             "--ports" "causes,caused-by,composes,composed-by,has-purpose,purpose-of-session,pinned-by-session,pins-urn" `
             "--types" "calendar_event,channel,clock,derivation,program,purpose,session,view_filter" `
             "--match" "calendar|temporal|time|clock|t200|google|governance|projection|writer|oauth|time-fabric|purpose" `
+            "--context-agent-urns" $ActorUrn `
             "--out-base" "tmp/projections/session_pipeline/graph_artifacts/temporal_calendar_engineering"
     }
     Invoke-Step "T189 recommendation graph artifact projection" {
@@ -160,6 +162,7 @@ try {
             "--ports" "causes,caused-by,composes,composed-by,filtered-by,filters-session,owns,owned-by,pinned-by-session,pins-urn" `
             "--types" "calendar_event,derivation,group,program,purpose,session,view_filter" `
             "--match" "t189|t200|calendar|github|cytoscape|my-tiny-data-collider|convergence|governance|application" `
+            "--context-agent-urns" $ActorUrn `
             "--out-base" "tmp/projections/session_pipeline/graph_artifacts/t189_recommendation_engineering"
     }
     Invoke-Step "Calendar scope graph artifact projection" {
@@ -172,9 +175,11 @@ try {
             "--ports" "*" `
             "--types" "calendar_event,channel,claim,clock,derivation,external_op,group,knowledge_item,program,purpose,session,tool_call,view_filter" `
             "--match" "calendar|temporal|time|clock|t189|t200|google|governance|session|event|projection|writer|oauth|time-fabric|surface|recommendation|convergence" `
+                "--context-agent-urns" $ActorUrn `
             "--out-base" "tmp/projections/session_pipeline/graph_artifacts/calendar_scope_engineering"
     }
 
+            $env:MOOS_PROJECTION_CONTEXT_AGENT_URNS = $ActorUrn
     $env:MOOS_PROJECTION_PRESET = "session-occasion"
     $env:MOOS_BASE_URL = $ProjectionBaseUrl
     $env:MOOS_PROJECTION_OUT = "tmp/projections/session_pipeline/visual/session_occasion_frame"
@@ -233,6 +238,11 @@ try {
         Remove-Item Env:MOOS_PROJECTION_OUT -ErrorAction SilentlyContinue
     } else {
         $env:MOOS_PROJECTION_OUT = $oldOut
+    }
+    if ($null -eq $oldContextAgents) {
+        Remove-Item Env:MOOS_PROJECTION_CONTEXT_AGENT_URNS -ErrorAction SilentlyContinue
+    } else {
+        $env:MOOS_PROJECTION_CONTEXT_AGENT_URNS = $oldContextAgents
     }
     Pop-Location
 }

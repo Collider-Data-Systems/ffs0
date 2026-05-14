@@ -114,6 +114,7 @@ const TYPE_FILTER = env_set("MOOS_PROJECTION_TYPES")
 const PORT_FILTER = env_set("MOOS_PROJECTION_PORTS")
 const MATCH_PATTERN = strip(get(ENV, "MOOS_PROJECTION_MATCH", preset_value("MOOS_PROJECTION_MATCH")))
 const MATCH_REGEX = isempty(MATCH_PATTERN) ? nothing : Regex(MATCH_PATTERN, "i")
+const CONTEXT_AGENT_URNS_RAW = strip(get(ENV, "MOOS_PROJECTION_CONTEXT_AGENT_URNS", ""))
 const INCLUDE_OWNERS = env_bool("MOOS_PROJECTION_INCLUDE_OWNERS", true)
 const INCLUDE_VISUAL_LENS = env_bool("MOOS_PROJECTION_INCLUDE_VISUAL_LENS", true)
 const PROJECTION_LABEL = get(ENV, "MOOS_PROJECTION_LABEL", preset_value("MOOS_PROJECTION_LABEL", "mo:os folded-state projection"))
@@ -128,6 +129,15 @@ function root_urns()
     end
     isempty(roots) && !isempty(ROOT_URN) && push!(roots, ROOT_URN)
     return roots
+end
+
+function context_agent_urns()
+    agents = Set{String}()
+    for part in split(CONTEXT_AGENT_URNS_RAW, ';')
+        item = strip(part)
+        !isempty(item) && push!(agents, String(item))
+    end
+    return agents
 end
 
 function fetch_json(path::AbstractString)
@@ -187,6 +197,7 @@ function node_style(type_id::AbstractString, urn::AbstractString)
         "calendar_event" => ("#ffe8ef", "#a7355d"),
         "clock" => ("#e1f4f2", "#287a72"),
         "repository" => ("#f0eadf", "#7b6650"),
+        "agent" => ("#dce8ff", "#4267a5"),
         "group" => ("#fff5cf", "#8f7b22"),
         "user" => ("#eeeeee", "#666666"),
         "view_filter" => ("#ffe3c2", "#b86b14")
@@ -243,7 +254,9 @@ function filter_summary()
         string("types=", isempty(TYPE_FILTER) ? "*" : join(sort(collect(TYPE_FILTER)), ",")),
         string("ports=", isempty(PORT_FILTER) ? "*" : join(sort(collect(PORT_FILTER)), ",")),
         string("match=", isempty(MATCH_PATTERN) ? "*" : MATCH_PATTERN),
-        string("owners=", INCLUDE_OWNERS)
+        string("context_agents=", isempty(CONTEXT_AGENT_URNS_RAW) ? "<none>" : CONTEXT_AGENT_URNS_RAW),
+        string("owners=", INCLUDE_OWNERS),
+        "agent-neighborhood=true"
     ]
     return join(parts, "\n")
 end
@@ -284,6 +297,69 @@ for _ in 1:RADIUS
     selected = next_selected
 end
 
+function endpoint_type(urn::AbstractString)
+    haskey(nodes_by_urn, urn) || return ""
+    return string(nodes_by_urn[urn].type_id)
+end
+
+const AGENT_CONTEXT_TYPES = Set(["session", "program"])
+const AGENT_CONTEXT_RELATION_CATEGORIES = Set(["WF01", "WF02", "WF19"])
+const AGENT_CONTEXT_PRINCIPAL_TYPES = Set(["agent", "group", "role", "user"])
+
+function is_session_program_agent_relation(rel, selected_urns)
+    src = string(rel.src_urn)
+    tgt = string(rel.tgt_urn)
+    src_type = endpoint_type(src)
+    tgt_type = endpoint_type(tgt)
+    src_context = src in selected_urns && src_type in AGENT_CONTEXT_TYPES
+    tgt_context = tgt in selected_urns && tgt_type in AGENT_CONTEXT_TYPES
+    return (src_context && tgt_type == "agent") || (tgt_context && src_type == "agent")
+end
+
+agent_context_urns = Set{String}()
+agent_urns = Set{String}()
+agent_relation_urns = Set{String}()
+function add_agent_context!(rel)
+    src = string(rel.src_urn)
+    tgt = string(rel.tgt_urn)
+    src_type = endpoint_type(src)
+    tgt_type = endpoint_type(tgt)
+    push!(agent_context_urns, src)
+    push!(agent_context_urns, tgt)
+    src_type == "agent" && push!(agent_urns, src)
+    tgt_type == "agent" && push!(agent_urns, tgt)
+    push!(agent_relation_urns, string(rel.urn))
+end
+
+for agent in context_agent_urns()
+    if endpoint_type(agent) == "agent"
+        push!(agent_urns, agent)
+        push!(agent_context_urns, agent)
+    end
+end
+
+for rel in relations
+    if is_session_program_agent_relation(rel, selected)
+        add_agent_context!(rel)
+    end
+end
+
+for rel in relations
+    category = string(rel.rewrite_category)
+    category in AGENT_CONTEXT_RELATION_CATEGORIES || continue
+    src = string(rel.src_urn)
+    tgt = string(rel.tgt_urn)
+    src_type = endpoint_type(src)
+    tgt_type = endpoint_type(tgt)
+    touches_agent = src in agent_urns || tgt in agent_urns
+    owns_selected_context = category == "WF01" && ((src_type in AGENT_CONTEXT_PRINCIPAL_TYPES && tgt in selected && tgt_type in AGENT_CONTEXT_TYPES) || (tgt_type in AGENT_CONTEXT_PRINCIPAL_TYPES && src in selected && src_type in AGENT_CONTEXT_TYPES))
+    if touches_agent || owns_selected_context
+        add_agent_context!(rel)
+    end
+end
+
+union!(selected, agent_context_urns)
+
 if INCLUDE_VISUAL_LENS && haskey(nodes_by_urn, VIEW_FILTER_URN)
     push!(selected, VIEW_FILTER_URN)
 end
@@ -304,7 +380,7 @@ for urn in selected
     if !haskey(nodes_by_urn, urn)
         continue
     end
-    if urn in forced_urns || node_allowed(nodes_by_urn[urn], urn)
+    if urn in forced_urns || urn in agent_context_urns || node_allowed(nodes_by_urn[urn], urn)
         push!(filtered_selected, urn)
     end
 end
@@ -314,7 +390,7 @@ selected_relations = Any[]
 for rel in relations
     src = string(rel.src_urn)
     tgt = string(rel.tgt_urn)
-    if relation_allowed(rel) && src in selected && tgt in selected
+    if (relation_allowed(rel) || string(rel.urn) in agent_relation_urns) && src in selected && tgt in selected
         push!(selected_relations, rel)
     end
 end

@@ -142,6 +142,7 @@ Outputs land under `tmp/projections/session_pipeline/`:
 - `visual/session_occasion_frame.{dot,svg}` — static Graphviz session-occasion review artifact.
 - `visual/temporal_calendar_frame.{dot,svg}` — static Graphviz Calendar/time-fabric review artifact.
 - `visual/t189_recommendation_frame.{dot,svg}` — static Graphviz recommendation lens with applied Calendar event observations.
+- `visual/calendar_scope_frame.{dot,svg}` — static Graphviz Calendar F/G scope and reliability lens.
 - `calendar/calendar_time_fabric_plan.{json,md}` — Calendar projection payload plan/report.
 - `calendar/calendar_time_fabric_write_result.json` — explicit Google Calendar writer result; latest T189 run patched 16 existing events by `moos_projection_id`.
 - `recommendations/t189_t200_recommendation_hg_plan.{json,md}` — dry candidate HG nodes/relations for the five T189 recommendations and T200+ convergence.
@@ -150,7 +151,7 @@ Outputs land under `tmp/projections/session_pipeline/`:
 - `mvp/session_pipeline_gate.{json,md}` — pass/warn/fail gate report.
 - `index.html` — local human-facing control surface.
 
-Latest gate after atlas integration: `warn`, 19 pass, 1 warn, 0 fail. Remaining T189 warning: disconnected forced visual roots on the session-occasion lens. Keep Graphviz for deterministic review; Cytoscape.js tabs now exist for session-occasion and T189 recommendation lenses. Calendar G-ingest shape is hybrid: individual `calendar_event` nodes plus one grouped derivation/result are applied; WF07 source-anchor relations need operad review before APPLY.
+Latest gate after the T194 agent-neighborhood/F-G insight rerun: `warn`, 22 pass, 2 warn, 0 fail. Remaining warnings are visual lens root coverage and T189 recommendation reconciliation. Keep Graphviz DOT/SVG for deterministic review; Cytoscape.js tabs now exist for session occasion, Calendar Time-Fabric, T189 recommendations, and Calendar scope. All four graph artifacts and DOT lenses include the current context agent `agent:vscode.hp-laptop.copilot`; the dashboard includes F/G Relation Insights and Graphview Stack Notes with F/G node roles, WF relation-family labels, top-degree nodes, and renderer/library tradeoffs. Calendar G-ingest shape is hybrid: individual `calendar_event` nodes plus one grouped derivation/result are applied or planned depending on the run; WF07 source-anchor relations need operad review before APPLY.
 
 Kernel/application split: `moos-kernel` is the OS-facing runtime function program. `moos-router` is federation/read-routing. `ffs0` is the control/research workspace. Application groups such as `my-tiny-data-collider` run on HG through the kernels and may own websites, DNS, servers, Calendar, GitHub, and Workspace surfaces, but they are separate entities/codebases from the kernel.
 

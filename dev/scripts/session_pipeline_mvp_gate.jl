@@ -57,7 +57,7 @@ const PIPELINE_STAGE_SPECS = [
         "name" => "F visual lens",
         "short_name" => "F/visual",
         "description" => "The selected graph lenses become engineering summaries, static visual artifacts, Calendar payloads, and recommendation HG plans while keeping disconnected roots visible.",
-        "gate_names" => ["F graph artifact analysis", "Temporal Calendar lens", "T189 recommendation lens", "Calendar scope lens", "visual lens root coverage", "static visual output", "Calendar time-fabric artifacts", "T189/T200 recommendation artifacts", "T189 recommendation reconciliation", "deferred apply boundaries", "lens flexibility controls"],
+        "gate_names" => ["F graph artifact analysis", "Temporal Calendar lens", "T189 recommendation lens", "Calendar scope lens", "visual lens root coverage", "static visual output", "Calendar time-fabric artifacts", "T189/T200 recommendation artifacts", "T189 recommendation reconciliation", "deferred apply boundaries", "lens flexibility controls", "agent neighborhood visibility"],
     ),
     Dict(
         "id" => "operator-interface",
@@ -105,6 +105,18 @@ const RENDERER_CANDIDATES = [
         "recommendation" => "next",
     ),
     Dict(
+        "name" => "Cytoscape layout extensions",
+        "role" => "optional layout upgrade path",
+        "fit" => "Dagre and cose-bilkent are useful follow-ups when the inspector needs hierarchy or cleaner compound layouts; keep built-in Cose/Grid/Circle/Breadthfirst/Concentric for the local no-build dashboard.",
+        "recommendation" => "later",
+    ),
+    Dict(
+        "name" => "svg-pan-zoom",
+        "role" => "optional SVG viewport helper",
+        "fit" => "Good library fit for polished pan/zoom on static Graphviz SVGs, but the generated dashboard keeps native controls so offline/local file review still works.",
+        "recommendation" => "defer",
+    ),
+    Dict(
         "name" => "vis-network",
         "role" => "simple browser network fallback",
         "fit" => "Quick node/edge DataSet setup and clustering; useful if the first interactive prototype should be very small.",
@@ -116,7 +128,82 @@ const RENDERER_CANDIDATES = [
         "fit" => "Good for larger exploratory graphs with pan/zoom/drag interactions, but less semantically structured than Cytoscape for typed HG inspection.",
         "recommendation" => "later",
     ),
+    Dict(
+        "name" => "Sigma.js + Graphology",
+        "role" => "large WebGL graph explorer",
+        "fit" => "Strong for high-volume read-only exploration and graph analytics pipelines; less direct than Cytoscape for typed relation selectors and inspector-first workflows.",
+        "recommendation" => "later",
+    ),
+    Dict(
+        "name" => "GraphMakie + Graphs.jl",
+        "role" => "Julia-native analysis and rendering path",
+        "fit" => "Best Julia-side option when metrics, layouts, or notebooks need to stay inside the Julia process; keep generated JSON as the browser/dashboard contract.",
+        "recommendation" => "analysis path",
+    ),
+    Dict(
+        "name" => "ELK / Dagre hierarchical layout",
+        "role" => "DAG and lineage layout upgrade",
+        "fit" => "Useful for F/G pipelines, WF21 causality, and Calendar/recommendation lineage once the local dashboard can bundle layout extensions cleanly.",
+        "recommendation" => "next layout extension",
+    ),
 ]
+
+const VISUAL_STACK_NOTES = [
+    Dict(
+        "name" => "Renderer separation",
+        "guidance" => "Keep graph-artifact JSON as the contract. Graphviz SVG, Cytoscape, Julia notebooks, and any future WebGL renderer should all consume the same selected nodes and relations.",
+    ),
+    Dict(
+        "name" => "Static proof plus interactive inspection",
+        "guidance" => "Use DOT/SVG for deterministic review and diffable artifacts; use Cytoscape for search, filtering, focus, relation metadata, and operator triage.",
+    ),
+    Dict(
+        "name" => "F/G semantics in data",
+        "guidance" => "Encode F/G role and relation-family metadata on elements before rendering, so the UI can expose projection, ingest, authority, and lineage meaning without parsing labels.",
+    ),
+    Dict(
+        "name" => "Julia analytics boundary",
+        "guidance" => "Run graph metrics and lens checks in Julia where the pipeline already lives; avoid making the browser compute truth that belongs in the generated artifact.",
+    ),
+]
+
+const FG_NODE_ROLES = Dict(
+    "agent" => "authority",
+    "group" => "authority",
+    "role" => "authority",
+    "user" => "authority",
+    "session" => "f-context",
+    "purpose" => "f-context",
+    "program" => "f-context",
+    "workflow" => "f-context",
+    "view_filter" => "lens",
+    "grammar_fragment" => "lens",
+    "pattern" => "lens",
+    "knowledge_item" => "g-evidence",
+    "claim" => "g-evidence",
+    "derivation" => "lineage",
+    "channel" => "surface",
+    "calendar_event" => "surface",
+    "source_feed" => "surface",
+    "external_op" => "surface",
+    "kernel" => "substrate",
+    "workstation" => "substrate",
+    "transport_binding" => "substrate",
+    "endpoint" => "substrate",
+    "protocol" => "substrate",
+)
+
+const RELATION_FAMILIES = Dict(
+    "WF01" => Dict("family" => "authority ownership", "fg_direction" => "authority context", "insight" => "Who owns the node, agent, session, or surface being inspected."),
+    "WF02" => Dict("family" => "delegation and role", "fg_direction" => "authority context", "insight" => "Which principal can delegate or carry role-based capability."),
+    "WF07" => Dict("family" => "source anchor", "fg_direction" => "G evidence", "insight" => "External source anchoring for evidence that entered the HG."),
+    "WF12" => Dict("family" => "channel ingest", "fg_direction" => "G ingest", "insight" => "External channel material entering HG evidence topology."),
+    "WF13" => Dict("family" => "governance proposal", "fg_direction" => "governance", "insight" => "Proposed action or review item, not an already-applied rewrite."),
+    "WF16" => Dict("family" => "federation route", "fg_direction" => "substrate", "insight" => "Router/kernel reachability and federation shape."),
+    "WF18" => Dict("family" => "composition and scope", "fg_direction" => "F/G spine", "insight" => "Containment and composition: programs, artifacts, chunks, and scoped bundles."),
+    "WF19" => Dict("family" => "session/purpose/pin", "fg_direction" => "F session", "insight" => "Session purpose, occupant, tool, and pinned-scope topology."),
+    "WF21" => Dict("family" => "causal lineage", "fg_direction" => "lineage", "insight" => "Why a node exists or how a projection/recommendation follows from prior graph state."),
+)
 
 const LINGO = Dict(
     "G_ingest" => "External source -> HG evidence. For this lane: Google Keep export/manual download -> channel + knowledge_item + claim/derivation topology.",
@@ -134,6 +221,9 @@ const LINGO = Dict(
     "IDE_harness_surface" => "The local tool container currently hosting the operator, such as VS Code/Copilot, Claude Desktop, Claude Code, or Antigravity. It is evidence for reconciliation, not itself a session.",
     "S0_conversation_staging" => "Raw chat/debug-log transcript substrate. It becomes durable only after G-ingest as knowledge_item/claim/derivation topology.",
     "actor_occupant_reconciliation" => "A dry check that actor_urn, the folded HG occupant, and the current harness agent candidate name the same driver before the handoff is used to emit rewrites.",
+    "agent_neighborhood_lens" => "A lens widening rule: agents directly connected to selected session/program nodes stay visible in graph artifacts, SVGs, and inspectors even when ordinary type or match filters would otherwise hide them.",
+    "F_G_role_color" => "A renderer hint derived from node type: authority, F-context, G-evidence, surface, lens, lineage, or substrate. It is visual metadata, not HG truth.",
+    "relation_family_insight" => "A renderer hint derived from WF category: ownership, delegation, ingest, composition, session pinning, source anchoring, federation, proposal, or causal lineage.",
 )
 
 function object_value(obj, name::Symbol, default=nothing)
@@ -350,6 +440,35 @@ function compact_label(text; fallback="")
     return string(clean[1:33], "...")
 end
 
+fg_role(type_id::AbstractString) = get(FG_NODE_ROLES, string(type_id), "hg-node")
+
+function relation_family(category::AbstractString)
+    return get(RELATION_FAMILIES, string(category), Dict(
+        "family" => "other relation",
+        "fg_direction" => "HG relation",
+        "insight" => "Relation category is not yet classified for F/G visual inspection.",
+    ))
+end
+
+function sorted_count_entries(counts)
+    entries = Any[]
+    for key in sort(collect(keys(counts)); by=string)
+        push!(entries, (string(key), Int(counts[key])))
+    end
+    return entries
+end
+
+function print_count_chips(io, counts)
+    entries = sorted_count_entries(counts)
+    if isempty(entries)
+        print(io, "<span class=\"pill muted\">none</span>")
+        return
+    end
+    for (key, value) in entries
+        print(io, "<span class=\"pill\">", html_escape(key), " ", html_escape(value), "</span>")
+    end
+end
+
 function graph_inspector_payload(graph_pack; id="lens", label="Lens")
     nodes = collect(object_value(graph_pack, :nodes, Any[]))
     relations = collect(object_value(graph_pack, :relations, Any[]))
@@ -362,17 +481,38 @@ function graph_inspector_payload(graph_pack; id="lens", label="Lens")
     end
     cy_nodes = Any[]
     cy_edges = Any[]
+    type_counts = Dict{String, Int}()
+    relation_counts = Dict{String, Int}()
+    fg_counts = Dict{String, Int}()
+    relation_family_counts = Dict{String, Int}()
+    agent_urns = String[]
+    node_records = Any[]
     for node in nodes
         urn = string(object_value(node, :urn, ""))
         isempty(urn) && continue
         title = string(object_value(node, :title, urn))
+        type_id = string(object_value(node, :type_id, "unknown"))
+        role = fg_role(type_id)
+        type_counts[type_id] = get(type_counts, type_id, 0) + 1
+        fg_counts[role] = get(fg_counts, role, 0) + 1
+        type_id == "agent" && push!(agent_urns, urn)
+        node_record = Dict(
+            "urn" => urn,
+            "label" => compact_label(title; fallback=urn),
+            "title" => title,
+            "type_id" => type_id,
+            "fg_role" => role,
+            "degree" => get(degree, urn, 0),
+        )
+        push!(node_records, node_record)
         push!(cy_nodes, Dict(
             "data" => Dict(
                 "id" => urn,
                 "urn" => urn,
-                "label" => compact_label(title; fallback=urn),
+                "label" => node_record["label"],
                 "title" => title,
-                "type_id" => string(object_value(node, :type_id, "unknown")),
+                "type_id" => type_id,
+                "fg_role" => role,
                 "status" => string(object_value(node, :status, "")),
                 "degree" => get(degree, urn, 0),
             ),
@@ -383,27 +523,50 @@ function graph_inspector_payload(graph_pack; id="lens", label="Lens")
         tgt = string(object_value(relation, :tgt_urn, ""))
         (isempty(src) || isempty(tgt)) && continue
         urn = string(object_value(relation, :urn, string("rel:", index)))
+        category = string(object_value(relation, :rewrite_category, ""))
+        family = relation_family(category)
+        family_name = string(family["family"])
+        relation_counts[category] = get(relation_counts, category, 0) + 1
+        relation_family_counts[family_name] = get(relation_family_counts, family_name, 0) + 1
         push!(cy_edges, Dict(
             "data" => Dict(
                 "id" => urn,
                 "urn" => urn,
                 "source" => src,
                 "target" => tgt,
-                "label" => string(object_value(relation, :rewrite_category, "")),
-                "rewrite_category" => string(object_value(relation, :rewrite_category, "")),
+                "label" => category,
+                "rewrite_category" => category,
+                "family" => family_name,
+                "fg_direction" => string(family["fg_direction"]),
+                "insight" => string(family["insight"]),
                 "src_port" => string(object_value(relation, :src_port, "")),
                 "tgt_port" => string(object_value(relation, :tgt_port, "")),
             ),
         ))
     end
+    top_nodes = first(sort(node_records; by=record -> (-Int(record["degree"]), string(record["urn"]))), min(5, length(node_records)))
     return Dict(
         "id" => id,
         "label" => label,
         "renderer" => "Cytoscape.js",
         "node_count" => length(cy_nodes),
         "relation_count" => length(cy_edges),
+        "type_counts" => type_counts,
+        "relation_counts" => relation_counts,
+        "fg_counts" => fg_counts,
+        "relation_family_counts" => relation_family_counts,
+        "agent_urns" => sort(agent_urns),
+        "top_nodes" => top_nodes,
         "elements" => vcat(cy_nodes, cy_edges),
     )
+end
+
+function graph_pack_contains_node(graph_pack, urn::AbstractString)
+    isempty(strip(urn)) && return false
+    for node in collect(object_value(graph_pack, :nodes, Any[]))
+        string(object_value(node, :urn, "")) == urn && return true
+    end
+    return false
 end
 
 function json_literal(value)
@@ -694,6 +857,23 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         next_action=has_lens_controls ? "" : "Promote the lens spec to a shared JSON or view_filter-backed adapter.",
     ))
 
+    lens_packs = [
+        ("Session Occasion", graph_pack),
+        ("Calendar Time-Fabric", temporal_graph_pack),
+        ("T189 Recommendations", t189_graph_pack),
+        ("Calendar Scope", calendar_scope_graph_pack),
+    ]
+    actor_lens_visibility = Dict(label => graph_pack_contains_node(pack, actor_urn) for (label, pack) in lens_packs)
+    visible_agent_counts = Dict(label => Int(object_value(object_value(object_value(pack, :analysis, Dict()), :type_counts, Dict()), :agent, 0)) for (label, pack) in lens_packs)
+    agent_visibility_ok = all(values(actor_lens_visibility))
+    push!(gates, gate(
+        agent_visibility_ok ? "pass" : "warn",
+        "agent neighborhood visibility",
+        agent_visibility_ok ? "The current actor/occupant agent is visible across all four graph artifacts and therefore reaches the SVG and inspector surfaces." : "One or more graph artifacts hide the current actor/occupant agent.",
+        evidence=Dict("actor" => actor_urn, "lens_visibility" => actor_lens_visibility, "agent_counts" => visible_agent_counts),
+        next_action=agent_visibility_ok ? "" : "Regenerate graph artifacts after enabling the session/program agent-neighborhood widening rule.",
+    ))
+
     one_shot_apply_script_exists = isfile(one_shot_apply_script_path)
     push!(gates, gate(
         one_shot_apply_script_exists ? "warn" : "pass",
@@ -713,7 +893,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         inspector_ready ? "pass" : "warn",
         "interactive visual aid",
         inspector_ready ? "The dashboard embeds Cytoscape.js typed element sets for four lenses: session occasion, Calendar Time-Fabric, T189 recommendations, and Calendar scope." : "The dashboard does not yet have enough graph element data for all interactive browser/IDE graph lenses.",
-        evidence=Dict("renderer" => "Cytoscape.js", "lens_count" => length(inspectors), "session_nodes" => inspector["node_count"], "session_relations" => inspector["relation_count"], "temporal_nodes" => temporal_inspector["node_count"], "temporal_relations" => temporal_inspector["relation_count"], "t189_nodes" => t189_inspector["node_count"], "t189_relations" => t189_inspector["relation_count"], "calendar_scope_nodes" => calendar_scope_inspector["node_count"], "calendar_scope_relations" => calendar_scope_inspector["relation_count"], "context7_candidates_checked" => [candidate["name"] for candidate in RENDERER_CANDIDATES]),
+        evidence=Dict("renderer" => "Cytoscape.js", "lens_count" => length(inspectors), "session_nodes" => inspector["node_count"], "session_relations" => inspector["relation_count"], "temporal_nodes" => temporal_inspector["node_count"], "temporal_relations" => temporal_inspector["relation_count"], "t189_nodes" => t189_inspector["node_count"], "t189_relations" => t189_inspector["relation_count"], "calendar_scope_nodes" => calendar_scope_inspector["node_count"], "calendar_scope_relations" => calendar_scope_inspector["relation_count"], "features" => ["type filters", "relation filters", "agent focus", "selected neighborhood", "multi-layout", "wide view", "lens JSON export", "F/G role metadata", "relation family counts", "top-degree node insights"], "context7_candidates_checked" => [candidate["name"] for candidate in RENDERER_CANDIDATES]),
         next_action=inspector_ready ? "" : "Regenerate all graph artifact packs before relying on the interactive inspector.",
     ))
 
@@ -768,6 +948,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         "pipeline_stages" => stages,
         "interface_principles" => INTERFACE_PRINCIPLES,
         "renderer_candidates" => RENDERER_CANDIDATES,
+        "visual_stack_notes" => VISUAL_STACK_NOTES,
         "interactive_inspector" => inspector,
         "interactive_inspectors" => inspectors,
         "gates" => gates,
@@ -844,6 +1025,7 @@ function write_html(path::AbstractString, plan)
     ]
     inspectors = collect(object_value(plan, :interactive_inspectors, Any[object_value(plan, :interactive_inspector, Dict("elements" => Any[], "node_count" => 0, "relation_count" => 0))]))
     inspector = isempty(inspectors) ? Dict("elements" => Any[], "node_count" => 0, "relation_count" => 0) : inspectors[1]
+    visual_stack_notes = collect(object_value(plan, :visual_stack_notes, Any[]))
     inspector_json = json_literal(inspector)
     inspectors_json = json_literal(inspectors)
     open(path, "w") do io
@@ -855,8 +1037,9 @@ function write_html(path::AbstractString, plan)
         println(io, "<title>mo:os Session Pipeline MVP</title>")
         println(io, "<style>")
         println(io, "html{font-family:Inter,Segoe UI,Arial,sans-serif;background:#f7f7f2;color:#202522}body{margin:0}.shell{max-width:1180px;margin:0 auto;padding:24px}.top{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,.8fr);gap:16px;align-items:stretch}.panel,.stage,.gate,.artifact,.principle{background:#fff;border:1px solid #d9ded7;border-radius:8px;box-shadow:0 1px 2px rgba(20,30,25,.05)}.panel{padding:18px}h1{font-size:28px;line-height:1.15;margin:0 0 8px}h2{font-size:16px;margin:0 0 12px}p{line-height:1.45}.muted{color:#5f6b62}.status{display:inline-flex;align-items:center;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;text-transform:uppercase}.pass{background:#dff4df;color:#195d25}.warn{background:#fff0bd;color:#735600}.fail{background:#ffd8d3;color:#8a1f16}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.metric{border:1px solid #e3e6e0;border-radius:8px;padding:10px;background:#fafbf8}.metric strong{display:block;font-size:24px}.stageGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.stage{padding:14px;min-height:138px}.stageHead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.stageName{font-weight:800}.stageDesc{font-size:13px;color:#46524a}.gateToolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}.gateToolbar button,.linkButton{border:1px solid #ccd3cb;background:#fff;border-radius:6px;padding:7px 10px;cursor:pointer;color:#24362e;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.gateToolbar button.active{background:#24362e;color:#fff;border-color:#24362e}.gateList{display:grid;gap:8px}.gate{padding:12px}.gateTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.gateName{font-weight:750}.evidence{font-size:12px;color:#526057;margin-top:8px;word-break:break-word}.next{border-left:3px solid #c68a00;background:#fff8df;padding:8px;margin-top:8px;border-radius:4px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.artifactList,.principleList{display:grid;gap:8px}.artifact,.principle{padding:12px}.artifact a{color:#245c84;text-decoration:none;word-break:break-word}.artifact a:hover,.linkButton:hover{text-decoration:underline}.visualActions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.actions{display:grid;gap:8px}.action{border-left:4px solid #c68a00;background:#fff8df;border-radius:6px;padding:10px}.foot{margin-top:22px;font-size:12px;color:#667168}@media(max-width:900px){.top,.cols,.stageGrid{grid-template-columns:1fr}.shell{padding:16px}}")
-        println(io, ".inspectorGrid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.55fr);gap:12px}.cyBox{height:560px;border:1px solid #d9ded7;border-radius:8px;background:#fcfdf9}.inspectPane{border:1px solid #d9ded7;border-radius:8px;background:#fff;padding:12px;min-height:160px;overflow:auto}.inspectTitle{font-weight:800;margin-bottom:8px}.inspectMeta{font-size:12px;color:#526057;word-break:break-word}.inspectorTools{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.inspectorTools input{border:1px solid #ccd3cb;border-radius:6px;padding:7px 10px;min-width:220px}.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.legend span{font-size:11px;border:1px solid #d9ded7;border-radius:999px;padding:3px 7px;background:#fafbf8}.chip{display:inline-block;width:10px;height:10px;border-radius:999px;margin-right:5px;vertical-align:-1px}.inspectorBackdrop{display:none;position:fixed;inset:0;background:rgba(20,25,22,.55);z-index:30}.inspectorBackdrop.open{display:block}.inspectorPanel.wide{position:fixed;inset:22px;z-index:31;overflow:auto;box-shadow:0 18px 70px rgba(0,0,0,.35)}.inspectorPanel.wide .cyBox{height:calc(100vh - 285px);min-height:620px}.wideOnly{display:none}.inspectorPanel.wide .wideOnly{display:inline-flex}@media(max-width:900px){.inspectorGrid{grid-template-columns:1fr}.cyBox{height:460px}.inspectorPanel.wide{inset:10px}.inspectorPanel.wide .cyBox{height:calc(100vh - 360px);min-height:420px}}")
-        println(io, ".visualPair{display:grid;grid-template-columns:1fr 1fr;gap:14px}.visualPanel{min-width:0}.visualTitle{font-weight:800;margin:0 0 8px}.visualPanel.wide{position:fixed;inset:22px;z-index:31;overflow:auto;box-shadow:0 18px 70px rgba(0,0,0,.35)}.visualPanel.wide .visualBox{height:calc(100vh - 225px);min-height:620px}.visualPanel.wide .wideOnly{display:inline-flex}.visualBox{border:1px solid #d9ded7;border-radius:8px;background:#fff;height:430px;overflow:auto;position:relative}.visualCanvas{width:1080px;height:680px}.visualCanvas object{width:1080px;height:680px;display:block;transform-origin:0 0}.visualHelp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 12px}.visualHelp div{border:1px solid #e3e6e0;border-radius:8px;padding:9px;background:#fafbf8}.lensTabs,.svgTabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.lensTabs button,.svgTabs button{border:1px solid #ccd3cb;background:#fff;border-radius:6px;padding:7px 10px;cursor:pointer;color:#24362e}.lensTabs button.active,.svgTabs button.active{background:#24362e;color:#fff;border-color:#24362e}@media(max-width:900px){.visualPair,.visualHelp{grid-template-columns:1fr}.visualBox{height:380px}.visualPanel.wide{inset:10px}.visualPanel.wide .visualBox{height:calc(100vh - 300px);min-height:420px}}")
+        println(io, ".inspectorGrid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.55fr);gap:12px}.cyBox{height:560px;border:1px solid #d9ded7;border-radius:8px;background:#fcfdf9}.inspectPane{border:1px solid #d9ded7;border-radius:8px;background:#fff;padding:12px;min-height:160px;overflow:auto}.inspectTitle{font-weight:800;margin-bottom:8px}.inspectMeta{font-size:12px;color:#526057;word-break:break-word}.inspectorTools,.filterRow{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.inspectorTools input,.svgSearch{border:1px solid #ccd3cb;border-radius:6px;padding:7px 10px;min-width:220px}.filterButton{border:1px solid #ccd3cb;background:#fff;border-radius:999px;padding:5px 9px;cursor:pointer;color:#24362e;font-size:12px}.filterButton.active{background:#24362e;color:#fff;border-color:#24362e}.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.legend span{font-size:11px;border:1px solid #d9ded7;border-radius:999px;padding:3px 7px;background:#fafbf8}.chip{display:inline-block;width:10px;height:10px;border-radius:999px;margin-right:5px;vertical-align:-1px}.inspectorBackdrop{display:none;position:fixed;inset:0;background:rgba(20,25,22,.55);z-index:30}.inspectorBackdrop.open{display:block}.inspectorPanel.wide{position:fixed;inset:22px;z-index:31;overflow:auto;box-shadow:0 18px 70px rgba(0,0,0,.35)}.inspectorPanel.wide .cyBox{height:calc(100vh - 335px);min-height:620px}.wideOnly{display:none}.inspectorPanel.wide .wideOnly{display:inline-flex}@media(max-width:900px){.inspectorGrid{grid-template-columns:1fr}.cyBox{height:460px}.inspectorPanel.wide{inset:10px}.inspectorPanel.wide .cyBox{height:calc(100vh - 410px);min-height:420px}}")
+        println(io, ".insightGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.insightCard{border:1px solid #d9ded7;border-radius:8px;background:#fff;padding:12px}.insightCard h3{font-size:14px;margin:0 0 8px}.pillRow{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0 10px}.pill{display:inline-flex;border:1px solid #d9ded7;border-radius:999px;background:#fafbf8;color:#24362e;font-size:11px;padding:3px 7px}.topNode{font-size:12px;color:#46524a;border-top:1px solid #eef0ec;padding-top:6px;margin-top:6px}.stackGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}@media(max-width:900px){.insightGrid,.stackGrid{grid-template-columns:1fr}}")
+        println(io, ".visualPair{display:grid;grid-template-columns:1fr 1fr;gap:14px}.visualPanel{min-width:0}.visualTitle{font-weight:800;margin:0 0 8px}.visualPanel.wide{position:fixed;inset:22px;z-index:31;overflow:auto;box-shadow:0 18px 70px rgba(0,0,0,.35)}.visualPanel.wide .visualBox{height:calc(100vh - 270px);min-height:620px}.visualPanel.wide .wideOnly{display:inline-flex}.visualBox{border:1px solid #d9ded7;border-radius:8px;background:#fff;height:430px;overflow:auto;position:relative}.visualCanvas{width:1080px;height:680px}.visualCanvas object{width:1080px;height:680px;display:block;transform-origin:0 0}.visualHelp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 12px}.visualHelp div{border:1px solid #e3e6e0;border-radius:8px;padding:9px;background:#fafbf8}.lensTabs,.svgTabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.lensTabs button,.svgTabs button{border:1px solid #ccd3cb;background:#fff;border-radius:6px;padding:7px 10px;cursor:pointer;color:#24362e}.lensTabs button.active,.svgTabs button.active{background:#24362e;color:#fff;border-color:#24362e}@media(max-width:900px){.visualPair,.visualHelp{grid-template-columns:1fr}.visualBox{height:380px}.visualPanel.wide{inset:10px}.visualPanel.wide .visualBox{height:calc(100vh - 340px);min-height:420px}}")
         println(io, "</style>")
         println(io, "</head>")
         println(io, "<body>")
@@ -908,7 +1091,7 @@ function write_html(path::AbstractString, plan)
         for (index, lens) in enumerate(svg_lenses)
             println(io, "<div class=\"visualPanel\" data-svg-panel=\"", index - 1, "\"><p class=\"visualTitle\">", html_escape(lens["label"]), "</p>")
             if !isempty(string(lens["svg_path"])) && isfile(string(lens["svg_path"]))
-                println(io, "<div class=\"visualActions\"><button class=\"linkButton\" type=\"button\" data-svg-action=\"fit\">Fit</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"zoom-in\">Zoom +</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"zoom-out\">Zoom -</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"reset\">Reset</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"wide\">Wide view</button><button class=\"linkButton wideOnly\" type=\"button\" data-svg-action=\"close\">Close</button><a class=\"linkButton\" href=\"", html_escape(lens["svg_href"]), "\">Open SVG</a><a class=\"linkButton\" href=\"", html_escape(lens["dot_href"]), "\">Open DOT</a></div>")
+                println(io, "<div class=\"visualActions\"><input class=\"svgSearch\" data-svg-search type=\"search\" placeholder=\"Find label or URN\"><button class=\"linkButton\" type=\"button\" data-svg-action=\"svg-find\">Find</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"fit\">Fit</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"center\">Center</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"zoom-in\">Zoom +</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"zoom-out\">Zoom -</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"reset\">Reset</button><button class=\"linkButton\" type=\"button\" data-svg-action=\"wide\">Wide view</button><button class=\"linkButton wideOnly\" type=\"button\" data-svg-action=\"close\">Close</button><a class=\"linkButton\" href=\"", html_escape(lens["svg_href"]), "\">Open SVG</a><a class=\"linkButton\" href=\"", html_escape(lens["dot_href"]), "\">Open DOT</a></div>")
                 println(io, "<div class=\"visualBox\" data-svg-scale=\"1\"><div class=\"visualCanvas\"><object type=\"image/svg+xml\" data=\"", html_escape(lens["svg_href"]), "\"></object></div></div>")
             else
                 println(io, "<p class=\"muted\">", html_escape(lens["missing"]), "</p>")
@@ -917,6 +1100,23 @@ function write_html(path::AbstractString, plan)
         end
         println(io, "</div>")
         println(io, "</section>")
+        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>F/G Relation Insights</h2>")
+        println(io, "<p class=\"muted\">Per-lens visual metadata derived from node types and WF categories. This keeps projection, ingest, authority, surface, and lineage meaning visible in the graphview without changing HG truth.</p>")
+        println(io, "<div class=\"insightGrid\">")
+        for lens in inspectors
+            println(io, "<article class=\"insightCard\"><h3>", html_escape(object_value(lens, :label, "Lens")), "</h3>")
+            println(io, "<div class=\"muted\">F/G roles</div><div class=\"pillRow\">")
+            print_count_chips(io, object_value(lens, :fg_counts, Dict()))
+            println(io, "</div><div class=\"muted\">Relation families</div><div class=\"pillRow\">")
+            print_count_chips(io, object_value(lens, :relation_family_counts, Dict()))
+            println(io, "</div>")
+            top_nodes = collect(object_value(lens, :top_nodes, Any[]))
+            for node in top_nodes[1:min(3, length(top_nodes))]
+                println(io, "<div class=\"topNode\"><strong>", html_escape(object_value(node, :label, object_value(node, :urn, ""))), "</strong><br>", html_escape(object_value(node, :fg_role, "")), " · degree ", html_escape(object_value(node, :degree, 0)), "</div>")
+            end
+            println(io, "</article>")
+        end
+        println(io, "</div></section>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Calendar Time-Fabric</h2>")
         println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_plan, "")))), "\">Open Calendar Plan</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_report, "")))), "\">Open Calendar Report</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_write_result, "")))), "\">Open Write Result</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :temporal_graph_pack, "")))), "\">Open Graph Artifact</a></div>")
         println(io, "<p class=\"muted\">Temporal plan, temporal visual lens, and temporal graph artifact are now separate review surfaces: plan for Calendar payload semantics, SVG/DOT for deterministic visual review, and the HG inspector for node/relation inspection.</p>")
@@ -933,9 +1133,10 @@ function write_html(path::AbstractString, plan)
             println(io, "<button class=\"", active, "\" data-lens=\"", index - 1, "\">", html_escape(object_value(lens, :label, string("Lens ", index))), " <span class=\"muted\">", html_escape(object_value(lens, :node_count, 0)), "/", html_escape(object_value(lens, :relation_count, 0)), "</span></button>")
         end
         println(io, "</div>")
-        println(io, "<div class=\"inspectorTools\"><input id=\"cySearch\" type=\"search\" placeholder=\"Search URN, label, type, relation\"><button class=\"linkButton\" id=\"cyFit\" type=\"button\">Fit</button><button class=\"linkButton\" id=\"cyZoomIn\" type=\"button\">Zoom +</button><button class=\"linkButton\" id=\"cyZoomOut\" type=\"button\">Zoom -</button><button class=\"linkButton\" id=\"cyReset\" type=\"button\">Reset</button><button class=\"linkButton\" id=\"cyCose\" type=\"button\">Cose</button><button class=\"linkButton\" id=\"cyGrid\" type=\"button\">Grid</button><button class=\"linkButton\" id=\"cyWide\" type=\"button\">Wide view</button><button class=\"linkButton wideOnly\" id=\"cyClose\" type=\"button\">Close</button></div>")
+        println(io, "<div class=\"inspectorTools\"><input id=\"cySearch\" type=\"search\" placeholder=\"Search URN, label, type, relation\"><button class=\"linkButton\" id=\"cyFit\" type=\"button\">Fit</button><button class=\"linkButton\" id=\"cyZoomIn\" type=\"button\">Zoom +</button><button class=\"linkButton\" id=\"cyZoomOut\" type=\"button\">Zoom -</button><button class=\"linkButton\" id=\"cyReset\" type=\"button\">Reset</button><button class=\"linkButton\" id=\"cyCose\" type=\"button\">Cose</button><button class=\"linkButton\" id=\"cyGrid\" type=\"button\">Grid</button><button class=\"linkButton\" id=\"cyCircle\" type=\"button\">Circle</button><button class=\"linkButton\" id=\"cyBreadth\" type=\"button\">Breadth</button><button class=\"linkButton\" id=\"cyConcentric\" type=\"button\">Concentric</button><button class=\"linkButton\" id=\"cyAgents\" type=\"button\">Agents</button><button class=\"linkButton\" id=\"cyNeighborhood\" type=\"button\">Neighborhood</button><button class=\"linkButton\" id=\"cyExport\" type=\"button\">Export lens JSON</button><button class=\"linkButton\" id=\"cyWide\" type=\"button\">Wide view</button><button class=\"linkButton wideOnly\" id=\"cyClose\" type=\"button\">Close</button></div>")
+        println(io, "<div class=\"filterRow\" id=\"cyTypeFilters\"></div><div class=\"filterRow\" id=\"cyRelationFilters\"></div>")
         println(io, "<div class=\"inspectorGrid\"><div id=\"cy\" class=\"cyBox\"></div><div class=\"inspectPane\"><div class=\"inspectTitle\" id=\"inspectTitle\">No selection</div><div class=\"inspectMeta\" id=\"inspectMeta\">", html_escape(inspector["node_count"]), " nodes / ", html_escape(inspector["relation_count"]), " relations</div></div></div>")
-        println(io, "<div class=\"legend\"><span><i class=\"chip\" style=\"background:#4c78a8\"></i>claim</span><span><i class=\"chip\" style=\"background:#7b61a8\"></i>derivation</span><span><i class=\"chip\" style=\"background:#9c755f\"></i>program</span><span><i class=\"chip\" style=\"background:#b279a2\"></i>purpose</span><span><i class=\"chip\" style=\"background:#72b7b2\"></i>view_filter</span><span><i class=\"chip\" style=\"background:#54a24b\"></i>knowledge_item</span></div>")
+        println(io, "<div class=\"legend\"><span><i class=\"chip\" style=\"background:#4c78a8\"></i>claim</span><span><i class=\"chip\" style=\"background:#7b61a8\"></i>derivation</span><span><i class=\"chip\" style=\"background:#9c755f\"></i>program</span><span><i class=\"chip\" style=\"background:#b279a2\"></i>purpose</span><span><i class=\"chip\" style=\"background:#72b7b2\"></i>view_filter</span><span><i class=\"chip\" style=\"background:#54a24b\"></i>knowledge_item</span><span><i class=\"chip\" style=\"background:#4267a5\"></i>agent</span></div>")
         println(io, "</section>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Surface Context Atlas</h2>")
         println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas, "")))), "\">Open Atlas JSON</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas_report, "")))), "\">Open Atlas Report</a></div>")
@@ -963,14 +1164,19 @@ function write_html(path::AbstractString, plan)
             println(io, "<div class=\"principle\"><strong>", html_escape(candidate["name"]), "</strong> <span class=\"muted\">", html_escape(candidate["recommendation"]), "</span><p>", html_escape(candidate["fit"]), "</p></div>")
         end
         println(io, "</div></div></section>")
+        println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Graphview Stack Notes</h2><div class=\"stackGrid\">")
+        for note in visual_stack_notes
+            println(io, "<div class=\"principle\"><strong>", html_escape(object_value(note, :name, "Note")), "</strong><p>", html_escape(object_value(note, :guidance, "")), "</p></div>")
+        end
+        println(io, "</div></section>")
         println(io, "<p class=\"foot\">Generated from session_pipeline_mvp_gate.jl. This page is an artifact of the projection lane; it does not emit rewrites.</p>")
         println(io, "</main>")
         println(io, "<script>document.querySelectorAll('[data-filter]').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('[data-filter]').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');var f=btn.getAttribute('data-filter');document.querySelectorAll('.gate').forEach(function(g){g.style.display=(f==='all'||g.getAttribute('data-status')===f)?'block':'none'});});});</script>")
-        println(io, raw"""<script>(function(){var BASE_W=1080,BASE_H=680;var backdrop=document.getElementById('svgBackdrop');var activeWide=null;function setScale(panel,scale){var box=panel.querySelector('.visualBox');var canvas=panel.querySelector('.visualCanvas');var object=panel.querySelector('object');if(!box||!canvas||!object)return;scale=Math.max(.3,Math.min(3,scale));box.dataset.svgScale=String(scale);canvas.style.width=Math.ceil(BASE_W*scale)+'px';canvas.style.height=Math.ceil(BASE_H*scale)+'px';object.style.transform='scale('+scale+')'}function fit(panel){var box=panel.querySelector('.visualBox');if(!box)return;setScale(panel,Math.max(.3,Math.min(1.4,(box.clientWidth-24)/BASE_W)));box.scrollTo({left:0,top:0,behavior:'smooth'})}function setWide(panel,on){if(on){if(activeWide&&activeWide!==panel){setWide(activeWide,false)}activeWide=panel;panel.classList.add('wide');if(backdrop)backdrop.classList.add('open');setTimeout(function(){fit(panel)},80)}else{panel.classList.remove('wide');if(activeWide===panel)activeWide=null;if(backdrop)backdrop.classList.remove('open');setTimeout(function(){fit(panel)},80)}}document.querySelectorAll('[data-svg-panel]').forEach(function(panel){setScale(panel,1);panel.querySelectorAll('[data-svg-action]').forEach(function(button){button.addEventListener('click',function(){var action=button.getAttribute('data-svg-action');var scale=Number(panel.querySelector('.visualBox')?.dataset.svgScale||1);if(action==='fit')fit(panel);if(action==='zoom-in')setScale(panel,scale*1.25);if(action==='zoom-out')setScale(panel,scale*.8);if(action==='reset')setScale(panel,1);if(action==='wide')setWide(panel,true);if(action==='close')setWide(panel,false)})})});if(backdrop){backdrop.addEventListener('click',function(){if(activeWide)setWide(activeWide,false)})}document.addEventListener('keydown',function(evt){if(evt.key==='Escape'&&activeWide){setWide(activeWide,false)}});})();</script>""")
+        println(io, raw"""<script>(function(){var BASE_W=1080,BASE_H=680;var backdrop=document.getElementById('svgBackdrop');var activeWide=null;function setScale(panel,scale){var box=panel.querySelector('.visualBox');var canvas=panel.querySelector('.visualCanvas');var object=panel.querySelector('object');if(!box||!canvas||!object)return;scale=Math.max(.3,Math.min(3,scale));box.dataset.svgScale=String(scale);canvas.style.width=Math.ceil(BASE_W*scale)+'px';canvas.style.height=Math.ceil(BASE_H*scale)+'px';object.style.transform='scale('+scale+')'}function fit(panel){var box=panel.querySelector('.visualBox');if(!box)return;setScale(panel,Math.max(.3,Math.min(1.4,(box.clientWidth-24)/BASE_W)));box.scrollTo({left:0,top:0,behavior:'smooth'})}function objectDoc(panel){try{var object=panel.querySelector('object');return object&&object.contentDocument}catch(_){return null}}function clearMatches(panel){var doc=objectDoc(panel);if(!doc)return;doc.querySelectorAll('[data-moos-svg-match]').forEach(function(el){el.removeAttribute('data-moos-svg-match');el.style.outline='';el.style.stroke='';el.style.strokeWidth='';el.style.filter=''})}function centerOn(panel,el){var box=panel.querySelector('.visualBox');var scale=Number(box&&box.dataset.svgScale||1);if(!box||!el||!el.getBBox)return;try{var bb=el.getBBox();box.scrollTo({left:Math.max(0,(bb.x+bb.width/2)*scale-box.clientWidth/2),top:Math.max(0,(bb.y+bb.height/2)*scale-box.clientHeight/2),behavior:'smooth'})}catch(_){}}function find(panel){clearMatches(panel);var q=(panel.querySelector('[data-svg-search]')?.value||'').toLowerCase().trim();if(!q)return null;var doc=objectDoc(panel);if(!doc)return null;var matches=[];doc.querySelectorAll('text,title').forEach(function(el){var text=(el.textContent||'').toLowerCase();if(text.indexOf(q)>=0){var target=el.tagName.toLowerCase()==='title'?el.parentElement:el;matches.push(target);target.setAttribute('data-moos-svg-match','1');target.style.outline='3px solid #202522';target.style.stroke='#202522';target.style.strokeWidth='2px'}});panel.dataset.svgMatchIndex='0';if(matches[0])centerOn(panel,matches[0]);return matches[0]||null}function centerCurrent(panel){var doc=objectDoc(panel);var match=doc&&doc.querySelector('[data-moos-svg-match]');if(match){centerOn(panel,match);return}var object=panel.querySelector('object');var box=panel.querySelector('.visualBox');if(object&&box){box.scrollTo({left:Math.max(0,object.clientWidth/2-box.clientWidth/2),top:Math.max(0,object.clientHeight/2-box.clientHeight/2),behavior:'smooth'})}}function setWide(panel,on){if(on){if(activeWide&&activeWide!==panel){setWide(activeWide,false)}activeWide=panel;panel.classList.add('wide');if(backdrop)backdrop.classList.add('open');setTimeout(function(){fit(panel)},80)}else{panel.classList.remove('wide');if(activeWide===panel)activeWide=null;if(backdrop)backdrop.classList.remove('open');setTimeout(function(){fit(panel)},80)}}document.querySelectorAll('[data-svg-panel]').forEach(function(panel){setScale(panel,1);var search=panel.querySelector('[data-svg-search]');if(search){search.addEventListener('keydown',function(evt){if(evt.key==='Enter')find(panel)})}panel.querySelectorAll('[data-svg-action]').forEach(function(button){button.addEventListener('click',function(){var action=button.getAttribute('data-svg-action');var scale=Number(panel.querySelector('.visualBox')?.dataset.svgScale||1);if(action==='svg-find')find(panel);if(action==='fit')fit(panel);if(action==='center')centerCurrent(panel);if(action==='zoom-in')setScale(panel,scale*1.25);if(action==='zoom-out')setScale(panel,scale*.8);if(action==='reset'){clearMatches(panel);setScale(panel,1)}if(action==='wide')setWide(panel,true);if(action==='close')setWide(panel,false)})})});if(backdrop){backdrop.addEventListener('click',function(){if(activeWide)setWide(activeWide,false)})}document.addEventListener('keydown',function(evt){if(evt.key==='Escape'&&activeWide){setWide(activeWide,false)}});})();</script>""")
         println(io, "<script src=\"https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js\"></script>")
         println(io, "<script id=\"inspectorData\" type=\"application/json\">", inspector_json, "</script>")
         println(io, "<script id=\"inspectorsData\" type=\"application/json\">", inspectors_json, "</script>")
-        println(io, raw"""<script>(function(){var raw=document.getElementById('inspectorsData');var title=document.getElementById('inspectTitle');var meta=document.getElementById('inspectMeta');var buttons=document.querySelectorAll('[data-lens]');var search=document.getElementById('cySearch');var fit=document.getElementById('cyFit');var zoomIn=document.getElementById('cyZoomIn');var zoomOut=document.getElementById('cyZoomOut');var reset=document.getElementById('cyReset');var cose=document.getElementById('cyCose');var grid=document.getElementById('cyGrid');var wide=document.getElementById('cyWide');var close=document.getElementById('cyClose');var panel=document.getElementById('inspectorPanel');var backdrop=document.getElementById('inspectorBackdrop');var lenses=raw?JSON.parse(raw.textContent):[];var cy=null;function esc(v){return String(v==null?'':v).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}function show(d){var kind=d.type_id||d.rewrite_category||'relation';var ports=d.src_port?'<br><strong>ports</strong> '+esc(d.src_port)+' / '+esc(d.tgt_port):'';var degree=d.degree!=null?'<br><strong>degree</strong> '+esc(d.degree):'';title.textContent=d.title||d.label||d.urn||'Selection';meta.innerHTML='<strong>'+esc(kind)+'</strong><br>'+esc(d.urn||d.id||'')+'<br>'+esc(d.status||'')+degree+ports}function runLayout(name){if(!cy)return;cy.layout({name:name,animate:false,fit:true,padding:32}).run()}function resizeFit(){if(!cy)return;cy.resize();cy.fit(null,32)}function zoomBy(factor){if(!cy)return;var box=cy.container().getBoundingClientRect();cy.zoom({level:cy.zoom()*factor,renderedPosition:{x:box.width/2,y:box.height/2}})}function setWide(on){if(!panel)return;panel.classList.toggle('wide',on);if(backdrop)backdrop.classList.toggle('open',on);setTimeout(resizeFit,80)}function applySearch(){if(!cy)return;var q=(search.value||'').toLowerCase().trim();cy.elements().removeClass('matched dimmed');if(!q){return}cy.elements().forEach(function(ele){var d=ele.data();var hay=[d.urn,d.label,d.title,d.type_id,d.rewrite_category,d.src_port,d.tgt_port].join(' ').toLowerCase();if(hay.indexOf(q)>=0){ele.addClass('matched')}else{ele.addClass('dimmed')}});var matched=cy.elements('.matched');if(matched.length){cy.fit(matched,48)}}function activate(index){buttons.forEach(function(btn){btn.classList.toggle('active',Number(btn.getAttribute('data-lens'))===index)});if(search){search.value=''}var data=lenses[index]||{label:'Lens',elements:[],node_count:0,relation_count:0};title.textContent=data.label||'Lens';meta.innerHTML=esc(data.node_count||0)+' nodes / '+esc(data.relation_count||0)+' relations';if(!window.cytoscape){title.textContent='Cytoscape.js unavailable';return}if(cy){cy.destroy()}cy=cytoscape({container:document.getElementById('cy'),elements:data.elements||[],layout:{name:'cose',animate:false,fit:true,padding:32,nodeRepulsion:9000,idealEdgeLength:110},minZoom:.18,maxZoom:3.5,style:[{selector:'node',style:{'label':'data(label)','font-size':10,'text-wrap':'wrap','text-max-width':120,'background-color':'#6f7f73','color':'#24362e','text-valign':'bottom','text-halign':'center','width':'mapData(degree,0,8,28,54)','height':'mapData(degree,0,8,28,54)','border-width':1,'border-color':'#ffffff'}},{selector:'node[type_id = "claim"]',style:{'background-color':'#4c78a8'}},{selector:'node[type_id = "derivation"]',style:{'background-color':'#7b61a8'}},{selector:'node[type_id = "knowledge_item"]',style:{'background-color':'#54a24b'}},{selector:'node[type_id = "program"]',style:{'background-color':'#9c755f'}},{selector:'node[type_id = "purpose"]',style:{'background-color':'#b279a2'}},{selector:'node[type_id = "view_filter"]',style:{'background-color':'#72b7b2'}},{selector:'node[type_id = "group"]',style:{'background-color':'#eeca3b'}},{selector:'node[type_id = "calendar_event"]',style:{'background-color':'#e15759'}},{selector:'node[type_id = "channel"]',style:{'background-color':'#59a14f'}},{selector:'edge',style:{'label':'data(label)','font-size':9,'curve-style':'bezier','target-arrow-shape':'triangle','line-color':'#9da8a0','target-arrow-color':'#9da8a0','width':1.4,'color':'#526057','text-background-color':'#fff','text-background-opacity':0.8}},{selector:'edge[rewrite_category = "WF18"]',style:{'line-color':'#2f6f9f','target-arrow-color':'#2f6f9f'}},{selector:'edge[rewrite_category = "WF19"]',style:{'line-color':'#287a72','target-arrow-color':'#287a72'}},{selector:'edge[rewrite_category = "WF21"]',style:{'line-color':'#7a4aa0','target-arrow-color':'#7a4aa0','line-style':'dashed'}},{selector:'.dimmed',style:{'opacity':0.16}},{selector:'.matched',style:{'border-width':4,'border-color':'#202522','line-color':'#202522','target-arrow-color':'#202522','opacity':1}},{selector:':selected',style:{'border-width':4,'border-color':'#202522','line-color':'#202522','target-arrow-color':'#202522'}}]});cy.on('tap','node, edge',function(evt){show(evt.target.data())});cy.on('tap',function(evt){if(evt.target===cy){title.textContent=data.label||'Lens';meta.innerHTML=esc(data.node_count||0)+' nodes / '+esc(data.relation_count||0)+' relations'}});cy.ready(resizeFit);}buttons.forEach(function(btn){btn.addEventListener('click',function(){activate(Number(btn.getAttribute('data-lens'))||0)})});if(search){search.addEventListener('input',applySearch)}if(fit){fit.addEventListener('click',resizeFit)}if(zoomIn){zoomIn.addEventListener('click',function(){zoomBy(1.25)})}if(zoomOut){zoomOut.addEventListener('click',function(){zoomBy(.8)})}if(reset){reset.addEventListener('click',function(){if(cy){cy.zoom(1);cy.center();resizeFit()}})}if(cose){cose.addEventListener('click',function(){runLayout('cose')})}if(grid){grid.addEventListener('click',function(){runLayout('grid')})}if(wide){wide.addEventListener('click',function(){setWide(true)})}if(close){close.addEventListener('click',function(){setWide(false)})}if(backdrop){backdrop.addEventListener('click',function(){setWide(false)})}document.addEventListener('keydown',function(evt){if(evt.key==='Escape'){setWide(false)}});activate(0);})();</script>""")
+        println(io, raw"""<script>(function(){var raw=document.getElementById('inspectorsData');var title=document.getElementById('inspectTitle');var meta=document.getElementById('inspectMeta');var buttons=document.querySelectorAll('[data-lens]');var search=document.getElementById('cySearch');var fit=document.getElementById('cyFit');var zoomIn=document.getElementById('cyZoomIn');var zoomOut=document.getElementById('cyZoomOut');var reset=document.getElementById('cyReset');var cose=document.getElementById('cyCose');var grid=document.getElementById('cyGrid');var circle=document.getElementById('cyCircle');var breadth=document.getElementById('cyBreadth');var concentric=document.getElementById('cyConcentric');var agentsBtn=document.getElementById('cyAgents');var neighborhoodBtn=document.getElementById('cyNeighborhood');var exportBtn=document.getElementById('cyExport');var typeFilters=document.getElementById('cyTypeFilters');var relationFilters=document.getElementById('cyRelationFilters');var wide=document.getElementById('cyWide');var close=document.getElementById('cyClose');var panel=document.getElementById('inspectorPanel');var backdrop=document.getElementById('inspectorBackdrop');var lenses=raw?JSON.parse(raw.textContent):[];var cy=null,currentLens=null,activeTypes=new Set(),activeRelations=new Set(),lastSelected=null;function esc(v){return String(v==null?'':v).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}function unique(values){return Array.from(new Set(values.filter(Boolean))).sort()}function showLensMeta(data){var agentCount=(data.agent_urns||[]).length;title.textContent=data.label||'Lens';meta.innerHTML=esc(data.node_count||0)+' nodes / '+esc(data.relation_count||0)+' relations<br><strong>agents</strong> '+esc(agentCount)+'<br><strong>types</strong> '+esc(Object.keys(data.type_counts||{}).join(', '))}function show(d){var kind=d.type_id||d.rewrite_category||'relation';var ports=d.src_port?'<br><strong>ports</strong> '+esc(d.src_port)+' / '+esc(d.tgt_port):'';var degree=d.degree!=null?'<br><strong>degree</strong> '+esc(d.degree):'';title.textContent=d.title||d.label||d.urn||'Selection';meta.innerHTML='<strong>'+esc(kind)+'</strong><br>'+esc(d.urn||d.id||'')+'<br>'+esc(d.status||'')+degree+ports}function runLayout(name){if(!cy)return;var opts={name:name,animate:false,fit:true,padding:32};if(name==='breadthfirst'){opts.directed=true;opts.spacingFactor=1.2}if(name==='concentric'){opts.concentric=function(n){return n.degree()+1};opts.levelWidth=function(){return 2}}if(name==='cose'){opts.nodeRepulsion=9000;opts.idealEdgeLength=110}cy.layout(opts).run()}function resizeFit(){if(!cy)return;cy.resize();cy.fit(null,32)}function zoomBy(factor){if(!cy)return;var box=cy.container().getBoundingClientRect();cy.zoom({level:cy.zoom()*factor,renderedPosition:{x:box.width/2,y:box.height/2}})}function setWide(on){if(!panel)return;panel.classList.toggle('wide',on);if(backdrop)backdrop.classList.toggle('open',on);setTimeout(resizeFit,80)}function applyFilters(){if(!cy)return;cy.elements().removeClass('filtered');cy.nodes().forEach(function(n){if(activeTypes.size&& !activeTypes.has(n.data('type_id'))){n.addClass('filtered')}});cy.edges().forEach(function(e){if((activeRelations.size&& !activeRelations.has(e.data('rewrite_category'))) || e.source().hasClass('filtered') || e.target().hasClass('filtered')){e.addClass('filtered')}});applySearch(false)}function renderFilters(data){function render(container,values,activeSet,prefix){if(!container)return;container.innerHTML='';values.forEach(function(value){activeSet.add(value);var b=document.createElement('button');b.type='button';b.className='filterButton active';b.textContent=prefix+' '+value;b.addEventListener('click',function(){if(activeSet.has(value)){activeSet.delete(value);b.classList.remove('active')}else{activeSet.add(value);b.classList.add('active')}applyFilters()});container.appendChild(b)})}activeTypes=new Set();activeRelations=new Set();var nodeTypes=unique((data.elements||[]).filter(function(e){return e.data&&e.data.type_id}).map(function(e){return e.data.type_id}));var relTypes=unique((data.elements||[]).filter(function(e){return e.data&&e.data.rewrite_category}).map(function(e){return e.data.rewrite_category}));render(typeFilters,nodeTypes,activeTypes,'T');render(relationFilters,relTypes,activeRelations,'WF')}function applySearch(fitMatches){if(!cy)return;var q=(search.value||'').toLowerCase().trim();cy.elements().removeClass('matched dimmed');if(!q){return}cy.elements().not('.filtered').forEach(function(ele){var d=ele.data();var hay=[d.urn,d.label,d.title,d.type_id,d.rewrite_category,d.src_port,d.tgt_port].join(' ').toLowerCase();if(hay.indexOf(q)>=0){ele.addClass('matched')}else{ele.addClass('dimmed')}});var matched=cy.elements('.matched').not('.filtered');if(fitMatches!==false&&matched.length){cy.fit(matched,48)}}function focusCollection(collection){if(!cy||!collection||!collection.length)return;cy.elements().removeClass('matched dimmed');var expanded=collection.union(collection.neighborhood()).not('.filtered');expanded.addClass('matched');cy.elements().not(expanded).not('.filtered').addClass('dimmed');cy.fit(expanded,48)}function focusAgents(){if(!cy)return;focusCollection(cy.nodes('[type_id = "agent"]').not('.filtered'))}function focusNeighborhood(){if(!cy)return;var selected=cy.$(':selected').not('.filtered');if(selected.length){focusCollection(selected);return}var agents=cy.nodes('[type_id = "agent"]').not('.filtered');if(agents.length){focusCollection(agents)}}function exportLens(){if(!currentLens)return;var blob=new Blob([JSON.stringify(currentLens,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(currentLens.label||'moos-lens').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.json';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},0)}function activate(index){buttons.forEach(function(btn){btn.classList.toggle('active',Number(btn.getAttribute('data-lens'))===index)});if(search){search.value=''}var data=lenses[index]||{label:'Lens',elements:[],node_count:0,relation_count:0,type_counts:{},relation_counts:{},agent_urns:[]};currentLens=data;showLensMeta(data);renderFilters(data);if(!window.cytoscape){title.textContent='Cytoscape.js unavailable';return}if(cy){cy.destroy()}cy=cytoscape({container:document.getElementById('cy'),elements:data.elements||[],layout:{name:'cose',animate:false,fit:true,padding:32,nodeRepulsion:9000,idealEdgeLength:110},minZoom:.18,maxZoom:3.5,style:[{selector:'node',style:{'label':'data(label)','font-size':10,'text-wrap':'wrap','text-max-width':120,'background-color':'#6f7f73','color':'#24362e','text-valign':'bottom','text-halign':'center','width':'mapData(degree,0,8,28,54)','height':'mapData(degree,0,8,28,54)','border-width':1,'border-color':'#ffffff'}},{selector:'node[type_id = "agent"]',style:{'background-color':'#4267a5'}},{selector:'node[type_id = "claim"]',style:{'background-color':'#4c78a8'}},{selector:'node[type_id = "derivation"]',style:{'background-color':'#7b61a8'}},{selector:'node[type_id = "knowledge_item"]',style:{'background-color':'#54a24b'}},{selector:'node[type_id = "program"]',style:{'background-color':'#9c755f'}},{selector:'node[type_id = "purpose"]',style:{'background-color':'#b279a2'}},{selector:'node[type_id = "view_filter"]',style:{'background-color':'#72b7b2'}},{selector:'node[type_id = "group"]',style:{'background-color':'#eeca3b'}},{selector:'node[type_id = "calendar_event"]',style:{'background-color':'#e15759'}},{selector:'node[type_id = "channel"]',style:{'background-color':'#59a14f'}},{selector:'edge',style:{'label':'data(label)','font-size':9,'curve-style':'bezier','target-arrow-shape':'triangle','line-color':'#9da8a0','target-arrow-color':'#9da8a0','width':1.4,'color':'#526057','text-background-color':'#fff','text-background-opacity':0.8}},{selector:'edge[rewrite_category = "WF01"]',style:{'line-color':'#5d6f2f','target-arrow-color':'#5d6f2f'}},{selector:'edge[rewrite_category = "WF02"]',style:{'line-color':'#6d5aa7','target-arrow-color':'#6d5aa7'}},{selector:'edge[rewrite_category = "WF18"]',style:{'line-color':'#2f6f9f','target-arrow-color':'#2f6f9f'}},{selector:'edge[rewrite_category = "WF19"]',style:{'line-color':'#287a72','target-arrow-color':'#287a72'}},{selector:'edge[rewrite_category = "WF21"]',style:{'line-color':'#7a4aa0','target-arrow-color':'#7a4aa0','line-style':'dashed'}},{selector:'.filtered',style:{'display':'none'}},{selector:'.dimmed',style:{'opacity':0.16}},{selector:'.matched',style:{'border-width':4,'border-color':'#202522','line-color':'#202522','target-arrow-color':'#202522','opacity':1}},{selector:':selected',style:{'border-width':4,'border-color':'#202522','line-color':'#202522','target-arrow-color':'#202522'}}]});cy.on('tap','node, edge',function(evt){lastSelected=evt.target;show(evt.target.data())});cy.on('tap',function(evt){if(evt.target===cy){lastSelected=null;showLensMeta(data)}});cy.ready(function(){applyFilters();resizeFit()});}buttons.forEach(function(btn){btn.addEventListener('click',function(){activate(Number(btn.getAttribute('data-lens'))||0)})});if(search){search.addEventListener('input',function(){applySearch(true)})}if(fit){fit.addEventListener('click',resizeFit)}if(zoomIn){zoomIn.addEventListener('click',function(){zoomBy(1.25)})}if(zoomOut){zoomOut.addEventListener('click',function(){zoomBy(.8)})}if(reset){reset.addEventListener('click',function(){if(cy){if(search)search.value='';cy.elements().removeClass('matched dimmed filtered');cy.zoom(1);cy.center();resizeFit();applyFilters()}})}if(cose){cose.addEventListener('click',function(){runLayout('cose')})}if(grid){grid.addEventListener('click',function(){runLayout('grid')})}if(circle){circle.addEventListener('click',function(){runLayout('circle')})}if(breadth){breadth.addEventListener('click',function(){runLayout('breadthfirst')})}if(concentric){concentric.addEventListener('click',function(){runLayout('concentric')})}if(agentsBtn){agentsBtn.addEventListener('click',focusAgents)}if(neighborhoodBtn){neighborhoodBtn.addEventListener('click',focusNeighborhood)}if(exportBtn){exportBtn.addEventListener('click',exportLens)}if(wide){wide.addEventListener('click',function(){setWide(true)})}if(close){close.addEventListener('click',function(){setWide(false)})}if(backdrop){backdrop.addEventListener('click',function(){setWide(false)})}document.addEventListener('keydown',function(evt){if(evt.key==='Escape'){setWide(false)}});activate(0);})();</script>""")
         println(io, "</body></html>")
     end
 end

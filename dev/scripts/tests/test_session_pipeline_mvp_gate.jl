@@ -63,13 +63,14 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         :nodes => [
             Dict(:urn => "urn:moos:derivation:demo", :type_id => "derivation", :title => "Demo derivation", :status => "closed"),
             Dict(:urn => "urn:moos:claim:demo", :type_id => "claim", :title => "Demo claim", :status => "open"),
+            Dict(:urn => actor_urn, :type_id => "agent", :title => "VS Code Copilot", :status => "active"),
         ],
         :relations => [
             Dict(:urn => "urn:moos:rel:demo.causes.claim", :rewrite_category => "WF21", :src_urn => "urn:moos:derivation:demo", :src_port => "causes", :tgt_urn => "urn:moos:claim:demo", :tgt_port => "caused-by"),
         ],
         :root_urns => ["urn:moos:derivation:demo"],
         :filters => Dict(:wfs => ["WF21"], :ports => ["causes"], :types => ["claim"], :match => "session"),
-        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:derivation:demo", :connected => true)]),
+        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:derivation:demo", :connected => true)], :type_counts => Dict(:agent => 1)),
     )
     t189_graph_pack = Dict(
         :projection_kind => "graph_artifact_engineering",
@@ -78,13 +79,14 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         :nodes => [
             Dict(:urn => "urn:moos:purpose:t189", :type_id => "purpose", :title => "T189 convergence", :status => "open"),
             Dict(:urn => "urn:moos:program:t189", :type_id => "program", :title => "T189 program", :status => "draft"),
+            Dict(:urn => actor_urn, :type_id => "agent", :title => "VS Code Copilot", :status => "active"),
         ],
         :relations => [
             Dict(:urn => "urn:moos:rel:t189", :rewrite_category => "WF18", :src_urn => "urn:moos:purpose:t189", :src_port => "composes", :tgt_urn => "urn:moos:program:t189", :tgt_port => "composed-by"),
         ],
         :root_urns => ["urn:moos:purpose:t189"],
         :filters => Dict(:wfs => ["WF18", "WF19"], :ports => ["composes", "pins-urn"], :types => ["purpose", "program"], :match => "t189"),
-        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:purpose:t189", :connected => true)]),
+        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:purpose:t189", :connected => true)], :type_counts => Dict(:agent => 1)),
     )
     temporal_graph_pack = Dict(
         :projection_kind => "graph_artifact_engineering",
@@ -93,13 +95,14 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         :nodes => [
             Dict(:urn => "urn:moos:program:temporal", :type_id => "program", :title => "Temporal fabric", :status => "active"),
             Dict(:urn => "urn:moos:channel:calendar", :type_id => "channel", :title => "Calendar channel", :status => "active"),
+            Dict(:urn => actor_urn, :type_id => "agent", :title => "VS Code Copilot", :status => "active"),
         ],
         :relations => [
             Dict(:urn => "urn:moos:rel:temporal", :rewrite_category => "WF18", :src_urn => "urn:moos:program:temporal", :src_port => "composes", :tgt_urn => "urn:moos:channel:calendar", :tgt_port => "composed-by"),
         ],
         :root_urns => ["urn:moos:program:temporal"],
         :filters => Dict(:wfs => ["WF18", "WF19", "WF21"], :ports => ["composes", "pins-urn"], :types => ["program", "channel"], :match => "calendar"),
-        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:program:temporal", :connected => true)]),
+        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:program:temporal", :connected => true)], :type_counts => Dict(:agent => 1)),
     )
     calendar_scope_graph_pack = Dict(
         :projection_kind => "graph_artifact_engineering",
@@ -108,13 +111,14 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         :nodes => [
             Dict(:urn => "urn:moos:channel:google.calendar.sam", :type_id => "channel", :title => "Google Calendar", :status => "active"),
             Dict(:urn => "urn:moos:program:sam.t200plus.temporal-projection-fabric", :type_id => "program", :title => "Temporal fabric", :status => "active"),
+            Dict(:urn => actor_urn, :type_id => "agent", :title => "VS Code Copilot", :status => "active"),
         ],
         :relations => [
             Dict(:urn => "urn:moos:rel:calendar.scope", :rewrite_category => "WF18", :src_urn => "urn:moos:program:sam.t200plus.temporal-projection-fabric", :src_port => "composes", :tgt_urn => "urn:moos:channel:google.calendar.sam", :tgt_port => "composed-by"),
         ],
         :root_urns => ["urn:moos:program:sam.t200plus.temporal-projection-fabric"],
         :filters => Dict(:wfs => ["WF18", "WF19", "WF21"], :ports => [], :types => ["program", "channel"], :match => "calendar"),
-        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:program:sam.t200plus.temporal-projection-fabric", :connected => true)], :component_count => 1, :largest_component_size => 12),
+        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:program:sam.t200plus.temporal-projection-fabric", :connected => true)], :component_count => 1, :largest_component_size => 3, :type_counts => Dict(:agent => 1)),
     )
 
     mktempdir() do dir
@@ -196,6 +200,7 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test "Calendar scope lens" in names
         @test "T189 recommendation reconciliation" in names
         @test "deferred apply boundaries" in names
+        @test "agent neighborhood visibility" in names
         @test "surface context atlas" in names
         @test "one-shot apply script cleanup" in names
         @test plan["lingo"]["lens"] != ""
@@ -207,16 +212,29 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test plan["lingo"]["HG_occupant"] != ""
         @test plan["lingo"]["IDE_harness_surface"] != ""
         @test plan["lingo"]["actor_occupant_reconciliation"] != ""
+        @test plan["lingo"]["agent_neighborhood_lens"] != ""
+        @test plan["lingo"]["F_G_role_color"] != ""
+        @test plan["lingo"]["relation_family_insight"] != ""
         @test plan["renderer_candidates"][2]["name"] == "Cytoscape.js"
-        @test plan["interactive_inspector"]["node_count"] == 2
+        @test any(candidate["name"] == "svg-pan-zoom" for candidate in plan["renderer_candidates"])
+        @test any(candidate["name"] == "GraphMakie + Graphs.jl" for candidate in plan["renderer_candidates"])
+        @test any(candidate["name"] == "ELK / Dagre hierarchical layout" for candidate in plan["renderer_candidates"])
+        @test length(plan["visual_stack_notes"]) == 4
+        @test plan["interactive_inspector"]["node_count"] == 3
         @test plan["interactive_inspector"]["relation_count"] == 1
+        @test plan["interactive_inspector"]["type_counts"]["agent"] == 1
+        @test plan["interactive_inspector"]["agent_urns"] == [actor_urn]
+        @test plan["interactive_inspector"]["fg_counts"]["authority"] == 1
+        @test plan["interactive_inspector"]["fg_counts"]["g-evidence"] == 1
+        @test plan["interactive_inspector"]["relation_family_counts"]["causal lineage"] == 1
+        @test any(node["fg_role"] == "lineage" for node in plan["interactive_inspector"]["top_nodes"])
         @test length(plan["interactive_inspectors"]) == 4
         @test plan["interactive_inspectors"][2]["label"] == "Calendar Time-Fabric"
         @test plan["interactive_inspectors"][3]["label"] == "T189 Recommendations"
         @test plan["interactive_inspectors"][4]["label"] == "Calendar Scope"
         @test length(plan["pipeline_stages"]) == 4
         @test plan["pipeline_stages"][1]["status"] == "pass"
-        @test plan["pipeline_stages"][3]["summary"]["pass"] == 11
+        @test plan["pipeline_stages"][3]["summary"]["pass"] == 12
         @test isempty(plan["priority_actions"])
 
         html_path = joinpath(dir, "index.html")
@@ -228,10 +246,17 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test occursin("Calendar Time-Fabric", html)
         @test occursin("HG Recommendations", html)
         @test occursin("Visual Lenses", html)
+        @test occursin("F/G Relation Insights", html)
+        @test occursin("Graphview Stack Notes", html)
+        @test occursin("Renderer separation", html)
+        @test occursin("causal lineage", html)
+        @test occursin("authority", html)
         @test occursin("SVG zoom pane", html)
         @test occursin("Static Graphviz proof frame", html)
         @test occursin("data-svg-panel", html)
         @test occursin("data-svg-action=\"fit\"", html)
+        @test occursin("data-svg-action=\"svg-find\"", html)
+        @test occursin("data-svg-action=\"center\"", html)
         @test occursin("data-svg-action=\"zoom-in\"", html)
         @test occursin("data-svg-action=\"zoom-out\"", html)
         @test occursin("data-svg-action=\"reset\"", html)
@@ -242,10 +267,18 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test occursin("Calendar Scope", html)
         @test occursin("Review Surfaces", html)
         @test occursin("cySearch", html)
+        @test occursin("cyTypeFilters", html)
+        @test occursin("cyRelationFilters", html)
         @test occursin("cyWide", html)
         @test occursin("inspectorBackdrop", html)
         @test occursin("cyZoomIn", html)
         @test occursin("cyZoomOut", html)
+        @test occursin("cyCircle", html)
+        @test occursin("cyBreadth", html)
+        @test occursin("cyConcentric", html)
+        @test occursin("cyAgents", html)
+        @test occursin("cyNeighborhood", html)
+        @test occursin("cyExport", html)
         @test occursin("Open Graph Artifact", html)
         @test occursin("Open Reconciliation", html)
         @test occursin("Surface Context Atlas", html)

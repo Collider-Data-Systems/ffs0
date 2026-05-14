@@ -21,6 +21,10 @@ const DEFAULT_WFS = "WF12,WF18,WF20,WF21"
 const DEFAULT_PORTS = "causes,caused-by,composes,composed-by,consumes,consumed-by,produces,produced-by,provides-kb,provided-by,grammar-promotes,grammar-promoted-by"
 const DEFAULT_TYPES = "claim,derivation,grammar_fragment,knowledge_item,pattern,program,purpose,session,system_instruction,workflow"
 const DEFAULT_MATCH = "session|occasion|affordance|keep|purpose|program|workflow|grammar|z440"
+const DEFAULT_CONTEXT_AGENT_URNS = ""
+const AGENT_CONTEXT_TYPES = Set(["session", "program"])
+const AGENT_CONTEXT_RELATION_CATEGORIES = Set(["WF01", "WF02", "WF19"])
+const AGENT_CONTEXT_PRINCIPAL_TYPES = Set(["agent", "group", "role", "user"])
 
 function object_value(obj, name::Symbol, default=nothing)
     if obj isa AbstractDict
@@ -78,6 +82,8 @@ function split_roots(raw::AbstractString)
     return roots
 end
 
+split_urns(raw::AbstractString) = split_roots(raw)
+
 function nodes_by_urn(nodes)
     result = Dict{String, Any}()
     for node in nodes
@@ -128,7 +134,53 @@ function expand_neighborhood(relations, roots::Vector{String}; radius::Integer=D
     return selected
 end
 
-function selected_subgraph(nodes, relations; root_urns::Vector{String}=split_roots(DEFAULT_ROOT_URNS), radius::Integer=DEFAULT_RADIUS, wf_filter=split_set(DEFAULT_WFS), port_filter=split_set(DEFAULT_PORTS), type_filter=split_set(DEFAULT_TYPES), match_pattern::String=DEFAULT_MATCH)
+function node_type(index, urn::AbstractString)
+    haskey(index, urn) || return ""
+    return string(object_value(index[urn], :type_id, ""))
+end
+
+function agent_neighborhood(index, relations, selected::Set{String}; seed_agents::Set{String}=Set{String}())
+    agents = Set{String}(agent for agent in seed_agents if haskey(index, agent) && node_type(index, agent) == "agent")
+    context_urns = Set{String}()
+    relation_urns = Set{String}()
+    union!(context_urns, agents)
+    function add_context!(rel, src::String, tgt::String, src_type::String, tgt_type::String)
+        push!(context_urns, src)
+        push!(context_urns, tgt)
+        src_type == "agent" && push!(agents, src)
+        tgt_type == "agent" && push!(agents, tgt)
+        push!(relation_urns, string(object_value(rel, :urn, "")))
+    end
+    for rel in relations
+        src = string(object_value(rel, :src_urn, ""))
+        tgt = string(object_value(rel, :tgt_urn, ""))
+        src_type = node_type(index, src)
+        tgt_type = node_type(index, tgt)
+        src_context = src in selected && src_type in AGENT_CONTEXT_TYPES
+        tgt_context = tgt in selected && tgt_type in AGENT_CONTEXT_TYPES
+        if src_context && tgt_type == "agent"
+            add_context!(rel, src, tgt, src_type, tgt_type)
+        elseif tgt_context && src_type == "agent"
+            add_context!(rel, src, tgt, src_type, tgt_type)
+        end
+    end
+    for rel in relations
+        category = string(object_value(rel, :rewrite_category, ""))
+        category in AGENT_CONTEXT_RELATION_CATEGORIES || continue
+        src = string(object_value(rel, :src_urn, ""))
+        tgt = string(object_value(rel, :tgt_urn, ""))
+        src_type = node_type(index, src)
+        tgt_type = node_type(index, tgt)
+        touches_agent = src in agents || tgt in agents
+        owns_selected_context = category == "WF01" && ((src_type in AGENT_CONTEXT_PRINCIPAL_TYPES && tgt in selected && tgt_type in AGENT_CONTEXT_TYPES) || (tgt_type in AGENT_CONTEXT_PRINCIPAL_TYPES && src in selected && src_type in AGENT_CONTEXT_TYPES))
+        if touches_agent || owns_selected_context
+            add_context!(rel, src, tgt, src_type, tgt_type)
+        end
+    end
+    return context_urns, agents, relation_urns
+end
+
+function selected_subgraph(nodes, relations; root_urns::Vector{String}=split_roots(DEFAULT_ROOT_URNS), radius::Integer=DEFAULT_RADIUS, wf_filter=split_set(DEFAULT_WFS), port_filter=split_set(DEFAULT_PORTS), type_filter=split_set(DEFAULT_TYPES), match_pattern::String=DEFAULT_MATCH, context_agent_urns::Vector{String}=split_urns(DEFAULT_CONTEXT_AGENT_URNS))
     index = nodes_by_urn(nodes)
     isempty(root_urns) && error("at least one root URN is required")
     missing_roots = [urn for urn in root_urns if !haskey(index, urn)]
@@ -142,16 +194,20 @@ function selected_subgraph(nodes, relations; root_urns::Vector{String}=split_roo
             push!(selected, urn)
         end
     end
+    context_agents = Set{String}(context_agent_urns)
+    agent_context_urns, agent_urns, agent_relation_urns = agent_neighborhood(index, relations, selected; seed_agents=context_agents)
+    union!(selected, agent_context_urns)
     selected_relations = Any[]
     for rel in relations
-        relation_allowed(rel, wf_filter, port_filter) || continue
+        allowed = relation_allowed(rel, wf_filter, port_filter) || string(object_value(rel, :urn, "")) in agent_relation_urns
+        allowed || continue
         src = string(object_value(rel, :src_urn, ""))
         tgt = string(object_value(rel, :tgt_urn, ""))
         if src in selected && tgt in selected
             push!(selected_relations, rel)
         end
     end
-    return index, selected, selected_relations
+    return index, selected, selected_relations, agent_context_urns, agent_urns, agent_relation_urns
 end
 
 function compact_properties(node)
@@ -353,9 +409,9 @@ function engineering_findings(selected_nodes, selected_relations; root_coverage=
     return findings
 end
 
-function plan_graph_artifact_projection(nodes, relations; root_urn::String=DEFAULT_ROOT_URN, root_urns::Vector{String}=String[], radius::Integer=DEFAULT_RADIUS, wf_filter=split_set(DEFAULT_WFS), port_filter=split_set(DEFAULT_PORTS), type_filter=split_set(DEFAULT_TYPES), match_pattern::String=DEFAULT_MATCH, health=nothing, generated_at::String=format_utc(now(UTC)), base_url::String=DEFAULT_BASE_URL)
+function plan_graph_artifact_projection(nodes, relations; root_urn::String=DEFAULT_ROOT_URN, root_urns::Vector{String}=String[], radius::Integer=DEFAULT_RADIUS, wf_filter=split_set(DEFAULT_WFS), port_filter=split_set(DEFAULT_PORTS), type_filter=split_set(DEFAULT_TYPES), match_pattern::String=DEFAULT_MATCH, context_agent_urns::Vector{String}=split_urns(DEFAULT_CONTEXT_AGENT_URNS), health=nothing, generated_at::String=format_utc(now(UTC)), base_url::String=DEFAULT_BASE_URL)
     roots = isempty(root_urns) ? [root_urn] : root_urns
-    index, selected, selected_relations = selected_subgraph(nodes, relations; root_urns=roots, radius=radius, wf_filter=wf_filter, port_filter=port_filter, type_filter=type_filter, match_pattern=match_pattern)
+    index, selected, selected_relations, agent_context_urns, agent_urns, agent_relation_urns = selected_subgraph(nodes, relations; root_urns=roots, radius=radius, wf_filter=wf_filter, port_filter=port_filter, type_filter=type_filter, match_pattern=match_pattern, context_agent_urns=context_agent_urns)
     selected_nodes = [index[urn] for urn in sort(collect(selected))]
     summaries = [node_summary(node) for node in selected_nodes]
     rel_summaries = [relation_summary(rel) for rel in selected_relations]
@@ -372,6 +428,14 @@ function plan_graph_artifact_projection(nodes, relations; root_urn::String=DEFAU
     counts["component_count"] = length(sizes)
     counts["component_sizes"] = sizes
     counts["largest_component_size"] = isempty(sizes) ? 0 : first(sizes)
+    counts["agent_neighborhood"] = Dict(
+        "agent_count" => length(agent_urns),
+        "agent_urns" => sort(collect(agent_urns)),
+        "context_urns" => sort(collect(agent_context_urns)),
+        "relation_count" => length(agent_relation_urns),
+        "relation_urns" => sort(collect(agent_relation_urns)),
+        "rule" => "Agents directly connected to selected session/program nodes, plus immediate WF01/WF02/WF19 ownership/delegation/session context around those agents, are retained even when ordinary type or match filters would hide them.",
+    )
     findings = engineering_findings(selected_nodes, selected_relations; root_coverage=coverage)
     return Dict(
         "mode" => "plan",
@@ -388,6 +452,7 @@ function plan_graph_artifact_projection(nodes, relations; root_urn::String=DEFAU
             "ports" => sort(collect(port_filter)),
             "types" => sort(collect(type_filter)),
             "match" => match_pattern,
+            "context_agent_urns" => context_agent_urns,
         ),
         "node_count" => length(summaries),
         "relation_count" => length(rel_summaries),
@@ -500,6 +565,7 @@ function parse_args(argv)
         "nodes-file" => "",
         "relations-file" => "",
         "health-file" => "",
+        "context-agent-urns" => DEFAULT_CONTEXT_AGENT_URNS,
     )
     i = 1
     while i <= length(argv)
@@ -534,6 +600,7 @@ function main(argv=ARGS)
         port_filter=split_set(options["ports"]),
         type_filter=split_set(options["types"]),
         match_pattern=options["match"],
+        context_agent_urns=split_urns(options["context-agent-urns"]),
         health=health,
         base_url=options["base-url"],
     )

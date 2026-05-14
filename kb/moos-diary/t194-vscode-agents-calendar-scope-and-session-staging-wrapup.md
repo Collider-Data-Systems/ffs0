@@ -35,6 +35,31 @@ This rule lives first in projection/gate/tooling surfaces, not in a new ontology
 
 No new human/auth-account identity node was added. Existing `user:sam`, `group:sam`, and `role:superadmin` already express the user/group/authority side of this pass. The kernel helper was updated and tested so occupancy/admin resolution accepts `group` as a principal, matching the ontology's existing group-as-principal widening.
 
+## Agent-Neighborhood And F/G Graphview Addendum
+
+The follow-up sprint made the current actor/occupant visible in every generated graph and visual lens, then added relation insight metadata so the dashboard can explain why the visible relations matter.
+
+Implementation changes:
+
+- `dev/scripts/graph_artifact_projection.jl` now accepts `--context-agent-urns` and keeps the explicit context agent plus immediate WF01/WF02/WF19 ownership, delegation, and session neighborhood even when normal type, WF, port, or match filters would hide it.
+- `dev/scripts/export_t200plus_projection.jl` now honors `MOOS_PROJECTION_CONTEXT_AGENT_URNS` for the static DOT/SVG exports and records the context-agent selector in the Graphviz filter label.
+- `dev/scripts/projections/run-session-pipeline.ps1` passes the resolved `ActorUrn` into all four graph-artifact projections and all four SVG/DOT projections.
+- `dev/scripts/session_pipeline_mvp_gate.jl` now emits F/G node roles, WF relation-family labels, per-lens relation-family counts, top-degree node summaries, F/G Relation Insights cards, and Graphview Stack Notes.
+
+The visual stack decision is now explicit. Graphviz DOT/SVG remains the deterministic proof artifact. Cytoscape.js remains the right interactive browser inspector because typed element data, selectors, layouts, search, filters, focus, and tap selection map cleanly onto HG nodes and relations. Cytoscape Dagre/cose-bilkent or ELK/Dagre are the next layout-extension candidates for hierarchy and F/G pipeline views. `svg-pan-zoom` is still a polish option for SVG gestures, but the generated dashboard keeps local native SVG controls. Sigma.js + Graphology and force-graph are later options for larger read-only or dense canvas exploration. GraphMakie + Graphs.jl is the Julia-native analysis path when metrics/layouts should stay inside the Julia pipeline rather than the browser.
+
+Validation after this sprint:
+
+- All 10 Julia tests under `dev/scripts/tests` pass, 338/338 total.
+- Full session pipeline completes with `warn`, 22 pass / 2 warn / 0 fail.
+- Generated graph artifacts now include `urn:moos:agent:vscode.hp-laptop.copilot` in all four JSON `nodes` arrays: Session Occasion, Calendar Time-Fabric, T189 Recommendations, and Calendar Scope.
+- Generated DOT files now include the same agent in all four static visual lenses.
+- `session_pipeline_gate.json` contains `fg_counts`, `relation_family_counts`, `visual_stack_notes`, and renderer candidates for GraphMakie + Graphs.jl, ELK/Dagre hierarchical layout, and Sigma.js + Graphology.
+- `index.html` contains F/G Relation Insights, Graphview Stack Notes, causal-lineage and authority-ownership labels, and the richer Cytoscape/SVG controls.
+- `git diff --check` passes, with only CRLF normalization warnings from Git on this Windows checkout.
+
+The final gate still has two useful warnings: visual lens root coverage and T189 recommendation reconciliation. The new agent-neighborhood visibility gate passes.
+
 ## What Changed Locally
 
 Tracked local edits now cover four groups.
@@ -67,18 +92,19 @@ Latest local proof after implementation:
 
 - Julia focused tests: `test_calendar_time_fabric_projection.jl` passed 22/22; `test_session_pipeline_mvp_gate.jl` passed 69/69 after the fourth inspector, modal/zoom controls, and SVG zoom panes.
 - Identity-focused regression tests after the occupancy correction: `test_session_context_projection.jl` passed 29/29; `test_session_pipeline_mvp_gate.jl` passed 69/69 plus 4/4 gap tests; config/program JSON parsing passed; `VerifyPersona -Persona guido` passed against `agent:vscode.hp-laptop.copilot`; `go test ./internal/operad` passed after the group-principal helper fix.
-- Full session pipeline after the identity gate: `warn`, 21 pass, 2 warn, 0 fail.
+- Full session pipeline after the identity gate: `warn`, 21 pass, 2 warn, 0 fail. Full session pipeline after the four-lens agent-neighborhood/F-G insight sprint: `warn`, 22 pass, 2 warn, 0 fail.
 - Dashboard: `tmp/projections/session_pipeline/index.html`.
 - Edge/CDP browser validation passed against the generated dashboard, including headline metrics, four SVG objects, SVG zoom in/out/reset, SVG wide-pane open/close, four Cytoscape tabs, Calendar Time-Fabric tab selection, Calendar Scope tab selection, and no console/runtime errors.
 - Calendar writer: credential check passed; dry-run saw 16 events; real write patched 16 existing Google Calendar events, inserted 0.
 - Diagnostics on touched Julia/PowerShell/test files: clean.
+- Full Julia projection test set: all 10 `dev/scripts/tests/test_*.jl` files pass, 338/338 total.
 - `git diff --check`: only CRLF normalization warnings, no whitespace errors.
 
 Generated artifact shape is now symmetrical:
 
 - Graph artifacts: `session_occasion_engineering`, `temporal_calendar_engineering`, `t189_recommendation_engineering`, and `calendar_scope_engineering` as JSON/Markdown pairs.
 - Visuals: `session_occasion_frame`, `temporal_calendar_frame`, `t189_recommendation_frame`, and `calendar_scope_frame` as DOT/SVG pairs, surfaced as four SVG zoom panes in the dashboard.
-- Interactive inspectors: Session Occasion 16/20, Calendar Time-Fabric 44/54, T189 Recommendations 47/61, and Calendar Scope 53/62.
+- Interactive inspectors after the agent-neighborhood sprint: Session Occasion 19/23, Calendar Time-Fabric 47/67, T189 Recommendations 50/75, and Calendar Scope 59/85.
 
 The two pipeline warnings are expected and useful:
 
