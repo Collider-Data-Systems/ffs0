@@ -18,7 +18,7 @@
       "mcp_server": "moos-hpprodesk-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/hppro-vscode-t193-bootstrap.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
       "skills": ["moos-state-readback", "moos-tooling-dx", "moos-session-context-projection", "moos-rewrite-envelope"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona hpprodesk-vscode", "go test ./..."]
     },
@@ -32,7 +32,7 @@
       "mcp_server": "moos-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/z440-vscode-t190-finish-today.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/z440-vscode-t190-finish-today.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
       "skills": ["moos-session-context-projection", "moos-tooling-dx", "moos-state-readback", "moos-github-project-bridge"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona z440-vscode-lead", "dev/scripts/projections/run-session-pipeline.ps1"]
     },
@@ -62,7 +62,7 @@
       "topology_mcp_server": "moos-menno",
       "workspace": "moos-router-feat-type-map-routing",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/delegate-vscode-t166-overhaul.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/delegate-vscode-t166-overhaul.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
       "skills": ["moos-tooling-dx", "moos-session-context-projection", "moos-running-state-validator"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona steinberger", "go test ./..."]
     },
@@ -78,7 +78,7 @@
       "topology_mcp_server": "moos-lola",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/delegate-vscode-t166-overhaul.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/delegate-vscode-t166-overhaul.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
       "skills": ["moos-categorical-research", "moos-session-context-projection", "moos-state-readback"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona karpathy", "dev/scripts/projections/run-session-pipeline.ps1"]
     },
@@ -105,7 +105,7 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["Claude Code", "VS Code", "Copilot"],
-      "prompts": [".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
       "skills": ["moos-state-readback", "moos-round-close", "moos-running-state-validator", "moos-cross-persona-audit", "moos-rewrite-envelope"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona guido", "dev/scripts/projections/run-session-pipeline.ps1"]
     },

@@ -4,6 +4,10 @@
 			"type": "sse",
 			"url": "http://localhost:8080/sse"
 		},
+		"moos-hpprodesk-primary": {
+			"type": "sse",
+			"url": "http://localhost:8080/sse"
+		},
 		"moos-primary": {
 			"type": "sse",
 			"url": "http://localhost:8080/sse"

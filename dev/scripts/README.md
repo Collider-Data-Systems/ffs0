@@ -56,7 +56,7 @@ Older projection files may still exist directly under `tmp/projections/`; treat 
 
 ## T193 HP ProDesk Bootstrap
 
-For the third-workstation bring-up, use `.github/prompts/hppro-vscode-t193-bootstrap.prompt.md` after installing VS Code/Copilot on HP ProDesk. The prompt tells the HP ProDesk-side agent to discover hostname/IP, clone or refresh the three repos, build one primary kernel, verify local `/healthz`, and report back before topology edits or HG applies.
+For workstation bring-up or refresh, select `.github/agents/moos-workstation-operator.agent.md` in the VS Code Agents window and run `.github/prompts/agent-workstation-open.prompt.md`. The prompt tells the workstation-side agent to read live running state, snapshot the three repos, check local `/healthz`, inspect MCP config without printing secrets, and report before topology edits or HG applies.
 
 ### Session Pipeline Control Surface
 

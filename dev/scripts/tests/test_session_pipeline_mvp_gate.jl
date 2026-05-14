@@ -73,6 +73,36 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         :filters => Dict(:wfs => ["WF18", "WF19"], :ports => ["composes", "pins-urn"], :types => ["purpose", "program"], :match => "t189"),
         :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:purpose:t189", :connected => true)]),
     )
+    temporal_graph_pack = Dict(
+        :projection_kind => "graph_artifact_engineering",
+        :node_count => 6,
+        :relation_count => 4,
+        :nodes => [
+            Dict(:urn => "urn:moos:program:temporal", :type_id => "program", :title => "Temporal fabric", :status => "active"),
+            Dict(:urn => "urn:moos:channel:calendar", :type_id => "channel", :title => "Calendar channel", :status => "active"),
+        ],
+        :relations => [
+            Dict(:urn => "urn:moos:rel:temporal", :rewrite_category => "WF18", :src_urn => "urn:moos:program:temporal", :src_port => "composes", :tgt_urn => "urn:moos:channel:calendar", :tgt_port => "composed-by"),
+        ],
+        :root_urns => ["urn:moos:program:temporal"],
+        :filters => Dict(:wfs => ["WF18", "WF19", "WF21"], :ports => ["composes", "pins-urn"], :types => ["program", "channel"], :match => "calendar"),
+        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:program:temporal", :connected => true)]),
+    )
+    calendar_scope_graph_pack = Dict(
+        :projection_kind => "graph_artifact_engineering",
+        :node_count => 12,
+        :relation_count => 10,
+        :nodes => [
+            Dict(:urn => "urn:moos:channel:google.calendar.sam", :type_id => "channel", :title => "Google Calendar", :status => "active"),
+            Dict(:urn => "urn:moos:program:sam.t200plus.temporal-projection-fabric", :type_id => "program", :title => "Temporal fabric", :status => "active"),
+        ],
+        :relations => [
+            Dict(:urn => "urn:moos:rel:calendar.scope", :rewrite_category => "WF18", :src_urn => "urn:moos:program:sam.t200plus.temporal-projection-fabric", :src_port => "composes", :tgt_urn => "urn:moos:channel:google.calendar.sam", :tgt_port => "composed-by"),
+        ],
+        :root_urns => ["urn:moos:program:sam.t200plus.temporal-projection-fabric"],
+        :filters => Dict(:wfs => ["WF18", "WF19", "WF21"], :ports => [], :types => ["program", "channel"], :match => "calendar"),
+        :analysis => Dict(:root_coverage => [Dict(:urn => "urn:moos:program:sam.t200plus.temporal-projection-fabric", :connected => true)], :component_count => 1, :largest_component_size => 12),
+    )
 
     mktempdir() do dir
         dot_path = joinpath(dir, "frame.dot")
@@ -81,6 +111,8 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         temporal_svg_path = joinpath(dir, "temporal.svg")
         t189_dot_path = joinpath(dir, "t189.dot")
         t189_svg_path = joinpath(dir, "t189.svg")
+        calendar_scope_dot_path = joinpath(dir, "calendar_scope.dot")
+        calendar_scope_svg_path = joinpath(dir, "calendar_scope.svg")
         calendar_plan_path = joinpath(dir, "calendar_plan.json")
         calendar_report_path = joinpath(dir, "calendar_plan.md")
         recommendation_plan_path = joinpath(dir, "recommendation_plan.json")
@@ -96,6 +128,8 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         write(temporal_svg_path, "<svg></svg>")
         write(t189_dot_path, "digraph t189 {}")
         write(t189_svg_path, "<svg></svg>")
+        write(calendar_scope_dot_path, "digraph calendar_scope {}")
+        write(calendar_scope_svg_path, "<svg></svg>")
         write(calendar_plan_path, "{\"event_count\":2,\"events\":[{},{}]}\n")
         write(calendar_report_path, "# Calendar report\n")
         write(recommendation_plan_path, "{\"candidate_node_count\":8,\"selected_t189_recommendations\":[{},{},{},{},{}]}\n")
@@ -110,13 +144,17 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
             health=Dict(:status => "ok", :ontology_version => "3.16.1", :t_day => 188, :log_len => 1079),
             session_pack=session_pack,
             graph_pack=graph_pack,
+            temporal_graph_pack=temporal_graph_pack,
             t189_graph_pack=t189_graph_pack,
+            calendar_scope_graph_pack=calendar_scope_graph_pack,
             dot_path=dot_path,
             svg_path=svg_path,
             temporal_dot_path=temporal_dot_path,
             temporal_svg_path=temporal_svg_path,
             t189_dot_path=t189_dot_path,
             t189_svg_path=t189_svg_path,
+            calendar_scope_dot_path=calendar_scope_dot_path,
+            calendar_scope_svg_path=calendar_scope_svg_path,
             calendar_plan_path=calendar_plan_path,
             calendar_report_path=calendar_report_path,
             recommendation_plan_path=recommendation_plan_path,
@@ -137,9 +175,11 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test "G input channel" in names
         @test "F session handoff header" in names
         @test "visual lens root coverage" in names
+        @test "Temporal Calendar lens" in names
         @test "Calendar time-fabric artifacts" in names
         @test "T189/T200 recommendation artifacts" in names
         @test "T189 recommendation lens" in names
+        @test "Calendar scope lens" in names
         @test "T189 recommendation reconciliation" in names
         @test "deferred apply boundaries" in names
         @test "surface context atlas" in names
@@ -151,11 +191,13 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test plan["renderer_candidates"][2]["name"] == "Cytoscape.js"
         @test plan["interactive_inspector"]["node_count"] == 2
         @test plan["interactive_inspector"]["relation_count"] == 1
-        @test length(plan["interactive_inspectors"]) == 2
-        @test plan["interactive_inspectors"][2]["label"] == "T189 Recommendations"
+        @test length(plan["interactive_inspectors"]) == 4
+        @test plan["interactive_inspectors"][2]["label"] == "Calendar Time-Fabric"
+        @test plan["interactive_inspectors"][3]["label"] == "T189 Recommendations"
+        @test plan["interactive_inspectors"][4]["label"] == "Calendar Scope"
         @test length(plan["pipeline_stages"]) == 4
         @test plan["pipeline_stages"][1]["status"] == "pass"
-        @test plan["pipeline_stages"][3]["summary"]["pass"] == 9
+        @test plan["pipeline_stages"][3]["summary"]["pass"] == 11
         @test isempty(plan["priority_actions"])
 
         html_path = joinpath(dir, "index.html")
@@ -168,6 +210,14 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test occursin("HG Recommendations", html)
         @test occursin("Visual Lenses", html)
         @test occursin("T189 Recommendations", html)
+        @test occursin("Calendar Scope", html)
+        @test occursin("Review Surfaces", html)
+        @test occursin("cySearch", html)
+        @test occursin("cyWide", html)
+        @test occursin("inspectorBackdrop", html)
+        @test occursin("cyZoomIn", html)
+        @test occursin("cyZoomOut", html)
+        @test occursin("Open Graph Artifact", html)
         @test occursin("Open Reconciliation", html)
         @test occursin("Surface Context Atlas", html)
         @test occursin("Open Atlas Report", html)

@@ -52,7 +52,7 @@ Files now carrying the HP ProDesk handoff:
 - `dev/config/moos-federation.topology.json` includes `hpprodesk.primary`, router peer data, MCP server `moos-hpprodesk-primary`, and persona key `hpprodesk-vscode`.
 - `dev/config/session-affordance-map.json` includes the `hpprodesk-vscode-bootstrap` session affordance entry.
 - `dev/scripts/ops/Test-MoosFederation.ps1` recognizes `hpprodesk-vscode` and normalizes `DESKTOP-3FC7C3F` to `hpprodesk`.
-- `.github/prompts/hppro-vscode-t193-bootstrap.prompt.md` remains the compatibility filename, but its contents now describe HP ProDesk, `$env:USERPROFILE\CDS`, and the concrete `hpprodesk` URNs.
+- The former HP ProDesk compatibility prompt was later retired; use `.github/prompts/agent-workstation-open.prompt.md` with the `moos-workstation-operator` VS Code agent for HP ProDesk refreshes.
 - `dev/scripts/t193_workstation_inventory.jl` and its test now default to `hpprodesk` rather than the old `hppro` placeholder.
 
 ## Running-State Versus Diary Rule

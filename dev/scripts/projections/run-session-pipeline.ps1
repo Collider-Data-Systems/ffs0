@@ -121,6 +121,18 @@ try {
             "--focus" $Focus
     }
     Invoke-Step "Graph artifact projection" { & $Julia "dev\scripts\graph_artifact_projection.jl" "--base-url" $ProjectionBaseUrl }
+    Invoke-Step "Temporal calendar graph artifact projection" {
+        & $Julia "dev\scripts\graph_artifact_projection.jl" `
+            "--base-url" $ProjectionBaseUrl `
+            "--root-urn" "urn:moos:program:sam.t200plus.temporal-projection-fabric" `
+            "--root-urns" "urn:moos:session:sam.governance;urn:moos:channel:google.calendar.sam;urn:moos:program:sam.t200plus.temporal-projection-fabric;urn:moos:program:sam.t200plus.google-calendar-projection-contract;urn:moos:program:sam.t200plus.google-calendar-projection-planner;urn:moos:program:sam.t200plus.google-calendar-oauth-writer;urn:moos:derivation:guido.t200plus-google-calendar-write-result" `
+            "--radius" "2" `
+            "--wfs" "WF18,WF19,WF21" `
+            "--ports" "causes,caused-by,composes,composed-by,has-purpose,purpose-of-session,pinned-by-session,pins-urn" `
+            "--types" "calendar_event,channel,clock,derivation,program,purpose,session,view_filter" `
+            "--match" "calendar|temporal|time|clock|t200|google|governance|projection|writer|oauth|time-fabric|purpose" `
+            "--out-base" "tmp/projections/session_pipeline/graph_artifacts/temporal_calendar_engineering"
+    }
     Invoke-Step "T189 recommendation graph artifact projection" {
         & $Julia "dev\scripts\graph_artifact_projection.jl" `
             "--base-url" $ProjectionBaseUrl `
@@ -132,6 +144,18 @@ try {
             "--types" "calendar_event,derivation,group,program,purpose,session,view_filter" `
             "--match" "t189|t200|calendar|github|cytoscape|my-tiny-data-collider|convergence|governance|application" `
             "--out-base" "tmp/projections/session_pipeline/graph_artifacts/t189_recommendation_engineering"
+    }
+    Invoke-Step "Calendar scope graph artifact projection" {
+        & $Julia "dev\scripts\graph_artifact_projection.jl" `
+            "--base-url" $ProjectionBaseUrl `
+            "--root-urn" "urn:moos:program:sam.t200plus.temporal-projection-fabric" `
+            "--root-urns" "urn:moos:session:sam.governance;urn:moos:channel:google.calendar.sam;urn:moos:program:sam.t200plus.temporal-projection-fabric;urn:moos:program:sam.t200plus.google-calendar-projection-contract;urn:moos:program:sam.t200plus.google-calendar-projection-planner;urn:moos:program:sam.t200plus.google-calendar-oauth-writer;urn:moos:derivation:guido.t200plus-google-calendar-write-result;urn:moos:derivation:guido.t189-calendar-event-g-ingest-decision;urn:moos:program:sam.t189.calendar-event-g-ingest-shape;urn:moos:purpose:sam.t189-t200plus-time-fabric-convergence;urn:moos:view_filter:sam.t189-time-fabric-session-lens" `
+            "--radius" "3" `
+            "--wfs" "WF01,WF07,WF18,WF19,WF21" `
+            "--ports" "*" `
+            "--types" "calendar_event,channel,claim,clock,derivation,external_op,group,knowledge_item,program,purpose,session,tool_call,view_filter" `
+            "--match" "calendar|temporal|time|clock|t189|t200|google|governance|session|event|projection|writer|oauth|time-fabric|surface|recommendation|convergence" `
+            "--out-base" "tmp/projections/session_pipeline/graph_artifacts/calendar_scope_engineering"
     }
 
     $env:MOOS_PROJECTION_PRESET = "session-occasion"
@@ -147,6 +171,10 @@ try {
     $env:MOOS_PROJECTION_OUT = "tmp/projections/session_pipeline/visual/t189_recommendation_frame"
     Invoke-Step "T189 recommendation visual projection" { & $Julia "dev\scripts\export_t200plus_projection.jl" }
 
+    $env:MOOS_PROJECTION_PRESET = "calendar-scope"
+    $env:MOOS_PROJECTION_OUT = "tmp/projections/session_pipeline/visual/calendar_scope_frame"
+    Invoke-Step "Calendar scope visual projection" { & $Julia "dev\scripts\export_t200plus_projection.jl" }
+
     $anchorTValue = $AnchorT
     if ($anchorTValue -le 0) {
         $health = Invoke-RestMethod -Uri "$ProjectionBaseUrl/healthz" -TimeoutSec 5
@@ -157,7 +185,7 @@ try {
             $anchorTValue = [int]$localHealth.t_day
         }
     }
-    Invoke-Step "Calendar time-fabric projection" { & $Julia "dev\scripts\calendar_time_fabric_projection.jl" "--anchor-t" ([string]$anchorTValue) }
+    Invoke-Step "Calendar time-fabric projection" { & $Julia "dev\scripts\calendar_time_fabric_projection.jl" "--anchor-t" ([string]$anchorTValue) "--scope-artifact" "tmp/projections/session_pipeline/graph_artifacts/calendar_scope_engineering.json" }
 
     Invoke-Step "T189/T200 recommendation HG projection" { & $Julia "dev\scripts\t189_t200_recommendation_projection.jl" }
 

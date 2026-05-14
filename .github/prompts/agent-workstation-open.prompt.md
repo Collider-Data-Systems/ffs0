@@ -1,5 +1,5 @@
 ---
-mode: agent
+agent: "moos-workstation-operator"
 description: "Use when opening or refreshing a mo:os VS Code/Copilot workstation session on hp-laptop, Z440, or HP ProDesk."
 ---
 
@@ -22,7 +22,7 @@ You are opening a VS Code/Copilot agent session on a mo:os workstation. Treat th
    Invoke-RestMethod http://localhost:8000/healthz | ConvertTo-Json -Depth 8
    Invoke-RestMethod http://localhost:9000/healthz | ConvertTo-Json -Depth 8
    ```
-5. Inspect `.vscode/mcp.json` and `.vscode/mcp.json.example` without printing secrets.
+5. Inspect `.vscode/mcp.json` if it exists and `.vscode/mcp.json.example` without printing secrets.
 
 ## Session Context
 

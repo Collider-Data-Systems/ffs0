@@ -1,6 +1,6 @@
 ---
 description: "Use when configuring VS Code, Copilot, Claude Desktop, Antigravity, MCP servers, workspace files, prompts, skills, or multi-workstation agent sessions."
-applyTo: "{**/*.code-workspace,**/.vscode/**,**/.github/prompts/**,**/.github/instructions/**,dev/claude-skills/**,dev/config/**}"
+applyTo: "{**/*.code-workspace,**/.vscode/**,**/.github/agents/**,**/.github/prompts/**,**/.github/instructions/**,dev/claude-skills/**,dev/config/**}"
 ---
 
 # Agent Workstation Rules
@@ -24,7 +24,9 @@ applyTo: "{**/*.code-workspace,**/.vscode/**,**/.github/prompts/**,**/.github/in
 - Treat VS Code chat sessions as S0 substrate. If a conversation matters beyond the live IDE, project or chunk it before treating it as durable state.
 - Keep repository-wide rules in `.github/copilot-instructions.md`.
 - Use scoped `.github/instructions/*.instructions.md` for task or file-family rules.
+- Use `.github/agents/*.agent.md` for VS Code custom agents and keep their frontmatter aligned with the current VS Code custom-agent format.
 - Use `.github/prompts/*.prompt.md` for repeatable operator handoffs.
+- Use `agent: "<custom-agent-name>"` in prompt frontmatter when a prompt should open under a specific VS Code custom agent.
 - Use `dev/claude-skills/*/SKILL.md` as the shared source for Claude Code skills; sync to `~/.claude/skills/` for active Claude Code discovery.
 
 ## MCP Rules

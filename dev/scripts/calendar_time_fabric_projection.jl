@@ -7,6 +7,7 @@ using JSON3
 using SHA
 
 const DEFAULT_GRAPH_ARTIFACT = "tmp/projections/session_pipeline/graph_artifacts/session_occasion_engineering.json"
+const DEFAULT_SCOPE_ARTIFACT = "tmp/projections/session_pipeline/graph_artifacts/calendar_scope_engineering.json"
 const DEFAULT_OUT = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json"
 const DEFAULT_MARKDOWN_OUT = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.md"
 const DEFAULT_CONTRACT_URN = "urn:moos:program:sam.t189.calendar-time-fabric-proof"
@@ -38,6 +39,8 @@ const TYPE_ORDER = Dict(
     "purpose" => 9,
     "session" => 10,
 )
+
+const TEMPORAL_FIELDS = [:t_day, :starts_t, :target_t, :deadline_t, :completed_t, :t_start, :t_target]
 
 function object_value(obj, name::Symbol, default=nothing)
     if obj isa AbstractDict
@@ -117,14 +120,19 @@ function node_status(node)
 end
 
 function node_t_value(node, fields::Vector{Symbol})
+    value, _ = node_t_value_detail(node, fields)
+    return value
+end
+
+function node_t_value_detail(node, fields::Vector{Symbol})
     props = object_value(node, :properties, Dict())
     for field in fields
         value = object_value(props, field, nothing)
         value = value isa AbstractDict ? object_value(value, :value, nothing) : value
         parsed = optional_t(value)
-        parsed !== nothing && return parsed
+        parsed !== nothing && return parsed, string(field)
     end
-    return nothing
+    return nothing, ""
 end
 
 function relation_context(relations, urn::AbstractString)
@@ -173,12 +181,60 @@ function summarize_relations(incoming, outgoing; limit::Integer=4)
 end
 
 function event_date_for_node(node, index::Integer; anchor_t::Integer, t0_date::Date)
-    explicit_t = node_t_value(node, [:t_day, :starts_t, :target_t, :deadline_t, :completed_t, :t_start, :t_target])
+    explicit_t, field = node_t_value_detail(node, TEMPORAL_FIELDS)
     if explicit_t !== nothing
-        return t_day_date(explicit_t; t0_date=t0_date), string("explicit T", explicit_t)
+        return t_day_date(explicit_t; t0_date=t0_date), Dict(
+            "kind" => "explicit_temporal_property",
+            "field" => field,
+            "t_day" => explicit_t,
+            "note" => string("explicit T", explicit_t),
+            "strength" => "high",
+        )
     end
     offset = fld(index - 1, 5)
-    return t_day_date(anchor_t + offset; t0_date=t0_date), string("lens-order placement from active T", anchor_t)
+    return t_day_date(anchor_t + offset; t0_date=t0_date), Dict(
+        "kind" => "lens_order_placement",
+        "field" => "<none>",
+        "t_day" => anchor_t + offset,
+        "note" => string("lens-order placement from active T", anchor_t),
+        "strength" => "low",
+    )
+end
+
+function surface_role(type_id::AbstractString)
+    type_id == "calendar_event" && return "G-observation-temporal-anchor"
+    type_id in Set(["program", "purpose", "session", "view_filter", "channel", "clock"]) && return "F-control-and-scope-carrier"
+    type_id in Set(["derivation", "claim", "knowledge_item"]) && return "evidence-lineage"
+    type_id in Set(["external_op", "tool_call"]) && return "actuator-boundary"
+    return "context-node"
+end
+
+function reliability_for(type_id::AbstractString, temporal_basis)
+    if type_id == "calendar_event"
+        return Dict(
+            "level" => "high",
+            "reason" => "calendar_event nodes are G-observations already typed back into HG with date/t_day identity",
+        )
+    elseif string(object_value(temporal_basis, :kind, "")) == "explicit_temporal_property"
+        return Dict(
+            "level" => "medium_high",
+            "reason" => "event date comes from an explicit HG temporal property; Calendar is a readable projection of graph time",
+        )
+    else
+        return Dict(
+            "level" => "low",
+            "reason" => "event date is lens-order placement; useful as a dashboard reminder, not a reliable schedule claim",
+        )
+    end
+end
+
+function relation_category_counts(incoming, outgoing)
+    counts = Dict{String, Int}()
+    for rel in vcat(incoming, outgoing)
+        category = string_value(object_value(rel, :rewrite_category, "<none>"), "<none>")
+        counts[category] = get(counts, category, 0) + 1
+    end
+    return counts
 end
 
 function calendar_payload(node, index::Integer, relations; contract_urn::String, anchor_t::Integer, t0_date::Date)
@@ -187,8 +243,10 @@ function calendar_payload(node, index::Integer, relations; contract_urn::String,
     type_id = string_value(object_value(node, :type_id, "unknown"), "unknown")
     title = short_title(node_title(node))
     status = node_status(node)
-    date, timing_note = event_date_for_node(node, index; anchor_t=anchor_t, t0_date=t0_date)
+    date, temporal_basis = event_date_for_node(node, index; anchor_t=anchor_t, t0_date=t0_date)
+    timing_note = string(temporal_basis["note"])
     incoming, outgoing = relation_context(relations, urn)
+    reliability = reliability_for(type_id, temporal_basis)
     projection = projection_id(urn, contract_urn)
     summary = short_title(string("mo:os ", type_id, " :: ", title); limit=96)
     description = String[
@@ -199,6 +257,8 @@ function calendar_payload(node, index::Integer, relations; contract_urn::String,
         string("Moos T anchor: T", anchor_t),
         string("IRL calendar date: ", date),
         string("Temporal interpretation: ", timing_note),
+        string("Surface role: ", surface_role(type_id)),
+        string("Calendar reliability: ", reliability["level"], " - ", reliability["reason"]),
         string("Relation counts: incoming=", length(incoming), ", outgoing=", length(outgoing)),
     ]
     relation_lines = summarize_relations(incoming, outgoing)
@@ -215,6 +275,14 @@ function calendar_payload(node, index::Integer, relations; contract_urn::String,
         "source_urn" => urn,
         "source_type" => type_id,
         "event_kind" => "recent_time_fabric_node",
+        "surface_role" => surface_role(type_id),
+        "temporal_basis" => temporal_basis,
+        "calendar_reliability" => reliability,
+        "relation_context" => Dict(
+            "incoming_count" => length(incoming),
+            "outgoing_count" => length(outgoing),
+            "category_counts" => relation_category_counts(incoming, outgoing),
+        ),
         "calendar_label" => get(TYPE_LABELS, type_id, "gray"),
         "google_event" => Dict(
             "summary" => summary,
@@ -244,7 +312,78 @@ function sorted_recent_nodes(nodes)
     return [pair[2] for pair in pairs]
 end
 
-function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONTRACT_URN, channel_urn::String=DEFAULT_CHANNEL_URN, anchor_t::Integer=188, t0_date::Date=DEFAULT_T0_DATE, max_events::Integer=64)
+function safe_read_json(path::AbstractString)
+    isempty(strip(path)) && return nothing
+    isfile(path) || return nothing
+    try
+        return JSON3.read(read(path, String))
+    catch
+        return nothing
+    end
+end
+
+function scope_diagnostics(path::AbstractString)
+    artifact = safe_read_json(path)
+    artifact === nothing && return Dict(
+        "path" => path,
+        "exists" => false,
+        "summary" => "No Calendar-scope graph artifact was available for this run.",
+    )
+    analysis = object_value(artifact, :analysis, Dict())
+    root_coverage = object_value(analysis, :root_coverage, Any[])
+    disconnected = [entry for entry in root_coverage if !Bool(object_value(entry, :connected, false))]
+    return Dict(
+        "path" => path,
+        "exists" => true,
+        "node_count" => Int(object_value(artifact, :node_count, 0)),
+        "relation_count" => Int(object_value(artifact, :relation_count, 0)),
+        "state_node_count" => Int(object_value(analysis, :state_node_count, 0)),
+        "state_relation_count" => Int(object_value(analysis, :state_relation_count, 0)),
+        "component_count" => Int(object_value(analysis, :component_count, 0)),
+        "largest_component_size" => Int(object_value(analysis, :largest_component_size, 0)),
+        "root_count" => length(root_coverage),
+        "disconnected_root_count" => length(disconnected),
+        "disconnected_roots" => [string_value(object_value(entry, :urn, "")) for entry in disconnected],
+    )
+end
+
+function slice_policy(max_events::Integer)
+    return Dict(
+        "event_source" => "session_occasion_graph_artifact_nodes",
+        "event_order" => "type-priority, then URN, then projected date",
+        "max_events" => max_events,
+        "default_depth" => 2,
+        "calendar_scope_depth" => 3,
+        "include_wfs" => ["WF01", "WF07", "WF12", "WF18", "WF19", "WF21"],
+        "interpretation" => "Only nodes admitted by the selected lens become Calendar events; the broader Calendar-scope artifact reports nearby graph availability and disconnected roots.",
+    )
+end
+
+function temporal_property_policy()
+    return Dict(
+        "explicit_fields" => [string(field) for field in TEMPORAL_FIELDS],
+        "strong_basis" => "calendar_event.date/t_day or program temporal fields such as starts_t, target_t, deadline_t, completed_t",
+        "weak_basis" => "lens-order placement from active T when a node has no explicit temporal property",
+        "dependency_relations" => Dict(
+            "WF18" => "program/purpose composition and known-node dependency DAG",
+            "WF21" => "causal lineage across derivation, claim, knowledge_item, program, channel, and clock",
+            "WF19" => "session scope, host, occupant, purpose, pins, and view filters",
+        ),
+    )
+end
+
+function ontological_patterns()
+    return [
+        Dict("name" => "evidence", "shape" => "channel -> knowledge_item -> claim, with derivation as inference carrier", "relations" => ["WF12", "WF21"]),
+        Dict("name" => "work", "shape" => "purpose/session/program: purpose colors the session, program carries temporal work", "relations" => ["WF18", "WF19"]),
+        Dict("name" => "actuator", "shape" => "external_op/tool_call/writer result: explicit boundary, never hidden inside a planner", "relations" => ["WF18", "WF21"]),
+        Dict("name" => "condition", "shape" => "t_hook/watchers/external_op conditions unblock programs; status is observed and gated", "relations" => ["WF17", "WF18"]),
+        Dict("name" => "argument", "shape" => "tool_call.arguments and pattern/workflow schemas are carriers, while topology stays in relations", "relations" => ["WF05", "WF18"]),
+        Dict("name" => "branchless-FP", "shape" => "project from folded state with pure planners; writers and rewrites are separate actuator/apply steps", "relations" => ["fold", "F", "G"]),
+    ]
+end
+
+function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONTRACT_URN, channel_urn::String=DEFAULT_CHANNEL_URN, anchor_t::Integer=188, t0_date::Date=DEFAULT_T0_DATE, max_events::Integer=64, scope_artifact_path::String=DEFAULT_SCOPE_ARTIFACT)
     nodes = sorted_recent_nodes(collect(object_value(artifact, :nodes, [])))
     relations = collect(object_value(artifact, :relations, []))
     if max_events > 0 && length(nodes) > max_events
@@ -256,6 +395,8 @@ function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONT
         payload !== nothing && push!(events, payload)
     end
     sort!(events; by = event -> (event["google_event"]["start"]["date"], event["source_type"], event["source_urn"]))
+    explicit_count = count(event -> string(object_value(event["temporal_basis"], :kind, "")) == "explicit_temporal_property", events)
+    lens_order_count = length(events) - explicit_count
     return Dict(
         "mode" => "plan",
         "source" => "hg_graph_artifact",
@@ -268,6 +409,17 @@ function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONT
         "node_count" => length(nodes),
         "relation_count" => length(relations),
         "event_count" => length(events),
+        "slice_policy" => slice_policy(max_events),
+        "temporal_property_policy" => temporal_property_policy(),
+        "scope_diagnostics" => scope_diagnostics(scope_artifact_path),
+        "calendar_surface_assessment" => Dict(
+            "reliable_as" => ["readable F-projection index", "operator reminder surface", "G-observation carrier when calendar_event nodes are reconciled back into HG"],
+            "not_reliable_as" => ["source of truth", "complete task scheduler", "proof that unlinked nodes are in session scope"],
+            "explicit_temporal_event_count" => explicit_count,
+            "lens_order_event_count" => lens_order_count,
+            "writer_boundary" => "google_calendar_writer.jl is the explicit actuator; this planner is dry and side-effect free",
+        ),
+        "ontological_patterns" => ontological_patterns(),
         "events" => events,
     )
 end
@@ -289,6 +441,28 @@ function write_markdown(path::AbstractString, plan)
         println(io, "- Contract URN: `", plan["contract_urn"], "`")
         println(io, "- Anchor: T", plan["anchor_t"], " / ", plan["anchor_date"])
         println(io, "- Events: ", plan["event_count"])
+        println(io, "- Slice: ", plan["slice_policy"]["event_source"], "; depth ", plan["slice_policy"]["default_depth"], " for event candidates, depth ", plan["slice_policy"]["calendar_scope_depth"], " for Calendar-scope diagnostics")
+        println(io, "- Temporal basis: ", plan["calendar_surface_assessment"]["explicit_temporal_event_count"], " explicit, ", plan["calendar_surface_assessment"]["lens_order_event_count"], " lens-order")
+        println(io)
+        println(io, "## Calendar Surface Reliability")
+        println(io, "Calendar is reliable here as a readable F-projection index and as a G-observation carrier after Calendar events are reconciled into HG. It is not the source of truth, not a complete scheduler, and not proof that disconnected nodes are in session scope.")
+        println(io, "Writer boundary: ", plan["calendar_surface_assessment"]["writer_boundary"])
+        println(io)
+        println(io, "## Calendar Scope Diagnostics")
+        scope = plan["scope_diagnostics"]
+        if Bool(object_value(scope, :exists, false))
+            println(io, "- Artifact: `", scope["path"], "`")
+            println(io, "- Selected: ", scope["node_count"], "/", scope["state_node_count"], " nodes; ", scope["relation_count"], "/", scope["state_relation_count"], " relations")
+            println(io, "- Components: ", scope["component_count"], " (largest ", scope["largest_component_size"], " nodes)")
+            println(io, "- Roots: ", scope["root_count"], "; disconnected: ", scope["disconnected_root_count"])
+        else
+            println(io, "- ", scope["summary"])
+        end
+        println(io)
+        println(io, "## Ontological Pattern Reading")
+        for pattern in plan["ontological_patterns"]
+            println(io, "- ", pattern["name"], ": ", pattern["shape"])
+        end
         println(io)
         println(io, "| Date | Type | Source URN | Summary |")
         println(io, "| --- | --- | --- | --- |")
@@ -306,6 +480,7 @@ function parse_args(argv)
         "markdown-out" => DEFAULT_MARKDOWN_OUT,
         "contract-urn" => DEFAULT_CONTRACT_URN,
         "channel-urn" => DEFAULT_CHANNEL_URN,
+        "scope-artifact" => DEFAULT_SCOPE_ARTIFACT,
         "anchor-t" => "188",
         "t0-date" => string(DEFAULT_T0_DATE),
         "max-events" => "64",
@@ -339,6 +514,7 @@ function main(argv=ARGS)
         anchor_t=parse(Int, options["anchor-t"]),
         t0_date=Date(options["t0-date"]),
         max_events=parse(Int, options["max-events"]),
+        scope_artifact_path=options["scope-artifact"],
     )
     write_json(options["out"], plan)
     write_markdown(options["markdown-out"], plan)

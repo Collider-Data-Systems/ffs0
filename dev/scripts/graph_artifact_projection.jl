@@ -209,6 +209,41 @@ function count_by(nodes, relations)
     )
 end
 
+function component_sizes(nodes, relations)
+    urns = Set([string(object_value(node, :urn, "")) for node in nodes])
+    adjacency = Dict{String, Set{String}}()
+    for urn in urns
+        adjacency[urn] = Set{String}()
+    end
+    for rel in relations
+        src = string(object_value(rel, :src_urn, ""))
+        tgt = string(object_value(rel, :tgt_urn, ""))
+        if src in urns && tgt in urns
+            push!(adjacency[src], tgt)
+            push!(adjacency[tgt], src)
+        end
+    end
+    visited = Set{String}()
+    sizes = Int[]
+    for urn in sort(collect(urns))
+        urn in visited && continue
+        stack = [urn]
+        size = 0
+        while !isempty(stack)
+            current = pop!(stack)
+            current in visited && continue
+            push!(visited, current)
+            size += 1
+            for neighbor in adjacency[current]
+                neighbor in visited || push!(stack, neighbor)
+            end
+        end
+        push!(sizes, size)
+    end
+    sort!(sizes; rev=true)
+    return sizes
+end
+
 function root_coverage(root_urns::Vector{String}, index, selected_relations)
     coverage = Any[]
     for urn in root_urns
@@ -326,7 +361,17 @@ function plan_graph_artifact_projection(nodes, relations; root_urn::String=DEFAU
     rel_summaries = [relation_summary(rel) for rel in selected_relations]
     counts = count_by(selected_nodes, selected_relations)
     coverage = root_coverage(roots, index, selected_relations)
+    sizes = component_sizes(selected_nodes, selected_relations)
     counts["root_coverage"] = coverage
+    counts["state_node_count"] = length(nodes)
+    counts["state_relation_count"] = length(relations)
+    counts["selected_node_count"] = length(summaries)
+    counts["selected_relation_count"] = length(rel_summaries)
+    counts["unselected_node_count"] = max(length(nodes) - length(summaries), 0)
+    counts["unselected_relation_count"] = max(length(relations) - length(rel_summaries), 0)
+    counts["component_count"] = length(sizes)
+    counts["component_sizes"] = sizes
+    counts["largest_component_size"] = isempty(sizes) ? 0 : first(sizes)
     findings = engineering_findings(selected_nodes, selected_relations; root_coverage=coverage)
     return Dict(
         "mode" => "plan",
@@ -402,6 +447,8 @@ function write_markdown(path::AbstractString, plan)
         println(io, "- Nodes: ", plan["node_count"])
         println(io, "- Relations: ", plan["relation_count"])
         println(io, "- Findings: ", plan["engineering"]["finding_count"])
+        println(io, "- State coverage: ", plan["analysis"]["selected_node_count"], "/", plan["analysis"]["state_node_count"], " nodes; ", plan["analysis"]["selected_relation_count"], "/", plan["analysis"]["state_relation_count"], " relations")
+        println(io, "- Components: ", plan["analysis"]["component_count"], " (largest ", plan["analysis"]["largest_component_size"], " nodes)")
         println(io)
         println(io, "## Type Counts")
         for (key, value) in sorted_pairs(plan["analysis"]["type_counts"])

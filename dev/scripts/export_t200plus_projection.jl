@@ -7,7 +7,8 @@ using JSON3
 const RAW_PRESET = lowercase(strip(get(ENV, "MOOS_PROJECTION_PRESET", "default")))
 const PRESET_ALIASES = Dict(
     "visual" => "default",
-    "calendar-temporal" => "temporal-calendar"
+    "calendar-temporal" => "temporal-calendar",
+    "google-calendar" => "calendar-scope"
 )
 const PRESET = get(PRESET_ALIASES, RAW_PRESET, RAW_PRESET)
 const PRESETS = Dict(
@@ -34,6 +35,19 @@ const PRESETS = Dict(
         "MOOS_PROJECTION_MATCH" => "calendar|T200|temporal|time|clock|t-local|purpose",
         "MOOS_PROJECTION_INCLUDE_OWNERS" => "true",
         "MOOS_PROJECTION_INCLUDE_VISUAL_LENS" => "true"
+    ),
+    "calendar-scope" => Dict(
+        "MOOS_PROJECTION_LABEL" => "Google Calendar F/G scope and reliability lens",
+        "MOOS_PROJECTION_ROOT" => "urn:moos:program:sam.t200plus.temporal-projection-fabric",
+        "MOOS_PROJECTION_ROOTS" => "urn:moos:session:sam.governance;urn:moos:channel:google.calendar.sam;urn:moos:program:sam.t200plus.temporal-projection-fabric;urn:moos:program:sam.t200plus.google-calendar-projection-contract;urn:moos:program:sam.t200plus.google-calendar-projection-planner;urn:moos:program:sam.t200plus.google-calendar-oauth-writer;urn:moos:derivation:guido.t200plus-google-calendar-write-result;urn:moos:derivation:guido.t189-calendar-event-g-ingest-decision;urn:moos:program:sam.t189.calendar-event-g-ingest-shape;urn:moos:purpose:sam.t189-t200plus-time-fabric-convergence;urn:moos:view_filter:sam.t189-time-fabric-session-lens",
+        "MOOS_PROJECTION_OUT" => "tmp/projections/session_pipeline/visual/calendar_scope_frame",
+        "MOOS_PROJECTION_RADIUS" => "3",
+        "MOOS_PROJECTION_WFS" => "WF01,WF07,WF18,WF19,WF21",
+        "MOOS_PROJECTION_TYPES" => "calendar_event,channel,claim,clock,derivation,external_op,group,knowledge_item,program,purpose,session,tool_call,view_filter",
+        "MOOS_PROJECTION_PORTS" => "",
+        "MOOS_PROJECTION_MATCH" => "calendar|temporal|time|clock|t189|t200|google|governance|session|event|projection|writer|oauth|time-fabric|surface|recommendation|convergence",
+        "MOOS_PROJECTION_INCLUDE_OWNERS" => "true",
+        "MOOS_PROJECTION_INCLUDE_VISUAL_LENS" => "false"
     ),
     "session-occasion" => Dict(
         "MOOS_PROJECTION_LABEL" => "T187 session-occasion implementation frame",
