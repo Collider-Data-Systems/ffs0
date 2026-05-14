@@ -1,0 +1,378 @@
+{
+    "envelopes": [
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os session :: urn:moos:session:sam.t200plus-s0-staging"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "tentative"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gray"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 197
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-17"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "moos-4aa99f2916caef0c98d5e11c"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-17.moos-4aa99f2916caef0c98d5e11c",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os session :: urn:moos:session:sam.t200plus-application-surface-map"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "tentative"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gray"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 197
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-17"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "moos-83d3dd372a8ab83c302b310b"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-17.moos-83d3dd372a8ab83c302b310b",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os session :: urn:moos:session:sam.t200plus-project-bridge"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "tentative"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gray"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 197
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-17"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "moos-f211401e5f8cb3a9c95c89c3"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-17.moos-f211401e5f8cb3a9c95c89c3",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os group :: sam"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "tentative"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gray"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 198
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-18"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "moos-108b5c248bbb82240ebf3037"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-18.moos-108b5c248bbb82240ebf3037",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os agent :: VS Code Copilot (hp-laptop)"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "tentative"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gray"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 198
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-18"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "moos-fbf5bd4bc763ea524b605e9c"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-18.moos-fbf5bd4bc763ea524b605e9c",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-4aa99f2916caef0c98d5e11c",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-4aa99f2916caef0c98d5e11c",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-17-moos-4aa99f2916caef0c98d5e11c",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-4aa99f2916caef0c98d5e11c",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-83d3dd372a8ab83c302b310b",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-83d3dd372a8ab83c302b310b",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-17-moos-83d3dd372a8ab83c302b310b",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-83d3dd372a8ab83c302b310b",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-f211401e5f8cb3a9c95c89c3",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-f211401e5f8cb3a9c95c89c3",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-17-moos-f211401e5f8cb3a9c95c89c3",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-f211401e5f8cb3a9c95c89c3",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-18-moos-108b5c248bbb82240ebf3037",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-18.moos-108b5c248bbb82240ebf3037",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-18-moos-108b5c248bbb82240ebf3037",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-18.moos-108b5c248bbb82240ebf3037",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-18-moos-fbf5bd4bc763ea524b605e9c",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-18.moos-fbf5bd4bc763ea524b605e9c",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-18-moos-fbf5bd4bc763ea524b605e9c",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-18.moos-fbf5bd4bc763ea524b605e9c",
+            "rewrite_type": "LINK"
+        }
+    ],
+    "persona": "guido",
+    "applied": true,
+    "target_url": "http://localhost:8000/programs",
+    "approval_basis": "Sam requested the big sprint to read diary/program/session/derivation/KI/claim state, realize safe pins, and create scoped delegable sessions for the T200+ continuation. This batch applies only safe Calendar observation nodes/pins and idle scoped session topology; WF07 anchors and Z440 live delegation remain deferred.",
+    "generated_from": "tmp/projections/session_pipeline/topology/t194_t200_big_sprint_topology_audit.json",
+    "review_only": false,
+    "target_kernel": "urn:moos:kernel:hp-laptop.primary",
+    "do_not_reapply": true,
+    "applied_at_utc": "2026-05-14T21:45:57Z",
+    "readback": {
+        "health": {
+            "status": "ok",
+            "ontology_version": "3.16.1",
+            "t_day": 194,
+            "log_len": 1354
+        },
+        "postapply_remaining_envelopes": 0,
+        "postapply_audit": "tmp/projections/session_pipeline/topology/catchup.postapply.audit.json"
+    }
+}

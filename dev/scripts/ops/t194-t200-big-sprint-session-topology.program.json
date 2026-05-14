@@ -1,0 +1,2690 @@
+{
+    "envelopes": [
+        {
+            "rewrite_type": "ADD",
+            "type_id": "purpose",
+            "properties": {
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "subject_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "open"
+                },
+                "target_state": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "Solidify the T187/T189/T200+ projection family into scoped sessions, applied Calendar observations, S0 staging gates, and delegable workstation lanes while preserving the rule that chat and external surfaces are evidence, not truth."
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:purpose:sam.t194-t300-hg-topology-solidification",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "program",
+            "properties": {
+                "target_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": 200
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "active"
+                },
+                "scope": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "Read moos-diary/program/session/derivation/KI/claim neighborhoods, apply safe Calendar readback pins, and split the T200+ continuation into scoped delegable session lanes."
+                },
+                "title": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "T194-T300 big sprint session topology"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "starts_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": 194
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "derivation",
+            "properties": {
+                "inference_kind": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "hand_authored"
+                },
+                "name": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "T194 big sprint topology audit"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "closed"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "confidence": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": 0.9
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:derivation:guido.t194-big-sprint-topology-audit",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "view_filter",
+            "properties": {
+                "name": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "T194-T300 big sprint session lens"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "active"
+                },
+                "predicate": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": {
+                        "predicates": [
+                            {
+                                "predicate_type": "on_type",
+                                "type_ids": [
+                                    "session",
+                                    "purpose",
+                                    "program",
+                                    "derivation",
+                                    "knowledge_item",
+                                    "claim",
+                                    "calendar_event",
+                                    "channel",
+                                    "agent",
+                                    "group",
+                                    "view_filter"
+                                ]
+                            },
+                            {
+                                "predicate_type": "on_relation",
+                                "rewrite_categories": [
+                                    "WF01",
+                                    "WF02",
+                                    "WF12",
+                                    "WF18",
+                                    "WF19",
+                                    "WF21"
+                                ]
+                            }
+                        ],
+                        "filter_type": "any_of"
+                    }
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:view_filter:sam.t194-t300-big-sprint-session-lens",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "program",
+            "properties": {
+                "target_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": 200
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "draft"
+                },
+                "scope": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "Generate ignored staging keys for VS Code/Copilot transcripts and promote only reviewed chunks into HG carriers after comparing against folded state."
+                },
+                "title": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "IDE conversation staging gate"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "starts_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": 195
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:program:sam.t195.ide-conversation-staging-gate",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "purpose",
+            "properties": {
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "subject_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "open"
+                },
+                "target_state": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "Calendar write results are observed back as dated calendar_event nodes, pinned into the correct review session, with WF07 source anchors held until the operad port pair is repaired."
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:purpose:sam.t200plus-calendar-readback-and-wf07-cleanup",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "session",
+            "properties": {
+                "local_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "active"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "purpose",
+            "properties": {
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "subject_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "open"
+                },
+                "target_state": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "Project #4 is repaired as an HG-identity control surface before any board status becomes a candidate HG MUTATE."
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:purpose:sam.t200plus-github-project-bridge",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "session",
+            "properties": {
+                "local_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "active"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "purpose",
+            "properties": {
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "subject_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "open"
+                },
+                "target_state": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "Pinned IDE conversations and debug logs are staged with stable keys, compared to folded HG, and promoted only as reviewed knowledge_item, claim, derivation, purpose, program, or view_filter nodes."
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:purpose:sam.t200plus-s0-conversation-staging",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "session",
+            "properties": {
+                "local_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "active"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "purpose",
+            "properties": {
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "subject_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "open"
+                },
+                "target_state": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "my-tiny-data-collider is modeled as an HG application group with websites, DNS, GitHub, Calendar, Workspace, and server surfaces separated from runtime repos."
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:purpose:sam.t200plus-application-surface-map",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "session",
+            "properties": {
+                "local_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "active"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "purpose",
+            "properties": {
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "subject_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "open"
+                },
+                "target_state": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "Z440 is rejoined through readback first, then longer-running HDC, GPU, DX, and diary lanes are delegated to the existing workstation/persona sessions with explicit pins and emit-target checks."
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:purpose:sam.t200plus-z440-rejoin-and-delegation",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "session",
+            "properties": {
+                "local_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "active"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "started_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os claim :: An IDE conversation should be treated as a first-class mo:os session: it has a..."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "blue"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 194
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "q0771gm2oslobg17iigknahb38"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-14.moos-657123eca115dbcd2e3ee5ae",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os knowledge_item :: T187 Keep note: session, purpose, occasion, and skills lingo"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "green"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 194
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "r8uq7s6ve57gmbger97lie6log"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-14.moos-731ea6e3fc2c0902de497931",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os derivation :: T187 Keep note classification"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "purple"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 194
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "6gniug4oh9m2uek64t92h2v290"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-14.moos-73e0e04ff9e8e4229398fc05",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os derivation :: T187 session occasion implementation frame"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "purple"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 194
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "a51l1sldj8e6m71lv5uvc29b50"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-14.moos-7d860cb1f50b29272cb6df01",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os claim :: The operative unit Sam is naming as occasion is where place, time, session, pu..."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "blue"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 194
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "6if5vg5rrkb26uf0hji5f04fps"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-14.moos-8b818ad6ab841fdcee78712a",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os claim :: Skills, prompts, workflows, and tools in the current IDE are an affordance pac..."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "blue"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 195
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-15"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "92evbo7vrg5pubdsdnu4air2ts"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-15.moos-198e99c75d8617b0755204a9",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os claim :: Current mo:os can derive occasion from log prefix, WF19 session topology, WF18..."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "blue"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 195
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-15"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "ktj1d1ttgsclktkpa6grjl8upo"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-15.moos-521f3619c41e8b271c9b97c9",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os claim :: Purpose should color the session: persona seating, skills, prompts, tools, and..."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "blue"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 195
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-15"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "5gli7nvit66chvh9fr533pelas"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-15.moos-d213cae622b0d26c0f72dd5a",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os claim :: A program is the S2 unit of purposeful work that may instantiate an S1 workflo..."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "blue"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 195
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-15"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "aonpftn07pgi51dhip005smbsk"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-15.moos-d4dc08ed4cdc681623e72fbd",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os claim :: A session is best modeled as a purpose-colored occasion of rewrite: purpose su..."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "blue"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 195
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-15"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "59hoj1t0ajups16p6jrup157dg"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-15.moos-e626ed63f0b0f07ccb4cc2d2",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os pattern :: session-affordance-pack"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "yellow"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 196
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-16"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gv9nsvu4luorth158o24pv2qg8"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-16.moos-1d55f871b77f7f93db72a646",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os system_instruction :: Framework: session occasion lingo"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gray"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 196
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-16"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "acu4ed346mrcs9hfvj4imqpgs4"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-16.moos-27bcd02235de0c73205e56da",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os grammar_fragment :: v317-1 occasion node type"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "red"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 196
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-16"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "q3sa8f2k90oud5tein4k445qik"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-16.moos-5239773a6f1b15d576ad0f94",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os claim :: Z440 kernels and personae have drifted since roughly T183; running programs on..."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "blue"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 196
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-16"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "d1rfk08f9milpbfj8l7mumnedg"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-16.moos-6ea4d6ff03b1dba16a179080",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os claim :: Current IDE skills, prompts, workflows, and tool wrappers are temporary accele..."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "blue"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 196
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-16"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "tj195bofvtaig6883f2okdoa08"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-16.moos-b2398bff1dda85e29aeec5a3",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os group :: sam"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "tentative"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gray"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 197
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-17"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "moos-108b5c248bbb82240ebf3037"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-17.moos-108b5c248bbb82240ebf3037",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os workflow :: z440-session-continuity-reconciliation"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "confirmed"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "orange"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 197
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-17"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "co0bgfk8vobnb37f2ksvgkk6fk"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-17.moos-2b096bed9e407d8f4e98a380",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os session :: urn:moos:session:sam.governance"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "tentative"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gray"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 197
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-17"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "moos-72c33d1569c0a9361302275a"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-17.moos-72c33d1569c0a9361302275a",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "rewrite_type": "ADD",
+            "type_id": "calendar_event",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "mo:os agent :: VS Code Copilot (hp-laptop)"
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-14T21:45:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "tentative"
+                },
+                "color_label": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gray"
+                },
+                "t_day": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": 197
+                },
+                "date": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-17"
+                },
+                "gcal_id": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "moos-fbf5bd4bc763ea524b605e9c"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:cal:2026-05-17.moos-fbf5bd4bc763ea524b605e9c",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-program-sam-t195-ide-conversation-staging-gat",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:program:sam.t195.ide-conversation-staging-gate",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-purpose-sam-t200plus-github-project-bridge",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-github-project-bridge",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-session-sam-t200plus-s0-staging",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-purpose-sam-t200plus-z440-rejoin-and-delegati",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-z440-rejoin-and-delegation",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-session-sam-t200plus-z440-rejoin",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-program-sam-t194-t300-big-sprint-session-topo",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-purpose-sam-t200plus-calendar-readback-and-wf",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-calendar-readback-and-wf07-cleanup",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-session-sam-t200plus-calendar-readback",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-purpose-sam-t194-t300-hg-topology-solidificat",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:purpose:sam.t194-t300-hg-topology-solidification",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-session-sam-t200plus-application-surface-map",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-session-sam-t200plus-project-bridge",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-purpose-sam-t200plus-application-surface-map",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-application-surface-map",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:group:sam",
+            "tgt_port": "owned-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-group-sam.owns.urn-moos-purpose-sam-t200plus-s0-conversation-staging",
+            "rewrite_category": "WF01",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "owns",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-s0-conversation-staging",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.pins-urn.urn-moos-purpose-sam-t194-t300-hg-topology-solidificat",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:purpose:sam.t194-t300-hg-topology-solidification",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.pins-urn.urn-moos-program-sam-t194-t300-big-sprint-session-topo",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.pins-urn.urn-moos-derivation-guido-t194-big-sprint-topology-aud",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:derivation:guido.t194-big-sprint-topology-audit",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.pins-urn.urn-moos-view-filter-sam-t194-t300-big-sprint-session-",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:view_filter:sam.t194-t300-big-sprint-session-lens",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "filters-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.filtered-by.urn-moos-view-filter-sam-t194-t300-big-sprint-session-",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "filtered-by",
+            "tgt_urn": "urn:moos:view_filter:sam.t194-t300-big-sprint-session-lens",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:purpose:sam.t194-t300-hg-topology-solidification",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-purpose-sam-t194-t300-hg-topology.composes.urn-moos-program-sam-t194-t300-big-sprint-session-topo",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-program-sam-t194-t300-big-sprint-.composes.urn-moos-program-sam-t195-ide-conversation-staging-gat",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:program:sam.t195.ide-conversation-staging-gate",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:derivation:guido.t194-big-sprint-topology-audit",
+            "tgt_port": "caused-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-derivation-guido-t194-big-sprint-.causes.urn-moos-program-sam-t194-t300-big-sprint-session-topo",
+            "rewrite_category": "WF21",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "causes",
+            "tgt_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:purpose:sam.t194-t300-hg-topology-solidification",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-purpose-sam-t194-t300-hg-topology.composes.urn-moos-purpose-sam-t200plus-calendar-readback-and-wf",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-calendar-readback-and-wf07-cleanup",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-program-sam-t194-t300-big-sprint-.composes.urn-moos-session-sam-t200plus-calendar-readback",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.pins-urn.urn-moos-session-sam-t200plus-calendar-readback",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "occupied-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-calendar-rea.opens-on.urn-moos-kernel-hp-laptop-primary",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "opens-on",
+            "tgt_urn": "urn:moos:kernel:hp-laptop.primary",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "purpose-of-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-calendar-rea.has-purpose.urn-moos-purpose-sam-t200plus-calendar-readback-and-wf",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "has-purpose",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-calendar-readback-and-wf07-cleanup",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "filters-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-calendar-rea.filtered-by.urn-moos-view-filter-sam-t194-t300-big-sprint-session-",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "filtered-by",
+            "tgt_urn": "urn:moos:view_filter:sam.t194-t300-big-sprint-session-lens",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-channel-google-calendar-sam",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:channel:google.calendar.sam",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-program-sam-t189-calendar-event-g-ingest-shap",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t189.calendar-event-g-ingest-shape",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-derivation-guido-t189-calendar-event-g-ingest",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:derivation:guido.t189-calendar-event-g-ingest-decision",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-view-filter-sam-t189-time-fabric-session-lens",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:view_filter:sam.t189-time-fabric-session-lens",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "tool-mounted-in-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-calendar-rea.mounts-tool.urn-moos-agent-claude-cowork-hp-laptop",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "mounts-tool",
+            "tgt_urn": "urn:moos:agent:claude-cowork.hp-laptop",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:purpose:sam.t194-t300-hg-topology-solidification",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-purpose-sam-t194-t300-hg-topology.composes.urn-moos-purpose-sam-t200plus-github-project-bridge",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-github-project-bridge",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-program-sam-t194-t300-big-sprint-.composes.urn-moos-session-sam-t200plus-project-bridge",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.pins-urn.urn-moos-session-sam-t200plus-project-bridge",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "tgt_port": "occupied-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-project-brid.opens-on.urn-moos-kernel-hp-laptop-primary",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "opens-on",
+            "tgt_urn": "urn:moos:kernel:hp-laptop.primary",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "tgt_port": "purpose-of-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-project-brid.has-purpose.urn-moos-purpose-sam-t200plus-github-project-bridge",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "has-purpose",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-github-project-bridge",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "tgt_port": "filters-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-project-brid.filtered-by.urn-moos-view-filter-sam-t194-t300-big-sprint-session-",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "filtered-by",
+            "tgt_urn": "urn:moos:view_filter:sam.t194-t300-big-sprint-session-lens",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-project-brid.pins-urn.urn-moos-program-sam-t189-github-project-urn-refresh",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t189.github-project-urn-refresh",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-project-brid.pins-urn.urn-moos-program-sam-t200plus-identity-stable-projecti",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t200plus.identity-stable-projection-surface-convergence",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-project-bridge",
+            "tgt_port": "tool-mounted-in-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-project-brid.mounts-tool.urn-moos-agent-vscode-hp-laptop-copilot",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "mounts-tool",
+            "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:purpose:sam.t194-t300-hg-topology-solidification",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-purpose-sam-t194-t300-hg-topology.composes.urn-moos-purpose-sam-t200plus-s0-conversation-staging",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-s0-conversation-staging",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-program-sam-t194-t300-big-sprint-.composes.urn-moos-session-sam-t200plus-s0-staging",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.pins-urn.urn-moos-session-sam-t200plus-s0-staging",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "tgt_port": "occupied-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-s0-staging.opens-on.urn-moos-kernel-hp-laptop-primary",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "opens-on",
+            "tgt_urn": "urn:moos:kernel:hp-laptop.primary",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "tgt_port": "purpose-of-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-s0-staging.has-purpose.urn-moos-purpose-sam-t200plus-s0-conversation-staging",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "has-purpose",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-s0-conversation-staging",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "tgt_port": "filters-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-s0-staging.filtered-by.urn-moos-view-filter-sam-t194-t300-big-sprint-session-",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "filtered-by",
+            "tgt_urn": "urn:moos:view_filter:sam.t194-t300-big-sprint-session-lens",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-s0-staging.pins-urn.urn-moos-session-sam-governance",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-s0-staging.pins-urn.urn-moos-agent-vscode-hp-laptop-copilot",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-s0-staging.pins-urn.urn-moos-program-sam-t195-ide-conversation-staging-gat",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t195.ide-conversation-staging-gate",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-s0-staging.pins-urn.urn-moos-program-sam-t194-t300-big-sprint-session-topo",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "tgt_port": "tool-mounted-in-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-s0-staging.mounts-tool.urn-moos-agent-vscode-hp-laptop-copilot",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "mounts-tool",
+            "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:purpose:sam.t194-t300-hg-topology-solidification",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-purpose-sam-t194-t300-hg-topology.composes.urn-moos-purpose-sam-t200plus-application-surface-map",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-application-surface-map",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-program-sam-t194-t300-big-sprint-.composes.urn-moos-session-sam-t200plus-application-surface-map",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.pins-urn.urn-moos-session-sam-t200plus-application-surface-map",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "tgt_port": "occupied-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-application-.opens-on.urn-moos-kernel-hp-laptop-primary",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "opens-on",
+            "tgt_urn": "urn:moos:kernel:hp-laptop.primary",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "tgt_port": "purpose-of-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-application-.has-purpose.urn-moos-purpose-sam-t200plus-application-surface-map",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "has-purpose",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-application-surface-map",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "tgt_port": "filters-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-application-.filtered-by.urn-moos-view-filter-sam-t194-t300-big-sprint-session-",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "filtered-by",
+            "tgt_urn": "urn:moos:view_filter:sam.t194-t300-big-sprint-session-lens",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-application-.pins-urn.urn-moos-group-my-tiny-data-collider",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:group:my-tiny-data-collider",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-application-.pins-urn.urn-moos-purpose-sam-my-tiny-data-collider-application",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:purpose:sam.my-tiny-data-collider-application",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-application-.pins-urn.urn-moos-program-sam-t192-application-group-model-my-t",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t192.application-group-model-my-tiny-data-collider",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-application-.pins-urn.urn-moos-program-sam-t200plus-identity-stable-projecti",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t200plus.identity-stable-projection-surface-convergence",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "tgt_port": "tool-mounted-in-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-application-.mounts-tool.urn-moos-agent-vscode-hp-laptop-copilot",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "mounts-tool",
+            "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+            "tgt_port": "tool-mounted-in-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-application-.mounts-tool.urn-moos-agent-vscode-hpprodesk-primary",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "mounts-tool",
+            "tgt_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:purpose:sam.t194-t300-hg-topology-solidification",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-purpose-sam-t194-t300-hg-topology.composes.urn-moos-purpose-sam-t200plus-z440-rejoin-and-delegati",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-z440-rejoin-and-delegation",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-program-sam-t194-t300-big-sprint-.composes.urn-moos-session-sam-t200plus-z440-rejoin",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-governance.pins-urn.urn-moos-session-sam-t200plus-z440-rejoin",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "tgt_port": "occupied-by",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-z440-rejoin.opens-on.urn-moos-kernel-hp-z440-primary",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "opens-on",
+            "tgt_urn": "urn:moos:kernel:hp-z440.primary",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "tgt_port": "purpose-of-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-z440-rejoin.has-purpose.urn-moos-purpose-sam-t200plus-z440-rejoin-and-delegati",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "has-purpose",
+            "tgt_urn": "urn:moos:purpose:sam.t200plus-z440-rejoin-and-delegation",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "tgt_port": "filters-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-z440-rejoin.filtered-by.urn-moos-view-filter-sam-t194-t300-big-sprint-session-",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "filtered-by",
+            "tgt_urn": "urn:moos:view_filter:sam.t194-t300-big-sprint-session-lens",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-z440-rejoin.pins-urn.urn-moos-workflow-z440-session-continuity-reconciliati",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:workflow:z440-session-continuity-reconciliation",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "tgt_port": "tool-mounted-in-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-z440-rejoin.mounts-tool.urn-moos-agent-claude-code-hp-z440",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "mounts-tool",
+            "tgt_urn": "urn:moos:agent:claude-code.hp-z440",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+            "tgt_port": "tool-mounted-in-session",
+            "relation_urn": "urn:moos:rel:t194-t200.urn-moos-session-sam-t200plus-z440-rejoin.mounts-tool.urn-moos-agent-antigravity-hp-z440",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "mounts-tool",
+            "tgt_urn": "urn:moos:agent:antigravity.hp-z440",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-657123eca115dbcd2e3ee5ae",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-657123eca115dbcd2e3ee5ae",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-14-moos-657123eca115dbcd2e3ee5ae",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-657123eca115dbcd2e3ee5ae",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-731ea6e3fc2c0902de497931",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-731ea6e3fc2c0902de497931",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-14-moos-731ea6e3fc2c0902de497931",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-731ea6e3fc2c0902de497931",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-73e0e04ff9e8e4229398fc05",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-73e0e04ff9e8e4229398fc05",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-14-moos-73e0e04ff9e8e4229398fc05",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-73e0e04ff9e8e4229398fc05",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-7d860cb1f50b29272cb6df01",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-7d860cb1f50b29272cb6df01",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-14-moos-7d860cb1f50b29272cb6df01",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-7d860cb1f50b29272cb6df01",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-8b818ad6ab841fdcee78712a",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-8b818ad6ab841fdcee78712a",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-14-moos-8b818ad6ab841fdcee78712a",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-14.moos-8b818ad6ab841fdcee78712a",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-198e99c75d8617b0755204a9",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-198e99c75d8617b0755204a9",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-15-moos-198e99c75d8617b0755204a9",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-198e99c75d8617b0755204a9",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-521f3619c41e8b271c9b97c9",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-521f3619c41e8b271c9b97c9",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-15-moos-521f3619c41e8b271c9b97c9",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-521f3619c41e8b271c9b97c9",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-d213cae622b0d26c0f72dd5a",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-d213cae622b0d26c0f72dd5a",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-15-moos-d213cae622b0d26c0f72dd5a",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-d213cae622b0d26c0f72dd5a",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-d4dc08ed4cdc681623e72fbd",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-d4dc08ed4cdc681623e72fbd",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-15-moos-d4dc08ed4cdc681623e72fbd",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-d4dc08ed4cdc681623e72fbd",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-e626ed63f0b0f07ccb4cc2d2",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-e626ed63f0b0f07ccb4cc2d2",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-15-moos-e626ed63f0b0f07ccb4cc2d2",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-15.moos-e626ed63f0b0f07ccb4cc2d2",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-1d55f871b77f7f93db72a646",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-1d55f871b77f7f93db72a646",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-16-moos-1d55f871b77f7f93db72a646",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-1d55f871b77f7f93db72a646",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-27bcd02235de0c73205e56da",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-27bcd02235de0c73205e56da",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-16-moos-27bcd02235de0c73205e56da",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-27bcd02235de0c73205e56da",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-5239773a6f1b15d576ad0f94",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-5239773a6f1b15d576ad0f94",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-16-moos-5239773a6f1b15d576ad0f94",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-5239773a6f1b15d576ad0f94",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-6ea4d6ff03b1dba16a179080",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-6ea4d6ff03b1dba16a179080",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-16-moos-6ea4d6ff03b1dba16a179080",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-6ea4d6ff03b1dba16a179080",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-b2398bff1dda85e29aeec5a3",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-b2398bff1dda85e29aeec5a3",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-16-moos-b2398bff1dda85e29aeec5a3",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-16.moos-b2398bff1dda85e29aeec5a3",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-108b5c248bbb82240ebf3037",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-108b5c248bbb82240ebf3037",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-17-moos-108b5c248bbb82240ebf3037",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-108b5c248bbb82240ebf3037",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-2b096bed9e407d8f4e98a380",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-2b096bed9e407d8f4e98a380",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-17-moos-2b096bed9e407d8f4e98a380",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-2b096bed9e407d8f4e98a380",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-72c33d1569c0a9361302275a",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-72c33d1569c0a9361302275a",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-17-moos-72c33d1569c0a9361302275a",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-72c33d1569c0a9361302275a",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-fbf5bd4bc763ea524b605e9c",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-fbf5bd4bc763ea524b605e9c",
+            "rewrite_type": "LINK"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t194-calendar-lane.urn-moos-session-sam-t200plus-calendar-rea.pins-urn.urn-moos-cal-2026-05-17-moos-fbf5bd4bc763ea524b605e9c",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:cal:2026-05-17.moos-fbf5bd4bc763ea524b605e9c",
+            "rewrite_type": "LINK"
+        }
+    ],
+    "persona": "guido",
+    "applied": true,
+    "applied_at_utc": "2026-05-14T21:45:00Z",
+    "target_url": "http://localhost:8000/programs",
+    "approval_basis": "Sam requested the big sprint to read diary/program/session/derivation/KI/claim state, realize safe pins, and create scoped delegable sessions for the T200+ continuation. This batch applies only safe Calendar observation nodes/pins and idle scoped session topology; WF07 anchors and Z440 live delegation remain deferred.",
+    "generated_from": "tmp/projections/session_pipeline/topology/t194_t200_big_sprint_topology_audit.json",
+    "review_only": false,
+    "target_kernel": "urn:moos:kernel:hp-laptop.primary",
+    "do_not_reapply": true,
+    "readback": {
+        "health": {
+            "status": "ok",
+            "ontology_version": "3.16.1",
+            "t_day": 194,
+            "log_len": 1338
+        },
+        "postapply_remaining_envelopes": 0,
+        "created_session_lanes": [
+            "urn:moos:session:sam.t200plus-calendar-readback",
+            "urn:moos:session:sam.t200plus-project-bridge",
+            "urn:moos:session:sam.t200plus-s0-staging",
+            "urn:moos:session:sam.t200plus-application-surface-map",
+            "urn:moos:session:sam.t200plus-z440-rejoin"
+        ],
+        "calendar_event_observations_applied": 19,
+        "wf07_anchor_relations_deferred": 19
+    }
+}
