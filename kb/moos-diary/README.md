@@ -79,6 +79,7 @@ Do not conflate account identity with user identity. Additional Gmail or Git acc
 - [T=190/T193 — ffs0 admin trunk and closeout policy](t190-session-branch-and-closeout-policy.md)
 - [T=190 — Z440 projection finish pass](t190-z440-projection-finish-wrapup.md)
 - [T=190 — Z440 Windows 11 session desktops](t190-z440-windows-session-desktops-wrapup.md)
+- [T=194 — T187 path and hp-laptop readback](t194-t187-path-and-hplaptop-readback.md)
 
 ## Original Diary Register
 
