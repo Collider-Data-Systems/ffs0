@@ -13,8 +13,12 @@
       "name": "moos-router"
     },
     {
-      "path": "${userHome}/Downloads",
-      "name": "Downloads"
+      "path": "../moos-config",
+      "name": "moos-config-legacy"
+    },
+    {
+      "path": "../../Downloads",
+      "name": "local-downloads"
     }
   ],
   "settings": {
@@ -22,6 +26,17 @@
     "git.autofetch": true,
     "git.pruneOnFetch": true,
     "git.openRepositoryInParentFolders": "never",
+    "chat.instructionsFilesLocations": {
+      ".github/instructions": true
+    },
+    "chat.viewSessions.orientation": "stacked",
+    "github.copilot.enable": {
+      "*": true,
+      "plaintext": false,
+      "markdown": true,
+      "scminput": false
+    },
+    "github.copilot.nextEditSuggestions.enabled": true,
     "scm.alwaysShowRepositories": true,
     "terminal.integrated.defaultProfile.windows": "PowerShell",
     "editor.scrollbar.vertical": "visible",
@@ -43,6 +58,13 @@
       "**/.pytest_cache": true,
       "**/node_modules": true,
     },
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/tmp/projections/**": true,
+      "**/node_modules/**": true,
+      "**/__pycache__/**": true,
+    },
     "search.exclude": {
       "**/dev/reference/**": true,
       "**/AppData/**": true,
@@ -53,15 +75,19 @@
       "**/.git/objects/**": true,
     },
     "terminal.integrated.cwd": "${workspaceFolder:ffs0-private-workspace}",
-    "powershell.cwd": "ffs0-private-workspace",
+    "powershell.cwd": "${workspaceFolder:ffs0-private-workspace}",
   },
   "extensions": {
     "recommendations": [
+      "github.copilot",
+      "github.copilot-chat",
       "esbenp.prettier-vscode",
       "redhat.vscode-yaml",
       "DavidAnson.vscode-markdownlint",
       "ms-vscode.powershell",
       "GitHub.vscode-pull-request-github",
+      "golang.go",
+      "ms-python.python",
       "eamodio.gitlens",
       "thedangander.jsonl-lab",
       "mechatroner.rainbow-csv",
@@ -84,6 +110,48 @@
           "Doctor"
         ],
         "group": "build",
+      },
+      {
+        "label": "Moos: Verify Guido Emit Target",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder:ffs0-private-workspace}/dev/scripts/ops/Test-MoosFederation.ps1",
+          "-Mode",
+          "VerifyPersona",
+          "-Persona",
+          "guido"
+        ],
+        "group": "test",
+      },
+      {
+        "label": "Moos: Run Session Pipeline",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "${workspaceFolder:ffs0-private-workspace}/dev/scripts/projections/run-session-pipeline.ps1"
+        ],
+        "group": "build",
+      },
+      {
+        "label": "Moos: Open Session Dashboard",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-Command",
+          "Start-Process '${workspaceFolder:ffs0-private-workspace}/tmp/projections/session_pipeline/index.html'"
+        ],
+        "group": "build",
+        "problemMatcher": [],
       },
       {
         "label": "Moos: Start Z440 Federation",
@@ -182,7 +250,7 @@
         "args": [
           "-NoProfile",
           "-Command",
-          "git -C ${workspaceFolder:ffs0-private-workspace} status --short --branch; git -C ${workspaceFolder:moos-kernel} status --short --branch; git -C ${workspaceFolder:moos-router} status --short --branch",
+          "git -C ${workspaceFolder:ffs0-private-workspace} status --short --branch; git -C ${workspaceFolder:moos-kernel} status --short --branch; git -C ${workspaceFolder:moos-router} status --short --branch; git -C ${workspaceFolder:moos-config-legacy} status --short --branch",
         ],
         "group": "build",
       },
@@ -200,7 +268,9 @@
           "cowork-z440",
           "guido",
           "cowork-laptop",
-          "ag-laptop"
+          "ag-laptop",
+          "z440-vscode-lead",
+          "hpprodesk-vscode"
         ],
         "default": "steinberger"
       },

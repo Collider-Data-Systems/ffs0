@@ -10,7 +10,9 @@ All three repos at `github.com/Collider-Data-Systems/*` since T=172.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, personae seatings, key URNs.
 
-Current T189 hp-laptop state: kernel `hp-laptop.primary` is live on `ontology_version=3.16.1`, `t_day=189`, `log_len=1160`. `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation` and now pins the Calendar/time-fabric program family, grouped T189/T200 recommendation carriers, 16 individual `calendar_event` observations, and `program:sam.t189.surface-context-atlas`. The active working lane is the Keep/session/visual/Calendar/recommendation/atlas projection pipeline; latest report is `kb/moos-diary/t189-surface-context-atlas-wrapup.md`.
+Current T194 hp-laptop state: kernel `hp-laptop.primary` is live on `ontology_version=3.16.1`, `t_day=194`, `log_len=1184`. Router `localhost:9000` is healthy with hp-laptop up and Z440 currently down over LAN. `session:sam.governance` remains the hp-laptop governance/projection lane; HP ProDesk has a local setup session proven at T193. The active working lane is the Keep/session/visual/Calendar/recommendation/atlas projection family; latest report is `kb/moos-diary/t194-t187-path-and-hplaptop-readback.md`.
+
+VS Code is now an explicit agent surface. Treat pinned VS Code conversations, Copilot sessions, Claude Desktop, and Antigravity windows as S0 substrate that may need G-ingest later; do not assume chat UI state is durable HG truth until it is chunked or projected. On this hp-laptop window, Sam currently has two pinned VS Code conversations in the `ffs0` workspace: T193 and T186.
 
 For projection work, run the local pipeline before making claims about MVP status:
 
@@ -35,6 +37,7 @@ Avoid process-heavy documents unless explicitly requested. `.md` accumulation is
 Invoke `moos-session-context-projection` for session context packs, IDE/harness projection, local MVP gate checks, or graph visualization/analysis of newly added HG nodes.
 Invoke the `moos-domain-expert` skill for categorical/mathematical reasoning.
 Invoke `moos-rewrite-envelope` for envelope authoring (post-§M11 actor discipline: agent-default, kernel-for-ontology-governed, never user:sam in Apply path).
+Invoke `moos-tooling-dx` for VS Code, Claude Desktop, Antigravity, MCP, task-runner, prompt, skill, and workstation attach work.
 
 ## Safety
 
