@@ -16,7 +16,6 @@ You are opening a VS Code/Copilot agent session on a mo:os workstation. Treat th
    git -C . status --short --branch
    git -C ../moos-kernel status --short --branch
    git -C ../moos-router status --short --branch
-   git -C ../moos-config status --short --branch
    ```
 4. Check local runtime:
    ```powershell
@@ -32,6 +31,7 @@ You are opening a VS Code/Copilot agent session on a mo:os workstation. Treat th
 - HP ProDesk setup: `agent:vscode.hpprodesk.primary`, `session:sam.hpprodesk-setup`, MCP `moos-hpprodesk-primary`.
 
 Use `dev/config/session-affordance-map.json` for planned skills/prompts/MCP affordances, but trust live HG/running-state over stale config.
+Legacy `moos-config` or local `Downloads` inspection belongs in an ignored `*.local.code-workspace`, not the portable workspace.
 
 ## Useful VS Code Tasks
 

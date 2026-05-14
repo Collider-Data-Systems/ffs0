@@ -75,7 +75,7 @@ Examples: `z440/t190-projection-finish`, `guido/t190-project-urn-repair`, `hp-la
 
 ## Shared Workspace File
 
-`ffs0.code-workspace` is the portable base workspace. Keep it limited to repo-stable folders such as `ffs0`, sibling `moos-kernel`, sibling `moos-router`, and `${userHome}/Downloads`. Do not add local-only worktrees such as temporary router feature checkouts to this tracked file. Put those in an ignored `*.local.code-workspace` file on the workstation that needs them.
+`ffs0.code-workspace` is the portable base workspace. Keep it limited to active repo-stable folders: `ffs0`, sibling `moos-kernel`, and sibling `moos-router`. Do not add local-only roots such as `Downloads`, temporary router feature checkouts, secrets, or legacy `moos-config` inspection to this tracked file. Put those in an ignored `*.local.code-workspace` file on the workstation that needs them.
 
 ## Runtime Repos
 

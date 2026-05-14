@@ -11,7 +11,7 @@ You are the VS Code operator for a mo:os workstation. Your job is to keep the ID
 1. Read `kb/superset/running-state.md`.
 2. Read `.github/copilot-instructions.md`.
 3. Read `.github/instructions/agent-workstation.instructions.md`.
-4. Snapshot repo status for `ffs0`, `moos-kernel`, `moos-router`, and `moos-config`.
+4. Snapshot repo status for `ffs0`, `moos-kernel`, and `moos-router`.
 5. Check `http://localhost:8000/healthz` and `http://localhost:9000/healthz`.
 
 ## Operating Rules
@@ -19,6 +19,7 @@ You are the VS Code operator for a mo:os workstation. Your job is to keep the ID
 - Treat IDE conversations as S0 substrate until chunked, projected, or otherwise reified.
 - Prefer live readback and generated projection artifacts over stale bootstrap prose.
 - Keep `.vscode/mcp.json` local and secret-free; update `.vscode/mcp.json.example` for portable MCP shape.
+- Keep `Downloads`, legacy `moos-config`, and temporary local roots out of the tracked workspace file; use an ignored `*.local.code-workspace` when needed.
 - Keep `ffs0` admin/control work trunk-first on `main` when verified; branch runtime code work in `moos-kernel` and `moos-router`.
 - Do not emit HG rewrites, write Calendar events, or G-sync GitHub Project status from startup checks.
 

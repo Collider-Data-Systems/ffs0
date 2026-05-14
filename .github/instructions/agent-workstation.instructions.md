@@ -30,6 +30,7 @@ applyTo: "{**/*.code-workspace,**/.vscode/**,**/.github/prompts/**,**/.github/in
 ## MCP Rules
 
 - Workspace MCP config uses `.vscode/mcp.json` with top-level `servers`.
+- Root `.mcp.json` is legacy/non-VS Code client config; VS Code agent sessions use `.vscode/mcp.json` / `.vscode/mcp.json.example`.
 - Prefer native VS Code server entries (`type: "sse"` or `type: "http"`) for mo:os endpoints.
 - Do not add the remote GitHub Copilot MCP endpoint manually unless its auth path is verified in the current VS Code build; use the built-in GitHub/Copilot integration or `gh` CLI for GitHub work.
 - Do not hardcode secrets. Use environment variables for Cloudflare Access headers and local secret stores for OAuth tokens.
@@ -38,9 +39,9 @@ applyTo: "{**/*.code-workspace,**/.vscode/**,**/.github/prompts/**,**/.github/in
 
 ## Multi-Repo Workspace
 
-- `ffs0.code-workspace` should contain `ffs0`, `moos-kernel`, `moos-router`, and any stable config repo needed for operator context.
+- `ffs0.code-workspace` should contain the portable active repo roots: `ffs0`, `moos-kernel`, and `moos-router`.
 - Do not add throwaway worktrees or secret folders to the tracked workspace file.
-- Put local-only expansions in an ignored `*.local.code-workspace` file.
+- Put local-only expansions such as `Downloads`, temporary worktrees, or legacy `moos-config` inspection in an ignored `*.local.code-workspace` file.
 - Use VS Code tasks for repeatable readback: Doctor, persona verification, health, multi-repo status, and the session pipeline.
 
 ## Validation

@@ -11,14 +11,6 @@
     {
       "path": "../moos-router",
       "name": "moos-router"
-    },
-    {
-      "path": "../moos-config",
-      "name": "moos-config-legacy"
-    },
-    {
-      "path": "../../Downloads",
-      "name": "local-downloads"
     }
   ],
   "settings": {
@@ -250,7 +242,7 @@
         "args": [
           "-NoProfile",
           "-Command",
-          "git -C ${workspaceFolder:ffs0-private-workspace} status --short --branch; git -C ${workspaceFolder:moos-kernel} status --short --branch; git -C ${workspaceFolder:moos-router} status --short --branch; git -C ${workspaceFolder:moos-config-legacy} status --short --branch",
+          "git -C ${workspaceFolder:ffs0-private-workspace} status --short --branch; git -C ${workspaceFolder:moos-kernel} status --short --branch; git -C ${workspaceFolder:moos-router} status --short --branch",
         ],
         "group": "build",
       },
