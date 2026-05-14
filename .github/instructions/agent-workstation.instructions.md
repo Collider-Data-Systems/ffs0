@@ -17,11 +17,14 @@ applyTo: "{**/*.code-workspace,**/.vscode/**,**/.github/agents/**,**/.github/pro
 - Local HTTP kernel: `http://localhost:8000`.
 - Local router: `http://localhost:9000`.
 - Current governance session: `urn:moos:session:sam.governance`.
-- Current agent actor: `urn:moos:agent:claude-code.hp-laptop` unless a task explicitly names another occupant.
+- Current folded HG occupant for the VS Code/Copilot workstation surface: `urn:moos:agent:vscode.hp-laptop.copilot`.
+- Legacy Claude Code actor: `urn:moos:agent:claude-code.hp-laptop`; use it only when Claude Code is actually running and its WF19 occupancy has been restored or an explicit reviewed payload names it.
 
 ## VS Code Agent Surface
 
 - Treat VS Code chat sessions as S0 substrate. If a conversation matters beyond the live IDE, project or chunk it before treating it as durable state.
+- Separate the lingo: HG occupant = folded WF19 `has-occupant` target; IDE harness surface = the local VS Code/Copilot/Claude/Antigravity container; actor_urn = the envelope principal; mounted tool = an invokable agent/tool, not necessarily the occupant.
+- Before emitting rewrites, reconcile actor_urn with folded HG occupancy and current harness evidence. Do not infer that Claude Code is running just because an old prompt or config names `claude-code.hp-laptop`.
 - Keep repository-wide rules in `.github/copilot-instructions.md`.
 - Use scoped `.github/instructions/*.instructions.md` for task or file-family rules.
 - Use `.github/agents/*.agent.md` for VS Code custom agents and keep their frontmatter aligned with the current VS Code custom-agent format.

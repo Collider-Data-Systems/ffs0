@@ -16,6 +16,7 @@ Steinberger's working surface for tooling, IDE attachment, and developer-experie
 - A new skill scaffolding question ("what's the shape of a SKILL.md frontmatter?")
 - A federation-startup or kernel-restart workflow needing scripting
 - An agent-harness design question (per §M20 tool-mounting)
+- An IDE surface says one agent is running while folded HG occupancy names another
 
 ## What this skill is NOT
 
@@ -34,6 +35,15 @@ Steinberger's working surface for tooling, IDE attachment, and developer-experie
 - **Branch role on board items:** `agent`
 
 **Why emit to primary, not menno:** Seat-topology (this session, your agent, the WF19 LINKs) was materialized at T=173 batch B on Z440 primary `:8000` only. Twin kernels (`:8001`/`:8002`/`:8003`) ran fresh from federation startup with their own sovereign logs and don't carry seat-state. §M11 runs against the receiving kernel's state; primary has it, twins don't. Once §M9 twin_link adjoint sync ships (round-15+, paired with §M10 QUIC), emit-target collapses into opens-on. Until then: emit to primary. `Test-MoosFederation.ps1` should hardcode primary as the POST target + use opens-on as a topology-validation check, not an emit-target. See `running-state.md` Persona → emit-target mapping block for the full table.
+
+## Actor, Occupant, Harness
+
+- **HG occupant** is the folded WF19 `session --has-occupant--> principal` target. This is what §M11 uses for liveness.
+- **IDE harness surface** is the local VS Code/Copilot/Claude/Antigravity process or chat container. It is S0 evidence, not a session node.
+- **actor_urn** is the principal placed in rewrite envelopes. It must match the HG occupant or carry an explicit reviewed reason.
+- **mounted tool** is a WF19 `mounts-tool` affordance. A mounted tool can be invokable without being the current occupant.
+
+When these disagree, do a readback before touching MCP or prompt config: query the session's WF19 relations, check local process/harness evidence, then either rotate occupancy with a reviewed program or stage the IDE conversation as G-ingest evidence. Do not keep using `agent:claude-code.hp-laptop` merely because a stale prompt named it; on hp-laptop VS Code/Copilot the current governance occupant is `agent:vscode.hp-laptop.copilot` until live HG says otherwise.
 
 ## The DX-friction-as-claim pattern
 

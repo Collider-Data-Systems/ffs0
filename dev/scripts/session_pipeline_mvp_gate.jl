@@ -33,7 +33,7 @@ const DEFAULT_ONE_SHOT_APPLY_SCRIPT = "tmp/projections/session_pipeline/recommen
 const DEFAULT_OUT_BASE = "tmp/projections/session_pipeline/mvp/session_pipeline_gate"
 const DEFAULT_HTML_PATH = "tmp/projections/session_pipeline/index.html"
 const DEFAULT_SESSION_URN = "urn:moos:session:sam.governance"
-const DEFAULT_ACTOR_URN = "urn:moos:agent:claude-code.hp-laptop"
+const DEFAULT_ACTOR_URN = "urn:moos:agent:vscode.hp-laptop.copilot"
 const DEFAULT_KEEP_CHANNEL_URN = "urn:moos:channel:google.keep.sam"
 const DEFAULT_KEEP_KI_URN = "urn:moos:ki:gdrive.t187-keep-session-occasion-lingo"
 
@@ -50,7 +50,7 @@ const PIPELINE_STAGE_SPECS = [
         "name" => "F session pack",
         "short_name" => "F/session",
         "description" => "Folded HG state becomes a session header plus purpose-colored affordance pack for VS Code, an agent, or a harness.",
-        "gate_names" => ["F session handoff header", "session occasion topology", "session purpose color", "F affordance pack"],
+        "gate_names" => ["F session handoff header", "session actor/occupant reconciliation", "session occasion topology", "session purpose color", "F affordance pack"],
     ),
     Dict(
         "id" => "f-visual",
@@ -130,6 +130,10 @@ const LINGO = Dict(
     "SVG_zoom_pane" => "A deterministic Graphviz SVG with local fit, zoom, reset, scroll, and wide-view controls. Use it to inspect layout, labels, and topology without changing the graph.",
     "HG_inspector" => "A typed interactive view of graph-artifact JSON. Use it when you need selectable node/relation metadata rather than the static Graphviz layout.",
     "mvp_gate" => "A generated check that the G input, F outputs, session header, and visual lens artifacts exist and expose known gaps instead of hiding them.",
+    "HG_occupant" => "The folded WF19 has-occupant target for a session. This is the principal §M11 sees, regardless of which local process window is visible.",
+    "IDE_harness_surface" => "The local tool container currently hosting the operator, such as VS Code/Copilot, Claude Desktop, Claude Code, or Antigravity. It is evidence for reconciliation, not itself a session.",
+    "S0_conversation_staging" => "Raw chat/debug-log transcript substrate. It becomes durable only after G-ingest as knowledge_item/claim/derivation topology.",
+    "actor_occupant_reconciliation" => "A dry check that actor_urn, the folded HG occupant, and the current harness agent candidate name the same driver before the handoff is used to emit rewrites.",
 )
 
 function object_value(obj, name::Symbol, default=nothing)
@@ -457,6 +461,25 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         session_header_ok ? "Session context pack carries the expected actor and session_urn." : "Session context pack does not carry the expected actor/session header.",
         evidence=Dict("session_pack" => session_pack_path, "actor" => object_value(header, :actor, ""), "session_urn" => object_value(header, :session_urn, "")),
         next_action=session_header_ok ? "" : "Regenerate session_context_projection.jl with explicit --session-urn and --actor-urn.",
+    ))
+
+    identity = object_value(session_pack, :identity, Dict())
+    identity_status = string(object_value(identity, :status, ""))
+    identity_gate_status = isempty(identity_status) ? "warn" : identity_status
+    identity_actor = string(object_value(identity, :actor_urn, object_value(header, :actor, "")))
+    identity_occupants = object_value(identity, :hg_occupant_urns, Any[])
+    push!(gates, gate(
+        identity_gate_status,
+        "session actor/occupant reconciliation",
+        identity_gate_status == "pass" ? "Session context pack reconciles actor_urn with the folded HG occupant and current IDE harness candidate." : "Session context pack does not fully reconcile actor_urn, folded HG occupant, and current IDE harness candidate.",
+        evidence=Dict(
+            "actor" => identity_actor,
+            "occupants" => identity_occupants,
+            "harness_kind" => object_value(identity, :harness_kind, ""),
+            "harness_agent_urn" => object_value(identity, :harness_agent_urn, ""),
+            "reasons" => object_value(identity, :reasons, Any[]),
+        ),
+        next_action=identity_gate_status == "pass" ? "" : string(object_value(identity, :next_action, "Regenerate the session pack with identity reconciliation metadata, then rotate or restage the occupant explicitly.")),
     ))
 
     opens_on_count = length(context_array(session_pack, :opens_on))

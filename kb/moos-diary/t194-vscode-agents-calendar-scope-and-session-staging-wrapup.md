@@ -3,8 +3,8 @@
 **T-day:** T=194
 **Date:** 2026-05-14
 **Kernel/session:** `urn:moos:kernel:hp-laptop.primary` / `urn:moos:session:sam.governance`
-**Actor:** `urn:moos:agent:claude-code.hp-laptop`
-**Runtime readback:** hp-laptop `localhost:8000` ok, `ontology_version=3.16.1`, `t_day=194`, `log_len=1184`; router `localhost:9000` ok with local kernel up and Z440 remote down
+**Actor:** `urn:moos:agent:vscode.hp-laptop.copilot` after the later occupancy correction; `urn:moos:agent:claude-code.hp-laptop` is legacy/idle unless Claude Code is explicitly restored
+**Runtime readback:** hp-laptop `localhost:8000` ok, `ontology_version=3.16.1`, `t_day=194`, `log_len=1192`; router `localhost:9000` ok with local kernel up and Z440 remote down
 **Lane:** VS Code Agents surface, session-context projection, Calendar scope, S0 conversation staging design, T195+ planning
 
 ## Executive Status
@@ -14,6 +14,26 @@ This T194 pass expanded the projection lane rather than changing HG truth. The V
 The live graph did not receive new rewrites in this pass. The external Google Calendar writer did run as an explicit actuator boundary and patched 16 existing events by `moos_projection_id`. Those write effects are not automatically HG state. The regenerated recommendation reconciliation correctly reports the new T194-dated `calendar_event` observations and session pins as pending HG rows, with WF07 source anchors still deferred.
 
 The important forward move is conceptual but concrete: IDE conversations like this one should be treated as S0 substrate with a gated staging layer. A conversation can carry stable session-specific keys that point toward candidate `knowledge_item`, `claim`, `derivation`, `purpose`, `program`, and `view_filter` nodes, but those keys are not graph identity until a G-ingest or APPLY batch lands them in HG.
+
+## T194 Occupancy Correction Addendum
+
+Sam then caught the central mismatch: Claude Code was not running, but the folded graph and several operator surfaces still treated `agent:claude-code.hp-laptop` as the current hp-laptop governance occupant. The correction is now live in HG and reflected in the projection gates.
+
+Applied program: `dev/scripts/ops/t194-hplaptop-vscode-copilot-occupancy.program.json`.
+
+The batch did seven things: added `agent:vscode.hp-laptop.copilot`, linked `group:sam` as owner, pinned the new agent into `session:sam.governance`, removed the stale Claude Code occupant relations from both `session:sam.governance` and abandoned `session:t187-mvp`, linked governance occupancy to the VS Code/Copilot agent, and marked the legacy Claude Code agent `idle`. Health moved from `log_len=1184` to `log_len=1192`. Post-apply readback shows Claude Code with 0 remaining `has-occupant` relations.
+
+The lingo is now explicit:
+
+- HG occupant: folded WF19 `has-occupant` topology; this is what inferred §M11 liveness sees.
+- IDE harness surface: the local VS Code/Copilot/Claude/Antigravity process or chat container; evidence for reconciliation, not a session.
+- S0 conversation staging: raw chat/debug transcript substrate pending G-ingest.
+- `actor_urn`: the envelope principal; it should match the folded occupant unless a reviewed payload deliberately sets an explicit `session_urn` and different actor.
+- Mounted tool: an invokable affordance bound to the session, not necessarily the current driver.
+
+This rule lives first in projection/gate/tooling surfaces, not in a new ontology bump: `session_context_projection.jl` now emits an `identity` block, and `session_pipeline_mvp_gate.jl` now has a `session actor/occupant reconciliation` gate. The latest full pipeline is `warn`, 21 pass / 2 warn / 0 fail. The identity block is `pass` with actor, HG occupant, and harness candidate all equal to `urn:moos:agent:vscode.hp-laptop.copilot`.
+
+No new human/auth-account identity node was added. Existing `user:sam`, `group:sam`, and `role:superadmin` already express the user/group/authority side of this pass. The kernel helper was updated and tested so occupancy/admin resolution accepts `group` as a principal, matching the ontology's existing group-as-principal widening.
 
 ## What Changed Locally
 
@@ -46,7 +66,8 @@ Tracked local edits now cover four groups.
 Latest local proof after implementation:
 
 - Julia focused tests: `test_calendar_time_fabric_projection.jl` passed 22/22; `test_session_pipeline_mvp_gate.jl` passed 69/69 after the fourth inspector, modal/zoom controls, and SVG zoom panes.
-- Full session pipeline: `warn`, 20 pass, 2 warn, 0 fail.
+- Identity-focused regression tests after the occupancy correction: `test_session_context_projection.jl` passed 29/29; `test_session_pipeline_mvp_gate.jl` passed 69/69 plus 4/4 gap tests; config/program JSON parsing passed; `VerifyPersona -Persona guido` passed against `agent:vscode.hp-laptop.copilot`; `go test ./internal/operad` passed after the group-principal helper fix.
+- Full session pipeline after the identity gate: `warn`, 21 pass, 2 warn, 0 fail.
 - Dashboard: `tmp/projections/session_pipeline/index.html`.
 - Edge/CDP browser validation passed against the generated dashboard, including headline metrics, four SVG objects, SVG zoom in/out/reset, SVG wide-pane open/close, four Cytoscape tabs, Calendar Time-Fabric tab selection, Calendar Scope tab selection, and no console/runtime errors.
 - Calendar writer: credential check passed; dry-run saw 16 events; real write patched 16 existing Google Calendar events, inserted 0.
@@ -69,11 +90,11 @@ The two pipeline warnings are expected and useful:
 The session-context pack is the best current summary of what this VS Code occasion sees.
 
 - Session: `session:sam.governance`.
-- Actor: `agent:claude-code.hp-laptop`.
+- Actor: `agent:vscode.hp-laptop.copilot`.
 - Kernel place: `kernel:hp-laptop.primary` via WF19 `opens-on`.
-- Occupant: the Claude Code hp-laptop agent via WF19 `has-occupant`.
+- Occupant: the VS Code/Copilot hp-laptop agent via WF19 `has-occupant`.
 - Purpose color: `purpose:sam.doctrine-governance-and-delegation` via WF19 `has-purpose`.
-- Scope roots: 33 nodes in the regenerated session pack, heavily centered on Calendar/time-fabric, T189/T200 recommendation convergence, visual projection, and application-surface modeling.
+- Scope roots: 34 nodes in the regenerated session pack, heavily centered on Calendar/time-fabric, T189/T200 recommendation convergence, visual projection, application-surface modeling, and the current VS Code/Copilot agent.
 - Calendar Time-Fabric lens: 44 selected nodes out of 433 state nodes; 54 selected relations out of 444 state relations; no engineering findings after adding `has-purpose/purpose-of-session` to the temporal port filter.
 - Calendar-scope lens: 53 selected nodes out of 433 state nodes; 62 selected relations out of 444 state relations; 8 weak components, largest component 46 nodes; 11 explicit roots, all connected.
 

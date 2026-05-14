@@ -1,0 +1,89 @@
+{
+  "review_only": false,
+  "target_url": "http://localhost:8000/programs",
+  "target_kernel": "urn:moos:kernel:hp-laptop.primary",
+  "persona": "guido",
+  "applied": true,
+  "applied_at_utc": "2026-05-14T20:05:00Z",
+  "do_not_reapply": true,
+  "approval_basis": "Sam reported that Claude Code is not running in this hp-laptop VS Code/Copilot workstation session and asked to correct the session/agent/IDE-harness topology. The batch uses existing user/group/role principals, adds only the missing VS Code/Copilot agent node, and rotates WF19 occupancy using UNLINK+LINK.",
+  "readback": {
+    "health": {"status": "ok", "ontology_version": "3.16.1", "t_day": 194, "log_len": 1192},
+    "resolved_nodes": [
+      "urn:moos:agent:vscode.hp-laptop.copilot"
+    ],
+    "governance_session_occupant": "urn:moos:agent:vscode.hp-laptop.copilot",
+    "governance_session_pin": "urn:moos:rel:session.sam.governance.pins.agent.vscode.hp-laptop-copilot",
+    "claude_remaining_has_occupant_count": 0
+  },
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-code.hp-laptop",
+      "session_urn": "urn:moos:session:sam.governance",
+      "node_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "type_id": "agent",
+      "properties": {
+        "name": {"value": "VS Code Copilot (hp-laptop)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "delegate_type": {"value": "ide", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "owner_urn": {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "created_at": {"value": "2026-05-14T20:05:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "transport_type": {"value": "mcp-sse", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "invocation_protocol": {"value": "mcp", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "model": {"value": "GitHub Copilot", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "board_id": {"value": "AGENT-VSCODE-COPILOT-HP-LAPTOP", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "status": {"value": "busy", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.agent.vscode.hp-laptop-copilot",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.governance.pins.agent.vscode.hp-laptop-copilot",
+      "src_urn": "urn:moos:session:sam.governance",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "tgt_port": "pinned-by-session",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.t187-mvp.has-occupant.agent.claude-code-hp-laptop",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.governance.has-occupant.agent.claude-code-hp-laptop",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:session.sam.governance.has-occupant.agent.vscode.hp-laptop-copilot",
+      "src_urn": "urn:moos:session:sam.governance",
+      "src_port": "has-occupant",
+      "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "tgt_port": "is-occupant-of",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:agent:claude-code.hp-laptop",
+      "field": "status",
+      "new_value": "idle",
+      "rewrite_category": "WF07"
+    }
+  ]
+}

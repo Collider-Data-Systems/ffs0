@@ -10,7 +10,7 @@ Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, open items, key URNs.
 
-At T=189 hp-laptop kernel is live on v3.16.1 (log_len 1160, t_day 189). Z440 4-kernel federation last confirmed at v3.15.0 (T=177). `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation` and now pins the Calendar/time-fabric program family, grouped T189/T200 recommendation carriers, 16 individual `calendar_event` observations, and `program:sam.t189.surface-context-atlas`. The active working lane is the Keep/session/visual/Calendar/recommendation/atlas projection pipeline, not a single running HG program. Current operator report: `kb/moos-diary/t189-surface-context-atlas-wrapup.md`; prior T189 reports: `kb/moos-diary/t189-calendar-event-public-surface-wrapup.md`, `kb/moos-diary/t189-recommendation-hg-projection-wrapup.md`, and `kb/moos-diary/t189-calendar-dashboard-organization-wrapup.md`. Doctrine lives as derivations on log plus carefully chosen reports; conversations should still reify through HG chunks when they need persistence.
+At T=194 hp-laptop kernel is live on v3.16.1 (log_len 1192, t_day 194). `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation`; its current folded occupant is `agent:vscode.hp-laptop.copilot`, not `agent:claude-code.hp-laptop` unless Claude Code is actually running and occupancy is explicitly restored. The active working lane is the Keep/session/visual/Calendar/recommendation/atlas projection pipeline, not a single running HG program. Current operator report: `kb/moos-diary/t194-vscode-agents-calendar-scope-and-session-staging-wrapup.md`; prior T189 reports: `kb/moos-diary/t189-surface-context-atlas-wrapup.md`, `kb/moos-diary/t189-calendar-event-public-surface-wrapup.md`, `kb/moos-diary/t189-recommendation-hg-projection-wrapup.md`, and `kb/moos-diary/t189-calendar-dashboard-organization-wrapup.md`. Doctrine lives as derivations on log plus carefully chosen reports; conversations should still reify through HG chunks when they need persistence. Z440 federation is topology memory until live readback says otherwise.
 
 ---
 
@@ -87,13 +87,13 @@ Full envelope shape + gotchas: `moos-rewrite-envelope` skill.
 
 ---
 
-## Current sessions + personae (T=189)
+## Current sessions + personae (T=194)
 
-Active on hp-laptop now: `sam.governance`, `sam.laptop-cowork-workspace`, `sam.laptop-moos-diary`, `hp-laptop.primary`. `sam.governance` is the current Guido lane for doctrine, projection gating, and round closeout. Z440 rows below are topology memory until that federation is live again.
+Active on hp-laptop now: `sam.governance`, `sam.laptop-cowork-workspace`, `sam.laptop-moos-diary`, `hp-laptop.primary`. `sam.governance` is the current Guido lane for doctrine, projection gating, and round closeout. Its live hp-laptop IDE occupant is VS Code/Copilot. Z440 rows below are topology memory until that federation is live again.
 
 | Persona | Agent | Session | Host kernel | Notes |
 |---|---|---|---|---|
-| Guido van Rossum | `claude-code.hp-laptop` | `sam.governance` | `hp-laptop.primary` | doctrine + audit |
+| Guido van Rossum / hp-laptop VS Code | `vscode.hp-laptop.copilot` | `sam.governance` | `hp-laptop.primary` | doctrine + audit; Claude Code actor is legacy/idle unless restored |
 | Stephen Wolfram | `claude-code.hp-z440` | `sam.kernel-proper` | `hp-z440.primary` | kernel implementation |
 | Moos the Dachshund | `antigravity.hp-z440` | `sam.moos-diary` | `hp-z440.primary` | multimodal diary curation |
 | Andrej Karpathy | `vscode.hp-z440.lola` | `sam.karpathy-seat` | `hp-z440.lola` | HDC/VSA categorical bridge |

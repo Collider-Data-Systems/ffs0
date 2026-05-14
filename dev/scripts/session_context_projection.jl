@@ -8,7 +8,10 @@ using JSON3
 
 const DEFAULT_BASE_URL = "http://localhost:8000"
 const DEFAULT_SESSION_URN = "urn:moos:session:sam.governance"
-const DEFAULT_ACTOR_URN = "urn:moos:agent:claude-code.hp-laptop"
+const DEFAULT_ACTOR_URN = "urn:moos:agent:vscode.hp-laptop.copilot"
+const DEFAULT_HARNESS_KIND = "VS Code/Copilot"
+const DEFAULT_HARNESS_AGENT_URN = ""
+const DEFAULT_HARNESS_EVIDENCE = "VS Code GitHub Copilot chat surface"
 const DEFAULT_PATTERN_URN = "urn:moos:pattern:session-affordance-pack"
 const DEFAULT_SKILLS_DIR = "dev/claude-skills"
 const DEFAULT_EXTENSIONS_DIR = joinpath(homedir(), ".vscode", "extensions")
@@ -150,6 +153,72 @@ function sources_by_port(relations, port::AbstractString)
         string(object_value(rel, :src_urn, "")) for rel in relations
         if string(object_value(rel, :src_port, "")) == port && !isempty(string(object_value(rel, :src_urn, "")))
     ]))
+end
+
+function contains_urn(urns, urn::AbstractString)
+    needle = strip(string(urn))
+    isempty(needle) && return false
+    return needle in Set(string(item) for item in urns)
+end
+
+function identity_reconciliation(index, occupant_urns;
+    actor_urn::String,
+    harness_kind::String="",
+    harness_agent_urn::String="",
+    harness_evidence::String="",
+)
+    clean_actor = strip(actor_urn)
+    clean_harness_agent = strip(harness_agent_urn)
+    actor_node_exists = !isempty(clean_actor) && haskey(index, clean_actor)
+    actor_is_hg_occupant = contains_urn(occupant_urns, clean_actor)
+    harness_agent_node_exists = !isempty(clean_harness_agent) && haskey(index, clean_harness_agent)
+    harness_agent_is_hg_occupant = contains_urn(occupant_urns, clean_harness_agent)
+    harness_matches_actor = isempty(clean_harness_agent) || clean_harness_agent == clean_actor
+
+    status = "pass"
+    reasons = String[]
+    next_action = ""
+    if isempty(clean_actor)
+        status = "fail"
+        push!(reasons, "no actor_urn was supplied")
+        next_action = "Regenerate with an explicit --actor-urn that is also the WF19 has-occupant target."
+    elseif !actor_node_exists
+        status = "fail"
+        push!(reasons, "actor node is missing from folded HG state")
+        next_action = "ADD or select the correct agent node before using this session header."
+    elseif !actor_is_hg_occupant
+        status = "fail"
+        push!(reasons, "actor_urn is not the current WF19 has-occupant target for this session")
+        next_action = "Rotate the session occupant or regenerate the pack with the current HG occupant."
+    end
+    if !harness_matches_actor
+        status = status == "fail" ? "fail" : "warn"
+        push!(reasons, "harness agent candidate differs from actor_urn")
+        isempty(next_action) && (next_action = "Choose whether the live IDE harness should rotate the HG occupant or stay as S0 staging only.")
+    end
+    if !isempty(clean_harness_agent) && actor_node_exists && !harness_agent_node_exists
+        status = status == "fail" ? "fail" : "warn"
+        push!(reasons, "harness agent candidate is not an HG node")
+        isempty(next_action) && (next_action = "Land the harness agent as HG topology or remove it from the durable handoff header.")
+    end
+    isempty(reasons) && push!(reasons, "actor_urn, HG occupant, and harness candidate agree")
+
+    return Dict(
+        "status" => status,
+        "actor_urn" => clean_actor,
+        "actor_node_exists" => actor_node_exists,
+        "actor_is_hg_occupant" => actor_is_hg_occupant,
+        "hg_occupant_urns" => [string(urn) for urn in occupant_urns],
+        "harness_kind" => strip(harness_kind),
+        "harness_agent_urn" => clean_harness_agent,
+        "harness_agent_node_exists" => harness_agent_node_exists,
+        "harness_agent_is_hg_occupant" => harness_agent_is_hg_occupant,
+        "harness_matches_actor" => harness_matches_actor,
+        "harness_evidence" => strip(harness_evidence),
+        "reasons" => reasons,
+        "next_action" => next_action,
+        "rule" => "HG occupant is WF19 topology; IDE harness conversation is S0/G-ingest substrate until reconciled into an agent node and has-occupant relation.",
+    )
 end
 
 function strip_wrapping_quotes(value::AbstractString)
@@ -386,6 +455,9 @@ end
 function plan_session_context_projection(nodes, relations;
     session_urn::String=DEFAULT_SESSION_URN,
     actor_urn::String=DEFAULT_ACTOR_URN,
+    harness_kind::String=DEFAULT_HARNESS_KIND,
+    harness_agent_urn::String=DEFAULT_HARNESS_AGENT_URN,
+    harness_evidence::String=DEFAULT_HARNESS_EVIDENCE,
     focus::String="",
     skill_catalog=Any[],
     skill_limit::Integer=DEFAULT_SKILL_LIMIT,
@@ -409,6 +481,13 @@ function plan_session_context_projection(nodes, relations;
     scope_urns = targets_by_port(outgoing, "pins-urn")
     tool_urns = targets_by_port(outgoing, "mounts-tool")
     owner_urns = sources_by_port(incoming, "owns")
+    effective_harness_agent_urn = isempty(strip(harness_agent_urn)) ? actor_urn : harness_agent_urn
+    identity = identity_reconciliation(index, occupant_urns;
+        actor_urn=actor_urn,
+        harness_kind=harness_kind,
+        harness_agent_urn=effective_harness_agent_urn,
+        harness_evidence=harness_evidence,
+    )
 
     context = Dict(
         "opens_on" => node_summaries(index, opens_on_urns),
@@ -442,6 +521,7 @@ function plan_session_context_projection(nodes, relations;
         "focus" => focus,
         "session" => node_summary(session),
         "purpose_color" => purpose_color,
+        "identity" => identity,
         "context" => context,
         "relations" => Dict(
             "outgoing" => [relation_summary(rel) for rel in outgoing],
@@ -464,7 +544,7 @@ function plan_session_context_projection(nodes, relations;
             "prompt_seed" => string(
                 "Use actor=", actor_urn,
                 " and session_urn=", session_urn,
-                ". Treat this chat as the current session occasion; derive skills, extensions, MCP servers, and tools from purpose and scope before emitting rewrites."
+                ". Treat this chat as S0 conversation staging; verify the HG occupant, actor_urn, and IDE harness candidate before emitting rewrites. Derive skills, extensions, MCP servers, and tools from purpose and scope."
             ),
         ),
     )
@@ -525,6 +605,16 @@ function write_markdown(path::AbstractString, plan)
         println(io)
         println(io, "A session is a purpose-colored occasion of rewrite. This projection is dry: it compiles folded HG state into a handoff artifact and does not emit rewrites or edit IDE config.")
         println(io)
+        identity = plan["identity"]
+        println(io, "## Identity Reconciliation")
+        println(io, "- Status: ", identity["status"])
+        println(io, "- Actor: ", identity["actor_urn"])
+        println(io, "- HG occupants: ", isempty(identity["hg_occupant_urns"]) ? "<none>" : join(identity["hg_occupant_urns"], ", "))
+        println(io, "- Harness: ", isempty(identity["harness_kind"]) ? "<unspecified>" : identity["harness_kind"])
+        !isempty(identity["harness_agent_urn"]) && println(io, "- Harness agent candidate: ", identity["harness_agent_urn"])
+        !isempty(identity["harness_evidence"]) && println(io, "- Harness evidence: ", identity["harness_evidence"])
+        println(io, "- Rule: ", identity["rule"])
+        println(io)
         context = plan["context"]
         write_item_list(io, "Kernel Place", context["opens_on"])
         write_item_list(io, "Occupants", context["occupants"])
@@ -580,6 +670,9 @@ function parse_args(argv)
         "base-url" => DEFAULT_BASE_URL,
         "session-urn" => DEFAULT_SESSION_URN,
         "actor-urn" => DEFAULT_ACTOR_URN,
+        "harness-kind" => DEFAULT_HARNESS_KIND,
+        "harness-agent-urn" => DEFAULT_HARNESS_AGENT_URN,
+        "harness-evidence" => DEFAULT_HARNESS_EVIDENCE,
         "focus" => "session context projection for VS Code, agents, harnesses, and graph visualization",
         "skills-dir" => DEFAULT_SKILLS_DIR,
         "skill-limit" => string(DEFAULT_SKILL_LIMIT),
@@ -623,6 +716,9 @@ function main(argv=ARGS)
         relations;
         session_urn=options["session-urn"],
         actor_urn=options["actor-urn"],
+        harness_kind=options["harness-kind"],
+        harness_agent_urn=options["harness-agent-urn"],
+        harness_evidence=options["harness-evidence"],
         focus=options["focus"],
         skill_catalog=skills,
         skill_limit=parse(Int, options["skill-limit"]),

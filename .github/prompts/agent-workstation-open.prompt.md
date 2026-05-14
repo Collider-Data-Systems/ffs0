@@ -26,11 +26,13 @@ You are opening a VS Code/Copilot agent session on a mo:os workstation. Treat th
 
 ## Session Context
 
-- hp-laptop governance: `agent:claude-code.hp-laptop`, `session:sam.governance`, MCP `moos-hp-laptop-primary`.
+- hp-laptop governance in this VS Code/Copilot surface: `agent:vscode.hp-laptop.copilot`, `session:sam.governance`, MCP `moos-hp-laptop-primary`.
+- hp-laptop legacy Claude Code actor: `agent:claude-code.hp-laptop`; treat it as inactive unless live process/readback and WF19 occupancy say otherwise.
 - Z440 VS Code lead: `agent:vscode.hp-z440.primary`, `session:sam.z440-vscode-projection-lead`, MCP `moos-primary`.
 - HP ProDesk setup: `agent:vscode.hpprodesk.primary`, `session:sam.hpprodesk-setup`, MCP `moos-hpprodesk-primary`.
 
 Use `dev/config/session-affordance-map.json` for planned skills/prompts/MCP affordances, but trust live HG/running-state over stale config.
+Opening readback must distinguish HG occupant, IDE harness surface, S0 conversation staging, and mounted tools before reporting an active actor.
 Legacy `moos-config` or local `Downloads` inspection belongs in an ignored `*.local.code-workspace`, not the portable workspace.
 
 ## Useful VS Code Tasks

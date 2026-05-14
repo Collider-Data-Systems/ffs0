@@ -23,6 +23,9 @@ The pack is dry by default. It reads state, derives context, and writes reviewab
 - **Control surface**: the local HTML materialization at `tmp/projections/session_pipeline/index.html`; it is a human-readable view over the generated JSON/Markdown artifacts, not a new truth source.
 - **Reconciliation**: the comparison between a dry recommendation plan and folded HG state. It must name applied, pending, and deferred rows separately.
 - **Lens**: a reusable selection rule over roots, radius, node types, WFs, ports, and match predicates. A lens may later become a `view_filter`, but the generated artifact is still only a projection.
+- **HG occupant**: the folded WF19 `has-occupant` target for a session. This is the principal §M11 sees.
+- **IDE harness surface**: the local VS Code/Copilot/Claude Desktop/Claude Code/Antigravity container hosting the operator. It is evidence for reconciliation, not itself a session.
+- **Actor/occupant reconciliation**: the dry check that `actor_urn`, folded HG occupant, and harness agent candidate agree before a handoff is used to emit rewrites.
 - **S0 conversation staging**: raw IDE conversation state queued as substrate, not truth. A staged conversation may carry stable keys to proposed `knowledge_item`, `claim`, `derivation`, `purpose`, `program`, or `view_filter` nodes, but nothing is durable until a gated G-ingest/apply step lands it in HG.
 
 ## Current Planner
@@ -44,7 +47,9 @@ Useful options:
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\session_context_projection.jl `
   --base-url http://localhost:8000 `
   --session-urn urn:moos:session:sam.governance `
-  --actor-urn urn:moos:agent:claude-code.hp-laptop `
+  --actor-urn urn:moos:agent:vscode.hp-laptop.copilot `
+  --harness-kind "VS Code/Copilot" `
+  --harness-agent-urn urn:moos:agent:vscode.hp-laptop.copilot `
   --focus "session-focused VS Code projection and visual graph analysis" `
   --skill-limit 5 `
   --extension-limit 8 `
@@ -57,7 +62,7 @@ The planner scans `dev/claude-skills`, the local VS Code extension directory, an
 
 1. Read `kb/superset/running-state.md` first and verify `/healthz`.
 2. Generate the session context pack with the Julia planner.
-3. Inspect the JSON or Markdown pack before using it as a prompt seed or handoff.
+3. Inspect the JSON or Markdown pack before using it as a prompt seed or handoff; the identity block must reconcile the actor, HG occupant, and harness candidate.
 4. Run `dev/scripts/projections/run-session-pipeline.ps1` when evaluating whether the current Keep-note/session/visual/Calendar/recommendation lane is MVP-usable; inspect the generated control surface before using the pack as a handoff.
 5. Treat Calendar, GitHub Project rows, organization profile text, dashboards, websites, and DNS plans as external projection surfaces with graph-derived identity.
 6. If a tool needs to consume or publish the projection automatically, build a writer as a separate explicit boundary.
@@ -86,7 +91,7 @@ Calendar writer actions are explicit actuator steps. The writer is an upsert key
 
 - **VS Code / Copilot**: use the Markdown handoff as the conversation seed and the JSON as machine-readable state.
 - **Claude Desktop / Cursor / other IDEs**: pass the same pack as a session header before asking for rewrites or analysis.
-- **Harnesses**: pass `handoff.session_header` so emitted envelopes carry the right actor and `session_urn`.
+- **Harnesses**: pass `handoff.session_header` only after `identity.status == pass`, so emitted envelopes carry the right actor and `session_urn`.
 - **VS Code extensions**: use the ranked extension list as the concrete IDE affordance surface for this occasion.
 - **MCP servers**: use the server list to decide which tool surfaces belong in the session, without leaking header or environment values.
 - **Visual analysis**: pair this pack with `export_t200plus_projection.jl` for DOT/SVG and `graph_artifact_projection.jl` for engineering summaries rooted at the session, purpose, pattern, workflow, grammar_fragment, or a multi-root artifact set.

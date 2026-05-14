@@ -31,6 +31,19 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         :projection_kind => "session_context_pack",
         :handoff => Dict(:session_header => Dict(:actor => actor_urn, :session_urn => session_urn, :kernel_base_url => "http://localhost:8000")),
         :purpose_color => "Session pipeline",
+        :identity => Dict(
+            :status => "pass",
+            :actor_urn => actor_urn,
+            :actor_node_exists => true,
+            :actor_is_hg_occupant => true,
+            :hg_occupant_urns => [actor_urn],
+            :harness_kind => "VS Code/Copilot",
+            :harness_agent_urn => actor_urn,
+            :harness_agent_node_exists => true,
+            :harness_agent_is_hg_occupant => true,
+            :harness_matches_actor => true,
+            :reasons => ["actor_urn, HG occupant, and harness candidate agree"],
+        ),
         :context => Dict(
             :opens_on => [Dict(:urn => kernel_urn)],
             :occupants => [Dict(:urn => actor_urn)],
@@ -174,6 +187,7 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         names = Set(gate["name"] for gate in plan["gates"])
         @test "G input channel" in names
         @test "F session handoff header" in names
+        @test "session actor/occupant reconciliation" in names
         @test "visual lens root coverage" in names
         @test "Temporal Calendar lens" in names
         @test "Calendar time-fabric artifacts" in names
@@ -190,6 +204,9 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test plan["lingo"]["Recommendation_projection"] != ""
         @test plan["lingo"]["SVG_zoom_pane"] != ""
         @test plan["lingo"]["HG_inspector"] != ""
+        @test plan["lingo"]["HG_occupant"] != ""
+        @test plan["lingo"]["IDE_harness_surface"] != ""
+        @test plan["lingo"]["actor_occupant_reconciliation"] != ""
         @test plan["renderer_candidates"][2]["name"] == "Cytoscape.js"
         @test plan["interactive_inspector"]["node_count"] == 2
         @test plan["interactive_inspector"]["relation_count"] == 1

@@ -54,17 +54,26 @@ function Resolve-SessionContext {
     $contexts = @(
         [pscustomobject]@{
             SessionUrn = "urn:moos:session:sam.governance"
-            ActorUrn = "urn:moos:agent:claude-code.hp-laptop"
+            ActorUrn = "urn:moos:agent:vscode.hp-laptop.copilot"
+            HarnessKind = "VS Code/Copilot"
+            HarnessAgentUrn = "urn:moos:agent:vscode.hp-laptop.copilot"
+            HarnessEvidence = "VS Code GitHub Copilot chat surface; Claude Code is not assumed to be running."
             Focus = "session context projection for VS Code, agents, harnesses, and graph visualization"
         },
         [pscustomobject]@{
             SessionUrn = "urn:moos:session:sam.z440-vscode-projection-lead"
             ActorUrn = "urn:moos:agent:vscode.hp-z440.primary"
+            HarnessKind = "VS Code/Copilot"
+            HarnessAgentUrn = "urn:moos:agent:vscode.hp-z440.primary"
+            HarnessEvidence = "Z440 VS Code/Copilot projection lead surface."
             Focus = "Z440 VS Code projection lead parity, federated readback, Julia pipeline, dashboard gate review, and Project #4 HG URN repair"
         },
         [pscustomobject]@{
             SessionUrn = "urn:moos:session:sam.hpprodesk-setup"
             ActorUrn = "urn:moos:agent:vscode.hpprodesk.primary"
+            HarnessKind = "VS Code/Copilot"
+            HarnessAgentUrn = "urn:moos:agent:vscode.hpprodesk.primary"
+            HarnessEvidence = "HP ProDesk VS Code/Copilot setup surface."
             Focus = "HP ProDesk workstation bootstrap, session wiring readback, projection pipeline, and router peer readiness"
         }
     )
@@ -78,10 +87,14 @@ function Resolve-SessionContext {
     return $contexts[0]
 }
 
+$actorWasProvided = -not [string]::IsNullOrWhiteSpace($ActorUrn)
 $resolvedContext = Resolve-SessionContext -Url $BaseUrl
 if ([string]::IsNullOrWhiteSpace($SessionUrn)) { $SessionUrn = $resolvedContext.SessionUrn }
 if ([string]::IsNullOrWhiteSpace($ActorUrn)) { $ActorUrn = $resolvedContext.ActorUrn }
 if ([string]::IsNullOrWhiteSpace($Focus)) { $Focus = $resolvedContext.Focus }
+$HarnessKind = if ($resolvedContext.PSObject.Properties['HarnessKind']) { [string]$resolvedContext.HarnessKind } else { '' }
+$HarnessAgentUrn = if ($actorWasProvided) { $ActorUrn } elseif ($resolvedContext.PSObject.Properties['HarnessAgentUrn']) { [string]$resolvedContext.HarnessAgentUrn } else { $ActorUrn }
+$HarnessEvidence = if ($resolvedContext.PSObject.Properties['HarnessEvidence']) { [string]$resolvedContext.HarnessEvidence } else { '' }
 
 $ProjectionBaseUrl = $BaseUrl
 if ($SessionUrn -eq "urn:moos:session:sam.z440-vscode-projection-lead" -and $BaseUrl.TrimEnd('/') -eq "http://localhost:8000" -and (Test-MoosHealth -Url "http://localhost:9000")) {
@@ -111,6 +124,7 @@ try {
     Write-Host "Projection read URL: $ProjectionBaseUrl"
     Write-Host "Session: $SessionUrn"
     Write-Host "Actor: $ActorUrn"
+    Write-Host "Harness: $HarnessKind / $HarnessAgentUrn"
     Write-Host "Julia: $Julia"
 
     Invoke-Step "Session context projection" {
@@ -118,6 +132,9 @@ try {
             "--base-url" $ProjectionBaseUrl `
             "--session-urn" $SessionUrn `
             "--actor-urn" $ActorUrn `
+            "--harness-kind" $HarnessKind `
+            "--harness-agent-urn" $HarnessAgentUrn `
+            "--harness-evidence" $HarnessEvidence `
             "--focus" $Focus
     }
     Invoke-Step "Graph artifact projection" { & $Julia "dev\scripts\graph_artifact_projection.jl" "--base-url" $ProjectionBaseUrl }

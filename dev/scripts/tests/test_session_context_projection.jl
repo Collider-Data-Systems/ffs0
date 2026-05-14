@@ -8,14 +8,14 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
 
 @testset "Session context projection" begin
     session_urn = "urn:moos:session:sam.governance"
-    actor_urn = "urn:moos:agent:claude-code.hp-laptop"
+    actor_urn = "urn:moos:agent:vscode.hp-laptop.copilot"
     purpose_urn = "urn:moos:purpose:sam.session-context"
     kernel_urn = "urn:moos:kernel:hp-laptop.primary"
     scope_urn = "urn:moos:program:sam.session-context-projection"
 
     nodes = [
         Dict(:urn => session_urn, :type_id => "session", :properties => Dict(:name => prop("Governance"), :local_t => prop(12))),
-        Dict(:urn => actor_urn, :type_id => "agent", :properties => Dict(:name => prop("Claude Code hp-laptop"))),
+        Dict(:urn => actor_urn, :type_id => "agent", :properties => Dict(:name => prop("VS Code Copilot hp-laptop"))),
         Dict(:urn => purpose_urn, :type_id => "purpose", :properties => Dict(:title => prop("Session context projection"))),
         Dict(:urn => kernel_urn, :type_id => "kernel", :properties => Dict(:name => prop("hp-laptop primary"))),
         Dict(:urn => scope_urn, :type_id => "program", :properties => Dict(:title => prop("Projection program"))),
@@ -57,6 +57,9 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
     )
 
     @test plan["projection_kind"] == "session_context_pack"
+    @test plan["identity"]["status"] == "pass"
+    @test plan["identity"]["actor_is_hg_occupant"]
+    @test plan["identity"]["harness_matches_actor"]
     @test plan["context"]["opens_on"][1]["urn"] == kernel_urn
     @test plan["context"]["occupants"][1]["urn"] == actor_urn
     @test plan["context"]["purposes"][1]["urn"] == purpose_urn
@@ -73,6 +76,18 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
     @test plan["affordance_pack"]["mcp_servers"][1]["name"] == "moos-primary"
     @test occursin(session_urn, plan["handoff"]["prompt_seed"])
     @test occursin("MCP servers", plan["handoff"]["prompt_seed"])
+
+    mismatch = SCP.plan_session_context_projection(
+        nodes,
+        relations;
+        session_urn=session_urn,
+        actor_urn=actor_urn,
+        harness_agent_urn="urn:moos:agent:claude-code.hp-laptop",
+        focus="VS Code session projection harness",
+        generated_at="2026-05-07T15:00:00Z",
+    )
+    @test mismatch["identity"]["status"] == "warn"
+    @test !mismatch["identity"]["harness_matches_actor"]
 
     @testset "skill frontmatter catalog" begin
         mktempdir() do dir

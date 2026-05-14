@@ -169,11 +169,13 @@
       "requires_explicit_session_urn": true
     },
     "guido": {
-      "actor_urn": "urn:moos:agent:claude-code.hp-laptop",
+      "actor_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "legacy_actor_urn": "urn:moos:agent:claude-code.hp-laptop",
       "session_urn": "urn:moos:session:sam.governance",
       "opens_on_kernel": "hp-laptop.primary",
       "emit_kernel": "hp-laptop.primary",
-      "mcp_server": "moos-hp-laptop-primary"
+      "mcp_server": "moos-hp-laptop-primary",
+      "requires_explicit_session_urn": true
     },
     "cowork-laptop": {
       "actor_urn": "urn:moos:agent:claude-cowork.hp-laptop",
