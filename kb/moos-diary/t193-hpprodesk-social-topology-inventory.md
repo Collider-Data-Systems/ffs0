@@ -21,12 +21,21 @@ After this inventory, Sam requested implementation. Hp-laptop primary applied `d
 The apply was deliberately limited to topology-safe HP ProDesk materialization:
 
 - New shared-HG nodes: `workstation:hpprodesk`, `kernel:hpprodesk.primary`, `agent:vscode.hpprodesk.primary`, `purpose:sam.hpprodesk-workstation-bootstrap`, `session:sam.hpprodesk-setup`, and `program:sam.t193.hpprodesk-topology-materialization`.
-- New wiring: `group:sam` ownership, WF03 workstation hosting, WF18 purpose-program composition, and WF19 session `opens-on`, `has-purpose`, `has-occupant`, and `pins-urn` relations.
+- New relations: `group:sam` ownership, WF03 workstation hosting, WF18 purpose-program composition, and WF19 session `opens-on`, `has-purpose`, `has-occupant`, and `pins-urn` relations.
 - Runtime readback after apply: `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=1184`.
 
 The identity decision remains unchanged: no `user:geurt`, no `group:geurt`, no Gmail/auth/account channel, and no secret or raw account identifier was added.
 
 The HP ProDesk local kernel then received its own session-layer bootstrap through `dev/scripts/ops/t193-hpprodesk-local-session-bootstrap.program.json`. That batch preserved the existing 5-line seed graph, added local `group:sam`, `agent:vscode.hpprodesk.primary`, `purpose:sam.hpprodesk-workstation-bootstrap`, `session:sam.hpprodesk-setup`, and `program:sam.t193.hpprodesk-topology-materialization`, then wired ownership and WF19 session relations. Local HP ProDesk readback after apply: `status=ok`, `ontology_version=3.16.1`, `t_day=193`, `log_len=26`; `VerifyPersona -Persona hpprodesk-vscode` passes.
+
+## Session Traceability
+
+The implementation and projection chain is session-traceable at each boundary:
+
+- Shared mirror apply: `urn:moos:agent:claude-code.hp-laptop` acting from `urn:moos:session:sam.governance` posted the reviewed topology materialization to `urn:moos:kernel:hp-laptop.primary` through the `guido` persona target.
+- Local setup apply: `urn:moos:agent:vscode.hpprodesk.primary` is the occupant of `urn:moos:session:sam.hpprodesk-setup`, which opens on `urn:moos:kernel:hpprodesk.primary` and has purpose `urn:moos:purpose:sam.hpprodesk-workstation-bootstrap`.
+- Projection run: the successful shared-graph projection used `-SessionUrn urn:moos:session:sam.hpprodesk-setup` and `-ActorUrn urn:moos:agent:vscode.hpprodesk.primary` while reading folded state from hp-laptop. The generated local files are projection artifacts, not additional rewrites.
+- Identity boundary: Geurt/Gmail/account details remain report-only or future evidence/channel proposals until Sam approves a stronger authority model.
 
 ## Runtime And Projection Follow-Up
 
@@ -92,11 +101,11 @@ hp-laptop is currently the richer shared governance read surface:
 
 Relation counts on hp-laptop for the requested WFs:
 
-- WF01: 37 ownership edges, including `user:sam --owns/child--> workstation:hp-laptop`, `user:sam --owns/child--> ws:hp-z440`, and `group:sam --owns/owned-by--> kernel:hp-laptop.primary`.
-- WF02: 7 governance edges, all from `user:sam` to agents or `role:superadmin`.
-- WF18: 123 composition/dependency-style edges.
-- WF19: 61 session governance edges: 5 `opens-on`, 4 `has-occupant`, 4 `has-purpose`, 46 `pins-urn`, and 2 `filtered-by`.
-- WF21: 40 causal edges.
+- WF01: 37 ownership relations, including `user:sam --owns/child--> workstation:hp-laptop`, `user:sam --owns/child--> ws:hp-z440`, and `group:sam --owns/owned-by--> kernel:hp-laptop.primary`.
+- WF02: 7 governance relations, all from `user:sam` to agents or `role:superadmin`.
+- WF18: 123 composition/dependency-style relations.
+- WF19: 61 session governance relations: 5 `opens-on`, 4 `has-occupant`, 4 `has-purpose`, 46 `pins-urn`, and 2 `filtered-by`.
+- WF21: 40 causal relations.
 
 No shared-HG nodes were found for `group:geurt`, `group:geurt-household`, or `user:geurt`.
 
@@ -108,7 +117,7 @@ The first safe distinction is:
 - `desktop-3fc7c3f\geurt` is an OS login observed on the physical workstation.
 - A Gmail/Google identity in Windows or VS Code settings is an external account/auth surface.
 - The HP ProDesk itself is a workstation substrate.
-- This VS Code/Copilot conversation is S0 substrate attached to the planned `session:sam.hpprodesk-setup` occasion.
+- This VS Code/Copilot conversation is S0 substrate attached to the materialized `session:sam.hpprodesk-setup` occasion.
 
 These should not collapse into one `user` node.
 

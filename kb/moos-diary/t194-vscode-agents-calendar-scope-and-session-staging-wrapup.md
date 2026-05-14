@@ -1,15 +1,15 @@
 # T194 VS Code Agents, Calendar Scope, And Session Staging Wrapup
 
-**T-day:** T=194  
-**Date:** 2026-05-14  
-**Kernel/session:** `kernel:hp-laptop.primary` / `session:sam.governance`  
-**Actor:** `agent:claude-code.hp-laptop`  
-**Runtime readback:** hp-laptop `localhost:8000` ok, `ontology_version=3.16.1`, `t_day=194`, `log_len=1184`; router `localhost:9000` ok with local kernel up and Z440 remote down  
+**T-day:** T=194
+**Date:** 2026-05-14
+**Kernel/session:** `urn:moos:kernel:hp-laptop.primary` / `urn:moos:session:sam.governance`
+**Actor:** `urn:moos:agent:claude-code.hp-laptop`
+**Runtime readback:** hp-laptop `localhost:8000` ok, `ontology_version=3.16.1`, `t_day=194`, `log_len=1184`; router `localhost:9000` ok with local kernel up and Z440 remote down
 **Lane:** VS Code Agents surface, session-context projection, Calendar scope, S0 conversation staging design, T195+ planning
 
 ## Executive Status
 
-This T194 pass expanded the projection lane rather than changing HG truth. The VS Code portable workspace is now the explicit operator surface; the custom agent and opener prompt are wired into `.github/agents/` and `.github/prompts/`; the session pipeline now contains four matched graph/visual/inspector lenses; and the Calendar time-fabric planner now says what slice it is projecting, how deep it looks, which temporal properties it trusts, and why Google Calendar is an external surface rather than graph truth.
+This T194 pass expanded the projection lane rather than changing HG truth. The VS Code portable workspace is now the explicit operator surface; the custom agent and opener prompt are wired into `.github/agents/` and `.github/prompts/`; the session pipeline now contains four matched graph artifacts, four DOT/SVG visual lenses, four SVG zoom panes, and four interactive HG inspector lenses; and the Calendar time-fabric planner now says what slice it is projecting, how deep it looks, which temporal properties it trusts, and why Google Calendar is an external surface rather than graph truth.
 
 The live graph did not receive new rewrites in this pass. The external Google Calendar writer did run as an explicit actuator boundary and patched 16 existing events by `moos_projection_id`. Those write effects are not automatically HG state. The regenerated recommendation reconciliation correctly reports the new T194-dated `calendar_event` observations and session pins as pending HG rows, with WF07 source anchors still deferred.
 
@@ -34,7 +34,7 @@ Tracked local edits now cover four groups.
    - `dev/scripts/export_t200plus_projection.jl` has a `calendar-scope` preset.
    - `dev/scripts/projections/run-session-pipeline.ps1` emits four graph artifacts and four visual lenses: session occasion, Calendar Time-Fabric, T189 recommendations, and Calendar scope. The Calendar planner receives the Calendar-scope artifact as its reliability/scope context.
    - `dev/scripts/calendar_time_fabric_projection.jl` emits slice policy, temporal-basis metadata, event reliability, relation context, ontology-pattern notes, and Calendar-scope diagnostics.
-   - `dev/scripts/session_pipeline_mvp_gate.jl` gates the Calendar Time-Fabric and Calendar-scope lenses, includes all four static visual lenses, and exposes four Cytoscape inspector tabs with search, fit, zoom, reset, layout, and wide-view modal controls.
+   - `dev/scripts/session_pipeline_mvp_gate.jl` gates the Calendar Time-Fabric and Calendar-scope lenses, includes all four static visual lenses as SVG zoom panes with fit/zoom/reset/wide controls, and exposes four Cytoscape inspector tabs with search, fit, zoom, reset, layout, and wide-view modal controls.
    - Focused tests for the Calendar planner and MVP gate were updated and pass.
 
 4. Skill and docs refresh:
@@ -45,9 +45,10 @@ Tracked local edits now cover four groups.
 
 Latest local proof after implementation:
 
-- Julia focused tests: `test_calendar_time_fabric_projection.jl` passed 22/22; `test_session_pipeline_mvp_gate.jl` passed 57/57 after the fourth inspector and modal/zoom controls.
+- Julia focused tests: `test_calendar_time_fabric_projection.jl` passed 22/22; `test_session_pipeline_mvp_gate.jl` passed 69/69 after the fourth inspector, modal/zoom controls, and SVG zoom panes.
 - Full session pipeline: `warn`, 20 pass, 2 warn, 0 fail.
 - Dashboard: `tmp/projections/session_pipeline/index.html`.
+- Edge/CDP browser validation passed against the generated dashboard, including headline metrics, four SVG objects, SVG zoom in/out/reset, SVG wide-pane open/close, four Cytoscape tabs, Calendar Time-Fabric tab selection, Calendar Scope tab selection, and no console/runtime errors.
 - Calendar writer: credential check passed; dry-run saw 16 events; real write patched 16 existing Google Calendar events, inserted 0.
 - Diagnostics on touched Julia/PowerShell/test files: clean.
 - `git diff --check`: only CRLF normalization warnings, no whitespace errors.
@@ -55,7 +56,7 @@ Latest local proof after implementation:
 Generated artifact shape is now symmetrical:
 
 - Graph artifacts: `session_occasion_engineering`, `temporal_calendar_engineering`, `t189_recommendation_engineering`, and `calendar_scope_engineering` as JSON/Markdown pairs.
-- Visuals: `session_occasion_frame`, `temporal_calendar_frame`, `t189_recommendation_frame`, and `calendar_scope_frame` as DOT/SVG pairs.
+- Visuals: `session_occasion_frame`, `temporal_calendar_frame`, `t189_recommendation_frame`, and `calendar_scope_frame` as DOT/SVG pairs, surfaced as four SVG zoom panes in the dashboard.
 - Interactive inspectors: Session Occasion 16/20, Calendar Time-Fabric 44/54, T189 Recommendations 47/61, and Calendar Scope 53/62.
 
 The two pipeline warnings are expected and useful:
@@ -77,6 +78,8 @@ The session-context pack is the best current summary of what this VS Code occasi
 - Calendar-scope lens: 53 selected nodes out of 433 state nodes; 62 selected relations out of 444 state relations; 8 weak components, largest component 46 nodes; 11 explicit roots, all connected.
 
 The dashboard was cleaned up around review roles rather than raw file lists. `Review Surfaces` now groups Atlas, Graph Artifacts, Calendar, Recommendations, and MVP Gate links. The Atlas panel is the table of contents for the local generated surfaces; recommendations remain a dry plan/reconciliation surface; `mvp/` remains the pass/warn/fail contract; and `graph_artifacts/` is now the canonical engineering substrate for the four interactive lenses. The interactive HG inspector now has a wider modal mode with backdrop/close affordance, plus search, fit, zoom in/out, reset, and Cose/Grid layout controls.
+
+The static and interactive visual surfaces now have distinct lingo. An SVG zoom pane is the deterministic Graphviz review layer for labels, rank, and relation visibility. An interactive HG inspector is the Cytoscape-backed typed graph-artifact view for selecting nodes and relations and reading metadata. Both are F-direction projections from folded HG for `urn:moos:session:sam.governance`; neither is a truth source or rewrite surface.
 
 The live `session.status` property still appears as `abandoned` in the generated JSON. That property is deprecated in the ontology and should not be treated as the liveness source. Current liveness is relation-evaluated from WF19: `opens-on`, `has-occupant`, `has-purpose`, and `pins-urn`. A compatibility MUTATE from `abandoned` to `active` is possible under kernel authority, but the stronger fix is for projections and readers to prefer WF19 topology over deprecated scalar session status.
 
@@ -108,7 +111,7 @@ Topology rewires change graph connectivity and projection scope. Examples:
 - LINK/UNLINK WF18 composition: changes the program/purpose DAG and therefore what the Calendar/recommendation/visual lenses see.
 - LINK WF21: changes causal reachability and can connect previously forced roots, but it must remain acyclic.
 
-For projections, relation rewires are louder than most node-property mutations because lenses are rooted in topology. A single new WF19 pin can add a whole subtree to the session pack. A single `view_filter.predicate` MUTATE can hide or reveal a large t-cone. A Calendar `date` cannot be MUTATEd because it is immutable on `calendar_event`; a changed external date must either create a new `calendar_event` observation or wait for an ontology/identity decision about Calendar event URN stability.
+For projections, relation rewires are louder than most node-property MUTATEs because lenses are rooted in topology. A single new WF19 pin can add a whole subtree to the session pack. A single `view_filter.predicate` MUTATE can hide or reveal a large t-cone. A Calendar `date` cannot be MUTATEd because it is immutable on `calendar_event`; a changed external date must either create a new `calendar_event` observation or wait for an ontology/identity decision about Calendar event URN stability.
 
 ## Candidate HG Work For The Next Session
 
@@ -123,7 +126,7 @@ Recommended HG move:
 - ADD 16 new `calendar_event` nodes for the T194-dated observations.
 - LINK each new event into `session:sam.governance` with WF19 `pins-urn/pinned-by-session`.
 - Keep the 16 WF07 `anchors/anchor` relations deferred until WF07 is repaired.
-- Add or close a derivation recording that these are a new G-observation of the external Calendar surface, not a mutation of the older `calendar_event` nodes.
+- Add or close a derivation recording that these are a new G-observation of the external Calendar surface, not a MUTATE of the older `calendar_event` nodes.
 
 Do not try to MUTATE old `calendar_event.date` or `t_day`; both are immutable. If stable Calendar identity should survive date movement, that is a future ontology design, probably a projection identity carrier separate from date-stamped `calendar_event` observations.
 
@@ -289,7 +292,7 @@ If the conversation-staging pattern stabilizes after one or two T195 runs, promo
 - No Project #4 G-sync was performed.
 - No Z440 GPU commands were run because Z440 is currently down from hp-laptop's router view.
 - No T195 Keep note was ingested yet because the source note was not supplied in this session.
-- No commit or push was performed; the worktree remains intentionally dirty for review.
+- The first dashboard/projection packet was committed and pushed as `502286c`. The later SVG zoom-pane and traceability updates belong to this final wrap-up packet.
 
 ## Next Concrete Move
 

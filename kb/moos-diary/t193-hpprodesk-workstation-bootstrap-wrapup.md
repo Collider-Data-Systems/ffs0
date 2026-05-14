@@ -2,15 +2,25 @@
 
 **T-day:** T=193
 **Date:** 2026-05-13
-**Kernel/session:** `hp-laptop.primary` / `session:sam.governance` as the coordinating lane; `hpprodesk.primary` / `session:sam.hpprodesk-setup` as the planned third-workstation lane
-**Runtime readback:** HP ProDesk local primary now reports `/healthz` green from the `hpprodesk` seed log; no HP ProDesk HG rewrites have been applied yet
+**Kernel/session:** `urn:moos:kernel:hp-laptop.primary` / `urn:moos:session:sam.governance` as the coordinating lane; `urn:moos:kernel:hpprodesk.primary` / `urn:moos:session:sam.hpprodesk-setup` as the third-workstation setup lane
+**Actor:** coordinating lane `urn:moos:agent:claude-code.hp-laptop`; HP ProDesk VS Code lane `urn:moos:agent:vscode.hpprodesk.primary`
+**Runtime readback:** HP ProDesk local primary first reported `/healthz` green from the `hpprodesk` seed log; later T193 shared and local session-layer batches materialized the setup topology, and final projection readback applied no additional HG payloads
 **Lane:** HP ProDesk workstation bring-up, topology correction, prompt handoff, and ffs0 trunk policy
 
 ## Executive Status
 
-The recent T193 period turned the loose "HP Pro is in reach" idea into a concrete HP ProDesk bootstrap packet. The new workstation is now named consistently as `hpprodesk`, with planned kernel `urn:moos:kernel:hpprodesk.primary`, setup session `urn:moos:session:sam.hpprodesk-setup`, purpose `urn:moos:purpose:sam.hpprodesk-workstation-bootstrap`, and VS Code agent `urn:moos:agent:vscode.hpprodesk.primary`.
+The recent T193 period turned the loose "HP Pro is in reach" idea into a concrete HP ProDesk bootstrap packet. The new workstation is now named consistently as `hpprodesk`, with kernel `urn:moos:kernel:hpprodesk.primary`, setup session `urn:moos:session:sam.hpprodesk-setup`, purpose `urn:moos:purpose:sam.hpprodesk-workstation-bootstrap`, and VS Code agent `urn:moos:agent:vscode.hpprodesk.primary`.
 
 The practical result is that the HP ProDesk-side VS Code/Copilot can now pull `ffs0/main`, read the shared bootstrap prompt, and continue from a topology file that already knows the current LAN facts: HP ProDesk at `172.29.0.32`, hp-laptop at `172.29.0.38`, and Z440 kept in consideration as the historical/offline workstation at `192.168.1.11`.
+
+## Session Traceability
+
+This packet should be read together with `kb/moos-diary/t193-hpprodesk-social-topology-inventory.md`, which records the later applied shared and local HP ProDesk session layers. The trace is:
+
+- Coordinating lane: `urn:moos:session:sam.governance` on `urn:moos:kernel:hp-laptop.primary`, occupied by `urn:moos:agent:claude-code.hp-laptop`.
+- HP ProDesk setup lane: `urn:moos:session:sam.hpprodesk-setup` opens on `urn:moos:kernel:hpprodesk.primary`, has purpose `urn:moos:purpose:sam.hpprodesk-workstation-bootstrap`, and is occupied by `urn:moos:agent:vscode.hpprodesk.primary`.
+- Applied records: `dev/scripts/ops/t193-hpprodesk-topology-materialization.program.json` materialized the shared hp-laptop mirror; `dev/scripts/ops/t193-hpprodesk-local-session-bootstrap.program.json` materialized the local HP ProDesk setup layer. Treat both as applied/do-not-reapply records.
+- Projection outputs under `tmp/projections/session_pipeline/` are F-direction readback artifacts for that session context, not HG truth and not APPLY payloads.
 
 ## HP ProDesk Local Readback Projection
 
@@ -65,7 +75,7 @@ The diary wrapup carries the story: why the topology changed, how the workstatio
 
 ## Explicitly Not Done
 
-- No HG rewrite batch was applied for HP ProDesk yet. The workstation, kernel, setup session, purpose, and occupant links remain planned until HP ProDesk proves local kernel health and Sam approves the batch.
+- No additional HG rewrite batch was applied during the final projection readback. The shared HP ProDesk mirror and local setup session batches had already landed in the later T193 implementation records.
 - No secrets were copied through chat or committed. `.vscode/mcp.json` and `secrets/` remain local-only surfaces.
 - No `moos-kernel` or `moos-router` code changed.
 - Z440 was not treated as replaced. It remains the second historical workstation and should be reconciled when it is physically reachable again.
@@ -95,7 +105,7 @@ Follow-up projection check confirmed hp-laptop's session pipeline is current eno
 
 ## Next Moves
 
-- Prepare a reviewed `moos-rewrite-envelope` batch for the HP ProDesk workstation/kernel/session/purpose/occupant topology.
-- After Sam approves the batch, apply it to the intended receiving kernel and re-run persona/topology verification.
-- Keep HP ProDesk to one primary kernel until the setup session is represented in HG and restart-stable.
+- Do not reapply either T193 HP ProDesk program JSON; both are now historical applied records.
+- Keep HP ProDesk to one primary kernel until the setup session remains restart-stable across routine workstation opens.
+- Decide whether HP ProDesk needs a dedicated local projection mode/root set or should remain shared-graph-first through hp-laptop/router.
 - When back at the Z440, run the federation doctor and reconcile all three workstations together.

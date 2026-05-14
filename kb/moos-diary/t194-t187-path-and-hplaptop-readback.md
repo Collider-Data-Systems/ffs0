@@ -1,9 +1,10 @@
 # T194 T187 Path And Hp-Laptop Readback
 
-**T-day:** T=194  
-**Date:** 2026-05-14  
-**Kernel/session:** `kernel:hp-laptop.primary` / `session:sam.governance`  
-**Runtime readback:** hp-laptop `localhost:8000` ok, `ontology_version=3.16.1`, `t_day=194`, `log_len=1184`; router `localhost:9000` ok with Z440 remote down  
+**T-day:** T=194
+**Date:** 2026-05-14
+**Kernel/session:** `urn:moos:kernel:hp-laptop.primary` / `urn:moos:session:sam.governance`
+**Actor:** `urn:moos:agent:claude-code.hp-laptop`
+**Runtime readback:** hp-laptop `localhost:8000` ok, `ontology_version=3.16.1`, `t_day=194`, `log_len=1184`; router `localhost:9000` ok with Z440 remote down
 **Lane:** session readback, T187 path synthesis, running-state closeout
 
 ## Executive status
@@ -42,6 +43,8 @@ This report is authored from the hp-laptop governance lane. The live hp-laptop k
 
 The HP ProDesk T193 setup remains a separate local session: `session:sam.hpprodesk-setup` / `agent:vscode.hpprodesk.primary` on `kernel:hpprodesk.primary`, last copied back at `t_day=193`, `log_len=26`, with persona verification passing. Do not reapply either T193 program JSON; both were marked applied and do-not-reapply.
 
+Traceability rule for later readers: this T194 readback is a doc-only projection from `urn:moos:session:sam.governance`; HP ProDesk outputs remain tied to `urn:moos:session:sam.hpprodesk-setup`; and both sessions should be read through WF19 `opens-on`, `has-occupant`, `has-purpose`, and `pins-urn` relations rather than through stale scalar status values.
+
 ## Surface and identity reading
 
 GitHub readback during this pass found no open `ffs0` issues. Project #4 `mo:os` is active with 107 items and 19 fields, but no board-status-to-HG sync was performed.
@@ -54,7 +57,7 @@ The identity boundary from T193 still holds. Geurt, Gmail accounts, Google accou
 - Rejoin live room state across hp-laptop, HP ProDesk, and Z440 before any new topology apply.
 - Keep the HP ProDesk 26-line local graph minimal unless there is a real local-only projection need.
 - Continue T189/T200 projection cleanup: WF07 anchors, forced visual-root relation decisions, Project #4 `HG URN` coverage, and `my-tiny-data-collider` surface mapping.
-- Treat the stale deleted HP ProDesk prompt reference in `dev/config/session-affordance-map.json` as config drift for a later focused pass.
+- The stale deleted HP ProDesk prompt reference in `dev/config/session-affordance-map.json` was superseded by the later T194 VS Code Agents pass, which points HP ProDesk and VS Code sessions at the reusable workstation opener.
 
 ## Validation
 

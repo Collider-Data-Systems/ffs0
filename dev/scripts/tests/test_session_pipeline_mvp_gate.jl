@@ -188,6 +188,8 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test plan["lingo"]["reconciliation"] != ""
         @test plan["lingo"]["Calendar_projection"] != ""
         @test plan["lingo"]["Recommendation_projection"] != ""
+        @test plan["lingo"]["SVG_zoom_pane"] != ""
+        @test plan["lingo"]["HG_inspector"] != ""
         @test plan["renderer_candidates"][2]["name"] == "Cytoscape.js"
         @test plan["interactive_inspector"]["node_count"] == 2
         @test plan["interactive_inspector"]["relation_count"] == 1
@@ -209,6 +211,16 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test occursin("Calendar Time-Fabric", html)
         @test occursin("HG Recommendations", html)
         @test occursin("Visual Lenses", html)
+        @test occursin("SVG zoom pane", html)
+        @test occursin("Static Graphviz proof frame", html)
+        @test occursin("data-svg-panel", html)
+        @test occursin("data-svg-action=\"fit\"", html)
+        @test occursin("data-svg-action=\"zoom-in\"", html)
+        @test occursin("data-svg-action=\"zoom-out\"", html)
+        @test occursin("data-svg-action=\"reset\"", html)
+        @test occursin("data-svg-action=\"wide\"", html)
+        @test occursin("svgBackdrop", html)
+        @test length(collect(eachmatch(r"<div class=\"visualPanel\" data-svg-panel", html))) == 4
         @test occursin("T189 Recommendations", html)
         @test occursin("Calendar Scope", html)
         @test occursin("Review Surfaces", html)

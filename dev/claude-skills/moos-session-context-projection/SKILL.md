@@ -78,7 +78,7 @@ The T189/T200 lane regenerates a complete local projection pack:
 8. T189/T200 recommendation HG plan.
 9. Recommendation reconciliation against folded HG state.
 10. Surface context atlas.
-11. MVP gate and dashboard with Graphviz plus Cytoscape.js inspector tabs for session occasion, Calendar Time-Fabric, T189 recommendations, and Calendar scope. The inspector supports search, fit, zoom, reset, layout switching, and a wide modal view.
+11. MVP gate and dashboard with Graphviz SVG zoom panes plus Cytoscape.js inspector tabs for session occasion, Calendar Time-Fabric, T189 recommendations, and Calendar scope. The SVG panes support fit, zoom, reset, scrolling, and wide view for static layout review; the inspector supports search, fit, zoom, reset, layout switching, and a wide modal view for typed graph-artifact metadata.
 
 Calendar writer actions are explicit actuator steps. The writer is an upsert keyed by `moos_projection_id`: rerunning the plan should patch existing Google Calendar events rather than insert duplicates. HG-side Calendar readback is separate: individual `calendar_event` nodes and session pins can be applied while WF07 source-anchor relations remain deferred until the operad declaration is resolved.
 
