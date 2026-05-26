@@ -167,6 +167,9 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
         @test all(row -> row["present"], atlas["hg_anchors"]["application_surface_map"])
         @test length(atlas["programs_with_irl_external_shape"]) >= 2
         @test atlas["pending_moves"][1]["status"] == "ready-for-anchor-apply-review"
+        closed_moves = Atlas.pending_moves(Dict(:status => "declared"), Dict(:summary => Dict(:deferred_relations => 0, :calendar_anchor_relations_pending => 0)))
+        @test closed_moves[1]["status"] == "applied"
+        @test occursin("No pending Calendar source anchors remain", closed_moves[1]["next"])
         @test "team-ide-affordance-map" in Set(move["id"] for move in atlas["pending_moves"])
         @test "multi-workspace-cloud-testbed" in Set(move["id"] for move in atlas["pending_moves"])
         @test "cloudflare-domain-dns-inventory" in Set(move["id"] for move in atlas["pending_moves"])

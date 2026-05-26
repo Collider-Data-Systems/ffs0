@@ -70,6 +70,18 @@ function wf_ids(ontology)
     return ids
 end
 
+function wf07_anchor_pair_declared(ontology)
+    for spec in object_value(ontology, :rewrite_categories, Any[])
+        string(object_value(spec, :id, "")) == "WF07" || continue
+        for pair in object_value(spec, :additional_port_pairs, Any[])
+            if string(object_value(pair, :src_port, "")) == "anchors" && string(object_value(pair, :tgt_port, "")) == "anchor"
+                return true
+            end
+        end
+    end
+    return false
+end
+
 t_day_for_date(date::Date; t0_date::Date=DEFAULT_T0_DATE) = Dates.value(date - t0_date)
 
 function slug_tail(text::AbstractString; limit::Integer=44)
@@ -270,9 +282,11 @@ function grouped_relations(calendar_nodes)
     return relations
 end
 
-function deferred_calendar_anchor_relations(calendar_nodes, calendar_plan)
+function calendar_anchor_relations(calendar_nodes, calendar_plan; pair_declared::Bool=false)
     events_by_projection = Dict(string(object_value(event, :projection_id, "")) => event for event in object_value(calendar_plan, :events, Any[]))
-    deferred = Any[]
+    anchors = Any[]
+    status = pair_declared ? "ready-for-apply-review" : "requires-operad-review"
+    note = pair_declared ? "WF07 anchors/anchor is declared as an additional_port_pair; apply only after live runtime reload/validation and explicit actor review." : "calendar_event declares anchors and port_color_compat lists WF07 anchors/anchor, but WF07 top-level declaration still names participates/participated-by. Check loader behavior before applying."
     for event_node in calendar_nodes
         projection_tail = split(string(event_node["urn"]), ".")[end]
         projection_id = startswith(projection_tail, "moos-") ? projection_tail : ""
@@ -280,9 +294,9 @@ function deferred_calendar_anchor_relations(calendar_nodes, calendar_plan)
         event === nothing && continue
         source_urn = string(object_value(event, :source_urn, ""))
         isempty(source_urn) && continue
-        push!(deferred, relation("WF07", event_node["urn"], "anchors", source_urn, "anchor"; status="requires-operad-review", note="calendar_event declares anchors and port_color_compat lists WF07 anchors/anchor, but WF07 top-level declaration still names participates/participated-by. Check loader behavior before applying."))
+        push!(anchors, relation("WF07", event_node["urn"], "anchors", source_urn, "anchor"; status=status, note=note))
     end
-    return deferred
+    return anchors
 end
 
 function t200_recommendations()
@@ -302,8 +316,15 @@ function plan_projection(ontology, calendar_plan, write_result; t0_date::Date=DE
     calendar_nodes = [calendar_event_node(event, write_index; t0_date=t0_date) for event in object_value(calendar_plan, :events, Any[])]
     group_nodes = grouped_nodes()
     candidate_nodes = vcat(group_nodes, calendar_nodes)
+    anchor_pair_declared = wf07_anchor_pair_declared(ontology)
+    anchor_relations = calendar_anchor_relations(calendar_nodes, calendar_plan; pair_declared=anchor_pair_declared)
     candidate_relations = grouped_relations(calendar_nodes)
-    deferred_relations = deferred_calendar_anchor_relations(calendar_nodes, calendar_plan)
+    deferred_relations = Any[]
+    if anchor_pair_declared
+        append!(candidate_relations, anchor_relations)
+    else
+        append!(deferred_relations, anchor_relations)
+    end
     used_types = Set(string(node["type_id"]) for node in candidate_nodes)
     used_wfs = Set(string(rel["rewrite_category"]) for rel in vcat(candidate_relations, deferred_relations))
 
@@ -327,6 +348,8 @@ function plan_projection(ontology, calendar_plan, write_result; t0_date::Date=DE
         "candidate_node_count" => length(candidate_nodes),
         "candidate_relation_count" => length(candidate_relations),
         "deferred_relation_count" => length(deferred_relations),
+        "calendar_anchor_relation_count" => length(anchor_relations),
+        "calendar_anchor_relation_status" => anchor_pair_declared ? "ready-for-apply-review" : "requires-operad-review",
         "calendar_event_node_count" => length(calendar_nodes),
         "ontology_check" => Dict(
             "required_types" => REQUIRED_TYPES,
@@ -335,6 +358,7 @@ function plan_projection(ontology, calendar_plan, write_result; t0_date::Date=DE
             "unknown_required_wfs" => [wf for wf in REQUIRED_WFS if !(wf in known_wfs)],
             "used_types" => sort(collect(used_types)),
             "used_wfs" => sort(collect(used_wfs)),
+            "wf07_anchors_anchor_pair" => anchor_pair_declared ? "declared" : "missing",
         ),
         "t200_recommendations" => t200_recommendations(),
     )
@@ -366,6 +390,7 @@ function write_markdown(path::AbstractString, plan)
         println(io, "- Candidate nodes: ", plan["candidate_node_count"])
         println(io, "- Candidate relations: ", plan["candidate_relation_count"])
         println(io, "- Deferred relation checks: ", plan["deferred_relation_count"])
+        println(io, "- Calendar source anchors: ", plan["calendar_anchor_relation_count"], " (", plan["calendar_anchor_relation_status"], ")")
         println(io)
         println(io, "| Type | URN | Scope |")
         println(io, "| --- | --- | --- |")
@@ -382,8 +407,13 @@ function write_markdown(path::AbstractString, plan)
         check = plan["ontology_check"]
         println(io, "- Unknown required types: ", isempty(check["unknown_required_types"]) ? "none" : join(check["unknown_required_types"], ", "))
         println(io, "- Unknown required WFs: ", isempty(check["unknown_required_wfs"]) ? "none" : join(check["unknown_required_wfs"], ", "))
+        println(io, "- WF07 anchors/anchor pair: ", check["wf07_anchors_anchor_pair"])
         println(io)
-        println(io, "Deferred relations are not failures. They mark where the current ontology has a useful port-color clue, but the top-level rewrite category still needs loader/validator confirmation before an APPLY batch.")
+        if plan["calendar_anchor_relation_status"] == "ready-for-apply-review"
+            println(io, "Calendar source anchors are declared WF07 candidates. They still require live runtime reload/validation and an explicit APPLY batch.")
+        else
+            println(io, "Deferred relations are not failures. They mark where the current ontology has a useful port-color clue, but the top-level rewrite category still needs loader/validator confirmation before an APPLY batch.")
+        end
     end
 end
 

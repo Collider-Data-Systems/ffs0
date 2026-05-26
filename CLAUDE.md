@@ -10,7 +10,7 @@ Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.
 
 **Read `kb/superset/running-state.md` first.** Current T-day, active program, kernel state, open items, key URNs.
 
-At T=194 hp-laptop kernel is live on v3.16.1 (log_len 1354, t_day 194). `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation`; its current folded occupant is `agent:vscode.hp-laptop.copilot`, not `agent:claude-code.hp-laptop` unless Claude Code is actually running and occupancy is explicitly restored. The active working lane is the Keep/session/visual/Calendar/recommendation/atlas projection pipeline plus the newly applied T194/T200 scoped session topology, not a single running HG program. Current operator report: `kb/moos-diary/t194-t200-big-sprint-topology-wrapup.md`; prior T194 report: `kb/moos-diary/t194-vscode-agents-calendar-scope-and-session-staging-wrapup.md`; prior T189 reports: `kb/moos-diary/t189-surface-context-atlas-wrapup.md`, `kb/moos-diary/t189-calendar-event-public-surface-wrapup.md`, `kb/moos-diary/t189-recommendation-hg-projection-wrapup.md`, and `kb/moos-diary/t189-calendar-dashboard-organization-wrapup.md`. Doctrine lives as derivations on log plus carefully chosen reports; conversations should still reify through HG chunks when they need persistence. Z440 federation is topology memory until live readback says otherwise.
+At T=206 hp-laptop kernel is live on v3.16.2 (log_len 1467, t_day 206). `session:sam.governance` has durable WF19 purpose `purpose:sam.doctrine-governance-and-delegation`; its current folded occupant is `agent:vscode.hp-laptop.copilot`, not `agent:claude-code.hp-laptop` unless Claude Code is actually running and occupancy is explicitly restored. The active working lane is the Keep/session/visual/Calendar/recommendation/atlas projection pipeline plus the T194/T200 scoped session topology and T206 WF07 Calendar source-anchor catch-up, not a single running HG program. Current recommendation reconciliation is converged: grouped nodes 10/10, grouped safe relations 16/16, Calendar event nodes 22/22, Calendar session pins 22/22, WF07 source anchors 22/22, deferred relations 0. Current operator state starts with `kb/superset/running-state.md`; recent reports include `kb/moos-diary/t194-t200-big-sprint-topology-wrapup.md`, `kb/moos-diary/t194-vscode-agents-calendar-scope-and-session-staging-wrapup.md`, `kb/moos-diary/t189-surface-context-atlas-wrapup.md`, `kb/moos-diary/t189-calendar-event-public-surface-wrapup.md`, `kb/moos-diary/t189-recommendation-hg-projection-wrapup.md`, and `kb/moos-diary/t189-calendar-dashboard-organization-wrapup.md`. Doctrine lives as derivations on log plus carefully chosen reports; conversations should still reify through HG chunks when they need persistence. Z440 federation is topology memory until live readback says otherwise.
 
 ---
 
@@ -58,7 +58,7 @@ Relations are truth. Properties never duplicate topology.
 
 ## Ontology
 
-`kb/superset/ontology.json` — **v3.16.1**, 53 node types, 21 WFs (WF01–WF21).
+`kb/superset/ontology.json` — **v3.16.2**, 53 node types, 21 WFs (WF01–WF21).
 Do not edit without reading running-state.md first.
 
 Notable bumps since v3.9 baseline (T=168):
@@ -70,6 +70,7 @@ Notable bumps since v3.9 baseline (T=168):
 - v3.15.0 (T=176) — `clock` node type, WF21 causes/caused-by (acyclic), substrate properties on channel/knowledge_item, channel.kind +video/+audio.
 - v3.16.0 (T=185) — D22.1 `has-purpose`/`purpose-of-session` WF19 port-pair. Session repurposing via MUTATE.
 - v3.16.1 (T=187) — authority-scope patch for kernel-authored lifecycle closeout and current projection-lane validation.
+- v3.16.2 (T=206) — WF07 `anchors`/`anchor` additional_port_pair for Calendar source anchors; T206 catch-up applied the 22 pending Calendar source-anchor relations.
 
 ---
 
@@ -146,12 +147,12 @@ Outputs land under `tmp/projections/session_pipeline/`:
 - `calendar/calendar_time_fabric_plan.{json,md}` — Calendar projection payload plan/report.
 - `calendar/calendar_time_fabric_write_result.json` — explicit Google Calendar writer result; latest T189 run patched 16 existing events by `moos_projection_id`.
 - `recommendations/t189_t200_recommendation_hg_plan.{json,md}` — dry candidate HG nodes/relations for the five T189 recommendations and T200+ convergence.
-- `recommendations/t189_recommendation_reconciliation.{json,md}` — comparison of candidate plan against folded state; current result: 10/10 grouped nodes, 16/16 grouped safe relations, 22/22 Calendar event nodes, 22/22 Calendar session pins applied, 22 WF07 anchors deferred.
+- `recommendations/t189_recommendation_reconciliation.{json,md}` — comparison of candidate plan against folded state; current result: 10/10 grouped nodes, 16/16 grouped safe relations, 22/22 Calendar event nodes, 22/22 Calendar session pins applied, 22/22 WF07 source anchors applied, deferred relations 0.
 - `atlas/surface_context_atlas.{json,md}` — generated table of contents for JSON API, JSONL log, Git repos, Calendar, dashboard, visuals, type/relation/program surfaces, existing HG anchors, step-by-step HG use, and pending moves.
 - `mvp/session_pipeline_gate.{json,md}` — pass/warn/fail gate report.
 - `index.html` — local human-facing control surface.
 
-Latest gate after the T194/T200 topology apply and Calendar catch-up: `warn`, 23 pass, 1 warn, 0 fail. Remaining warning is visual lens root coverage; T189 recommendation reconciliation now passes for all safe rows. Keep Graphviz DOT/SVG for deterministic review; Cytoscape.js tabs now exist for session occasion, Calendar Time-Fabric, T189 recommendations, and Calendar scope. All four graph artifacts and DOT lenses include the current context agent `agent:vscode.hp-laptop.copilot`; the dashboard includes F/G Relation Insights and Graphview Stack Notes with F/G node roles, WF relation-family labels, top-degree nodes, and renderer/library tradeoffs. Calendar G-ingest shape is hybrid: individual `calendar_event` nodes plus one grouped derivation/result are applied, with WF07 source-anchor relations still deferred for operad review before APPLY.
+Latest gate after the T206 WF07 catch-up: `warn`, 23 pass, 1 warn, 0 fail. Remaining warning is visual lens root coverage; T189 recommendation reconciliation now passes for all rows including WF07 source anchors. Keep Graphviz DOT/SVG for deterministic review; Cytoscape.js tabs now exist for session occasion, Calendar Time-Fabric, T189 recommendations, and Calendar scope. All four graph artifacts and DOT lenses include the current context agent `agent:vscode.hp-laptop.copilot`; the dashboard includes F/G Relation Insights and Graphview Stack Notes with F/G node roles, WF relation-family labels, top-degree nodes, and renderer/library tradeoffs. Calendar G-ingest shape is hybrid: individual `calendar_event` nodes plus one grouped derivation/result are applied, and WF07 source-anchor relations are now folded into HG.
 
 Kernel/application split: `moos-kernel` is the OS-facing runtime function program. `moos-router` is federation/read-routing. `ffs0` is the control/research workspace. Application groups such as `my-tiny-data-collider` run on HG through the kernels and may own websites, DNS, servers, Calendar, GitHub, and Workspace surfaces, but they are separate entities/codebases from the kernel.
 

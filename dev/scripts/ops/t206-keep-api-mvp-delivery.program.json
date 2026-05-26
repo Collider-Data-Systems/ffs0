@@ -1,0 +1,759 @@
+{
+    "log_len_after": 1400,
+    "applied_at": "2026-05-26T21:01:48.385",
+    "review_only": false,
+    "log_len_before": 1360,
+    "applied": true,
+    "do_not_reapply": true,
+    "envelopes": [
+        {
+            "session_urn": "urn:moos:session:sam.governance",
+            "type_id": "program",
+            "properties": {
+                "target_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": 206
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "active"
+                },
+                "scope": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "Land the reviewed Keep API/OAuth boundary and S0 staging result as HG carriers, regenerate dashboard/visual/Calendar projections, and keep WF07 source anchors deferred until repaired."
+                },
+                "title": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "T206 Keep API MVP delivery"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "starts_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": 206
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:program:sam.t206.keep-api-mvp-delivery",
+            "rewrite_type": "ADD"
+        },
+        {
+            "session_urn": "urn:moos:session:sam.governance",
+            "type_id": "knowledge_item",
+            "properties": {
+                "summary": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "Reviewed T206 operator evidence: Google Keep API fetcher and dry stager are implemented and tested; Google OAuth currently rejects keep.readonly for the active OAuth project; raw T195-T206 Keep notes are not fetched; MVP delivery proceeds by landing the boundary, staging claims, projections, and Calendar handoff without asserting raw note content."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "retrieved_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "source_url": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "vscode-copilot://session/t206-keep-api-mvp-delivery"
+                },
+                "substrate": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "external-channel"
+                },
+                "language": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "en"
+                },
+                "source_type": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "gdrive"
+                },
+                "credential_check_artifact": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "tmp/projections/session_pipeline/keep_t206/google_keep_credential_check.json"
+                },
+                "stage_artifact": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "tmp/projections/session_pipeline/keep_t206/keep_t195_t206_stage.json"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "summarized"
+                },
+                "title": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "T206 Keep API MVP status and loose-thought staging boundary"
+                },
+                "substrate_anchor_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:channel:google.keep.sam"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "rewrite_type": "ADD"
+        },
+        {
+            "session_urn": "urn:moos:session:sam.governance",
+            "type_id": "derivation",
+            "properties": {
+                "inference_kind": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "hand_authored"
+                },
+                "name": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "T206 Keep API MVP readback"
+                },
+                "stochastic_weights": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": {
+                        "source": "operator-readback",
+                        "temperature": 0
+                    }
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "closed"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "confidence": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": 0.9
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:derivation:guido.t206-keep-api-mvp-readback",
+            "rewrite_type": "ADD"
+        },
+        {
+            "session_urn": "urn:moos:session:sam.governance",
+            "type_id": "claim",
+            "properties": {
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "source_ki_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:ki:gdrive.t206-keep-api-mvp-status"
+                },
+                "text": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "Google rejected the requested Keep readonly OAuth scope for the current OAuth client with invalid_scope, even though the public Keep discovery document lists the scope."
+                },
+                "confidence": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0.95
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:claim:t206-keep.oauth-scope-blocked",
+            "rewrite_type": "ADD"
+        },
+        {
+            "session_urn": "urn:moos:session:sam.governance",
+            "type_id": "claim",
+            "properties": {
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "source_ki_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:ki:gdrive.t206-keep-api-mvp-status"
+                },
+                "text": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "The T195-T206 raw Keep and loose-thought notes are not yet fetched into local reviewable source files; durable ingestion must remain staged until OAuth succeeds or Sam supplies a structured export."
+                },
+                "confidence": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0.93
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:claim:t206-keep.raw-notes-not-yet-ingested",
+            "rewrite_type": "ADD"
+        },
+        {
+            "session_urn": "urn:moos:session:sam.governance",
+            "type_id": "claim",
+            "properties": {
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "source_ki_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:ki:gdrive.t206-keep-api-mvp-status"
+                },
+                "text": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "A safe T206 MVP can land graph carriers for the Keep API boundary, S0 staging result, projection dashboard, and Google Calendar handoff without asserting raw Keep-note contents."
+                },
+                "confidence": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0.88
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:claim:t206-keep.mvp-carrier-safe-boundary",
+            "rewrite_type": "ADD"
+        },
+        {
+            "session_urn": "urn:moos:session:sam.governance",
+            "type_id": "claim",
+            "properties": {
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "source_ki_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:ki:gdrive.t206-keep-api-mvp-status"
+                },
+                "text": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "Sam's T206 loose-thought theme request points toward manifold compute, Rust, assembly, hardware, distributed hyperware compute, and Macrohard as classification buckets, but those buckets should classify retrieved notes rather than substitute for the source notes."
+                },
+                "confidence": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0.82
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:claim:t206-keep.macrohard-theme-staged",
+            "rewrite_type": "ADD"
+        },
+        {
+            "session_urn": "urn:moos:session:sam.governance",
+            "type_id": "claim",
+            "properties": {
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "source_ki_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:ki:gdrive.t206-keep-api-mvp-status"
+                },
+                "text": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "WF07 Calendar source anchors remain deferred until anchors/anchor is explicitly declared and runtime-validated as a WF07 port pair."
+                },
+                "confidence": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": 0.96
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:claim:t206-keep.wf07-stays-deferred",
+            "rewrite_type": "ADD"
+        },
+        {
+            "session_urn": "urn:moos:session:sam.governance",
+            "type_id": "external_op",
+            "properties": {
+                "automates_via_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "urn:moos:program:sam.t206.keep-api-mvp-delivery"
+                },
+                "command_hint": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "In Google Cloud Console, enable Google Keep API, add https://www.googleapis.com/auth/keep.readonly to OAuth consent scopes, add Sam as test user or verify/publish as required, then rerun google_keep_fetch.jl --mode auth-listen."
+                },
+                "created_at": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "2026-05-26T19:15:00Z"
+                },
+                "deadline_t": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": 207
+                },
+                "note": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "Blocks direct Google Keep API fetch; does not block the reviewed T206 MVP carrier/projection delivery."
+                },
+                "status": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "kernel",
+                    "value": "pending"
+                },
+                "title": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "Approve Google Keep OAuth readonly scope"
+                },
+                "owner_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "immutable",
+                    "authority_scope": "",
+                    "value": "urn:moos:user:sam"
+                },
+                "responsible_urn": {
+                    "stratum_origin": 2,
+                    "mutability": "mutable",
+                    "authority_scope": "owner",
+                    "value": "urn:moos:user:sam"
+                }
+            },
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "node_urn": "urn:moos:external_op:sam.t206-google-keep-oauth-scope-approval",
+            "rewrite_type": "ADD"
+        },
+        {
+            "src_urn": "urn:moos:channel:google.keep.sam",
+            "rewrite_type": "LINK",
+            "tgt_port": "kb-source",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-channel-google-keep-sam.provides-kb.urn-moos-ki-gdrive-t206-keep-api-mvp-status",
+            "rewrite_category": "WF12",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "provides-kb",
+            "tgt_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:program:sam.t194-t300.big-sprint-session-topology",
+            "rewrite_type": "LINK",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-program-sam-t194-t300-big-spr.composes.urn-moos-program-sam-t206-keep-api-mvp-delivery",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:program:sam.t206.keep-api-mvp-delivery",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:program:sam.t206.keep-api-mvp-delivery",
+            "rewrite_type": "LINK",
+            "tgt_port": "composed-by",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-program-sam-t206-keep-api-mvp.composes.urn-moos-ki-gdrive-t206-keep-api-mvp-status",
+            "rewrite_category": "WF18",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "composes",
+            "tgt_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "rewrite_type": "LINK",
+            "tgt_port": "caused-by",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-ki-gdrive-t206-keep-api-mvp-s.causes.urn-moos-derivation-guido-t206-keep-api-mvp-readba",
+            "rewrite_category": "WF21",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "causes",
+            "tgt_urn": "urn:moos:derivation:guido.t206-keep-api-mvp-readback",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:derivation:guido.t206-keep-api-mvp-readback",
+            "rewrite_type": "LINK",
+            "tgt_port": "caused-by",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-derivation-guido-t206-keep-ap.causes.urn-moos-program-sam-t206-keep-api-mvp-delivery",
+            "rewrite_category": "WF21",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "causes",
+            "tgt_urn": "urn:moos:program:sam.t206.keep-api-mvp-delivery",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "rewrite_type": "LINK",
+            "tgt_port": "kb-source",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-ki-gdrive-t206-keep-api-mvp-s.provides-kb.urn-moos-claim-t206-keep-oauth-scope-blocked",
+            "rewrite_category": "WF12",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "provides-kb",
+            "tgt_urn": "urn:moos:claim:t206-keep.oauth-scope-blocked",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:derivation:guido.t206-keep-api-mvp-readback",
+            "rewrite_type": "LINK",
+            "tgt_port": "caused-by",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-derivation-guido-t206-keep-ap.causes.urn-moos-claim-t206-keep-oauth-scope-blocked",
+            "rewrite_category": "WF21",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "causes",
+            "tgt_urn": "urn:moos:claim:t206-keep.oauth-scope-blocked",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "rewrite_type": "LINK",
+            "tgt_port": "kb-source",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-ki-gdrive-t206-keep-api-mvp-s.provides-kb.urn-moos-claim-t206-keep-raw-notes-not-yet-ingeste",
+            "rewrite_category": "WF12",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "provides-kb",
+            "tgt_urn": "urn:moos:claim:t206-keep.raw-notes-not-yet-ingested",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:derivation:guido.t206-keep-api-mvp-readback",
+            "rewrite_type": "LINK",
+            "tgt_port": "caused-by",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-derivation-guido-t206-keep-ap.causes.urn-moos-claim-t206-keep-raw-notes-not-yet-ingeste",
+            "rewrite_category": "WF21",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "causes",
+            "tgt_urn": "urn:moos:claim:t206-keep.raw-notes-not-yet-ingested",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "rewrite_type": "LINK",
+            "tgt_port": "kb-source",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-ki-gdrive-t206-keep-api-mvp-s.provides-kb.urn-moos-claim-t206-keep-mvp-carrier-safe-boundary",
+            "rewrite_category": "WF12",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "provides-kb",
+            "tgt_urn": "urn:moos:claim:t206-keep.mvp-carrier-safe-boundary",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:derivation:guido.t206-keep-api-mvp-readback",
+            "rewrite_type": "LINK",
+            "tgt_port": "caused-by",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-derivation-guido-t206-keep-ap.causes.urn-moos-claim-t206-keep-mvp-carrier-safe-boundary",
+            "rewrite_category": "WF21",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "causes",
+            "tgt_urn": "urn:moos:claim:t206-keep.mvp-carrier-safe-boundary",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "rewrite_type": "LINK",
+            "tgt_port": "kb-source",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-ki-gdrive-t206-keep-api-mvp-s.provides-kb.urn-moos-claim-t206-keep-macrohard-theme-staged",
+            "rewrite_category": "WF12",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "provides-kb",
+            "tgt_urn": "urn:moos:claim:t206-keep.macrohard-theme-staged",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:derivation:guido.t206-keep-api-mvp-readback",
+            "rewrite_type": "LINK",
+            "tgt_port": "caused-by",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-derivation-guido-t206-keep-ap.causes.urn-moos-claim-t206-keep-macrohard-theme-staged",
+            "rewrite_category": "WF21",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "causes",
+            "tgt_urn": "urn:moos:claim:t206-keep.macrohard-theme-staged",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "rewrite_type": "LINK",
+            "tgt_port": "kb-source",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-ki-gdrive-t206-keep-api-mvp-s.provides-kb.urn-moos-claim-t206-keep-wf07-stays-deferred",
+            "rewrite_category": "WF12",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "provides-kb",
+            "tgt_urn": "urn:moos:claim:t206-keep.wf07-stays-deferred",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:derivation:guido.t206-keep-api-mvp-readback",
+            "rewrite_type": "LINK",
+            "tgt_port": "caused-by",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-derivation-guido-t206-keep-ap.causes.urn-moos-claim-t206-keep-wf07-stays-deferred",
+            "rewrite_category": "WF21",
+            "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
+            "src_port": "causes",
+            "tgt_urn": "urn:moos:claim:t206-keep.wf07-stays-deferred",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-governance.pins-urn.urn-moos-program-sam-t206-keep-api-mvp-delivery",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t206.keep-api-mvp-delivery",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-governance.pins-urn.urn-moos-derivation-guido-t206-keep-api-mvp-readba",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:derivation:guido.t206-keep-api-mvp-readback",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-governance.pins-urn.urn-moos-ki-gdrive-t206-keep-api-mvp-status",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-governance.pins-urn.urn-moos-external-op-sam-t206-google-keep-oauth-sc",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:external_op:sam.t206-google-keep-oauth-scope-approval",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-governance.pins-urn.urn-moos-claim-t206-keep-oauth-scope-blocked",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:claim:t206-keep.oauth-scope-blocked",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-governance.pins-urn.urn-moos-claim-t206-keep-raw-notes-not-yet-ingeste",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:claim:t206-keep.raw-notes-not-yet-ingested",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-governance.pins-urn.urn-moos-claim-t206-keep-mvp-carrier-safe-boundary",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:claim:t206-keep.mvp-carrier-safe-boundary",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-governance.pins-urn.urn-moos-claim-t206-keep-macrohard-theme-staged",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:claim:t206-keep.macrohard-theme-staged",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.governance",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-governance.pins-urn.urn-moos-claim-t206-keep-wf07-stays-deferred",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:claim:t206-keep.wf07-stays-deferred",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-t200plus-s0-stagi.pins-urn.urn-moos-program-sam-t206-keep-api-mvp-delivery",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t206.keep-api-mvp-delivery",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-t200plus-s0-stagi.pins-urn.urn-moos-ki-gdrive-t206-keep-api-mvp-status",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-s0-staging",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-t200plus-s0-stagi.pins-urn.urn-moos-external-op-sam-t206-google-keep-oauth-sc",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:external_op:sam.t206-google-keep-oauth-scope-approval",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-t200plus-calendar.pins-urn.urn-moos-program-sam-t206-keep-api-mvp-delivery",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:program:sam.t206.keep-api-mvp-delivery",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-t200plus-calendar.pins-urn.urn-moos-ki-gdrive-t206-keep-api-mvp-status",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:ki:gdrive.t206-keep-api-mvp-status",
+            "session_urn": "urn:moos:session:sam.governance"
+        },
+        {
+            "src_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+            "rewrite_type": "LINK",
+            "tgt_port": "pinned-by-session",
+            "relation_urn": "urn:moos:rel:t206-keep-mvp.urn-moos-session-sam-t200plus-calendar.pins-urn.urn-moos-external-op-sam-t206-google-keep-oauth-sc",
+            "rewrite_category": "WF19",
+            "actor": "urn:moos:kernel:hp-laptop.primary",
+            "src_port": "pins-urn",
+            "tgt_urn": "urn:moos:external_op:sam.t206-google-keep-oauth-scope-approval",
+            "session_urn": "urn:moos:session:sam.governance"
+        }
+    ],
+    "approval_basis": "Sam explicitly requested a T206 MVP that can process/ingest/project the Keep/API/S0 staging lane while respecting pending WF07 and raw Keep-note boundaries.",
+    "persona": "guido",
+    "generated_from": "tmp/projections/session_pipeline/keep_t206/t206_keep_mvp_delivery.json",
+    "target_url": "http://localhost:8000/programs",
+    "target_kernel": "urn:moos:kernel:hp-laptop.primary"
+}

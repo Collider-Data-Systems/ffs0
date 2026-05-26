@@ -25,13 +25,15 @@ The operator manual for the generated filesystem, dashboard, script stack, typed
 - `graph_artifact_projection.jl` — dry folded-state graph artifact analyzer for newly added HG frames. It writes JSON/Markdown engineering summaries and pairs with the DOT/SVG exporter for visualization.
 - `calendar_time_fabric_projection.jl` — F-direction planner that turns a recent graph artifact into Google Calendar payloads, mapping HG identity, T-day anchor, node type/status, and relation context into visible Calendar events.
 - `t189_t200_recommendation_projection.jl` — dry planner that turns the five T189 recommendations into candidate HG nodes/relations and T200+ recommendation artifacts without applying rewrites.
-- `t189_recommendation_reconciliation.jl` — dry reconciliation adapter that compares the T189/T200 recommendation plan to folded HG state and reports grouped rows, Calendar event rows, session pins, and WF07-deferred relations separately.
+- `t189_recommendation_reconciliation.jl` — dry reconciliation adapter that compares the T189/T200 recommendation plan to folded HG state and reports grouped rows, Calendar event rows, session pins, WF07 Calendar source anchors, and deferred rows separately.
 - `surface_context_atlas.jl` — generated operator/agent atlas that explains the live JSON API, JSONL log, Git repos, Google Calendar projection, dashboard, visual lenses, type/relation/program surface, known HG anchors, and pending moves in one JSON/Markdown artifact.
 - `t193_workstation_inventory.jl` — dry workstation/persona inventory for T193 three-workstation planning. It folds the local JSONL log, compares it with `dev/config/moos-federation.topology.json`, and emits a JSON/Markdown packet that treats hp-laptop, HP ProDesk, and offline Z440 together without applying rewrites.
 - `google_calendar_projection.jl` — F-direction planning adapter from folded HG state to Google Calendar event payloads. It writes a reviewable JSON plan and does not perform OAuth or cloud writes.
 - `google_calendar_writer.jl` — explicit OAuth boundary writer for applying an approved Google Calendar projection plan. Defaults to dry-run/check modes; real writes require local gitignored OAuth files and `--mode write`.
 - `session_context_projection.jl` — F-direction planning adapter from folded HG state to a session context pack for IDE, agent, or harness handoff. It writes reviewable JSON and Markdown, and does not edit IDE config or emit rewrites.
 - `session_pipeline_mvp_gate.jl` — dry MVP gate report for the Keep-note/session/visual-projection lane. It checks live G-ingest evidence, F session handoff output, graph-artifact analysis, static visuals, lens controls, and known gaps.
+- `keep_t195_t206_ingest_stage.jl` — dry G-direction stager for T195-T206 Google Keep/loose-thought material. It reads a local Takeout/manual export folder or file, filters the T-window, marks duplicate/undated notes, classifies hardware/software/HG lifecycle themes, and writes review-only candidate KI/claim/derivation/program topology without emitting rewrites.
+- `t206_keep_mvp_delivery.jl` — narrow T206 MVP carrier planner for the Google Keep API/S0 staging boundary. It emits only new-needed program/derivation/KI/claim/external_op nodes and valid WF12/WF18/WF19/WF21 links; raw Keep-note content remains deferred.
 
 ## Python Status
 
@@ -65,6 +67,72 @@ powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-
 ```
 
 The runner regenerates the current Keep-note/session/visual lane and writes `tmp/projections/session_pipeline/index.html`. The HTML page is the MVP operator surface: it shows the G-ingest/F-session/F-visual stages, pass/warn/fail gates, runtime metadata, artifact links, the static visual lens, Calendar time-fabric artifacts, recommendation HG artifacts, the surface context atlas, and the next actions for warning gates. It is generated locally and does not emit rewrites.
+
+### T206 Keep/Loose-Thought Ingest Stage
+
+Harness-neutral entrypoint for any agent surface:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode Check
+powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode Stage -SourcePath scratch\keep\t195-t206 -RunPipeline
+```
+
+For the Google Keep web UI, copy selected note text to the clipboard and run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode ClipboardStage -RunPipeline
+```
+
+The same contract is captured as `.github/prompts/keep-ingest-any-harness.prompt.md` so VS Code/Copilot, Claude Desktop, Antigravity, Cursor, or a terminal agent can use the same source modes and review boundary.
+
+Proper affordance map for this lane:
+
+- VS Code prompt agent mode: `.github/agents/moos-workstation-operator.agent.md` via `.github/prompts/keep-ingest-any-harness.prompt.md`.
+- Runner modes: `Check`, `Stage`, `ClipboardStage`, `ApiAuthListen`, `ApiFetch`, `Pipeline`.
+- Skills: `moos-state-readback`, `moos-workspace-ingest`, `moos-session-context-projection`, `moos-tooling-dx`, `moos-rewrite-envelope`, and `moos-running-state-validator` when durable state docs are touched.
+- HG relations after review: `WF12 provides-kb/kb-source`, `WF18 composes/composed-by`, `WF19 pins-urn/pinned-by-session`, and `WF21 causes/caused-by`; `WF07 anchors/anchor` is only for explicit reviewed Calendar source-anchor apply batches after the runtime has loaded the repaired operad declaration.
+- Existing anchors to reuse: `session:sam.governance`, `channel:google.keep.sam`, `program:sam.t206.keep-api-mvp-delivery`, `ki:gdrive.t206-keep-api-mvp-status`, and `external_op:sam.t206-google-keep-oauth-scope-approval`. `Check` mode reports these anchors and the current session/MVP/T206 graph projections for another harness.
+
+Apply the reviewed T206 MVP carrier after the live readback says hp-laptop primary is healthy:
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\t206_keep_mvp_delivery.jl
+```
+
+The planner writes `tmp/projections/session_pipeline/keep_t206/t206_keep_mvp_delivery.{json,md}` and `dev/scripts/ops/t206-keep-api-mvp-delivery.program.json`. It is intentionally not a raw Keep-note import: it records the implemented API/fetch/staging boundary, the Google OAuth `invalid_scope` blocker, the staged theme buckets, and the WF07 deferral as graph carriers so dashboard and Calendar projections can move while the source-note fetch remains blocked.
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\keep_t195_t206_ingest_stage.jl --source scratch\keep\t195-t206
+```
+
+The stager writes `tmp/projections/session_pipeline/keep_t206/keep_t195_t206_stage.json` and `.md`. It is intentionally dry: Google Takeout/manual-export material becomes a local review artifact first, then candidate HG nodes/relations. It keeps `apply_ready=false` until Sam approves the source structure and a separate `dev/scripts/ops/` apply program is generated.
+
+Google Keep API fetch is an explicit OAuth boundary, mirroring the Calendar writer. Store local OAuth files under `secrets/`, then run:
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\google_keep_fetch.jl --mode check
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\google_keep_fetch.jl --mode auth-listen
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\google_keep_fetch.jl --mode fetch
+```
+
+The fetcher uses the Google Keep readonly scope, writes normalized API notes under `scratch/keep/t195-t206/api/notes/`, stores raw API responses beside them, and by default regenerates the same dry stage report. It does not emit HG rewrites and does not print token or client-secret values.
+
+Keep auth uses Google's v2 OAuth endpoint. If Google shows `Error 400: invalid_scope` with request details containing `scope=https://www.googleapis.com/auth/keep.readonly`, the local script path is working: the scope exists in Google's Keep discovery document, but the OAuth client/project is not allowed to present it yet.
+
+Fix that in Google Cloud Console before retrying the API fetch:
+
+1. Enable the Google Keep API in the project that owns the OAuth client.
+2. Add `https://www.googleapis.com/auth/keep.readonly` to the OAuth consent screen scopes.
+3. Add Sam's Google account as a test user, or publish/verify the app if Google requires it for this restricted scope.
+4. Prefer a dedicated Desktop OAuth client JSON at `secrets/google_keep_oauth_client.json`; reusing the Calendar client only works after that same Cloud project is configured for Keep.
+5. Rerun `--mode auth-listen`, then `--mode fetch` after `secrets/google_keep_token.json` is written.
+
+If there is no `secrets/google_keep_oauth_client.json` yet but the Calendar OAuth client exists, reuse the same local OAuth app and write a separate Keep token:
+
+```powershell
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\google_keep_fetch.jl --mode auth-listen --credentials secrets\google_calendar_oauth_client.json --token secrets\google_keep_token.json --open-browser true
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\google_keep_fetch.jl --mode fetch --credentials secrets\google_calendar_oauth_client.json --token secrets\google_keep_token.json
+```
 
 ### T200+ Projection Exporter
 
@@ -156,7 +224,7 @@ The adapter reads the ontology plus the Calendar time-fabric plan/write result a
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\t189_recommendation_reconciliation.jl --base-url http://localhost:8000
 ```
 
-The adapter compares the recommendation plan to folded HG state and emits `tmp/projections/session_pipeline/recommendations/t189_recommendation_reconciliation.json` plus Markdown. Current T189 semantics distinguish four surfaces: grouped purpose/program/view_filter/group rows, individual `calendar_event` nodes, WF19 session pins for those events, and WF07 source-anchor relations that remain deferred until the operad declaration is repaired.
+The adapter compares the recommendation plan to folded HG state and emits `tmp/projections/session_pipeline/recommendations/t189_recommendation_reconciliation.json` plus Markdown. Current T189 semantics distinguish grouped purpose/program/view_filter/group rows, individual `calendar_event` nodes, WF19 session pins for those events, WF07 Calendar source anchors, and still-deferred rows.
 
 ### Google Calendar OAuth Writer
 

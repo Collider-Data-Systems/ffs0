@@ -29,6 +29,13 @@ const DEFAULT_RECONCILIATION_PATH = "tmp/projections/session_pipeline/recommenda
 const DEFAULT_RECONCILIATION_REPORT_PATH = "tmp/projections/session_pipeline/recommendations/t189_recommendation_reconciliation.md"
 const DEFAULT_ATLAS_PATH = "tmp/projections/session_pipeline/atlas/surface_context_atlas.json"
 const DEFAULT_ATLAS_REPORT_PATH = "tmp/projections/session_pipeline/atlas/surface_context_atlas.md"
+const DEFAULT_T206_KEEP_MVP_REPORT_PATH = "tmp/projections/session_pipeline/keep_t206/t206_keep_mvp_delivery.md"
+const DEFAULT_T206_KEEP_MVP_JSON_PATH = "tmp/projections/session_pipeline/keep_t206/t206_keep_mvp_delivery.json"
+const DEFAULT_T206_KEEP_MVP_GRAPH_PATH = "tmp/projections/session_pipeline/graph_artifacts/t206_keep_mvp_engineering.json"
+const DEFAULT_T206_KEEP_MVP_DOT_PATH = "tmp/projections/session_pipeline/visual/t206_keep_mvp_frame.dot"
+const DEFAULT_T206_KEEP_MVP_SVG_PATH = "tmp/projections/session_pipeline/visual/t206_keep_mvp_frame.svg"
+const DEFAULT_T206_KEEP_MVP_CALENDAR_PLAN_PATH = "tmp/projections/session_pipeline/keep_t206/t206_keep_mvp_calendar_plan.json"
+const DEFAULT_T206_KEEP_MVP_CALENDAR_WRITE_RESULT_PATH = "tmp/projections/session_pipeline/keep_t206/t206_keep_mvp_calendar_write_result.json"
 const DEFAULT_ONE_SHOT_APPLY_SCRIPT = "tmp/projections/session_pipeline/recommendations/apply_t189_grouped.ps1"
 const DEFAULT_OUT_BASE = "tmp/projections/session_pipeline/mvp/session_pipeline_gate"
 const DEFAULT_HTML_PATH = "tmp/projections/session_pipeline/index.html"
@@ -792,12 +799,16 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     calendar_event_relations_applied = Int(object_value(rec_summary, :calendar_event_relations_applied, 0))
     calendar_event_relations_total = Int(object_value(rec_summary, :calendar_event_relations_total, 0))
     calendar_event_relations_pending = Int(object_value(rec_summary, :calendar_event_relations_pending, 0))
+    calendar_anchor_relations_applied = Int(object_value(rec_summary, :calendar_anchor_relations_applied, 0))
+    calendar_anchor_relations_total = Int(object_value(rec_summary, :calendar_anchor_relations_total, 0))
+    calendar_anchor_relations_pending = Int(object_value(rec_summary, :calendar_anchor_relations_pending, 0))
     deferred_relations = Int(object_value(rec_summary, :deferred_relations, 0))
     grouped_nodes_ok = Bool(object_value(rec_summary, :grouped_nodes_ok, false))
     grouped_relations_ok = Bool(object_value(rec_summary, :grouped_relations_ok, false))
     calendar_nodes_ok = calendar_event_nodes_total == 0 || calendar_event_nodes_pending == 0
     calendar_relations_ok = calendar_event_relations_total == 0 || calendar_event_relations_pending == 0
-    reconciliation_ok = reconciliation_exists && reconciliation_report_exists && grouped_nodes_ok && grouped_relations_ok && calendar_nodes_ok && calendar_relations_ok && grouped_nodes_total > 0 && grouped_relations_total > 0
+    calendar_anchor_relations_ok = calendar_anchor_relations_total == 0 || calendar_anchor_relations_pending == 0
+    reconciliation_ok = reconciliation_exists && reconciliation_report_exists && grouped_nodes_ok && grouped_relations_ok && calendar_nodes_ok && calendar_relations_ok && calendar_anchor_relations_ok && grouped_nodes_total > 0 && grouped_relations_total > 0
     push!(gates, gate(
         reconciliation_ok ? "pass" : "warn",
         "T189 recommendation reconciliation",
@@ -817,20 +828,27 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
             "calendar_event_relations_applied" => calendar_event_relations_applied,
             "calendar_event_relations_total" => calendar_event_relations_total,
             "calendar_event_relations_pending" => calendar_event_relations_pending,
+            "calendar_anchor_relations_applied" => calendar_anchor_relations_applied,
+            "calendar_anchor_relations_total" => calendar_anchor_relations_total,
+            "calendar_anchor_relations_pending" => calendar_anchor_relations_pending,
         ),
         next_action=reconciliation_ok ? "" : "Run t189_recommendation_reconciliation.jl after the recommendation HG plan, then inspect pending rows before any further APPLY work.",
     ))
 
-    deferred_boundaries_ok = reconciliation_exists && deferred_relations > 0 && (calendar_event_nodes_total > 0 || calendar_event_nodes_pending > 0)
-    deferred_detail = if deferred_boundaries_ok && calendar_event_nodes_pending == 0
+    anchor_boundary_visible = reconciliation_exists && (deferred_relations > 0 || calendar_anchor_relations_total > 0) && (calendar_event_nodes_total > 0 || calendar_event_nodes_pending > 0)
+    deferred_detail = if calendar_anchor_relations_total > 0 && calendar_anchor_relations_pending == 0
+        "Calendar event nodes, session pins, and WF07 source anchors are all applied."
+    elseif calendar_anchor_relations_total > 0
+        "WF07 source anchors are declared and visible as explicit pending apply-review rows."
+    elseif deferred_relations > 0 && calendar_event_nodes_pending == 0
         "Calendar event nodes and session pins are applied; WF07 source-anchor relations remain explicitly deferred for operad review."
-    elseif deferred_boundaries_ok
+    elseif deferred_relations > 0
         "Calendar event nodes and WF07 anchor relations remain explicitly pending/deferred instead of being silently applied."
     else
-        "Deferred Calendar/WF07 boundaries are not visible in the reconciliation artifact."
+        "Calendar/WF07 anchor boundaries are not visible in the reconciliation artifact."
     end
     push!(gates, gate(
-        deferred_boundaries_ok ? "pass" : "warn",
+        anchor_boundary_visible ? "pass" : "warn",
         "deferred apply boundaries",
         deferred_detail,
         evidence=Dict(
@@ -840,11 +858,14 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
             "calendar_event_relations_applied" => calendar_event_relations_applied,
             "calendar_event_relations_total" => calendar_event_relations_total,
             "calendar_event_relations_pending" => calendar_event_relations_pending,
+            "calendar_anchor_relations_applied" => calendar_anchor_relations_applied,
+            "calendar_anchor_relations_total" => calendar_anchor_relations_total,
+            "calendar_anchor_relations_pending" => calendar_anchor_relations_pending,
             "deferred_relations" => deferred_relations,
             "grouped_nodes_ok" => grouped_nodes_ok,
             "grouped_relations_ok" => grouped_relations_ok,
         ),
-        next_action=deferred_boundaries_ok ? "" : "Keep WF07 anchors and board repair out of live APPLY batches until the next explicit actor/operad review step.",
+        next_action=anchor_boundary_visible ? "" : "Keep WF07 anchors and board repair out of live APPLY batches until the next explicit actor/operad review step.",
     ))
 
     filters = object_value(graph_pack, :filters, Dict())
@@ -1079,6 +1100,9 @@ function write_html(path::AbstractString, plan)
         println(io, "<div class=\"panel\"><h2>Review Surfaces</h2><div class=\"artifactList\">")
         println(io, "<div class=\"artifact\"><strong>Atlas</strong><p class=\"muted\">Table of contents for the projection surfaces and next moves.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas_report, "")))), "\">Open report</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas, "")))), "\">JSON</a></div>")
         println(io, "<div class=\"artifact\"><strong>Graph Artifacts</strong><p class=\"muted\">Engineering JSON/Markdown for the four interactive lenses.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :graph_pack, "")))), "\">Session</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :temporal_graph_pack, "")))), "\">Time-Fabric</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :t189_graph_pack, "")))), "\">T189</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_scope_graph_pack, "")))), "\">Calendar Scope</a></div>")
+        if isfile(DEFAULT_T206_KEEP_MVP_REPORT_PATH) || isfile(DEFAULT_T206_KEEP_MVP_GRAPH_PATH)
+            println(io, "<div class=\"artifact\"><strong>T206 Keep MVP</strong><p class=\"muted\">Applied Keep API/S0 staging carrier, OAuth blocker, WF07 boundary, and focused graph/visual/Calendar artifacts.</p><a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_REPORT_PATH)), "\">Report</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_JSON_PATH)), "\">JSON</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_GRAPH_PATH)), "\">Graph</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_SVG_PATH)), "\">SVG</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_DOT_PATH)), "\">DOT</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_CALENDAR_PLAN_PATH)), "\">Calendar plan</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_CALENDAR_WRITE_RESULT_PATH)), "\">Calendar result</a></div>")
+        end
         println(io, "<div class=\"artifact\"><strong>Calendar</strong><p class=\"muted\">Dry time-fabric plan plus explicit Google writer result.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_report, "")))), "\">Report</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_plan, "")))), "\">Plan</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_write_result, "")))), "\">Write result</a></div>")
         println(io, "<div class=\"artifact\"><strong>Recommendations</strong><p class=\"muted\">Candidate HG plan and folded-state reconciliation.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_report, "")))), "\">Plan report</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_reconciliation_report, "")))), "\">Reconciliation</a></div>")
         println(io, "<div class=\"artifact\"><strong>MVP Gate</strong><p class=\"muted\">Current pass/warn/fail contract for the local control surface.</p><a href=\"mvp/session_pipeline_gate.md\">Gate report</a> · <a href=\"mvp/session_pipeline_gate.json\">JSON</a></div>")

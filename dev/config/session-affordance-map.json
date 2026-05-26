@@ -106,8 +106,8 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
-      "skills": ["moos-state-readback", "moos-round-close", "moos-running-state-validator", "moos-cross-persona-audit", "moos-rewrite-envelope"],
+      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/keep-ingest-any-harness.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "skills": ["moos-state-readback", "moos-workspace-ingest", "moos-session-context-projection", "moos-tooling-dx", "moos-round-close", "moos-running-state-validator", "moos-cross-persona-audit", "moos-rewrite-envelope"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona guido", "dev/scripts/projections/run-session-pipeline.ps1"]
     },
     {
@@ -123,7 +123,7 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "Calendar readback and recommendation reconciliation surfaces",
       "harnesses": ["VS Code", "Copilot", "Cowork"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/keep-ingest-any-harness.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
       "skills": ["moos-session-context-projection", "moos-workspace-ingest", "moos-rewrite-envelope", "moos-state-readback"],
       "validation": ["dev/scripts/projections/run-session-pipeline.ps1", "dev/scripts/tests/test_t194_t200_big_sprint_topology.jl"]
     },
@@ -204,8 +204,8 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "Google Workspace surfaces",
       "harnesses": ["Claude Desktop", "Cowork"],
-      "prompts": [".github/prompts/multi-workstation-git-flow.prompt.md"],
-      "skills": ["moos-workspace-ingest", "moos-state-readback"],
+      "prompts": [".github/prompts/keep-ingest-any-harness.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "skills": ["moos-workspace-ingest", "moos-session-context-projection", "moos-state-readback"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona cowork-laptop"]
     },
     {

@@ -26,13 +26,13 @@ Round-close discipline for the Guido / governance lane. Walks the §9 invariant 
 ## Persona seat conventions
 
 ```
-agent:    urn:moos:agent:claude-code.hp-laptop  (Guido)
+agent:    urn:moos:agent:vscode.hp-laptop.copilot  (Guido / hp-laptop VS Code)
 session:  urn:moos:session:sam.governance
 kernel:   kernel:hp-laptop.primary  (port 8000 HTTP, 8080 MCP)
 branch:   guido/r<NN>-<topic>  (per-round per-topic; round-close commits ride main via PR)
 ```
 
-The skill is invokable from any persona seat (read-only, no actor required for queries), but interpretation + posting the comment is Guido-lane-specific.
+The legacy `urn:moos:agent:claude-code.hp-laptop` actor is only valid when Claude Code is actually live and WF19 occupancy has been explicitly restored. The skill is invokable from any persona seat (read-only, no actor required for queries), but interpretation + posting the comment is Guido-lane-specific.
 
 ## The N-invariant checklist (round-15+)
 

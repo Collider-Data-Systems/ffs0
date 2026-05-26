@@ -9,11 +9,12 @@ const Recon = T189RecommendationReconciliation
     calendar_node = Dict(:urn => "urn:moos:cal:2026-05-09.demo", :type_id => "calendar_event", :recommendation_scope => "individual-calendar-event")
     grouped_relation = Dict(:rewrite_category => "WF18", :src_urn => "urn:moos:purpose:root", :src_port => "composes", :tgt_urn => "urn:moos:program:grouped", :tgt_port => "composed-by", :status => "declared")
     calendar_pin = Dict(:rewrite_category => "WF19", :src_urn => "urn:moos:session:sam.governance", :src_port => "pins-urn", :tgt_urn => "urn:moos:cal:2026-05-09.demo", :tgt_port => "pinned-by-session", :status => "declared")
+    calendar_anchor = Dict(:rewrite_category => "WF07", :src_urn => "urn:moos:cal:2026-05-09.demo", :src_port => "anchors", :tgt_urn => "urn:moos:program:source", :tgt_port => "anchor", :status => "ready-for-apply-review")
     deferred = Dict(:rewrite_category => "WF07", :src_urn => "urn:moos:cal:2026-05-09.demo", :src_port => "anchors", :tgt_urn => "urn:moos:program:source", :tgt_port => "anchor", :status => "requires-operad-review", :note => "check WF07")
     plan = Dict(
         :projection_kind => "t189_t200_recommendation_hg_plan",
         :candidate_nodes => [grouped_node, calendar_node],
-        :candidate_relations => [grouped_relation, calendar_pin],
+        :candidate_relations => [grouped_relation, calendar_pin, calendar_anchor],
         :deferred_relations => [deferred],
     )
     nodes = [Dict(:urn => "urn:moos:program:grouped", :type_id => "program")]
@@ -32,6 +33,10 @@ const Recon = T189RecommendationReconciliation
     @test report["summary"]["calendar_event_relations_applied"] == 0
     @test report["summary"]["calendar_event_relations_total"] == 1
     @test report["summary"]["calendar_event_relations_pending"] == 1
+    @test report["summary"]["calendar_anchor_relations_applied"] == 0
+    @test report["summary"]["calendar_anchor_relations_total"] == 1
+    @test report["summary"]["calendar_anchor_relations_pending"] == 1
+    @test report["summary"]["calendar_anchor_relations_ok"] == false
     @test report["summary"]["deferred_relations"] == 1
     @test report["summary"]["grouped_nodes_ok"] == true
     @test report["summary"]["grouped_relations_ok"] == true
@@ -41,6 +46,7 @@ const Recon = T189RecommendationReconciliation
     relation_statuses = Dict(row["bucket"] => row["status"] for row in report["relations"])
     @test relation_statuses["grouped-safe"] == "applied"
     @test relation_statuses["calendar-event"] == "pending"
+    @test relation_statuses["calendar-anchor"] == "pending"
 
     mktempdir() do dir
         path = joinpath(dir, "reconciliation.md")
@@ -50,6 +56,7 @@ const Recon = T189RecommendationReconciliation
         @test occursin("Calendar event nodes: 0/1 applied", text)
         @test occursin("Pending Calendar Event Nodes", text)
         @test occursin("Pending Calendar Event Session Pins", text)
+        @test occursin("Pending Calendar Source Anchors", text)
         @test occursin("Deferred Relations", text)
     end
 end

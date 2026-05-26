@@ -38,6 +38,7 @@ const Rec = T189T200RecommendationProjection
     @test isempty(plan["ontology_check"]["unknown_required_types"])
     @test isempty(plan["ontology_check"]["unknown_required_wfs"])
     @test plan["deferred_relation_count"] == 2
+    @test plan["calendar_anchor_relation_status"] == "requires-operad-review"
 
     event_one = only(filter(node -> node["urn"] == "urn:moos:cal:2026-05-09.moos-one", plan["candidate_nodes"]))
     @test event_one["type_id"] == "calendar_event"
@@ -50,4 +51,15 @@ const Rec = T189T200RecommendationProjection
     @test any(node -> node["urn"] == "urn:moos:group:my-tiny-data-collider", plan["candidate_nodes"])
     @test any(rel -> rel["rewrite_category"] == "WF19" && rel["src_port"] == "filtered-by", plan["candidate_relations"])
     @test any(rec -> rec["urn"] == "urn:moos:program:sam.t200plus.identity-stable-projection-surface-convergence", plan["t200_recommendations"])
+
+    declared_ontology = Dict(
+        :version => "3.16.2",
+        :types => Dict(:s2 => [Dict(:id => type) for type in Rec.REQUIRED_TYPES]),
+        :rewrite_categories => [wf == "WF07" ? Dict(:id => wf, :additional_port_pairs => [Dict(:src_port => "anchors", :tgt_port => "anchor")]) : Dict(:id => wf) for wf in Rec.REQUIRED_WFS],
+    )
+    declared_plan = Rec.plan_projection(declared_ontology, calendar_plan, write_result; t0_date=Date("2025-11-01"))
+    @test declared_plan["deferred_relation_count"] == 0
+    @test declared_plan["calendar_anchor_relation_count"] == 2
+    @test declared_plan["calendar_anchor_relation_status"] == "ready-for-apply-review"
+    @test any(rel -> rel["rewrite_category"] == "WF07" && rel["src_port"] == "anchors" && rel["status"] == "ready-for-apply-review", declared_plan["candidate_relations"])
 end

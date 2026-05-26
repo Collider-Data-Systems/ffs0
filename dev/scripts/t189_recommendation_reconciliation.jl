@@ -94,8 +94,12 @@ end
 function classify_relation(candidate)
     status = string(object_value(candidate, :status, "declared"))
     status == "requires-operad-review" && return "deferred"
+    source = string(object_value(candidate, :src_urn, ""))
+    source_port = string(object_value(candidate, :src_port, ""))
+    target_port = string(object_value(candidate, :tgt_port, ""))
     target = string(object_value(candidate, :tgt_urn, ""))
     wf = string(object_value(candidate, :rewrite_category, ""))
+    wf == "WF07" && source_port == "anchors" && target_port == "anchor" && startswith(source, "urn:moos:cal:") && return "calendar-anchor"
     startswith(target, "urn:moos:cal:") && return "calendar-event"
     wf in SAFE_GROUPED_WFS && return "grouped-safe"
     return "other"
@@ -170,6 +174,9 @@ function reconcile(plan, nodes, relations; health=Dict(), generated_at::String=f
     calendar_relations_applied = get(counts, "relation_calendar-event_applied", 0)
     calendar_relations_total = get(counts, "relation_calendar-event_total", 0)
     calendar_relations_pending = get(counts, "relation_calendar-event_pending", 0)
+    calendar_anchor_relations_applied = get(counts, "relation_calendar-anchor_applied", 0)
+    calendar_anchor_relations_total = get(counts, "relation_calendar-anchor_total", 0)
+    calendar_anchor_relations_pending = get(counts, "relation_calendar-anchor_pending", 0)
     deferred_relation_total = get(counts, "deferred_relation_total", 0)
 
     return Dict(
@@ -192,6 +199,10 @@ function reconcile(plan, nodes, relations; health=Dict(), generated_at::String=f
             "calendar_event_relations_total" => calendar_relations_total,
             "calendar_event_relations_pending" => calendar_relations_pending,
             "calendar_event_relations_ok" => calendar_relations_total > 0 && calendar_relations_pending == 0,
+            "calendar_anchor_relations_applied" => calendar_anchor_relations_applied,
+            "calendar_anchor_relations_total" => calendar_anchor_relations_total,
+            "calendar_anchor_relations_pending" => calendar_anchor_relations_pending,
+            "calendar_anchor_relations_ok" => calendar_anchor_relations_total == 0 || calendar_anchor_relations_pending == 0,
             "deferred_relations" => deferred_relation_total,
             "grouped_nodes_ok" => grouped_nodes_ok,
             "grouped_relations_ok" => grouped_relations_ok,
@@ -219,6 +230,7 @@ function write_markdown(path::AbstractString, report)
         println(io, "- Grouped safe relations: ", summary["grouped_relations_applied"], "/", summary["grouped_relations_total"], " applied")
         println(io, "- Calendar event nodes: ", summary["calendar_event_nodes_applied"], "/", summary["calendar_event_nodes_total"], " applied")
         println(io, "- Calendar event session pins: ", summary["calendar_event_relations_applied"], "/", summary["calendar_event_relations_total"], " applied")
+        println(io, "- Calendar source anchors: ", summary["calendar_anchor_relations_applied"], "/", summary["calendar_anchor_relations_total"], " applied")
         println(io, "- Deferred relations: ", summary["deferred_relations"])
         println(io)
         println(io, "## Pending Calendar Event Nodes")
@@ -238,6 +250,17 @@ function write_markdown(path::AbstractString, report)
             println(io, "- <none>")
         else
             for row in pending_pins
+                println(io, "- `", row["rewrite_category"], "` ", row["src_port"], " -> ", row["tgt_port"], ": `", row["src_urn"], "` -> `", row["tgt_urn"], "`")
+            end
+        end
+        println(io)
+
+        println(io, "## Pending Calendar Source Anchors")
+        pending_anchors = [row for row in report["relations"] if row["bucket"] == "calendar-anchor" && row["status"] == "pending"]
+        if isempty(pending_anchors)
+            println(io, "- <none>")
+        else
+            for row in pending_anchors
                 println(io, "- `", row["rewrite_category"], "` ", row["src_port"], " -> ", row["tgt_port"], ": `", row["src_urn"], "` -> `", row["tgt_urn"], "`")
             end
         end

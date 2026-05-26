@@ -1,13 +1,20 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.16.1",
-  "t_day": 187,
+  "version": "3.16.2",
+  "t_day": 206,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md. T=173 round-12 v3.13.0: four promoted grammar_fragments materialized into ontology — v313-6 (WF02 delegates-to/delegated-by additional port pair for role→role capability delegation), v313-7 (new S2 `group` node type — collective principal, extends principalTypes from {user, agent} to {user, agent, group}), v313-8 (channel.kind enum expansion: +calendar, +task-list, +cloud-storage, +vcs, +project-board), v313-9 (WF01 owns/owned-by additional port pair — group|user source owning kernel|session|purpose|program|channel|agent targets). WF19 has-occupant tgt_types extends to include `group` (session occupancy by a collective principal). See kb/research/session/20260422-t172-wolframs-court-social-topology.md §3 + T=173 batch on Z440 kernel 0 log_seq 285-288 (WF20 promotion ceremony for the 4 fragments).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "dev/reference/research-archive/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "3.16.2",
+      "date": "2026-05-26",
+      "round": "T206 WF07 anchor declaration patch",
+      "fragments_promoted": [],
+      "summary": "Patch-level WF07 declaration repair: adds `anchors / anchor` as an explicit WF07 additional_port_pair for calendar_event source anchors. This aligns the top-level rewrite category with the existing port-color compatibility entry so Calendar G-ingest observations can move from deferred-operad-review rows to reviewed apply candidates. The primary WF07 participates/participated-by pair remains unchanged. Runtime kernels must reload this ontology before accepting new WF07 anchor LINKs."
+    },
     {
       "version": "3.16.1",
       "date": "2026-05-07",
@@ -3756,6 +3763,20 @@
       ],
       "src_port": "participates",
       "tgt_port": "participated-by",
+      "additional_port_pairs": [
+        {
+          "src_port": "anchors",
+          "tgt_port": "anchor",
+          "src_types": [
+            "calendar_event"
+          ],
+          "tgt_types": [
+            "*"
+          ],
+          "description": "Calendar G-ingest source anchor. A calendar_event observation may anchor back to the graph node it projects or observes; target type is wildcard because source_urns can be claims, derivations, sessions, agents, groups, grammar fragments, programs, knowledge_items, or other reviewed node types.",
+          "added_in_version": "3.16.2"
+        }
+      ],
       "authority": "principal or delegate",
       "mutate_scope": [
         "status",

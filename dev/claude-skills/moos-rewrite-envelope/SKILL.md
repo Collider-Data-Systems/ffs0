@@ -195,7 +195,7 @@ When a Google Calendar write has already happened and is being observed back int
 ```json
 {
   "rewrite_type": "ADD",
-  "actor": "urn:moos:agent:claude-code.hp-laptop",
+  "actor": "urn:moos:agent:vscode.hp-laptop.copilot",
   "session_urn": "urn:moos:session:sam.governance",
   "node_urn": "urn:moos:cal:2026-05-09.moos-example",
   "type_id": "calendar_event",

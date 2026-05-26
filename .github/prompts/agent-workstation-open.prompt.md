@@ -48,6 +48,8 @@ Legacy `moos-config` or local `Downloads` inspection belongs in an ignored `*.lo
 
 - Do not emit HG rewrites from a startup readback.
 - Do not G-sync GitHub Project status until `HG URN` identity coverage is reliable.
+- Do not ingest the current T195-T206 Keep/loose-thought backlog until Sam explicitly says the source notes are structured and ready.
+- Treat Cloudflared/public tunnel failures separately from local kernel/router health.
 - Do not model account owners as kernel `user` principals without explicit approval.
 - Do not hardcode secrets in MCP, prompt, skill, workspace, or config files.
 - Preserve local uncommitted workspace edits unless Sam asks to revert them.

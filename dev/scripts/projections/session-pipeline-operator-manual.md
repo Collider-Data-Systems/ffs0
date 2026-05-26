@@ -187,7 +187,7 @@ calendar_time_fabric_plan.json
   -> calendar_time_fabric_write_result.json
 ```
 
-The writer upserts by `moos_projection_id`, so repeated writes should patch existing events rather than create duplicates. After the external write, G-direction readback can create typed `calendar_event` nodes and WF19 session pins in HG. WF07 source-anchor relations remain deferred until the operad declaration is repaired.
+The writer upserts by `moos_projection_id`, so repeated writes should patch existing events rather than create duplicates. After the external write, G-direction readback can create typed `calendar_event` nodes and WF19 session pins in HG. WF07 source-anchor relations are reviewed separately and should only be applied after the live runtime has loaded an ontology that declares `anchors/anchor`.
 
 ### 5. Reconciliation
 

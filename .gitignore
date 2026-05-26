@@ -2,6 +2,8 @@
 secrets/api_keys.env
 secrets/client_secret_*.json
 secrets/google_token.json
+secrets/*oauth_client*.json
+secrets/*token*.json
 
 # Subrepo — has its own git repo
 moos/

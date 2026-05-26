@@ -503,9 +503,18 @@ end
 
 function pending_moves(wf07, reconciliation, affordance_map=Dict())
     summary = object_value(reconciliation, :summary, Dict())
-    deferred = Int(object_value(summary, :deferred_relations, 0))
+    deferred_value = object_value(summary, :deferred_relations, nothing)
+    anchor_pending_value = object_value(summary, :calendar_anchor_relations_pending, nothing)
+    deferred = deferred_value === nothing ? 0 : Int(deferred_value)
+    anchor_pending = anchor_pending_value === nothing ? 0 : Int(anchor_pending_value)
+    declared = string(object_value(wf07, :status, "")) == "declared"
+    anchor_counts_present = deferred_value !== nothing && anchor_pending_value !== nothing
+    anchors_closed = declared && anchor_counts_present && deferred == 0 && anchor_pending == 0
+    wf07_status = anchors_closed ? "applied" : (declared ? "ready-for-anchor-apply-review" : "pending-ontology-patch")
+    wf07_header = anchors_closed ? "WF07 Calendar source anchors closed" : "Resolve WF07 top-level declaration"
+    wf07_next = anchors_closed ? "No pending Calendar source anchors remain; keep future anchors/anchor rows inside the normal reconciliation gate." : (declared ? "Runtime-validate the declared anchors/anchor pair, then apply or reconcile the pending Calendar source anchors." : "Add anchors/anchor as an explicit WF07 additional_port_pair, reload/runtime-validate, then apply the deferred Calendar source anchors.")
     return [
-        Dict("id" => "wf07-anchor-declaration", "status" => string(object_value(wf07, :status, "")) == "declared" ? "ready-for-anchor-apply-review" : "pending-ontology-patch", "header" => "Resolve WF07 top-level declaration", "next" => "Add anchors/anchor as an explicit WF07 additional_port_pair, reload/runtime-validate, then apply the deferred Calendar source anchors.", "evidence" => Dict("wf07" => wf07, "deferred_relations" => deferred)),
+        Dict("id" => "wf07-anchor-declaration", "status" => wf07_status, "header" => wf07_header, "next" => wf07_next, "evidence" => Dict("wf07" => wf07, "deferred_relations" => deferred, "calendar_anchor_relations_pending" => anchor_pending)),
         Dict("id" => "project-4-row-identity", "status" => "planned", "header" => "Repair Project #4 row identity", "next" => "Dry-run item inventory, populate HG URN coverage, then allow board rows to become conservative G-direction observations.", "evidence" => Dict("program_urn" => "urn:moos:program:sam.t189.github-project-urn-refresh")),
         Dict("id" => "reusable-lens-contracts", "status" => "planned", "header" => "Promote reusable lens contracts", "next" => "Keep script presets as executable proof, then promote only repeated lens shapes into view_filter carriers.", "evidence" => Dict("t189_view_filter" => "urn:moos:view_filter:sam.t189-time-fabric-session-lens", "t200_view_filter" => "urn:moos:view_filter:sam.t200plus-visual-projection-lens")),
         Dict("id" => "tiny-data-collider-surface-map", "status" => "planned", "header" => "Give my-tiny-data-collider a surface map", "next" => "Model website, DNS, GitHub, Calendar, Workspace, server/runtime, and readback surfaces as application-domain topology, not runtime repo identity.", "evidence" => Dict("group" => "urn:moos:group:my-tiny-data-collider")),

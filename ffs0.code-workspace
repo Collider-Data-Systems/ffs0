@@ -67,7 +67,7 @@
       "**/.git/objects/**": true,
     },
     "terminal.integrated.cwd": "${workspaceFolder:ffs0-private-workspace}",
-    "powershell.cwd": "${workspaceFolder:ffs0-private-workspace}",
+    "powershell.cwd": "ffs0-private-workspace",
   },
   "extensions": {
     "recommendations": [
