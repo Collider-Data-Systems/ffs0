@@ -67,6 +67,49 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
     @test "session missing has-purpose in projection" in topics
 end
 
+@testset "Default session occasion roots follow folded topology" begin
+    root_urn = "urn:moos:derivation:guido.t187-session-occasion-implementation-frame"
+    system_urn = "urn:moos:system_instruction:framework.session-occasion-lingo"
+    grammar_urn = "urn:moos:grammar_fragment:v317-1-occasion-type"
+    pattern_urn = "urn:moos:pattern:session-affordance-pack"
+    workflow_urn = "urn:moos:workflow:z440-session-continuity-reconciliation"
+    claim_urn = "urn:moos:claim:t187-keep.session-purpose-colored-occasion"
+    calendar_urn = "urn:moos:cal:2026-05-28.moos-pattern-anchor"
+    rejoin_session_urn = "urn:moos:session:sam.t200plus-z440-rejoin"
+
+    nodes = [
+        Dict(:urn => root_urn, :type_id => "derivation", :properties => Dict(:name => prop("Session occasion frame"), :status => prop("closed"))),
+        Dict(:urn => system_urn, :type_id => "system_instruction", :properties => Dict(:name => prop("Session occasion lingo"), :status => prop("active"))),
+        Dict(:urn => grammar_urn, :type_id => "grammar_fragment", :properties => Dict(:name => prop("Occasion type"), :status => prop("proposed"))),
+        Dict(:urn => pattern_urn, :type_id => "pattern", :properties => Dict(:name => prop("Session affordance pack"), :status => prop("draft"))),
+        Dict(:urn => workflow_urn, :type_id => "workflow", :properties => Dict(:name => prop("Z440 session continuity reconciliation"), :status => prop("draft"))),
+        Dict(:urn => claim_urn, :type_id => "claim", :properties => Dict(:name => prop("Session purpose-colored occasion"), :status => prop("open"))),
+        Dict(:urn => calendar_urn, :type_id => "calendar_event", :properties => Dict(:title => prop("Calendar source anchor for pattern"), :status => prop("confirmed"))),
+        Dict(:urn => rejoin_session_urn, :type_id => "session", :properties => Dict(:name => prop("Z440 rejoin"))),
+    ]
+    relations = [
+        Dict(:urn => "rel:root-causes-claim", :rewrite_category => "WF21", :src_urn => root_urn, :src_port => "causes", :tgt_urn => claim_urn, :tgt_port => "caused-by"),
+        Dict(:urn => "rel:system-promotes-grammar", :rewrite_category => "WF20", :src_urn => system_urn, :src_port => "promotes", :tgt_urn => grammar_urn, :tgt_port => "promoted-from"),
+        Dict(:urn => "rel:calendar-anchors-pattern", :rewrite_category => "WF07", :src_urn => calendar_urn, :src_port => "anchors", :tgt_urn => pattern_urn, :tgt_port => "anchor"),
+        Dict(:urn => "rel:session-pins-workflow", :rewrite_category => "WF19", :src_urn => rejoin_session_urn, :src_port => "pins-urn", :tgt_urn => workflow_urn, :tgt_port => "pinned-by-session"),
+    ]
+
+    plan = GAP.plan_graph_artifact_projection(
+        nodes,
+        relations;
+        root_urn=root_urn,
+        root_urns=[root_urn, system_urn, grammar_urn, pattern_urn, workflow_urn],
+        generated_at="2026-05-27T09:00:00Z",
+    )
+
+    @test all(entry["connected"] for entry in plan["analysis"]["root_coverage"])
+    @test plan["analysis"]["relation_counts"]["WF07"] == 1
+    @test plan["analysis"]["relation_counts"]["WF19"] == 1
+    @test plan["analysis"]["relation_counts"]["WF20"] == 1
+    topics = Set(finding["topic"] for finding in plan["engineering"]["findings"])
+    @test !("roots disconnected in projection" in topics)
+end
+
 @testset "Explicit context agent projection" begin
     root_urn = "urn:moos:derivation:demo.frame"
     claim_urn = "urn:moos:claim:demo"

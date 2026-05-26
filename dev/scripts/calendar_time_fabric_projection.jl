@@ -10,6 +10,7 @@ const DEFAULT_GRAPH_ARTIFACT = "tmp/projections/session_pipeline/graph_artifacts
 const DEFAULT_SCOPE_ARTIFACT = "tmp/projections/session_pipeline/graph_artifacts/calendar_scope_engineering.json"
 const DEFAULT_OUT = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json"
 const DEFAULT_MARKDOWN_OUT = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.md"
+const DEFAULT_WRITE_RESULT = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_write_result.json"
 const DEFAULT_CONTRACT_URN = "urn:moos:program:sam.t189.calendar-time-fabric-proof"
 const DEFAULT_CHANNEL_URN = "urn:moos:channel:google.calendar.sam"
 const DEFAULT_T0_DATE = Date("2025-11-01")
@@ -322,6 +323,17 @@ function safe_read_json(path::AbstractString)
     end
 end
 
+function write_result_source_urns(path::AbstractString)
+    result = safe_read_json(path)
+    result === nothing && return Set{String}()
+    sources = Set{String}()
+    for row in object_value(result, :results, Any[])
+        source_urn = string_value(object_value(row, :source_urn, ""))
+        !isempty(source_urn) && push!(sources, source_urn)
+    end
+    return sources
+end
+
 function scope_diagnostics(path::AbstractString)
     artifact = safe_read_json(path)
     artifact === nothing && return Dict(
@@ -347,7 +359,7 @@ function scope_diagnostics(path::AbstractString)
     )
 end
 
-function slice_policy(max_events::Integer)
+function slice_policy(max_events::Integer; written_source_lock::Bool=false)
     return Dict(
         "event_source" => "session_occasion_graph_artifact_nodes",
         "event_order" => "type-priority, then URN, then projected date",
@@ -355,7 +367,8 @@ function slice_policy(max_events::Integer)
         "default_depth" => 2,
         "calendar_scope_depth" => 3,
         "include_wfs" => ["WF01", "WF07", "WF12", "WF18", "WF19", "WF21"],
-        "interpretation" => "Only nodes admitted by the selected lens become Calendar events; the broader Calendar-scope artifact reports nearby graph availability and disconnected roots.",
+        "written_source_lock" => written_source_lock,
+        "interpretation" => written_source_lock ? "Only graph nodes whose source_urn appears in the stored Calendar writer result become Calendar event candidates; widened visual context remains inspectable but does not create new G-readback rows." : "Only nodes admitted by the selected lens become Calendar events; the broader Calendar-scope artifact reports nearby graph availability and disconnected roots.",
     )
 end
 
@@ -383,8 +396,10 @@ function ontological_patterns()
     ]
 end
 
-function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONTRACT_URN, channel_urn::String=DEFAULT_CHANNEL_URN, anchor_t::Integer=188, t0_date::Date=DEFAULT_T0_DATE, max_events::Integer=64, scope_artifact_path::String=DEFAULT_SCOPE_ARTIFACT)
-    nodes = sorted_recent_nodes(collect(object_value(artifact, :nodes, [])))
+function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONTRACT_URN, channel_urn::String=DEFAULT_CHANNEL_URN, anchor_t::Integer=188, t0_date::Date=DEFAULT_T0_DATE, max_events::Integer=64, scope_artifact_path::String=DEFAULT_SCOPE_ARTIFACT, written_source_urns::Set{String}=Set{String}(), write_result_path::String="")
+    all_nodes = sorted_recent_nodes(collect(object_value(artifact, :nodes, [])))
+    written_source_lock = !isempty(written_source_urns)
+    nodes = written_source_lock ? [node for node in all_nodes if string_value(object_value(node, :urn, "")) in written_source_urns] : all_nodes
     relations = collect(object_value(artifact, :relations, []))
     if max_events > 0 && length(nodes) > max_events
         nodes = nodes[1:max_events]
@@ -407,9 +422,10 @@ function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONT
         "anchor_date" => string(t_day_date(anchor_t; t0_date=t0_date)),
         "t0_date" => string(t0_date),
         "node_count" => length(nodes),
+        "source_node_count" => length(all_nodes),
         "relation_count" => length(relations),
         "event_count" => length(events),
-        "slice_policy" => slice_policy(max_events),
+        "slice_policy" => slice_policy(max_events; written_source_lock=written_source_lock),
         "temporal_property_policy" => temporal_property_policy(),
         "scope_diagnostics" => scope_diagnostics(scope_artifact_path),
         "calendar_surface_assessment" => Dict(
@@ -417,6 +433,12 @@ function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONT
             "not_reliable_as" => ["source of truth", "complete task scheduler", "proof that unlinked nodes are in session scope"],
             "explicit_temporal_event_count" => explicit_count,
             "lens_order_event_count" => lens_order_count,
+            "written_source_lock" => Dict(
+                "enabled" => written_source_lock,
+                "write_result_path" => write_result_path,
+                "source_urn_count" => length(written_source_urns),
+                "excluded_node_count" => max(length(all_nodes) - length(nodes), 0),
+            ),
             "writer_boundary" => "google_calendar_writer.jl is the explicit actuator; this planner is dry and side-effect free",
         ),
         "ontological_patterns" => ontological_patterns(),
@@ -441,6 +463,8 @@ function write_markdown(path::AbstractString, plan)
         println(io, "- Contract URN: `", plan["contract_urn"], "`")
         println(io, "- Anchor: T", plan["anchor_t"], " / ", plan["anchor_date"])
         println(io, "- Events: ", plan["event_count"])
+        lock = plan["calendar_surface_assessment"]["written_source_lock"]
+        println(io, "- Written-source lock: ", lock["enabled"], " (", lock["source_urn_count"], " source URNs; ", lock["excluded_node_count"], " nodes excluded)")
         println(io, "- Slice: ", plan["slice_policy"]["event_source"], "; depth ", plan["slice_policy"]["default_depth"], " for event candidates, depth ", plan["slice_policy"]["calendar_scope_depth"], " for Calendar-scope diagnostics")
         println(io, "- Temporal basis: ", plan["calendar_surface_assessment"]["explicit_temporal_event_count"], " explicit, ", plan["calendar_surface_assessment"]["lens_order_event_count"], " lens-order")
         println(io)
@@ -481,6 +505,8 @@ function parse_args(argv)
         "contract-urn" => DEFAULT_CONTRACT_URN,
         "channel-urn" => DEFAULT_CHANNEL_URN,
         "scope-artifact" => DEFAULT_SCOPE_ARTIFACT,
+        "write-result-path" => "",
+        "lock-written-sources" => "false",
         "anchor-t" => "188",
         "t0-date" => string(DEFAULT_T0_DATE),
         "max-events" => "64",
@@ -504,9 +530,14 @@ function parse_args(argv)
     return options
 end
 
+parse_bool(value::AbstractString) = lowercase(strip(value)) in Set(["1", "true", "yes", "on"])
+
 function main(argv=ARGS)
     options = parse_args(argv)
     artifact = JSON3.read(read(options["graph-artifact"], String))
+    lock_written_sources = parse_bool(options["lock-written-sources"])
+    write_result_path = isempty(options["write-result-path"]) ? DEFAULT_WRITE_RESULT : options["write-result-path"]
+    written_sources = lock_written_sources ? write_result_source_urns(write_result_path) : Set{String}()
     plan = plan_time_fabric_projection(
         artifact;
         contract_urn=options["contract-urn"],
@@ -515,6 +546,8 @@ function main(argv=ARGS)
         t0_date=Date(options["t0-date"]),
         max_events=parse(Int, options["max-events"]),
         scope_artifact_path=options["scope-artifact"],
+        written_source_urns=written_sources,
+        write_result_path=write_result_path,
     )
     write_json(options["out"], plan)
     write_markdown(options["markdown-out"], plan)

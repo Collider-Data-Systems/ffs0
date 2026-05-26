@@ -207,7 +207,13 @@ try {
             $anchorTValue = [int]$localHealth.t_day
         }
     }
-    Invoke-Step "Calendar time-fabric projection" { & $Julia "dev\scripts\calendar_time_fabric_projection.jl" "--anchor-t" ([string]$anchorTValue) "--scope-artifact" "tmp/projections/session_pipeline/graph_artifacts/calendar_scope_engineering.json" }
+    Invoke-Step "Calendar time-fabric projection" {
+        & $Julia "dev\scripts\calendar_time_fabric_projection.jl" `
+            "--anchor-t" ([string]$anchorTValue) `
+            "--scope-artifact" "tmp/projections/session_pipeline/graph_artifacts/calendar_scope_engineering.json" `
+            "--write-result-path" "tmp/projections/session_pipeline/calendar/calendar_time_fabric_write_result.json" `
+            "--lock-written-sources" "true"
+    }
 
     Invoke-Step "T189/T200 recommendation HG projection" { & $Julia "dev\scripts\t189_t200_recommendation_projection.jl" }
 

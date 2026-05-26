@@ -66,7 +66,7 @@ For workstation bring-up or refresh, select `.github/agents/moos-workstation-ope
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-session-pipeline.ps1
 ```
 
-The runner regenerates the current Keep-note/session/visual lane and writes `tmp/projections/session_pipeline/index.html`. The HTML page is the MVP operator surface: it shows the G-ingest/F-session/F-visual stages, pass/warn/fail gates, runtime metadata, artifact links, the static visual lens, Calendar time-fabric artifacts, recommendation HG artifacts, the surface context atlas, and the next actions for warning gates. It is generated locally and does not emit rewrites.
+The runner regenerates the current Keep-note/session/visual lane and writes `tmp/projections/session_pipeline/index.html`. The HTML page is the MVP operator surface: it shows the G-ingest/F-session/F-visual stages, pass/warn/fail gates, runtime metadata, artifact links, the static visual lens, Calendar time-fabric artifacts, recommendation HG artifacts, the surface context atlas, and the next actions for warning gates. It is generated locally and does not emit rewrites. When a Calendar writer result exists, the runner locks the Calendar time-fabric planner to the written source URNs so widened visual context remains inspectable without creating new Calendar G-readback candidates.
 
 ### T206 Keep/Loose-Thought Ingest Stage
 
@@ -184,7 +184,7 @@ By default it scans canonical mo:os skills, local VS Code extensions, and `.vsco
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\session_pipeline_mvp_gate.jl
 ```
 
-The gate emits `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`, `.md`, and the HTML dashboard at `tmp/projections/session_pipeline/index.html`. It treats the current lane as a small CICD/functorial-semantics pipeline: G-ingest from Keep into HG, F-projection from folded state into session/agent/visual artifacts, Calendar time-fabric projection payloads, recommendation reconciliation, and visual lenses whose scope is roots plus WF/port/type/match filters. The report is allowed to return `warn` for known MVP gaps, such as disconnected forced roots under a deliberately narrow lens. It exits nonzero only on `fail` gates.
+The gate emits `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`, `.md`, and the HTML dashboard at `tmp/projections/session_pipeline/index.html`. It treats the current lane as a small CICD/functorial-semantics pipeline: G-ingest from Keep into HG, F-projection from folded state into session/agent/visual artifacts, Calendar time-fabric projection payloads, recommendation reconciliation, and visual lenses whose scope is roots plus WF/port/type/match filters. The report is allowed to return `warn` for known MVP gaps, such as disconnected forced roots under a deliberately narrow lens. Current session-occasion roots are connected through existing WF20, WF19, and WF07 topology; the gate exits nonzero only on `fail` gates.
 
 ### Surface Context Atlas
 
@@ -208,7 +208,7 @@ The adapter emits `tmp/projections/google_calendar_projection_plan.json`. This i
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\calendar_time_fabric_projection.jl
 ```
 
-The adapter reads the current session graph artifact and emits `tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json` plus a Markdown review report. It uses the same writer contract as the Google Calendar planner, but projects every selected recent HG node as a stable Calendar event with type-based color, URN/type/status metadata, T-day anchor, and relation context.
+The adapter reads the current session graph artifact and emits `tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json` plus a Markdown review report. It uses the same writer contract as the Google Calendar planner, but projects selected recent HG nodes as stable Calendar events with type-based color, URN/type/status metadata, T-day anchor, and relation context. Use `--lock-written-sources true --write-result-path <path>` after a Calendar writer run to keep the readback/HG recommendation lane scoped to events that were actually written.
 
 ### T189/T200 Recommendation HG Projection
 

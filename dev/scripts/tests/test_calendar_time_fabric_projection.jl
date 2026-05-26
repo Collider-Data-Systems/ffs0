@@ -47,3 +47,30 @@ const CTF = CalendarTimeFabricProjection
     @test explicit_event["calendar_reliability"]["level"] == "medium_high"
     @test occursin("explicit T190", explicit_event["google_event"]["description"])
 end
+
+@testset "Calendar time-fabric locks to written source URNs" begin
+    artifact = Dict(
+        :nodes => [
+            Dict(:urn => "urn:moos:claim:written", :type_id => "claim", :title => "Written claim", :status => "open"),
+            Dict(:urn => "urn:moos:program:unwritten", :type_id => "program", :title => "Unwritten program", :status => "draft", :properties => Dict(:target_t => Dict(:value => 190))),
+            Dict(:urn => "urn:moos:cal:2026-05-26.written", :type_id => "calendar_event", :title => "Existing Calendar observation", :status => "confirmed"),
+        ],
+        :relations => Any[],
+    )
+
+    plan = CTF.plan_time_fabric_projection(
+        artifact;
+        anchor_t=188,
+        t0_date=Date("2025-11-01"),
+        scope_artifact_path="missing-calendar-scope.json",
+        written_source_urns=Set(["urn:moos:claim:written"]),
+        write_result_path="calendar_time_fabric_write_result.json",
+    )
+
+    @test plan["source_node_count"] == 3
+    @test plan["node_count"] == 1
+    @test plan["event_count"] == 1
+    @test plan["slice_policy"]["written_source_lock"] == true
+    @test plan["calendar_surface_assessment"]["written_source_lock"]["excluded_node_count"] == 2
+    @test only(plan["events"])["source_urn"] == "urn:moos:claim:written"
+end

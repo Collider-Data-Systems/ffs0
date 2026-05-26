@@ -17,10 +17,10 @@ const DEFAULT_ROOT_URNS = join([
 ], ";")
 const DEFAULT_OUT_BASE = "tmp/projections/session_pipeline/graph_artifacts/session_occasion_engineering"
 const DEFAULT_RADIUS = 2
-const DEFAULT_WFS = "WF12,WF18,WF20,WF21"
-const DEFAULT_PORTS = "causes,caused-by,composes,composed-by,consumes,consumed-by,produces,produced-by,provides-kb,provided-by,grammar-promotes,grammar-promoted-by"
-const DEFAULT_TYPES = "claim,derivation,grammar_fragment,knowledge_item,pattern,program,purpose,session,system_instruction,workflow"
-const DEFAULT_MATCH = "session|occasion|affordance|keep|purpose|program|workflow|grammar|z440"
+const DEFAULT_WFS = "WF07,WF12,WF18,WF19,WF20,WF21"
+const DEFAULT_PORTS = "anchors,anchor,causes,caused-by,composes,composed-by,consumes,consumed-by,produces,produced-by,provides-kb,provided-by,promotes,promoted-from,pinned-by-session,pins-urn"
+const DEFAULT_TYPES = "calendar_event,claim,derivation,grammar_fragment,knowledge_item,pattern,program,purpose,session,system_instruction,workflow"
+const DEFAULT_MATCH = "session|occasion|affordance|keep|purpose|program|workflow|grammar|z440|calendar|source|anchor"
 const DEFAULT_CONTEXT_AGENT_URNS = ""
 const AGENT_CONTEXT_TYPES = Set(["session", "program"])
 const AGENT_CONTEXT_RELATION_CATEGORIES = Set(["WF01", "WF02", "WF19"])
