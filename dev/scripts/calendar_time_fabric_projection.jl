@@ -3,9 +3,11 @@
 module CalendarTimeFabricProjection
 
 using Dates
+using Downloads
 using JSON3
 using SHA
 
+const DEFAULT_BASE_URL = "http://localhost:8000"
 const DEFAULT_GRAPH_ARTIFACT = "tmp/projections/session_pipeline/graph_artifacts/session_occasion_engineering.json"
 const DEFAULT_SCOPE_ARTIFACT = "tmp/projections/session_pipeline/graph_artifacts/calendar_scope_engineering.json"
 const DEFAULT_OUT = "tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json"
@@ -120,6 +122,13 @@ function node_status(node)
     return string_value(value, "<none>")
 end
 
+function node_property_value(node, field::Symbol, default=nothing)
+    props = object_value(node, :properties, Dict())
+    value = object_value(props, field, nothing)
+    value = value isa AbstractDict ? object_value(value, :value, nothing) : value
+    return value === nothing ? default : value
+end
+
 function node_t_value(node, fields::Vector{Symbol})
     value, _ = node_t_value_detail(node, fields)
     return value
@@ -216,6 +225,11 @@ function reliability_for(type_id::AbstractString, temporal_basis)
             "level" => "high",
             "reason" => "calendar_event nodes are G-observations already typed back into HG with date/t_day identity",
         )
+    elseif string(object_value(temporal_basis, :kind, "")) == "written_calendar_observation_lock"
+        return Dict(
+            "level" => "high",
+            "reason" => "event date is locked to an existing HG calendar_event observation anchored to this source",
+        )
     elseif string(object_value(temporal_basis, :kind, "")) == "explicit_temporal_property"
         return Dict(
             "level" => "medium_high",
@@ -238,13 +252,41 @@ function relation_category_counts(incoming, outgoing)
     return counts
 end
 
-function calendar_payload(node, index::Integer, relations; contract_urn::String, anchor_t::Integer, t0_date::Date)
+function locked_calendar_date(lock, fallback_t::Integer; t0_date::Date)
+    date_value = object_value(lock, :date, nothing)
+    if date_value isa Date
+        return date_value
+    end
+    date_text = string_value(date_value)
+    if !isempty(date_text)
+        try
+            return Date(date_text)
+        catch
+        end
+    end
+    t_value = optional_t(object_value(lock, :t_day, nothing))
+    return t_day_date(t_value === nothing ? fallback_t : t_value; t0_date=t0_date)
+end
+
+function calendar_payload(node, index::Integer, relations; contract_urn::String, anchor_t::Integer, t0_date::Date, written_observation_locks=Dict{String, Any}())
     urn = string_value(object_value(node, :urn, ""))
     isempty(urn) && return nothing
     type_id = string_value(object_value(node, :type_id, "unknown"), "unknown")
     title = short_title(node_title(node))
     status = node_status(node)
     date, temporal_basis = event_date_for_node(node, index; anchor_t=anchor_t, t0_date=t0_date)
+    observation_lock = get(written_observation_locks, urn, nothing)
+    if observation_lock !== nothing
+        date = locked_calendar_date(observation_lock, anchor_t; t0_date=t0_date)
+        lock_t = optional_t(object_value(observation_lock, :t_day, nothing))
+        temporal_basis = Dict(
+            "kind" => "written_calendar_observation_lock",
+            "field" => "calendar_event.date",
+            "t_day" => lock_t === nothing ? anchor_t : lock_t,
+            "note" => string("stored Calendar observation ", string_value(object_value(observation_lock, :calendar_event_urn, "<unknown>"))),
+            "strength" => "high",
+        )
+    end
     timing_note = string(temporal_basis["note"])
     incoming, outgoing = relation_context(relations, urn)
     reliability = reliability_for(type_id, temporal_basis)
@@ -284,6 +326,7 @@ function calendar_payload(node, index::Integer, relations; contract_urn::String,
             "outgoing_count" => length(outgoing),
             "category_counts" => relation_category_counts(incoming, outgoing),
         ),
+        "locked_calendar_event_urn" => observation_lock === nothing ? "" : string_value(object_value(observation_lock, :calendar_event_urn, "")),
         "calendar_label" => get(TYPE_LABELS, type_id, "gray"),
         "google_event" => Dict(
             "summary" => summary,
@@ -323,6 +366,16 @@ function safe_read_json(path::AbstractString)
     end
 end
 
+function fetch_json(base_url::AbstractString, path::AbstractString)
+    url = string(rstrip(base_url, '/'), "/", lstrip(path, '/'))
+    temp_path = Downloads.download(url)
+    try
+        return JSON3.read(read(temp_path, String))
+    finally
+        rm(temp_path; force=true)
+    end
+end
+
 function write_result_source_urns(path::AbstractString)
     result = safe_read_json(path)
     result === nothing && return Set{String}()
@@ -332,6 +385,76 @@ function write_result_source_urns(path::AbstractString)
         !isempty(source_urn) && push!(sources, source_urn)
     end
     return sources
+end
+
+function calendar_date_from_urn(calendar_urn::AbstractString)
+    matched = match(r"^urn:moos:cal:(\d{4}-\d{2}-\d{2})\.", calendar_urn)
+    matched === nothing && return nothing
+    try
+        return Date(matched.captures[1])
+    catch
+        return nothing
+    end
+end
+
+function calendar_observation_locks_from_graph(nodes, relations; t0_date::Date=DEFAULT_T0_DATE)
+    nodes_by_urn = Dict{String, Any}()
+    for node in nodes
+        urn = string_value(object_value(node, :urn, ""))
+        !isempty(urn) && (nodes_by_urn[urn] = node)
+    end
+
+    locks = Dict{String, Any}()
+    for rel in relations
+        string_value(object_value(rel, :rewrite_category, "")) == "WF07" || continue
+        string_value(object_value(rel, :src_port, "")) == "anchors" || continue
+        string_value(object_value(rel, :tgt_port, "")) == "anchor" || continue
+        calendar_urn = string_value(object_value(rel, :src_urn, ""))
+        source_urn = string_value(object_value(rel, :tgt_urn, ""))
+        startswith(calendar_urn, "urn:moos:cal:") || continue
+        isempty(source_urn) && continue
+        node = get(nodes_by_urn, calendar_urn, nothing)
+        node === nothing && continue
+        parsed_urn_date = calendar_date_from_urn(calendar_urn)
+        date_value = node_property_value(node, :date, "")
+        date_text = string_value(date_value)
+        if isempty(date_text) && parsed_urn_date !== nothing
+            date_text = string(parsed_urn_date)
+        end
+        isempty(date_text) && continue
+        t_day_value = node_property_value(node, :t_day, nothing)
+        if t_day_value === nothing && parsed_urn_date !== nothing
+            t_day_value = Dates.value(parsed_urn_date - t0_date)
+        end
+        locks[source_urn] = Dict(
+            "calendar_event_urn" => calendar_urn,
+            "date" => date_text,
+            "t_day" => t_day_value,
+        )
+    end
+    return locks
+end
+
+function calendar_observation_locks(scope_artifact_path::AbstractString; t0_date::Date=DEFAULT_T0_DATE)
+    artifact = safe_read_json(scope_artifact_path)
+    artifact === nothing && return Dict{String, Any}()
+    return calendar_observation_locks_from_graph(
+        object_value(artifact, :nodes, Any[]),
+        object_value(artifact, :relations, Any[]);
+        t0_date=t0_date,
+    )
+end
+
+function live_calendar_observation_locks(base_url::AbstractString; t0_date::Date=DEFAULT_T0_DATE)
+    isempty(strip(base_url)) && return Dict{String, Any}()
+    try
+        nodes = fetch_json(base_url, "/state/nodes")
+        relations = fetch_json(base_url, "/state/relations")
+        return calendar_observation_locks_from_graph(nodes, relations; t0_date=t0_date)
+    catch err
+        println(stderr, "Warning: could not read live calendar observation locks from ", base_url, ": ", sprint(showerror, err))
+        return Dict{String, Any}()
+    end
 end
 
 function scope_diagnostics(path::AbstractString)
@@ -396,9 +519,12 @@ function ontological_patterns()
     ]
 end
 
-function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONTRACT_URN, channel_urn::String=DEFAULT_CHANNEL_URN, anchor_t::Integer=188, t0_date::Date=DEFAULT_T0_DATE, max_events::Integer=64, scope_artifact_path::String=DEFAULT_SCOPE_ARTIFACT, written_source_urns::Set{String}=Set{String}(), write_result_path::String="")
+function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONTRACT_URN, channel_urn::String=DEFAULT_CHANNEL_URN, anchor_t::Integer=188, t0_date::Date=DEFAULT_T0_DATE, max_events::Integer=64, scope_artifact_path::String=DEFAULT_SCOPE_ARTIFACT, written_source_urns::Set{String}=Set{String}(), write_result_path::String="", base_url::String="")
     all_nodes = sorted_recent_nodes(collect(object_value(artifact, :nodes, [])))
     written_source_lock = !isempty(written_source_urns)
+    artifact_locks = written_source_lock ? calendar_observation_locks(scope_artifact_path; t0_date=t0_date) : Dict{String, Any}()
+    live_locks = written_source_lock ? live_calendar_observation_locks(base_url; t0_date=t0_date) : Dict{String, Any}()
+    written_observation_locks = merge(artifact_locks, live_locks)
     nodes = written_source_lock ? [node for node in all_nodes if string_value(object_value(node, :urn, "")) in written_source_urns] : all_nodes
     relations = collect(object_value(artifact, :relations, []))
     if max_events > 0 && length(nodes) > max_events
@@ -406,7 +532,7 @@ function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONT
     end
     events = Dict{String, Any}[]
     for (index, node) in enumerate(nodes)
-        payload = calendar_payload(node, index, relations; contract_urn=contract_urn, anchor_t=anchor_t, t0_date=t0_date)
+        payload = calendar_payload(node, index, relations; contract_urn=contract_urn, anchor_t=anchor_t, t0_date=t0_date, written_observation_locks=written_observation_locks)
         payload !== nothing && push!(events, payload)
     end
     sort!(events; by = event -> (event["google_event"]["start"]["date"], event["source_type"], event["source_urn"]))
@@ -437,6 +563,10 @@ function plan_time_fabric_projection(artifact; contract_urn::String=DEFAULT_CONT
                 "enabled" => written_source_lock,
                 "write_result_path" => write_result_path,
                 "source_urn_count" => length(written_source_urns),
+                "calendar_observation_lock_count" => length(written_observation_locks),
+                "artifact_observation_lock_count" => length(artifact_locks),
+                "live_observation_lock_count" => length(live_locks),
+                "live_base_url" => base_url,
                 "excluded_node_count" => max(length(all_nodes) - length(nodes), 0),
             ),
             "writer_boundary" => "google_calendar_writer.jl is the explicit actuator; this planner is dry and side-effect free",
@@ -464,7 +594,8 @@ function write_markdown(path::AbstractString, plan)
         println(io, "- Anchor: T", plan["anchor_t"], " / ", plan["anchor_date"])
         println(io, "- Events: ", plan["event_count"])
         lock = plan["calendar_surface_assessment"]["written_source_lock"]
-        println(io, "- Written-source lock: ", lock["enabled"], " (", lock["source_urn_count"], " source URNs; ", lock["excluded_node_count"], " nodes excluded)")
+        observation_count = get(lock, "calendar_observation_lock_count", 0)
+        println(io, "- Written-source lock: ", lock["enabled"], " (", lock["source_urn_count"], " source URNs; ", observation_count, " existing observation dates; ", lock["excluded_node_count"], " nodes excluded)")
         println(io, "- Slice: ", plan["slice_policy"]["event_source"], "; depth ", plan["slice_policy"]["default_depth"], " for event candidates, depth ", plan["slice_policy"]["calendar_scope_depth"], " for Calendar-scope diagnostics")
         println(io, "- Temporal basis: ", plan["calendar_surface_assessment"]["explicit_temporal_event_count"], " explicit, ", plan["calendar_surface_assessment"]["lens_order_event_count"], " lens-order")
         println(io)
@@ -500,6 +631,7 @@ end
 function parse_args(argv)
     options = Dict(
         "graph-artifact" => DEFAULT_GRAPH_ARTIFACT,
+        "base-url" => DEFAULT_BASE_URL,
         "out" => DEFAULT_OUT,
         "markdown-out" => DEFAULT_MARKDOWN_OUT,
         "contract-urn" => DEFAULT_CONTRACT_URN,
@@ -548,6 +680,7 @@ function main(argv=ARGS)
         scope_artifact_path=options["scope-artifact"],
         written_source_urns=written_sources,
         write_result_path=write_result_path,
+        base_url=options["base-url"],
     )
     write_json(options["out"], plan)
     write_markdown(options["markdown-out"], plan)

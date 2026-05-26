@@ -209,6 +209,7 @@ try {
     }
     Invoke-Step "Calendar time-fabric projection" {
         & $Julia "dev\scripts\calendar_time_fabric_projection.jl" `
+            "--base-url" $ProjectionBaseUrl `
             "--anchor-t" ([string]$anchorTValue) `
             "--scope-artifact" "tmp/projections/session_pipeline/graph_artifacts/calendar_scope_engineering.json" `
             "--write-result-path" "tmp/projections/session_pipeline/calendar/calendar_time_fabric_write_result.json" `

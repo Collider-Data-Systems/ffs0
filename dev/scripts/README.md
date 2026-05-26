@@ -23,7 +23,7 @@ The operator manual for the generated filesystem, dashboard, script stack, typed
 - `export_t200plus_projection.jl` — folded-state DOT/SVG exporter for T200+ graph lenses.
 - `generate_type_map.py` — active utility for generating moos-router type-map flags from `kb/superset/ontology.json`.
 - `graph_artifact_projection.jl` — dry folded-state graph artifact analyzer for newly added HG frames. It writes JSON/Markdown engineering summaries and pairs with the DOT/SVG exporter for visualization.
-- `calendar_time_fabric_projection.jl` — F-direction planner that turns a recent graph artifact into Google Calendar payloads, mapping HG identity, T-day anchor, node type/status, and relation context into visible Calendar events.
+- `calendar_time_fabric_projection.jl` — F-direction planner that turns a recent graph artifact into Google Calendar payloads, mapping HG identity, T-day anchor, node type/status, and relation context into visible Calendar events. When locked to a writer result, it also reads live folded Calendar observations to preserve applied event dates across T-day rollover.
 - `t189_t200_recommendation_projection.jl` — dry planner that turns the five T189 recommendations into candidate HG nodes/relations and T200+ recommendation artifacts without applying rewrites.
 - `t189_recommendation_reconciliation.jl` — dry reconciliation adapter that compares the T189/T200 recommendation plan to folded HG state and reports grouped rows, Calendar event rows, session pins, WF07 Calendar source anchors, and deferred rows separately.
 - `surface_context_atlas.jl` — generated operator/agent atlas that explains the live JSON API, JSONL log, Git repos, Google Calendar projection, dashboard, visual lenses, type/relation/program surface, known HG anchors, and pending moves in one JSON/Markdown artifact.
@@ -32,7 +32,8 @@ The operator manual for the generated filesystem, dashboard, script stack, typed
 - `google_calendar_writer.jl` — explicit OAuth boundary writer for applying an approved Google Calendar projection plan. Defaults to dry-run/check modes; real writes require local gitignored OAuth files and `--mode write`.
 - `session_context_projection.jl` — F-direction planning adapter from folded HG state to a session context pack for IDE, agent, or harness handoff. It writes reviewable JSON and Markdown, and does not edit IDE config or emit rewrites.
 - `session_pipeline_mvp_gate.jl` — dry MVP gate report for the Keep-note/session/visual-projection lane. It checks live G-ingest evidence, F session handoff output, graph-artifact analysis, static visuals, lens controls, and known gaps.
-- `keep_t195_t206_ingest_stage.jl` — dry G-direction stager for T195-T206 Google Keep/loose-thought material. It reads a local Takeout/manual export folder or file, filters the T-window, marks duplicate/undated notes, classifies hardware/software/HG lifecycle themes, and writes review-only candidate KI/claim/derivation/program topology without emitting rewrites.
+- `keep_t195_t206_ingest_stage.jl` — dry G-direction stager for T195-T206 Google Keep/loose-thought material. It reads a local Takeout ZIP/folder, manual export file, or API-normalized JSON folder, filters the T-window, marks duplicate/undated notes, classifies hardware/software/HG lifecycle themes, and writes review-only candidate KI/claim/derivation/program topology without emitting rewrites.
+- `google_keep_fetch.jl` — explicit official Google Keep API/OAuth boundary. It checks local credential readiness, opens the loopback consent URL, fetches notes when Google permits the Keep scope, writes normalized local JSON, and feeds the same dry stager.
 - `t206_keep_mvp_delivery.jl` — narrow T206 MVP carrier planner for the Google Keep API/S0 staging boundary. It emits only new-needed program/derivation/KI/claim/external_op nodes and valid WF12/WF18/WF19/WF21 links; raw Keep-note content remains deferred.
 
 ## Python Status
@@ -66,7 +67,7 @@ For workstation bring-up or refresh, select `.github/agents/moos-workstation-ope
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-session-pipeline.ps1
 ```
 
-The runner regenerates the current Keep-note/session/visual lane and writes `tmp/projections/session_pipeline/index.html`. The HTML page is the MVP operator surface: it shows the G-ingest/F-session/F-visual stages, pass/warn/fail gates, runtime metadata, artifact links, the static visual lens, Calendar time-fabric artifacts, recommendation HG artifacts, the surface context atlas, and the next actions for warning gates. It is generated locally and does not emit rewrites. When a Calendar writer result exists, the runner locks the Calendar time-fabric planner to the written source URNs so widened visual context remains inspectable without creating new Calendar G-readback candidates.
+The runner regenerates the current Keep-note/session/visual lane and writes `tmp/projections/session_pipeline/index.html`. The HTML page is the MVP operator surface: it shows the G-ingest/F-session/F-visual stages, pass/warn/fail gates, runtime metadata, artifact links, the static visual lens, Calendar time-fabric artifacts, recommendation HG artifacts, the surface context atlas, and the next actions for warning gates. It is generated locally and does not emit rewrites. When a Calendar writer result exists, the runner locks the Calendar time-fabric planner to the written source URNs and live folded Calendar observations so widened visual context and T-day rollover remain inspectable without creating new Calendar G-readback candidates.
 
 ### T206 Keep/Loose-Thought Ingest Stage
 
@@ -75,6 +76,12 @@ Harness-neutral entrypoint for any agent surface:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode Check
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode Stage -SourcePath scratch\keep\t195-t206 -RunPipeline
+```
+
+For a Google Takeout ZIP, pass the archive directly:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode Stage -SourcePath scratch\keep\t195-t206\takeout.zip -RunPipeline
 ```
 
 For the Google Keep web UI, copy selected note text to the clipboard and run:
@@ -103,9 +110,10 @@ The planner writes `tmp/projections/session_pipeline/keep_t206/t206_keep_mvp_del
 
 ```powershell
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\keep_t195_t206_ingest_stage.jl --source scratch\keep\t195-t206
+& 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\keep_t195_t206_ingest_stage.jl --source scratch\keep\t195-t206\takeout.zip
 ```
 
-The stager writes `tmp/projections/session_pipeline/keep_t206/keep_t195_t206_stage.json` and `.md`. It is intentionally dry: Google Takeout/manual-export material becomes a local review artifact first, then candidate HG nodes/relations. It keeps `apply_ready=false` until Sam approves the source structure and a separate `dev/scripts/ops/` apply program is generated.
+The stager writes `tmp/projections/session_pipeline/keep_t206/keep_t195_t206_stage.json` and `.md`. It is intentionally dry: Google Takeout ZIP/folder/manual-export material becomes a local review artifact first, then candidate HG nodes/relations. It keeps `apply_ready=false` until Sam approves the source structure and a separate `dev/scripts/ops/` apply program is generated. ZIP members get stable archive source URLs such as `file://...takeout.zip#Takeout/Keep/<note>.json`. The T207 local source scan only found the old T187 text export under `scratch\keep`; it selected 0 T195-T206 notes and no HG apply was valid.
 
 Google Keep API fetch is an explicit OAuth boundary, mirroring the Calendar writer. Store local OAuth files under `secrets/`, then run:
 
@@ -117,7 +125,7 @@ Google Keep API fetch is an explicit OAuth boundary, mirroring the Calendar writ
 
 The fetcher uses the Google Keep readonly scope, writes normalized API notes under `scratch/keep/t195-t206/api/notes/`, stores raw API responses beside them, and by default regenerates the same dry stage report. It does not emit HG rewrites and does not print token or client-secret values.
 
-Keep auth uses Google's v2 OAuth endpoint. If Google shows `Error 400: invalid_scope` with request details containing `scope=https://www.googleapis.com/auth/keep.readonly`, the local script path is working: the scope exists in Google's Keep discovery document, but the OAuth client/project is not allowed to present it yet.
+Keep auth uses Google's v2 OAuth endpoint. If Google shows `Error 400: invalid_scope` with request details containing `scope=https://www.googleapis.com/auth/keep.readonly`, the local script path is working: the scope exists in Google's Keep discovery document, but the OAuth client/project is not allowed to present it yet. This was rechecked at T207 using `Invoke-KeepIngestHarness.ps1 -Mode ApiAuthListen -UseCalendarOAuthClient -OpenBrowser`; Google still rejected the scope before any token could be written.
 
 Fix that in Google Cloud Console before retrying the API fetch:
 
@@ -208,7 +216,7 @@ The adapter emits `tmp/projections/google_calendar_projection_plan.json`. This i
 & 'C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe' dev\scripts\calendar_time_fabric_projection.jl
 ```
 
-The adapter reads the current session graph artifact and emits `tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json` plus a Markdown review report. It uses the same writer contract as the Google Calendar planner, but projects selected recent HG nodes as stable Calendar events with type-based color, URN/type/status metadata, T-day anchor, and relation context. Use `--lock-written-sources true --write-result-path <path>` after a Calendar writer run to keep the readback/HG recommendation lane scoped to events that were actually written.
+The adapter reads the current session graph artifact and emits `tmp/projections/session_pipeline/calendar/calendar_time_fabric_plan.json` plus a Markdown review report. It uses the same writer contract as the Google Calendar planner, but projects selected recent HG nodes as stable Calendar events with type-based color, URN/type/status metadata, T-day anchor, and relation context. Use `--lock-written-sources true --write-result-path <path> --base-url http://localhost:8000` after a Calendar writer run to keep the readback/HG recommendation lane scoped to events that were actually written and to preserve existing folded `calendar_event` observation dates across T-day rollover.
 
 ### T189/T200 Recommendation HG Projection
 

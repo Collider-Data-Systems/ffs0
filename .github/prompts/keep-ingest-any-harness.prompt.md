@@ -24,13 +24,14 @@ Use existing graph/projection state first:
 - Reuse `urn:moos:program:sam.t206.keep-api-mvp-delivery`, `urn:moos:ki:gdrive.t206-keep-api-mvp-status`, and `urn:moos:external_op:sam.t206-google-keep-oauth-scope-approval` as the existing T206 process/status carriers.
 - Read `tmp/projections/session_pipeline/session_context/current_session.json`, `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`, and `tmp/projections/session_pipeline/graph_artifacts/t206_keep_mvp_engineering.json` before deciding what a new harness needs.
 - Add new nodes only for approved source-note content or a genuinely new derivation/claim/program; otherwise add missing valid relations to existing nodes.
+- As of T207, Sam approved structured raw Keep staging, but the source boundary still holds: do not invent or assert Keep note content unless it came from a local Takeout ZIP/folder, official API export, clipboard/manual export, or other explicit source artifact.
 
 ## Source Acquisition
 
 Use exactly one source path per pass:
 
 - `ApiFetch`: use the official Google Keep API once OAuth works.
-- `Stage`: use a local Google Takeout folder, JSON file, HTML file, Markdown file, or plain text file.
+- `Stage`: use a local Google Takeout ZIP/folder, JSON file, HTML file, Markdown file, or plain text file.
 - `ClipboardStage`: ask Sam to select/copy notes from the Google Keep web UI, then capture the clipboard into `scratch/keep/t195-t206/manual/` and stage it.
 
 Do not infer note text from a screenshot. Do not use unofficial browser storage scraping as durable evidence. Do not print OAuth secrets or token contents.
@@ -93,6 +94,12 @@ For a Takeout/export folder or file:
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode Stage -SourcePath scratch\keep\t195-t206 -RunPipeline
 ```
 
+For a Takeout ZIP:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode Stage -SourcePath scratch\keep\t195-t206\takeout.zip -RunPipeline
+```
+
 For official API fetch after OAuth is fixed:
 
 ```powershell
@@ -105,6 +112,8 @@ If the default Keep OAuth client is absent but Calendar OAuth exists and the Goo
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode ApiAuthListen -UseCalendarOAuthClient -OpenBrowser
 ```
 
+T207 readback: this Calendar-client reuse path still reaches Google and then fails with `Error 400: invalid_scope` for `https://www.googleapis.com/auth/keep.readonly`; treat that as an external Google Cloud consent/scope approval blocker, not as a parser or runner failure.
+
 ## Review Boundary
 
 The runner writes:
@@ -114,7 +123,7 @@ The runner writes:
 - `tmp/projections/session_pipeline/keep_t206/keep_t195_t206_stage.json`
 - `tmp/projections/session_pipeline/keep_t206/keep_t195_t206_stage.md`
 
-The stage report is intentionally `apply_ready=false`. Only create or post a `dev/scripts/ops/` HG apply program after Sam explicitly approves the structured source artifact. Treat WF07 Calendar `anchors/anchor` rows as a separate reviewed apply surface once the live runtime has loaded the repaired operad declaration.
+The stage report is intentionally `apply_ready=false`. Only create or post a `dev/scripts/ops/` HG apply program after Sam explicitly approves the structured source artifact. If the stage finds zero selected T195-T206 notes, report the source acquisition gap and do not emit an empty/raw-note apply program. Treat WF07 Calendar `anchors/anchor` rows as a separate reviewed apply surface once the live runtime has loaded the repaired operad declaration.
 
 ## Closeout
 

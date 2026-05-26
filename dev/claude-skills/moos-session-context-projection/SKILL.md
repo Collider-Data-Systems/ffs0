@@ -79,13 +79,13 @@ The T189/T200 lane regenerates a complete local projection pack:
 4. T189 recommendation graph artifact.
 5. Calendar-scope graph artifact rooted at governance, Calendar channel, Calendar programs, writer result, G-ingest decision, purpose, and view_filter anchors.
 6. Session-occasion, temporal-calendar, T189 recommendation, and Calendar-scope DOT/SVG lenses.
-7. Calendar time-fabric JSON/Markdown plan with slice policy, temporal-basis notes, reliability assessment, and Calendar-scope component diagnostics.
+7. Calendar time-fabric JSON/Markdown plan with slice policy, temporal-basis notes, reliability assessment, Calendar-scope component diagnostics, writer-result source locks, and live folded Calendar observation locks.
 8. T189/T200 recommendation HG plan.
 9. Recommendation reconciliation against folded HG state.
 10. Surface context atlas.
 11. MVP gate and dashboard with Graphviz SVG zoom panes plus Cytoscape.js inspector tabs for session occasion, Calendar Time-Fabric, T189 recommendations, and Calendar scope. The SVG panes support fit, zoom, reset, scrolling, and wide view for static layout review; the inspector supports search, fit, zoom, reset, layout switching, and a wide modal view for typed graph-artifact metadata.
 
-Calendar writer actions are explicit actuator steps. The writer is an upsert keyed by `moos_projection_id`: rerunning the plan should patch existing Google Calendar events rather than insert duplicates. HG-side Calendar readback is separate: individual `calendar_event` nodes and session pins can be applied while WF07 source-anchor relations remain deferred until the operad declaration is resolved.
+Calendar writer actions are explicit actuator steps. The writer is an upsert keyed by `moos_projection_id`: rerunning the plan should patch existing Google Calendar events rather than insert duplicates. HG-side Calendar readback is separate: individual `calendar_event` nodes, session pins, and WF07 `anchors/anchor` source-anchor relations are now valid after ontology v3.16.2. When a writer result exists, the Calendar time-fabric planner should use both the stored source URNs and live folded Calendar observations so T-day rollover does not create fresh pending readback candidates for events that are already applied.
 
 ## Projection Targets
 

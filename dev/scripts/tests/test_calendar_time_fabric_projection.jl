@@ -1,4 +1,5 @@
 using Dates
+using JSON3
 using Test
 
 include(joinpath(@__DIR__, "..", "calendar_time_fabric_projection.jl"))
@@ -73,4 +74,52 @@ end
     @test plan["slice_policy"]["written_source_lock"] == true
     @test plan["calendar_surface_assessment"]["written_source_lock"]["excluded_node_count"] == 2
     @test only(plan["events"])["source_urn"] == "urn:moos:claim:written"
+end
+
+@testset "Calendar time-fabric preserves written observation dates" begin
+    artifact = Dict(
+        :nodes => [
+            Dict(:urn => "urn:moos:claim:written", :type_id => "claim", :title => "Written claim", :status => "open"),
+        ],
+        :relations => Any[],
+    )
+
+    mktempdir() do dir
+        scope_path = joinpath(dir, "calendar_scope.json")
+        scope_artifact = Dict(
+            :nodes => [
+                Dict(
+                    :urn => "urn:moos:cal:2026-05-26.moos-written",
+                    :type_id => "calendar_event",
+                    :properties => Dict(
+                        :date => Dict(:value => "2026-05-26"),
+                        :t_day => Dict(:value => 206),
+                    ),
+                ),
+            ],
+            :relations => [
+                Dict(:rewrite_category => "WF07", :src_urn => "urn:moos:cal:2026-05-26.moos-written", :src_port => "anchors", :tgt_urn => "urn:moos:claim:written", :tgt_port => "anchor"),
+            ],
+        )
+        open(scope_path, "w") do io
+            JSON3.pretty(io, scope_artifact)
+            println(io)
+        end
+
+        plan = CTF.plan_time_fabric_projection(
+            artifact;
+            anchor_t=207,
+            t0_date=Date("2025-11-01"),
+            scope_artifact_path=scope_path,
+            written_source_urns=Set(["urn:moos:claim:written"]),
+            write_result_path="calendar_time_fabric_write_result.json",
+        )
+
+        event = only(plan["events"])
+        @test event["google_event"]["start"]["date"] == "2026-05-26"
+        @test event["temporal_basis"]["kind"] == "written_calendar_observation_lock"
+        @test event["temporal_basis"]["t_day"] == 206
+        @test event["locked_calendar_event_urn"] == "urn:moos:cal:2026-05-26.moos-written"
+        @test plan["calendar_surface_assessment"]["written_source_lock"]["calendar_observation_lock_count"] == 1
+    end
 end

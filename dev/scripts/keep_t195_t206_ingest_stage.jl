@@ -21,7 +21,8 @@ const DEFAULT_OWNER_URN = "urn:moos:user:sam"
 const INGEST_PROGRAM_URN = "urn:moos:program:sam.t206.keep-loose-thought-ingest-stage"
 const INGEST_DERIVATION_URN = "urn:moos:derivation:guido.t206-keep-loose-thought-classification"
 
-const SUPPORTED_EXTENSIONS = Set([".json", ".html", ".htm", ".txt", ".md"])
+const NOTE_EXTENSIONS = Set([".json", ".html", ".htm", ".txt", ".md"])
+const SUPPORTED_EXTENSIONS = union(NOTE_EXTENSIONS, Set([".zip"]))
 
 const THEME_KEYWORDS = [
     "manifold_compute" => ["manifold", "surface", "projection", "hyperware", "distributed compute", "distributed", "object operations", "macrohard"],
@@ -149,6 +150,11 @@ end
 function source_url(path::AbstractString)
     normalized = replace(abspath(path), "\\" => "/")
     return string("file://", normalized)
+end
+
+function archive_member_url(archive_path::AbstractString, member_path::AbstractString)
+    normalized_member = replace(member_path, "\\" => "/")
+    return string(source_url(archive_path), "#", normalized_member)
 end
 
 function text_hash(text::AbstractString)
@@ -354,6 +360,60 @@ function notes_from_text(path::AbstractString; t0_date::Date=DEFAULT_T0_DATE)
     )]
 end
 
+function extract_zip_archive(zip_path::AbstractString, destination::AbstractString)
+    tar = Sys.which("tar")
+    if tar !== nothing
+        run(Cmd([tar, "-xf", zip_path, "-C", destination]))
+        return
+    end
+
+    if Sys.iswindows()
+        powershell = Sys.which("powershell")
+        if powershell !== nothing
+            run(Cmd([powershell, "-NoProfile", "-Command", "& { param([string]\$ZipPath,[string]\$Destination) Expand-Archive -LiteralPath \$ZipPath -DestinationPath \$Destination -Force }", zip_path, destination]))
+            return
+        end
+        pwsh = Sys.which("pwsh")
+        if pwsh !== nothing
+            run(Cmd([pwsh, "-NoProfile", "-Command", "& { param([string]\$ZipPath,[string]\$Destination) Expand-Archive -LiteralPath \$ZipPath -DestinationPath \$Destination -Force }", zip_path, destination]))
+            return
+        end
+    end
+
+    unzip = Sys.which("unzip")
+    if unzip !== nothing
+        run(Cmd([unzip, "-q", zip_path, "-d", destination]))
+        return
+    end
+
+    error("No local ZIP extractor found. Install PowerShell, tar, or unzip, or extract the Takeout archive manually and pass the Keep folder.")
+end
+
+function notes_from_zip(path::AbstractString; t0_date::Date=DEFAULT_T0_DATE)
+    notes = Any[]
+    mktempdir() do dir
+        extract_zip_archive(path, dir)
+        extracted_files = [joinpath(root, file) for (root, _, names) in walkdir(dir) for file in names if lowercase(splitext(file)[2]) in NOTE_EXTENSIONS]
+        for extracted_path in sort(extracted_files)
+            ext = lowercase(splitext(extracted_path)[2])
+            parsed_notes = ext == ".json" ? notes_from_json(extracted_path; t0_date=t0_date) :
+                (ext in [".html", ".htm"] ? notes_from_html(extracted_path; t0_date=t0_date) : notes_from_text(extracted_path; t0_date=t0_date))
+            member = replace(relpath(extracted_path, dir), "\\" => "/")
+            member_url = archive_member_url(path, member)
+            for note in parsed_notes
+                note["source_archive"] = abspath(path)
+                note["source_archive_member"] = member
+                note["source_path"] = string(abspath(path), "#", member)
+                if startswith(string(note["source_url"]), "file://")
+                    note["source_url"] = member_url
+                end
+                push!(notes, note)
+            end
+        end
+    end
+    return notes
+end
+
 function discover_files(source::AbstractString)
     ispath(source) || return String[]
     files = isfile(source) ? [source] : [joinpath(root, file) for (root, _, names) in walkdir(source) for file in names]
@@ -377,6 +437,8 @@ function load_notes(source::AbstractString; t0_date::Date=DEFAULT_T0_DATE)
                 append!(notes, notes_from_html(path; t0_date=t0_date))
             elseif ext in [".txt", ".md"]
                 append!(notes, notes_from_text(path; t0_date=t0_date))
+            elseif ext == ".zip"
+                append!(notes, notes_from_zip(path; t0_date=t0_date))
             end
         catch err
             push!(skipped, Dict("path" => abspath(path), "reason" => sprint(showerror, err)))

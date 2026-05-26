@@ -64,3 +64,36 @@ end
         @test any(row -> row["reason"] == "duplicate_source", duplicate_plan["excluded_notes"])
     end
 end
+
+@testset "T206 Keep stager reads Takeout ZIP sources" begin
+    tar = Sys.which("tar")
+    if tar === nothing
+        @test_skip false
+    else
+        mktempdir() do dir
+            takeout_dir = joinpath(dir, "takeout-source", "Takeout", "Keep")
+            mkpath(takeout_dir)
+            write_json(joinpath(takeout_dir, "macrohard.json"), Dict(
+                "title" => "Macrohard distributed compute",
+                "textContent" => "T206 Macrohard hardware surface for mo:os: Rust, assembly, HDC, GPU cache, and distributed hyperware compute.",
+                "labels" => [Dict("name" => "moos")],
+            ))
+            write(joinpath(takeout_dir, "session-surface.html"), "<html><head><title>Session surface</title></head><body><p>T205 Keep and IDE conversations are S0 staging material.</p></body></html>")
+
+            zip_path = joinpath(dir, "google-keep-takeout.zip")
+            source_root = joinpath(dir, "takeout-source")
+            run(Cmd([tar, "-a", "-cf", zip_path, "-C", source_root, "."]))
+
+            plan = Stage.plan_stage(zip_path; existing_source_urls=Set{String}(), include_undated=true, generated_at="2026-05-27T09:00:00Z")
+
+            @test plan["source"]["file_count"] == 1
+            @test plan["notes_total"] == 2
+            @test plan["selected_note_count"] == 2
+            @test all(note -> haskey(note, "source_archive"), plan["selected_notes"])
+            @test all(note -> occursin(".zip#", note["source_url"]), plan["selected_notes"])
+            @test haskey(plan["buckets"]["themes"], "manifold_compute")
+            @test haskey(plan["buckets"]["themes"], "runtime_substrate")
+            @test plan["candidate_hg"]["apply_ready"] == false
+        end
+    end
+end

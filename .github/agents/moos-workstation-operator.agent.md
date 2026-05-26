@@ -27,7 +27,7 @@ When launched from the VS Code Agents window, run `.github/prompts/agent-worksta
 - Keep `.vscode/mcp.json` local and secret-free; update `.vscode/mcp.json.example` for portable MCP shape.
 - Keep `Downloads`, legacy `moos-config`, and temporary local roots out of the tracked workspace file; use an ignored `*.local.code-workspace` when needed.
 - Keep `ffs0` admin/control work trunk-first on `main` when verified; branch runtime code work in `moos-kernel` and `moos-router`.
-- Do not emit HG rewrites, write Calendar events, G-sync GitHub Project status, seat scoped-idle sessions, or ingest raw Keep notes from startup/readback checks.
+- Do not emit HG rewrites, write Calendar events, G-sync GitHub Project status, seat scoped-idle sessions, or ingest raw Keep notes from startup/readback checks. Raw Keep staging requires an explicit Takeout ZIP/folder/API/clipboard/manual source artifact and review before apply.
 - Do not treat pinned chat state, prompt text, or VS Code UI state as durable HG truth.
 
 ## Workstation Outputs

@@ -10,6 +10,7 @@ applyTo: "{**/*.code-workspace,**/.vscode/**,**/.github/agents/**,**/.github/pro
 - Read `kb/superset/running-state.md` before changing IDE, MCP, prompt, skill, or workstation configuration.
 - Folded HG state and live `/healthz` readback outrank old bootstrap docs.
 - `dev/config/session-affordance-map.json` and `dev/config/moos-federation.topology.json` are projection configs, not HG truth.
+- Raw Keep notes are source-gated: stage only explicit local Takeout ZIP/folder/API/clipboard/manual artifacts, keep `apply_ready=false` through review, and do not emit raw-note HG rewrites from startup/readback checks.
 
 ## Current hp-laptop Shape
 
