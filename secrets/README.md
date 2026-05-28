@@ -61,6 +61,37 @@ Then set:
 GOOGLE_APPLICATION_CREDENTIALS=D:/FFS0_Factory/moos/secrets/gcp-service-account.json
 ```
 
+For Google Keep API ingest, use a Workspace domain-wide delegated service account. In Google Admin Console > Security > API controls > Domain-wide delegation, authorize the service account OAuth client ID for:
+
+```text
+https://www.googleapis.com/auth/keep.readonly
+```
+
+Then mint the local short-lived token and fetch real Keep API notes with `dev/scripts/ops/Invoke-KeepIngestHarness.ps1 -Mode ApiDelegatedFetch`.
+
+If service-account key creation is blocked by organization policy, use the keyless
+IAM Credentials path instead:
+
+1. Authorize the service account OAuth client ID in Workspace domain-wide
+   delegation for `https://www.googleapis.com/auth/keep.readonly`.
+2. Grant the Google Cloud operator `roles/iam.serviceAccountTokenCreator` on the
+   Keep ingest service account, or at the project level if needed.
+3. Mint a Cloud signer token, then mint/fetch the delegated Keep token:
+
+```powershell
+dev/scripts/ops/Invoke-KeepIngestHarness.ps1 -Mode ApiCloudToken -UseCalendarOAuthClient -OpenBrowser -CloudLoginHint maassenhochrath@gmail.com
+dev/scripts/ops/Invoke-KeepIngestHarness.ps1 -Mode ApiDelegatedKeylessFetch -UseCalendarOAuthClient
+```
+
+For a different Workspace subject, keep token and export lanes separate:
+
+```powershell
+dev/scripts/ops/Invoke-KeepIngestHarness.ps1 -Mode ApiDelegatedKeylessFetch -UseCalendarOAuthClient -DelegatedSubject lola@my-tiny-data-collider.nl -TokenPath secrets\google_keep_token_lola.json -OutDir tmp\projections\session_pipeline\keep_t206_lola -ApiOutDir scratch\keep\t195-t206\api-lola
+```
+
+`secrets/google_cloud_token.json` and `secrets/google_keep_token.json` are local
+token caches. Do not commit them.
+
 ## Usage in Code
 
 Load secret values from `secrets/api_keys.env` (or environment variables exported from it). Do not treat root `.env` as the source of truth.

@@ -40,14 +40,14 @@ function scope_diagnostics(scopes=DEFAULT_SCOPES)
     return Dict{String, Any}(
         "requested_scopes" => requested,
         "all_requested_scopes_in_keep_discovery" => all(scope -> scope in GOOGLE_KEEP_SCOPES, requested),
-        "observed_blocker" => "Google OAuth returned Error 400 invalid_scope and refused to display https://www.googleapis.com/auth/keep.readonly for the current OAuth client.",
-        "probable_cause" => "The local request is well-formed, but the Google Cloud project/OAuth consent screen is not configured or approved for the Google Keep API scope, or this account/app type cannot request it yet.",
+        "observed_blocker" => "Google OAuth returned Error 400 invalid_scope and Google Auth Platform refused to add https://www.googleapis.com/auth/keep.readonly for the current OAuth client, even after the existing project was moved into an organization.",
+        "probable_cause" => "The local request is well-formed, but the Google Keep API is Workspace/enterprise oriented and expects admin-approved domain-wide delegation rather than a normal installed-app OAuth consent flow for this project.",
         "operator_action" => [
             "Enable Google Keep API in the Google Cloud project that owns the OAuth client.",
-            "Add https://www.googleapis.com/auth/keep.readonly to the OAuth consent screen scopes.",
-            "Add Sam's account as a test user, or publish/verify the app if Google requires it for this scope.",
-            "Download a Desktop OAuth client JSON to secrets/google_keep_oauth_client.json, or update the existing Calendar OAuth project's consent configuration.",
-            "Rerun auth-listen and then fetch after secrets/google_keep_token.json is written.",
+            "Create a service account with domain-wide delegation enabled in that project.",
+            "Download its JSON key to secrets/gcp-service-account.json without committing it.",
+            "In Google Admin Console > Security > API controls > Domain-wide delegation, authorize the service account client ID for https://www.googleapis.com/auth/keep.readonly.",
+            "Run Invoke-KeepIngestHarness.ps1 -Mode ApiDelegatedFetch to mint secrets/google_keep_token.json, call Keep API, export normalized notes, and stage the real API output.",
         ],
     )
 end
@@ -274,6 +274,42 @@ function credential_status(credentials_path::AbstractString, token_path::Abstrac
     return OAuth.credential_status(credentials_path, token_path)
 end
 
+function ensure_keep_access_token(credentials_path::AbstractString, token_path::AbstractString; request_json_fn=OAuth.request_json)
+    if !isfile(token_path)
+        error(string("Google Keep token file not found: ", token_path, "; run OAuth auth-listen or mint a delegated service-account token"))
+    end
+
+    token = OAuth.read_json(token_path)
+    if !OAuth.token_needs_refresh(token)
+        access_token = object_value(token, :access_token, nothing)
+        if access_token === nothing || isempty(string(access_token))
+            error("Google Keep token is missing access_token")
+        end
+        return string(access_token)
+    end
+
+    refresh = object_value(token, :refresh_token, nothing)
+    if refresh !== nothing && !isempty(string(refresh))
+        if !isfile(credentials_path)
+            error(string("Google Keep token is expired and OAuth client file is missing: ", credentials_path))
+        end
+        credentials = OAuth.read_json(credentials_path)
+        token = OAuth.refresh_token(credentials, token; request_json_fn=request_json_fn)
+        write_json(token_path, token)
+        access_token = object_value(token, :access_token, nothing)
+        if access_token === nothing || isempty(string(access_token))
+            error("Google Keep refreshed token is missing access_token")
+        end
+        return string(access_token)
+    end
+
+    delegated_subject = object_value(token, :delegated_subject, nothing)
+    if delegated_subject !== nothing
+        error(string("Delegated Google Keep token is expired for ", delegated_subject, "; rerun google_keep_service_account_token.mjs before ApiFetch"))
+    end
+    error("Google Keep token is expired and has no refresh_token; rerun auth-listen or mint a delegated service-account token")
+end
+
 function maybe_open_browser(url::AbstractString; enabled::Bool=false)
     enabled || return false
     try
@@ -416,7 +452,7 @@ function main(argv=ARGS)
         println("Wrote OAuth token: ", options["token"])
         return 0
     elseif mode == "fetch"
-        access_token = OAuth.ensure_access_token(options["credentials"], options["token"])
+        access_token = ensure_keep_access_token(options["credentials"], options["token"])
         notes, pages, truncated = fetch_notes(
             access_token;
             page_size=parse(Int, options["page-size"]),

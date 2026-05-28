@@ -1,14 +1,22 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('Check', 'Stage', 'ClipboardStage', 'ApiAuthListen', 'ApiFetch', 'Pipeline')]
+    [ValidateSet('Check', 'Stage', 'ClipboardStage', 'ApiAuthListen', 'ApiCloudToken', 'ApiDelegatedInfo', 'ApiDelegatedToken', 'ApiDelegatedKeylessToken', 'ApiDelegatedFetch', 'ApiDelegatedKeylessFetch', 'ApiFetch', 'Pipeline')]
     [string]$Mode = 'Stage',
 
     [string]$SourcePath = 'scratch\keep\t195-t206',
     [string]$OutDir = 'tmp\projections\session_pipeline\keep_t206',
+    [string]$ApiOutDir = 'scratch\keep\t195-t206\api',
     [string]$BaseUrl = 'http://localhost:8000',
     [string]$JuliaPath = '',
     [string]$CredentialsPath = 'secrets\google_keep_oauth_client.json',
     [string]$TokenPath = 'secrets\google_keep_token.json',
+    [string]$CloudTokenPath = 'secrets\google_cloud_token.json',
+    [string]$ServiceAccountKeyPath = 'secrets\gcp-service-account.json',
+    [string]$ServiceAccountEmail = 'moos-keep-ingest@mailmind-ai-djbuw.iam.gserviceaccount.com',
+    [string]$ServiceAccountClientId = '100056768598448764528',
+    [string]$CloudLoginHint = 'maassenhochrath@gmail.com',
+    [string]$DelegatedSubject = 'sam@my-tiny-data-collider.nl',
+    [string]$KeepScope = 'https://www.googleapis.com/auth/keep.readonly',
     [switch]$UseCalendarOAuthClient,
     [switch]$OpenBrowser,
     [switch]$SkipLiveState,
@@ -45,6 +53,14 @@ function Resolve-JuliaPath {
 }
 
 $script:JuliaExe = Resolve-JuliaPath -RequestedPath $JuliaPath
+
+function Resolve-NodePath {
+    $command = Get-Command node -ErrorAction SilentlyContinue
+    if ($command) { return $command.Source }
+    throw 'Node.js executable not found. Install Node.js or add node.exe to PATH.'
+}
+
+$script:NodeExe = Resolve-NodePath
 
 function Invoke-JuliaScript {
     param(
@@ -169,6 +185,14 @@ function Invoke-ProjectionReadback {
 
 function Invoke-KeepCheck {
     New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
+    [pscustomobject]@{
+        ServiceAccountKeyPath = $ServiceAccountKeyPath
+        ServiceAccountKeyPresent = Test-Path $ServiceAccountKeyPath
+        DelegatedSubject = $DelegatedSubject
+        KeepScope = $KeepScope
+        DelegatedTokenPath = $TokenPath
+        DelegatedTokenPresent = Test-Path $TokenPath
+    } | Format-List | Out-String | Write-Host
     Invoke-JuliaScript -ScriptPath 'dev\scripts\google_keep_fetch.jl' -Arguments @(
         '--mode', 'check',
         '--credentials', $CredentialsPath,
@@ -234,7 +258,7 @@ function Invoke-KeepApiFetch {
         '--mode', 'fetch',
         '--credentials', $CredentialsPath,
         '--token', $TokenPath,
-        '--out-dir', 'scratch\keep\t195-t206\api',
+        '--out-dir', $ApiOutDir,
         '--out', (Join-Path $OutDir 'google_keep_fetch_result.json'),
         '--stage', 'true',
         '--stage-out', (Join-Path $OutDir 'keep_t195_t206_stage.json'),
@@ -244,6 +268,70 @@ function Invoke-KeepApiFetch {
         '--t-end', [string]$TEnd,
         '--include-undated', $includeUndatedText
     )
+}
+
+function Invoke-KeepDelegatedToken {
+    & $script:NodeExe 'dev\scripts\google_keep_service_account_token.mjs' `
+        '--key' $ServiceAccountKeyPath `
+        '--token' $TokenPath `
+        '--scope' $KeepScope `
+        '--subject' $DelegatedSubject
+    if ($LASTEXITCODE -ne 0) {
+        throw "Google Keep delegated-token helper failed with exit code $LASTEXITCODE"
+    }
+}
+
+function Invoke-GoogleCloudToken {
+    $openBrowserText = if ($OpenBrowser) { 'true' } else { 'false' }
+    $args = @(
+        'dev\scripts\google_oauth_loopback_token.mjs',
+        '--credentials', $CredentialsPath,
+        '--token', $CloudTokenPath,
+        '--scope', 'https://www.googleapis.com/auth/cloud-platform',
+        '--open-browser', $openBrowserText
+    )
+    if (-not [string]::IsNullOrWhiteSpace($CloudLoginHint)) {
+        $args += @('--login-hint', $CloudLoginHint)
+    }
+    & $script:NodeExe @args
+    if ($LASTEXITCODE -ne 0) {
+        throw "Google Cloud OAuth helper failed with exit code $LASTEXITCODE"
+    }
+}
+
+function Invoke-KeepDelegatedKeylessToken {
+    & $script:NodeExe 'dev\scripts\google_keep_service_account_token.mjs' `
+        '--client-email' $ServiceAccountEmail `
+        '--client-id' $ServiceAccountClientId `
+        '--signer-token' $CloudTokenPath `
+        '--token' $TokenPath `
+        '--scope' $KeepScope `
+        '--subject' $DelegatedSubject
+    if ($LASTEXITCODE -ne 0) {
+        throw "Google Keep keyless delegated-token helper failed with exit code $LASTEXITCODE"
+    }
+}
+
+function Invoke-KeepDelegatedInfo {
+    & $script:NodeExe 'dev\scripts\google_keep_service_account_token.mjs' `
+        '--key' $ServiceAccountKeyPath `
+        '--token' $TokenPath `
+        '--scope' $KeepScope `
+        '--subject' $DelegatedSubject `
+        '--dry-run' 'true'
+    if ($LASTEXITCODE -ne 0) {
+        throw "Google Keep delegated-token helper failed with exit code $LASTEXITCODE"
+    }
+}
+
+function Invoke-KeepDelegatedFetch {
+    Invoke-KeepDelegatedToken
+    Invoke-KeepApiFetch
+}
+
+function Invoke-KeepDelegatedKeylessFetch {
+    Invoke-KeepDelegatedKeylessToken
+    Invoke-KeepApiFetch
 }
 
 function Invoke-KeepApiAuthListen {
@@ -266,6 +354,7 @@ function Invoke-SessionPipeline {
 Write-Host "Keep ingest harness mode: $Mode" -ForegroundColor Cyan
 Write-Host "Repo: $RepoRoot"
 Write-Host "Julia: $script:JuliaExe"
+Write-Host "Node: $script:NodeExe"
 
 switch ($Mode) {
     'Check' {
@@ -283,6 +372,24 @@ switch ($Mode) {
     }
     'ApiAuthListen' {
         Invoke-KeepApiAuthListen
+    }
+    'ApiCloudToken' {
+        Invoke-GoogleCloudToken
+    }
+    'ApiDelegatedInfo' {
+        Invoke-KeepDelegatedInfo
+    }
+    'ApiDelegatedToken' {
+        Invoke-KeepDelegatedToken
+    }
+    'ApiDelegatedKeylessToken' {
+        Invoke-KeepDelegatedKeylessToken
+    }
+    'ApiDelegatedFetch' {
+        Invoke-KeepDelegatedFetch
+    }
+    'ApiDelegatedKeylessFetch' {
+        Invoke-KeepDelegatedKeylessFetch
     }
     'ApiFetch' {
         Invoke-KeepApiFetch

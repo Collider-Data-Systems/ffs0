@@ -84,4 +84,37 @@ const GKeep = GoogleKeepFetch
         @test occursin("invalid_scope", diagnostics["observed_blocker"])
         @test any(action -> occursin("Google Keep API", action), diagnostics["operator_action"])
     end
+
+    @testset "uses delegated token without OAuth client" begin
+        mktempdir() do dir
+            token_path = joinpath(dir, "google_keep_token.json")
+            GKeep.write_json(token_path, Dict(
+                "access_token" => "delegated-access",
+                "token_type" => "Bearer",
+                "scope" => "https://www.googleapis.com/auth/keep.readonly",
+                "expires_at" => "2999-01-01T00:00:00Z",
+                "delegated_subject" => "sam@my-tiny-data-collider.nl",
+            ))
+            @test GKeep.ensure_keep_access_token(joinpath(dir, "missing-oauth-client.json"), token_path) == "delegated-access"
+        end
+    end
+
+    @testset "expired delegated token names rerun path" begin
+        mktempdir() do dir
+            token_path = joinpath(dir, "google_keep_token.json")
+            GKeep.write_json(token_path, Dict(
+                "access_token" => "expired-delegated-access",
+                "token_type" => "Bearer",
+                "scope" => "https://www.googleapis.com/auth/keep.readonly",
+                "expires_at" => "2000-01-01T00:00:00Z",
+                "delegated_subject" => "sam@my-tiny-data-collider.nl",
+            ))
+            @test_throws ErrorException GKeep.ensure_keep_access_token(joinpath(dir, "missing-oauth-client.json"), token_path)
+            try
+                GKeep.ensure_keep_access_token(joinpath(dir, "missing-oauth-client.json"), token_path)
+            catch err
+                @test occursin("google_keep_service_account_token.mjs", sprint(showerror, err))
+            end
+        end
+    end
 end
