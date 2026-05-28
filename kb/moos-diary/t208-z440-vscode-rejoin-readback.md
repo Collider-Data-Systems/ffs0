@@ -64,6 +64,8 @@ The local no-arg session pipeline attempted to use `http://localhost:9000` as th
 - `http://192.168.1.14:9000/state/nodes` returned promptly.
 - `http://localhost:8000/state/nodes` and `http://192.168.1.14:8000/state/nodes` returned promptly.
 
+Post-readback firewall maintenance at ~21:35 CEST disabled the two router-specific Public inbound block rules for `D:\HPZ440\moos-router-feat-type-map-routing\moos-router.exe` and added explicit allow rule `MOOS Router Z440 LAN TCP 9000` for that executable, TCP `9000`, `LocalSubnet`, profile `Any`. Local verification now has `Test-NetConnection 192.168.1.13 -Port 9000` passing and `http://192.168.1.13:9000/healthz` returning `status=ok`; `http://192.168.1.13:9000/state/nodes` still times out after 12 seconds. This separates LAN ingress from the remaining router full-state fanout/read-path issue. Hp-laptop retest is pending.
+
 So the safe readback path for this sitting was the hp-laptop router plus explicit Z440 identity:
 
 ```powershell

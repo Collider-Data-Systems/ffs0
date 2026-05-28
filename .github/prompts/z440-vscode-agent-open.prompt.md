@@ -60,11 +60,11 @@ As of the T208 Z440 readback accepted by hp-laptop governance, the known state i
 - hp-laptop primary: `ontology_version=3.16.2`, `t_day=208`, `log_len=1467`, LAN `192.168.1.14`.
 - Z440 primary/twins: `ontology_version=3.16.2`, `t_day=208`, primary `log_len=449`, twins `13/11/16`, LAN `192.168.1.13`.
 - `session:sam.z440-vscode-projection-lead` resolves on Z440 primary with expected `has-occupant -> agent:vscode.hp-z440.primary`, `has-purpose`, `opens-on -> kernel:hp-z440.primary`, and scope pins.
-- Z440 router `localhost:9000` is healthy, listens on `::`, and is reachable locally via `192.168.1.13:9000`; hp-laptop currently cannot reach `192.168.1.13:9000` because local Public inbound `Block` firewall rules still exist for the feature router executable and require an elevated shell to change.
+- Z440 router `localhost:9000` is healthy, listens on `::`, and is reachable locally via `192.168.1.13:9000`; router-specific Public inbound block rules were disabled and explicit allow rule `MOOS Router Z440 LAN TCP 9000` was added for TCP `9000` from `LocalSubnet`. Local TCP and `/healthz` pass; hp-laptop retest is pending, and `http://192.168.1.13:9000/state/nodes` still times out after 12 seconds.
 - HP ProDesk is offline and non-blocking.
 - Workspace DWD/API Keep fetch is real source material, including note attachment metadata, but remains review-only S0 with `apply_ready=false`; do not emit raw Keep-note HG rewrites from this opener.
 
-The safe activation target is Z440 primary with current repo/topology, especially `ontology_version=3.16.2`, hp-laptop peer `192.168.1.14`, and explicit Z440 lead session/actor identity. Until the LAN router firewall rule is fixed from an elevated shell, use hp-laptop router `http://192.168.1.14:9000` as the federated read surface when needed.
+The safe activation target is Z440 primary with current repo/topology, especially `ontology_version=3.16.2`, hp-laptop peer `192.168.1.14`, and explicit Z440 lead session/actor identity. For projection reads, keep using hp-laptop router `http://192.168.1.14:9000` until hp-laptop confirms direct Z440 router LAN reachability and the local Z440 router full-state read path is fixed.
 
 ## If Z440 Is Stale Or Drifted
 
