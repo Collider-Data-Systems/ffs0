@@ -57,7 +57,7 @@ prop(value) = Dict(:value => value, :mutability => "mutable")
                 :workspace => "ffs0.code-workspace",
                 :harnesses => ["VS Code", "Copilot"],
                 :skills => ["moos-session-context-projection", "moos-tooling-dx"],
-                :prompts => [".github/prompts/z440-vscode-t190-finish-today.prompt.md"],
+                :prompts => [".github/prompts/z440-vscode-agent-open.prompt.md"],
                 :validation => ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona z440-vscode-lead"],
             )
         ],

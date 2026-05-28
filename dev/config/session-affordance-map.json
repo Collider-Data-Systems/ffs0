@@ -32,7 +32,7 @@
       "mcp_server": "moos-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/z440-vscode-t190-finish-today.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/z440-vscode-agent-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
       "skills": ["moos-session-context-projection", "moos-tooling-dx", "moos-state-readback", "moos-github-project-bridge"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona z440-vscode-lead", "dev/scripts/projections/run-session-pipeline.ps1"]
     },

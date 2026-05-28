@@ -3,6 +3,7 @@
 module GoogleKeepFetch
 
 using Dates
+using Downloads
 using JSON3
 using Sockets
 
@@ -97,6 +98,15 @@ function source_url_for_note(name::AbstractString)
     return string(GOOGLE_KEEP_API, "/v1/", name)
 end
 
+function source_url_for_attachment(name::AbstractString)
+    return string(GOOGLE_KEEP_API, "/v1/", name)
+end
+
+function attachment_id(name::AbstractString)
+    parts = split(string(name), '/')
+    return isempty(parts) ? string(name) : last(parts)
+end
+
 function slugify(text::AbstractString; fallback="note")
     return Stage.slugify(text; fallback=fallback)
 end
@@ -151,6 +161,77 @@ function note_list_content(note)
     return records
 end
 
+function attachment_mime_types(attachment)
+    types = String[]
+    for mime in Stage.as_array(object_value(attachment, :mimeType, nothing))
+        text = strip(string(mime))
+        !isempty(text) && push!(types, text)
+    end
+    return types
+end
+
+function normalize_attachments(note)
+    attachments = Any[]
+    for attachment in Stage.as_array(object_value(note, :attachments, nothing))
+        name = strip(string(object_value(attachment, :name, "")))
+        isempty(name) && continue
+        push!(attachments, Dict(
+            "name" => name,
+            "attachmentId" => attachment_id(name),
+            "mimeTypes" => attachment_mime_types(attachment),
+            "sourceUrl" => source_url_for_attachment(name),
+        ))
+    end
+    return attachments
+end
+
+function attachment_extension(mime::AbstractString)
+    lowered = lowercase(strip(string(mime)))
+    lowered == "image/png" && return ".png"
+    lowered in ["image/jpeg", "image/jpg"] && return ".jpg"
+    lowered == "image/gif" && return ".gif"
+    lowered == "image/webp" && return ".webp"
+    return ".bin"
+end
+
+function download_attachment_media!(attachment, access_token::AbstractString, out_dir::AbstractString, index::Integer)
+    mime_types = Stage.as_array(object_value(attachment, :mimeTypes, nothing))
+    isempty(mime_types) && return attachment
+    mime = strip(string(first(mime_types)))
+    isempty(mime) && return attachment
+    name = strip(string(object_value(attachment, :name, "")))
+    isempty(name) && return attachment
+
+    mkpath(out_dir)
+    file_name = string(lpad(index, 2, '0'), "-", attachment_id(name), attachment_extension(mime))
+    out_path = joinpath(out_dir, file_name)
+    url = keep_url(string("v1/", name); params=["alt" => "media", "mimeType" => mime])
+    headers = ["Authorization" => string("Bearer ", access_token), "Accept" => mime]
+
+    response = open(out_path, "w") do io
+        Downloads.request(url; headers=headers, output=io, throw=false)
+    end
+    if response.status < 200 || response.status >= 300
+        rm(out_path; force=true)
+        attachment["downloadError"] = string("HTTP ", response.status, " from Keep media download: ", response.message)
+        return attachment
+    end
+
+    attachment["localPath"] = abspath(out_path)
+    attachment["bytes"] = filesize(out_path)
+    return attachment
+end
+
+function download_note_attachments!(normalized, access_token::AbstractString, out_dir::AbstractString)
+    isempty(strip(access_token)) && return normalized
+    attachments = object_value(normalized, :attachments, nothing)
+    attachments === nothing && return normalized
+    for (index, attachment) in enumerate(Stage.as_array(attachments))
+        download_attachment_media!(attachment, access_token, out_dir, index)
+    end
+    return normalized
+end
+
 function normalize_note(note)
     name = string(object_value(note, :name, ""))
     title = string(object_value(note, :title, ""))
@@ -174,6 +255,8 @@ function normalize_note(note)
     updated !== nothing && (normalized["userEditedTimestampUsec"] = updated)
     list_content = note_list_content(note)
     !isempty(list_content) && (normalized["listContent"] = list_content)
+    attachments = normalize_attachments(note)
+    !isempty(attachments) && (normalized["attachments"] = attachments)
     return normalized
 end
 
@@ -219,9 +302,10 @@ function write_json(path::AbstractString, value)
     end
 end
 
-function export_notes(notes, out_dir::AbstractString; include_trashed::Bool=false)
+function export_notes(notes, out_dir::AbstractString; include_trashed::Bool=false, access_token::AbstractString="")
     raw_dir = joinpath(out_dir, "raw")
     notes_dir = joinpath(out_dir, "notes")
+    attachment_dir = joinpath(out_dir, "attachments")
     mkpath(raw_dir)
     mkpath(notes_dir)
     raw_files = String[]
@@ -241,6 +325,9 @@ function export_notes(notes, out_dir::AbstractString; include_trashed::Bool=fals
         stem = slugify(string(date_prefix, "-", normalized["title"], "-", id); fallback="keep-note")
         raw_path = joinpath(raw_dir, string(stem, ".raw.json"))
         normalized_path = joinpath(notes_dir, string(stem, ".json"))
+        if haskey(normalized, "attachments")
+            download_note_attachments!(normalized, access_token, joinpath(attachment_dir, stem))
+        end
         write_json(raw_path, note)
         write_json(normalized_path, normalized)
         push!(raw_files, raw_path)
@@ -250,6 +337,7 @@ function export_notes(notes, out_dir::AbstractString; include_trashed::Bool=fals
         "out_dir" => out_dir,
         "raw_dir" => raw_dir,
         "notes_dir" => notes_dir,
+        "attachment_dir" => attachment_dir,
         "raw_files" => raw_files,
         "normalized_files" => normalized_files,
         "skipped" => skipped,
@@ -459,7 +547,7 @@ function main(argv=ARGS)
             max_pages=parse(Int, options["max-pages"]),
             hydrate_details=parse_bool(options["hydrate-details"]),
         )
-        export_record = export_notes(notes, options["out-dir"]; include_trashed=parse_bool(options["include-trashed"]))
+        export_record = export_notes(notes, options["out-dir"]; include_trashed=parse_bool(options["include-trashed"]), access_token=access_token)
         result = Dict(
             "mode" => "fetch",
             "api" => "google_keep_v1",

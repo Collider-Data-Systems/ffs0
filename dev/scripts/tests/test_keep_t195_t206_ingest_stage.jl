@@ -27,6 +27,7 @@ end
             "textContent" => "mo:os is a manifold object operations surface. Rust, assembly, GPU, CUDA, HDC presets and HG projections belong in a distributed hyperware compute network.",
             "userEditedTimestampUsec" => timestamp_usec(DateTime(2026, 5, 20, 14, 50, 0)),
             "labels" => [Dict("name" => "moos")],
+            "attachments" => [Dict("name" => "notes/demo/attachments/a", "mimeTypes" => ["image/png"], "sourceUrl" => "https://keep.googleapis.com/v1/notes/demo/attachments/a", "localPath" => joinpath(keep_dir, "a.png"), "bytes" => 42)],
         ))
 
         old_path = joinpath(keep_dir, "old-note.json")
@@ -53,6 +54,10 @@ end
         @test haskey(plan["buckets"]["themes"], "accelerator_cache")
         @test plan["candidate_hg"]["apply_ready"] == false
         @test plan["candidate_hg"]["candidate_node_count"] == 8
+        attached = first(note for note in plan["selected_notes"] if note["title"] == "Manifold compute and Macrohard")
+        @test attached["attachment_count"] == 1
+        @test attached["attachments"][1]["mime_types"] == ["image/png"]
+        @test attached["attachments"][1]["bytes"] == 42
         @test any(node -> node["type_id"] == "knowledge_item" && node["review_status"] == "source_structured", plan["candidate_hg"]["candidate_nodes"])
         @test any(node -> node["type_id"] == "knowledge_item" && node["review_status"] == "needs_date_review", plan["candidate_hg"]["candidate_nodes"])
         @test any(rel -> rel["rewrite_category"] == "WF12" && rel["src_urn"] == Stage.DEFAULT_CHANNEL_URN, plan["candidate_hg"]["candidate_relations"])

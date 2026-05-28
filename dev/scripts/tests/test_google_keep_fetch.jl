@@ -13,6 +13,7 @@ const GKeep = GoogleKeepFetch
             :title => "T206 storyboard",
             :createTime => "2026-05-26T12:00:00Z",
             :updateTime => "2026-05-26T12:30:00.123Z",
+            :attachments => [Dict(:name => "notes/demo-note/attachments/image-a", :mimeType => ["image/png"])],
             :body => Dict(:text => Dict(:text => "G ingest keeps cloud fixes")),
         )
         normalized = GKeep.normalize_note(note)
@@ -22,6 +23,9 @@ const GKeep = GoogleKeepFetch
         @test normalized["sourceUrl"] == "https://keep.googleapis.com/v1/notes/demo-note"
         @test normalized["createdTimestampUsec"] > 0
         @test normalized["userEditedTimestampUsec"] > 0
+        @test length(normalized["attachments"]) == 1
+        @test normalized["attachments"][1]["mimeTypes"] == ["image/png"]
+        @test normalized["attachments"][1]["sourceUrl"] == "https://keep.googleapis.com/v1/notes/demo-note/attachments/image-a"
     end
 
     @testset "normalizes list notes" begin

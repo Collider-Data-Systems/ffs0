@@ -253,6 +253,35 @@ function label_list(value)
     return labels
 end
 
+function attachment_list(value)
+    attachments = Any[]
+    for item in as_array(value)
+        name = as_string(object_value(item, :name, ""), "")
+        source = as_string(object_value(item, :sourceUrl, object_value(item, :source_url, "")), "")
+        local_path = as_string(object_value(item, :localPath, object_value(item, :local_path, "")), "")
+        mime_values = object_value(item, :mimeTypes, object_value(item, :mimeType, nothing))
+        mime_types = String[]
+        for mime in as_array(mime_values)
+            text = as_string(mime, "")
+            !isempty(text) && push!(mime_types, text)
+        end
+        record = Dict{String, Any}(
+            "name" => name,
+            "mime_types" => mime_types,
+        )
+        !isempty(source) && (record["source_url"] = source)
+        !isempty(local_path) && (record["local_path"] = local_path)
+        bytes = object_value(item, :bytes, nothing)
+        bytes !== nothing && (record["bytes"] = bytes)
+        error = as_string(object_value(item, :downloadError, object_value(item, :download_error, "")), "")
+        !isempty(error) && (record["download_error"] = error)
+        if !isempty(name) || !isempty(mime_types) || !isempty(local_path)
+            push!(attachments, record)
+        end
+    end
+    return attachments
+end
+
 function note_from_json_object(obj, path::AbstractString; index::Integer=1, t0_date::Date=DEFAULT_T0_DATE)
     title = as_string(object_value(obj, :title, ""), splitext(basename(path))[1])
     text_parts = String[]
@@ -274,7 +303,7 @@ function note_from_json_object(obj, path::AbstractString; index::Integer=1, t0_d
     classification = classify_note(title, body)
     source = as_string(object_value(obj, :sourceUrl, object_value(obj, :source_url, "")), "")
     isempty(source) && (source = source_url(path))
-    return Dict(
+    note = Dict(
         "id" => string("json-", hash[1:12], "-", index),
         "format" => "json",
         "title" => title,
@@ -292,6 +321,12 @@ function note_from_json_object(obj, path::AbstractString; index::Integer=1, t0_d
         "theme_scores" => classification["scores"],
         "text_preview" => preview(body),
     )
+    attachments = attachment_list(object_value(obj, :attachments, nothing))
+    if !isempty(attachments)
+        note["attachments"] = attachments
+        note["attachment_count"] = length(attachments)
+    end
+    return note
 end
 
 function notes_from_json(path::AbstractString; t0_date::Date=DEFAULT_T0_DATE)
