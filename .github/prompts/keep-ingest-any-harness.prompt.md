@@ -1,6 +1,6 @@
 ---
 agent: "moos-workstation-operator"
-description: "Use when: ingesting Google Keep notes from API, Takeout, browser clipboard, or manual exports into the mo:os T195-T206 staging lane from any agent harness."
+description: "Use when: ingesting Google Keep notes from API, Takeout, browser clipboard, or manual exports into the mo:os T190-T208 review-only staging lane from any agent harness."
 ---
 
 # Keep Ingest Any Harness
@@ -24,13 +24,13 @@ Use existing graph/projection state first:
 - Reuse `urn:moos:program:sam.t206.keep-api-mvp-delivery`, `urn:moos:ki:gdrive.t206-keep-api-mvp-status`, and `urn:moos:external_op:sam.t206-google-keep-oauth-scope-approval` as the existing T206 process/status carriers.
 - Read `tmp/projections/session_pipeline/session_context/current_session.json`, `tmp/projections/session_pipeline/mvp/session_pipeline_gate.json`, and `tmp/projections/session_pipeline/graph_artifacts/t206_keep_mvp_engineering.json` before deciding what a new harness needs.
 - Add new nodes only for approved source-note content or a genuinely new derivation/claim/program; otherwise add missing valid relations to existing nodes.
-- As of T207, Sam approved structured raw Keep staging, but the source boundary still holds: do not invent or assert Keep note content unless it came from a local Takeout ZIP/folder, official API export, clipboard/manual export, or other explicit source artifact.
+- As of T208, Workspace DWD/API Keep source acquisition works for Workspace-visible notes and preserves attachment metadata, but the source boundary still holds: do not invent or assert Keep note content unless it came from a local Takeout ZIP/folder, official API export, clipboard/manual export, or other explicit source artifact. Keep staged material remains review-only with `apply_ready=false` until Sam chunks/approves it.
 
 ## Source Acquisition
 
 Use exactly one source path per pass:
 
-- `ApiFetch`: use the official Google Keep API once OAuth works.
+- `ApiFetch`: use the official Google Keep API path when live credentials are present; the current successful path is Workspace domain-wide delegation/keyless signing for Workspace-visible notes.
 - `Stage`: use a local Google Takeout ZIP/folder, JSON file, HTML file, Markdown file, or plain text file.
 - `ClipboardStage`: ask Sam to select/copy notes from the Google Keep web UI, then capture the clipboard into `scratch/keep/t195-t206/manual/` and stage it.
 
@@ -100,7 +100,7 @@ For a Takeout ZIP:
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode Stage -SourcePath scratch\keep\t195-t206\takeout.zip -RunPipeline
 ```
 
-For official API fetch after OAuth is fixed:
+For official API fetch with the live Workspace DWD/API path or another verified Keep credential:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode ApiFetch -RunPipeline
@@ -112,7 +112,7 @@ If the default Keep OAuth client is absent but Calendar OAuth exists and the Goo
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode ApiAuthListen -UseCalendarOAuthClient -OpenBrowser
 ```
 
-T207 readback: this Calendar-client reuse path still reaches Google and then fails with `Error 400: invalid_scope` for `https://www.googleapis.com/auth/keep.readonly`; treat that as an external Google Cloud consent/scope approval blocker, not as a parser or runner failure.
+Historical T207 readback: the Calendar-client loopback reuse path reached Google and failed with `Error 400: invalid_scope` for `https://www.googleapis.com/auth/keep.readonly`. That remains provenance for the OAuth-client path only; do not let it override the T208 Workspace DWD/API source path when live readback shows delegated fetch working.
 
 ## Review Boundary
 
@@ -127,4 +127,4 @@ The stage report is intentionally `apply_ready=false`. Only create or post a `de
 
 ## Closeout
 
-Report the source mode, selected note count, skipped/duplicate rows, theme buckets, candidate node/relation counts, dashboard path, and whether Google OAuth is still blocked by `invalid_scope`.
+Report the source mode, selected note count, skipped/duplicate rows, theme buckets, attachment counts, candidate node/relation counts, dashboard path, credential path used, and whether the staged artifact remains `apply_ready=false`.

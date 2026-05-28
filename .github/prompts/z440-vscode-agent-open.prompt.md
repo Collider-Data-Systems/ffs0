@@ -51,23 +51,26 @@ Invoke-RestMethod http://localhost:9000/healthz | ConvertTo-Json -Depth 8
 
 Report the branch/dirty state for all three repos, Z440 primary `ontology_version`, `t_day`, `log_len`, router peers, MCP target, and whether the persona preflight passes.
 
+On this Windows host, set `MOOS_LOCAL_HOST=hp-z440` before Doctor/persona preflight when you need local Z440 URL resolution; `COMPUTERNAME` may report `desktop-42d00rd`.
+
 ## Expected Current Situation
 
-As of the hp-laptop T208 handoff, the known state was:
+As of the T208 Z440 readback accepted by hp-laptop governance, the known state is:
 
 - hp-laptop primary: `ontology_version=3.16.2`, `t_day=208`, `log_len=1467`, LAN `192.168.1.14`.
-- Z440 was reachable at `192.168.1.13`, but stale on `ontology_version=3.16.1`, primary `log_len=449`, twins `13/11/16`.
-- Z440 router was up but still peered to old hp-laptop `192.168.1.18`.
+- Z440 primary/twins: `ontology_version=3.16.2`, `t_day=208`, primary `log_len=449`, twins `13/11/16`, LAN `192.168.1.13`.
+- `session:sam.z440-vscode-projection-lead` resolves on Z440 primary with expected `has-occupant -> agent:vscode.hp-z440.primary`, `has-purpose`, `opens-on -> kernel:hp-z440.primary`, and scope pins.
+- Z440 router `localhost:9000` is healthy, listens on `::`, and is reachable locally via `192.168.1.13:9000`; hp-laptop currently cannot reach `192.168.1.13:9000` because local Public inbound `Block` firewall rules still exist for the feature router executable and require an elevated shell to change.
 - HP ProDesk is offline and non-blocking.
-- Keep API text+image fetch is real source material but remains review-only S0; do not emit raw Keep-note HG rewrites from this opener.
+- Workspace DWD/API Keep fetch is real source material, including note attachment metadata, but remains review-only S0 with `apply_ready=false`; do not emit raw Keep-note HG rewrites from this opener.
 
-The safe activation target is Z440 primary and router aligned with the current repo/topology, especially `ontology_version=3.16.2` and hp-laptop peer `192.168.1.14`.
+The safe activation target is Z440 primary with current repo/topology, especially `ontology_version=3.16.2`, hp-laptop peer `192.168.1.14`, and explicit Z440 lead session/actor identity. Until the LAN router firewall rule is fixed from an elevated shell, use hp-laptop router `http://192.168.1.14:9000` as the federated read surface when needed.
 
-## If Z440 Is Stale
+## If Z440 Is Stale Or Drifted
 
 If any repo is dirty, stop and inspect before pulling. Preserve local WIP. Do not reset or force checkout.
 
-If repos are clean and Z440 still reports stale runtime/topology, use the smallest sync/restart path:
+If repos are clean and Z440 reports stale runtime/topology, use the smallest sync/restart path:
 
 ```powershell
 git -C D:\HPZ440\ffs0 fetch --all --prune

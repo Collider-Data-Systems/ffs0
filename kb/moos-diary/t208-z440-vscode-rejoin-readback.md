@@ -19,8 +19,8 @@ This was a readback and documentation closeout only.
 
 - Read the current ffs0 repository instructions, workstation instructions, Z440 opener prompt, generic workstation opener prompt, and trunk-first multi-workstation git prompt.
 - Read `Collider-Data-Systems/ffs0#54` plus its comments and used it as the T208 handoff source.
-- Fetched and confirmed current repos:
-  - `ffs0/main@cec622f`, clean, already up to date with `origin/main`.
+- Fetched and confirmed current repos before writing this readback:
+  - `ffs0/main@cec622f`, clean, already up to date with `origin/main`; this report was later committed and pushed as `ffs0/main@72a71ee` (`docs: record t208 z440 vscode rejoin`).
   - `moos-kernel/master@71c7f16`, clean, already up to date with `origin/master`.
   - `moos-router-feat-type-map-routing@f51c0a7`, clean, already up to date with `origin/feat/type-map-routing`.
   - `moos-router/master@18212eb`, no remote delta; local tracked `moos-router.exe` remains modified and was preserved.
@@ -30,7 +30,7 @@ This was a readback and documentation closeout only.
 - Ran `Test-MoosFederation.ps1` with `MOOS_LOCAL_HOST=hp-z440`; Doctor readback passed for live kernels, and `VerifyPersona` passed for `z440-vscode-lead`, `guido`, `steinberger`, and `karpathy`.
 - Ran the session pipeline successfully via `http://192.168.1.14:9000` with explicit Z440 identity; generated `tmp/projections/session_pipeline/index.html`.
 
-No HG rewrites landed. No Calendar writes, GitHub Project status sync, DNS/Cloudflare changes, raw Keep-note ingest, repo commit, or branch change was performed.
+No HG rewrites landed. No Calendar writes, GitHub Project status sync, DNS/Cloudflare changes, raw Keep-note ingest, or branch change was performed during the readback itself. The documentation closeout was later committed and pushed on `ffs0/main` as `72a71ee`.
 
 ## Session And Occupancy Reading
 
