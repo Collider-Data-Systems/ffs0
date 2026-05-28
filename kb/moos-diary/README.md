@@ -81,6 +81,7 @@ Do not conflate account identity with user identity. Additional Gmail or Git acc
 - [T=190 — Z440 Windows 11 session desktops](t190-z440-windows-session-desktops-wrapup.md)
 - [T=194 — T187 path and hp-laptop readback](t194-t187-path-and-hplaptop-readback.md)
 - [T=208 — Workspace Keep and Z440 room tie wrap-up](t208-workspace-keep-and-z440-room-tie-wrapup.md)
+- [T=208 — Z440 VS Code rejoin readback](t208-z440-vscode-rejoin-readback.md)
 
 ## Original Diary Register
 
