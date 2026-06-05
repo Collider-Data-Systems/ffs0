@@ -1,0 +1,367 @@
+[CmdletBinding()]
+param(
+    [string]$Repo = "Collider-Data-Systems/ffs0",
+    [int]$Issue = 54,
+    [int]$IntervalSeconds = 180,
+    [switch]$Watch,
+    [switch]$AutoReply,
+    [switch]$CloudflaredReadback,
+    [switch]$ReplyToAllZ440,
+    [long]$LastSeenId = -1,
+    [string]$StatePath = "",
+    [string]$Marker = "[hp-laptop-auto-ack]"
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+function Get-DefaultStatePath {
+    param(
+        [Parameter(Mandatory)][string]$RepoName,
+        [Parameter(Mandatory)][int]$IssueNumber
+    )
+
+    $safeRepo = $RepoName -replace '[^A-Za-z0-9_.-]', '_'
+    $stateDir = Join-Path (Join-Path (Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))) "tmp") "issue-watch"
+    New-Item -ItemType Directory -Path $stateDir -Force | Out-Null
+    return (Join-Path $stateDir "$safeRepo-$IssueNumber.json")
+}
+
+function Invoke-GhJson {
+    param(
+        [Parameter(Mandatory)][string[]]$Arguments
+    )
+
+    $output = & gh @Arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "gh command failed: gh $($Arguments -join ' ')"
+    }
+    return ($output | Out-String)
+}
+
+function Get-IssueComments {
+    param(
+        [Parameter(Mandatory)][string]$RepoName,
+        [Parameter(Mandatory)][int]$IssueNumber
+    )
+
+    $json = Invoke-GhJson -Arguments @(
+        "issue", "view", "$IssueNumber",
+        "--repo", $RepoName,
+        "--json", "comments",
+        "--jq", ".comments | map({node_id:.id, created_at:.createdAt, html_url:.url, user:.author.login, body:.body})"
+    )
+    $comments = @($json | ConvertFrom-Json)
+    $normalized = foreach ($comment in $comments) {
+        $numericId = 0L
+        $commentUrl = [string]$comment.html_url
+        $match = [regex]::Match($commentUrl, 'issuecomment-(\d+)')
+        if ($match.Success) {
+            $numericId = [long]$match.Groups[1].Value
+        } else {
+            Write-Host "Skipping comment without issuecomment numeric URL id: $commentUrl" -ForegroundColor Yellow
+            continue
+        }
+
+        [pscustomobject]@{
+            id = $numericId
+            node_id = $comment.node_id
+            created_at = $comment.created_at
+            html_url = $comment.html_url
+            user = $comment.user
+            body = $comment.body
+        }
+    }
+    return @($normalized | Sort-Object id)
+}
+
+function Read-LastSeenId {
+    param(
+        [Parameter(Mandatory)][string]$Path,
+        [long]$ExplicitLastSeenId,
+        [Parameter(Mandatory)][string]$RepoName,
+        [Parameter(Mandatory)][int]$IssueNumber
+    )
+
+    if ($ExplicitLastSeenId -ge 0) { return $ExplicitLastSeenId }
+
+    if (Test-Path $Path) {
+        try {
+            $state = Get-Content -Path $Path -Raw | ConvertFrom-Json
+            if ($null -ne $state.last_seen_id) { return [long]$state.last_seen_id }
+        } catch {
+            Write-Host "State file could not be read; starting from issue tail: $($_.Exception.Message)" -ForegroundColor Yellow
+        }
+    }
+
+    $apiPath = "repos/$RepoName/issues/$IssueNumber/comments?per_page=100"
+    $latestId = Invoke-GhJson -Arguments @("api", $apiPath, "--jq", ".[-1].id")
+    if ([string]::IsNullOrWhiteSpace($latestId)) { return 0 }
+    return [long]$latestId.Trim()
+}
+
+function Write-LastSeenId {
+    param(
+        [Parameter(Mandatory)][string]$Path,
+        [Parameter(Mandatory)][long]$SeenId
+    )
+
+    $parent = Split-Path -Parent $Path
+    if (-not [string]::IsNullOrWhiteSpace($parent)) {
+        New-Item -ItemType Directory -Path $parent -Force | Out-Null
+    }
+
+    $state = [pscustomobject]@{
+        repo = $script:Repo
+        issue = $script:Issue
+        last_seen_id = $SeenId
+        updated_at = (Get-Date).ToUniversalTime().ToString("o")
+    }
+    $state | ConvertTo-Json -Depth 4 | Set-Content -Path $Path -Encoding UTF8
+}
+
+function Test-AutoReplyRelevant {
+    param(
+        [Parameter(Mandatory)][string]$Body,
+        [switch]$ReplyToAnyZ440
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Body)) { return $false }
+    if ($Body -match [regex]::Escape($script:Marker)) { return $false }
+    if ($Body -match 'Auto-ack from Z440 VS Code lead') { return $false }
+    if ($Body -match 'hp-laptop governance auto watcher') { return $false }
+
+    $isZ440Side = $Body -match '(Antigravity-Z440|Cowork-Z440|Z440 VS Code lead|agent:vscode\.hp-z440|agent:antigravity\.hp-z440|agent:claude-cowork\.hp-z440|session:sam\.z440|kernel:hp-z440)'
+    if (-not $isZ440Side) { return $false }
+    if ($ReplyToAnyZ440) { return $true }
+
+    $asksOrHandoff = $Body -match '(hp-laptop governance action needed|hp-laptop governance|governance request|request to hp-laptop|Guido|open item|action needed|guidance|blocked|question|handoff|please reply|please post|requested redacted|config request)'
+    return $asksOrHandoff
+}
+
+function Test-NeedsCloudflaredReadback {
+    param([Parameter(Mandatory)][string]$Body)
+
+    return ($Body -match '(moos-hp|cloudflared|\.cloudflared|ingress|apex/www|502|tunnel)' -and
+            $Body -match '(hp-laptop|governance|redacted|config|readback|origin)')
+}
+
+function Get-RedactedCloudflaredIngress {
+    $configPath = Join-Path $HOME ".cloudflared\config.yml"
+    if (-not (Test-Path $configPath)) {
+        return [pscustomobject]@{
+            ConfigExists = $false
+            IngressText = "<config not found>"
+            Services = @()
+        }
+    }
+
+    $lines = Get-Content -Path $configPath
+    $ingressLines = New-Object System.Collections.Generic.List[string]
+    $services = New-Object System.Collections.Generic.List[string]
+    $inIngress = $false
+
+    foreach ($line in $lines) {
+        if ($line -match '^\s*tunnel\s*:') { continue }
+        if ($line -match '^\s*credentials-file\s*:') { continue }
+        if ($line -match '^\s*ingress\s*:') {
+            $inIngress = $true
+            $ingressLines.Add("ingress:")
+            continue
+        }
+        if (-not $inIngress) { continue }
+        if (($line -match '^\S') -and ($line -notmatch '^\s*#') -and ($line -notmatch '^\s*-')) { break }
+
+        $redacted = $line -replace '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}', '<uuid-redacted>'
+        $ingressLines.Add($redacted)
+
+        if ($line -match 'service:\s*(\S+)') {
+            [void]$services.Add($Matches[1])
+        }
+    }
+
+    return [pscustomobject]@{
+        ConfigExists = $true
+        IngressText = ($ingressLines -join "`n")
+        Services = @($services | Sort-Object -Unique)
+    }
+}
+
+function Invoke-LocalOriginTest {
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][string]$Uri,
+        [hashtable]$Headers = @{}
+    )
+
+    try {
+        $response = Invoke-WebRequest -Uri $Uri -UseBasicParsing -TimeoutSec 8 -MaximumRedirection 0 -Headers $Headers
+        return [pscustomobject]@{
+            Name = $Name
+            Uri = $Uri
+            Status = "$([int]$response.StatusCode)"
+            Detail = "$($response.Headers['content-type'])"
+        }
+    } catch {
+        $response = $_.Exception.Response
+        if ($null -ne $response) {
+            return [pscustomobject]@{
+                Name = $Name
+                Uri = $Uri
+                Status = "$([int]$response.StatusCode)"
+                Detail = $_.Exception.Message
+            }
+        }
+        return [pscustomobject]@{
+            Name = $Name
+            Uri = $Uri
+            Status = "error"
+            Detail = $_.Exception.Message
+        }
+    }
+}
+
+function Get-CloudflaredReadbackMarkdown {
+    $ingress = Get-RedactedCloudflaredIngress
+    $tests = @(
+        Invoke-LocalOriginTest -Name "apex origin / plain" -Uri "http://localhost:9000/",
+        Invoke-LocalOriginTest -Name "apex origin / host-header" -Uri "http://localhost:9000/" -Headers @{ Host = "my-tiny-data-collider.nl" },
+        Invoke-LocalOriginTest -Name "www origin / host-header" -Uri "http://localhost:9000/" -Headers @{ Host = "www.my-tiny-data-collider.nl" },
+        Invoke-LocalOriginTest -Name "router health" -Uri "http://localhost:9000/healthz",
+        Invoke-LocalOriginTest -Name "kernel mcp root" -Uri "http://localhost:8080/"
+    )
+
+    $process = Get-Process cloudflared -ErrorAction SilentlyContinue | Select-Object -First 1
+    $metricsLines = @()
+    try {
+        $metrics = (Invoke-WebRequest http://localhost:20241/metrics -UseBasicParsing -TimeoutSec 5).Content
+        $metricsLines = @($metrics -split "`n" | Select-String -Pattern 'cloudflared_tunnel_ha_connections|cloudflared_tunnel_total_requests|cloudflared_tunnel_concurrent_requests' | ForEach-Object { $_.Line.Trim() })
+    } catch {
+        $metricsLines = @("metrics unavailable: $($_.Exception.Message)")
+    }
+
+    $tableRows = $tests | ForEach-Object { "| ``$($_.Name)`` | ``$($_.Uri)`` | $($_.Status) | $($_.Detail) |" }
+    $processLine = if ($null -ne $process) {
+        "cloudflared process: $($process.Path), PID $($process.Id), started $($process.StartTime)"
+    } else {
+        "cloudflared process: not running"
+    }
+
+@"
+### Redacted hp-laptop `moos-hp` ingress readback
+
+`tunnel:` and `credentials-file:` are intentionally omitted/redacted. Current `ingress:` block:
+
+```yaml
+$($ingress.IngressText)
+```
+
+### Local origin tests
+
+| Test | URI | Status | Detail |
+|---|---|---:|---|
+$($tableRows -join "`n")
+
+### Connector health
+
+```text
+$processLine
+$($metricsLines -join "`n")
+```
+
+Governance read: if apex/www map to `http://localhost:9000/` and that root returns `502` while `/healthz` is `200`, the connector is alive and the apex/www failure is an ingress/origin-shape issue rather than a missing ingress rule. Keep DNS/Cloudflare/tunnel edits gated on explicit Sam approval.
+"@
+}
+
+function New-AutoReplyBody {
+    param(
+        [Parameter(Mandatory)]$Comment,
+        [switch]$IncludeCloudflaredReadback
+    )
+
+    $body = ""
+    if ($IncludeCloudflaredReadback -and (Test-NeedsCloudflaredReadback -Body $Comment.body)) {
+        $body = Get-CloudflaredReadbackMarkdown
+    } else {
+        $body = @"
+I saw this Z440-side governance request while the hp-laptop watcher is running. Conservative boundary held: no HG rewrites, no Keep/Calendar/Project sync, no DNS/Cloudflare/tunnel changes, no secret handling, and no manual log mirroring from this watcher.
+
+Default guidance until Sam wakes hp-laptop governance for a full reviewed reply:
+
+- Use `ffs0/main` at or after `c3f6e47` for the latest hp-laptop projection baseline.
+- Prefer live federation/read-surface checks; do not copy `moos.jsonl` between machines.
+- Keep domain/tunnel/4.0/channel moves as draft or source-evidence plans unless Sam explicitly authorizes an apply/change.
+- If a concrete hp-laptop action is needed, keep the phrase `hp-laptop governance action needed` in #54 and this session will handle it when active.
+"@
+    }
+
+@"
+$script:Marker
+
+Auto-reply from hp-laptop governance watcher for $($Comment.html_url) (`$comment_id=$($Comment.id)`).
+
+$body
+
+- hp-laptop governance issue watcher, T=216
+"@
+}
+
+function Invoke-IssuePoll {
+    $comments = Get-IssueComments -RepoName $script:Repo -IssueNumber $script:Issue
+    $newComments = @($comments | Where-Object { [long]$_.id -gt $script:LastSeenId } | Sort-Object id)
+
+    if ($newComments.Count -eq 0) {
+        Write-Host "[$(Get-Date -Format 'HH:mm:ss')] no new #$script:Issue comments since id $script:LastSeenId"
+        return
+    }
+
+    foreach ($comment in $newComments) {
+        $preview = (($comment.body -replace "`r", '') -split "`n" | Select-Object -First 6) -join ' / '
+        Write-Host "[$(Get-Date -Format 'HH:mm:ss')] new #$script:Issue comment id $($comment.id): $($comment.html_url)"
+        Write-Host "preview: $preview"
+
+        if ($script:AutoReply -and (Test-AutoReplyRelevant -Body $comment.body -ReplyToAnyZ440:$script:ReplyToAllZ440)) {
+            $replyBody = New-AutoReplyBody -Comment $comment -IncludeCloudflaredReadback:$script:CloudflaredReadback
+            $null = Invoke-GhJson -Arguments @("issue", "comment", "$script:Issue", "--repo", $script:Repo, "--body", $replyBody)
+            Write-Host "auto-reply posted for comment id $($comment.id)"
+        } elseif ($script:AutoReply) {
+            Write-Host "no auto-reply: comment did not match request rules or was an auto-ack"
+        }
+
+        if ([long]$comment.id -gt $script:LastSeenId) {
+            $script:LastSeenId = [long]$comment.id
+            Write-LastSeenId -Path $script:StatePath -SeenId $script:LastSeenId
+        }
+    }
+
+    Write-Host "Updated last seen id: $script:LastSeenId"
+}
+
+if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+    throw "GitHub CLI 'gh' was not found on PATH."
+}
+
+if ([string]::IsNullOrWhiteSpace($StatePath)) {
+    $StatePath = Get-DefaultStatePath -RepoName $Repo -IssueNumber $Issue
+}
+
+$LastSeenId = Read-LastSeenId -Path $StatePath -ExplicitLastSeenId $LastSeenId -RepoName $Repo -IssueNumber $Issue
+Write-LastSeenId -Path $StatePath -SeenId $LastSeenId
+
+Write-Host "Watching $Repo#$Issue. State: $StatePath"
+Write-Host "Last seen comment id: $LastSeenId"
+Write-Host "AutoReply: $AutoReply; CloudflaredReadback: $CloudflaredReadback; ReplyToAllZ440: $ReplyToAllZ440"
+
+Invoke-IssuePoll
+
+if (-not $Watch) { return }
+
+Write-Host "Polling every $IntervalSeconds seconds. Stop this terminal to stop the watcher."
+while ($true) {
+    Start-Sleep -Seconds $IntervalSeconds
+    try {
+        Invoke-IssuePoll
+    } catch {
+        Write-Host "[$(Get-Date -Format 'HH:mm:ss')] poll error: $($_.Exception.Message)" -ForegroundColor Yellow
+    }
+}
