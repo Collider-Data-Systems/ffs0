@@ -3,28 +3,66 @@ param(
     [string]$Repo = "Collider-Data-Systems/ffs0",
     [int]$Issue = 54,
     [int]$IntervalSeconds = 180,
+    [ValidateSet('hp-laptop-governance', 'z440-vscode-lead')]
+    [string]$Profile = 'hp-laptop-governance',
+    [string]$SessionUrn = '',
+    [string]$ActorUrn = '',
+    [string]$WatcherLabel = '',
     [switch]$Watch,
     [switch]$AutoReply,
     [switch]$CloudflaredReadback,
     [switch]$ReplyToAllZ440,
     [long]$LastSeenId = -1,
     [string]$StatePath = "",
-    [string]$Marker = "[hp-laptop-auto-ack]"
+    [string]$Marker = ""
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+function Get-WatcherProfileDefaults {
+    param([Parameter(Mandatory)][string]$Name)
+
+    switch ($Name) {
+        'hp-laptop-governance' {
+            return [pscustomobject]@{
+                Marker = '[hp-laptop-auto-ack]'
+                WatcherLabel = 'hp-laptop governance watcher'
+                SessionUrn = 'urn:moos:session:sam.governance'
+                ActorUrn = 'urn:moos:agent:vscode.hp-laptop.copilot'
+            }
+        }
+        'z440-vscode-lead' {
+            return [pscustomobject]@{
+                Marker = '[z440-vscode-auto-ack]'
+                WatcherLabel = 'Z440 VS Code lead watcher'
+                SessionUrn = 'urn:moos:session:sam.z440-vscode-projection-lead'
+                ActorUrn = 'urn:moos:agent:vscode.hp-z440.primary'
+            }
+        }
+    }
+
+    throw "Unknown watcher profile: $Name"
+}
+
+$profileDefaults = Get-WatcherProfileDefaults -Name $Profile
+if ([string]::IsNullOrWhiteSpace($Marker)) { $Marker = [string]$profileDefaults.Marker }
+if ([string]::IsNullOrWhiteSpace($WatcherLabel)) { $WatcherLabel = [string]$profileDefaults.WatcherLabel }
+if ([string]::IsNullOrWhiteSpace($SessionUrn)) { $SessionUrn = [string]$profileDefaults.SessionUrn }
+if ([string]::IsNullOrWhiteSpace($ActorUrn)) { $ActorUrn = [string]$profileDefaults.ActorUrn }
+
 function Get-DefaultStatePath {
     param(
         [Parameter(Mandatory)][string]$RepoName,
-        [Parameter(Mandatory)][int]$IssueNumber
+        [Parameter(Mandatory)][int]$IssueNumber,
+        [Parameter(Mandatory)][string]$ProfileName
     )
 
     $safeRepo = $RepoName -replace '[^A-Za-z0-9_.-]', '_'
+    $safeProfile = $ProfileName -replace '[^A-Za-z0-9_.-]', '_'
     $stateDir = Join-Path (Join-Path (Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))) "tmp") "issue-watch"
     New-Item -ItemType Directory -Path $stateDir -Force | Out-Null
-    return (Join-Path $stateDir "$safeRepo-$IssueNumber.json")
+    return (Join-Path $stateDir "$safeRepo-$IssueNumber-$safeProfile.json")
 }
 
 function Invoke-GhJson {
@@ -114,6 +152,11 @@ function Write-LastSeenId {
     $state = [pscustomobject]@{
         repo = $script:Repo
         issue = $script:Issue
+        profile = $script:Profile
+        watcher_label = $script:WatcherLabel
+        session_urn = $script:SessionUrn
+        actor_urn = $script:ActorUrn
+        marker = $script:Marker
         last_seen_id = $SeenId
         updated_at = (Get-Date).ToUniversalTime().ToString("o")
     }
@@ -127,20 +170,45 @@ function Test-AutoReplyRelevant {
     )
 
     if ([string]::IsNullOrWhiteSpace($Body)) { return $false }
-    if ($Body -match [regex]::Escape($script:Marker)) { return $false }
-    if ($Body -match 'Auto-ack from Z440 VS Code lead') { return $false }
-    if ($Body -match 'hp-laptop governance auto watcher') { return $false }
+    $autoReplyMarkers = @(
+        $script:Marker,
+        'Auto-ack from Z440 VS Code lead',
+        'hp-laptop governance auto watcher',
+        'Z440 VS Code lead watcher',
+        '[hp-laptop-auto-ack]',
+        '[z440-vscode-auto-ack]'
+    )
+    foreach ($autoReplyMarker in $autoReplyMarkers) {
+        if (-not [string]::IsNullOrWhiteSpace($autoReplyMarker) -and $Body -match [regex]::Escape($autoReplyMarker)) {
+            return $false
+        }
+    }
 
-    $isZ440Side = $Body -match '(Antigravity-Z440|Cowork-Z440|Z440 VS Code lead|agent:vscode\.hp-z440|agent:antigravity\.hp-z440|agent:claude-cowork\.hp-z440|session:sam\.z440|kernel:hp-z440)'
-    if (-not $isZ440Side) { return $false }
-    if ($ReplyToAnyZ440) { return $true }
+    switch ($script:Profile) {
+        'hp-laptop-governance' {
+            $isZ440Side = $Body -match '(Antigravity-Z440|Cowork-Z440|Z440 VS Code lead|agent:vscode\.hp-z440|agent:antigravity\.hp-z440|agent:claude-cowork\.hp-z440|session:sam\.z440|kernel:hp-z440)'
+            if (-not $isZ440Side) { return $false }
+            if ($ReplyToAnyZ440) { return $true }
 
-    $asksOrHandoff = $Body -match '(hp-laptop governance action needed|hp-laptop governance|governance request|request to hp-laptop|Guido|open item|action needed|guidance|blocked|question|handoff|please reply|please post|requested redacted|config request)'
-    return $asksOrHandoff
+            $asksOrHandoff = $Body -match '(hp-laptop governance action needed|hp-laptop governance|governance request|request to hp-laptop|Guido|open item|action needed|guidance|blocked|question|handoff|please reply|please post|requested redacted|config request)'
+            return $asksOrHandoff
+        }
+        'z440-vscode-lead' {
+            if ($ReplyToAnyZ440) {
+                return ($Body -match '(hp-laptop governance|Cowork-Z440|Antigravity-Z440|agent:vscode\.hp-laptop|agent:claude-cowork\.hp-z440|agent:antigravity\.hp-z440|session:sam\.governance|Z440)')
+            }
+
+            return ($Body -match '(Z440 action needed|Z440 VS Code lead action needed|request to Z440|request for Z440|handoff to Z440|please have Z440|please reply from Z440|pls.*Z440|agent:vscode\.hp-z440\.primary|session:sam\.z440-vscode-projection-lead)')
+        }
+    }
+
+    return $false
 }
 
 function Test-NeedsCloudflaredReadback {
     param([Parameter(Mandatory)][string]$Body)
+
+    if ($script:Profile -ne 'hp-laptop-governance') { return $false }
 
     return ($Body -match '(moos-hp|cloudflared|\.cloudflared|ingress|apex/www|502|tunnel)' -and
             $Body -match '(hp-laptop|governance|redacted|config|readback|origin)')
@@ -282,6 +350,17 @@ function New-AutoReplyBody {
     $body = ""
     if ($IncludeCloudflaredReadback -and (Test-NeedsCloudflaredReadback -Body $Comment.body)) {
         $body = Get-CloudflaredReadbackMarkdown
+    } elseif ($script:Profile -eq 'z440-vscode-lead') {
+        $body = @"
+I saw this #54 comment while the Z440 VS Code lead watcher is running in this VS Code IDE/conversation. Conservative boundary held: no HG rewrites, no Keep/Calendar/Project sync, no DNS/Cloudflare/tunnel changes, no secret handling, no repo edits, and no manual log mirroring from this watcher.
+
+Default Z440 stance until the live agent writes a reviewed reply:
+
+- Watching as `$script:SessionUrn` / `$script:ActorUrn`.
+- Prefer live federation/read-surface checks before claims.
+- Keep domain/tunnel/4.0/channel moves as draft or source-evidence plans unless Sam explicitly authorizes an apply/change.
+- If a concrete Z440 response is needed, keep the phrase `Z440 action needed` or `request to Z440` in #54 and this session will handle it when active.
+"@
     } else {
         $body = @"
 I saw this Z440-side governance request while the hp-laptop watcher is running. Conservative boundary held: no HG rewrites, no Keep/Calendar/Project sync, no DNS/Cloudflare/tunnel changes, no secret handling, and no manual log mirroring from this watcher.
@@ -298,11 +377,11 @@ Default guidance until Sam wakes hp-laptop governance for a full reviewed reply:
 @"
 $script:Marker
 
-Auto-reply from hp-laptop governance watcher for $($Comment.html_url) (`$comment_id=$($Comment.id)`).
+Auto-reply from $script:WatcherLabel for $($Comment.html_url) (`$comment_id=$($Comment.id)`).
 
 $body
 
-- hp-laptop governance issue watcher, T=216
+- $script:WatcherLabel, T=216
 "@
 }
 
@@ -342,13 +421,17 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
 }
 
 if ([string]::IsNullOrWhiteSpace($StatePath)) {
-    $StatePath = Get-DefaultStatePath -RepoName $Repo -IssueNumber $Issue
+    $StatePath = Get-DefaultStatePath -RepoName $Repo -IssueNumber $Issue -ProfileName $Profile
 }
 
 $LastSeenId = Read-LastSeenId -Path $StatePath -ExplicitLastSeenId $LastSeenId -RepoName $Repo -IssueNumber $Issue
 Write-LastSeenId -Path $StatePath -SeenId $LastSeenId
 
 Write-Host "Watching $Repo#$Issue. State: $StatePath"
+Write-Host "Profile: $Profile; Watcher: $WatcherLabel"
+Write-Host "Session: $SessionUrn"
+Write-Host "Actor: $ActorUrn"
+Write-Host "Marker: $Marker"
 Write-Host "Last seen comment id: $LastSeenId"
 Write-Host "AutoReply: $AutoReply; CloudflaredReadback: $CloudflaredReadback; ReplyToAllZ440: $ReplyToAllZ440"
 
