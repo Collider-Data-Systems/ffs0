@@ -1,7 +1,7 @@
 
 {
   "schema_version": 1,
-  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=208 for hp-laptop/Z440 LAN rejoin. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
+  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=216 for hp-laptop/Z440 LAN rejoin. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
   "local_host": "auto",
   "expected_ontology_version": "3.16.2",
   "kernels": {
@@ -9,7 +9,7 @@
       "urn": "urn:moos:kernel:hp-z440.primary",
       "host": "hp-z440",
       "http_local": "http://localhost:8000",
-      "http_lan": "http://192.168.1.13:8000",
+      "http_lan": "http://192.168.1.15:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_server": "moos-primary",
       "expected_ontology_version": "3.16.2",
@@ -25,7 +25,7 @@
       "urn": "urn:moos:kernel:hp-z440.menno",
       "host": "hp-z440",
       "http_local": "http://localhost:8001",
-      "http_lan": "http://192.168.1.13:8001",
+      "http_lan": "http://192.168.1.15:8001",
       "mcp_sse_local": "http://localhost:9001/sse",
       "mcp_server": "moos-menno",
       "expected_ontology_version": "3.16.2",
@@ -35,7 +35,7 @@
       "urn": "urn:moos:kernel:hp-z440.lola",
       "host": "hp-z440",
       "http_local": "http://localhost:8002",
-      "http_lan": "http://192.168.1.13:8002",
+      "http_lan": "http://192.168.1.15:8002",
       "mcp_sse_local": "http://localhost:9002/sse",
       "mcp_server": "moos-lola",
       "expected_ontology_version": "3.16.2",
@@ -45,7 +45,7 @@
       "urn": "urn:moos:kernel:hp-z440.moos",
       "host": "hp-z440",
       "http_local": "http://localhost:8003",
-      "http_lan": "http://192.168.1.13:8003",
+      "http_lan": "http://192.168.1.15:8003",
       "mcp_sse_local": "http://localhost:9003/sse",
       "mcp_server": "moos-moos",
       "expected_ontology_version": "3.16.2",
@@ -55,9 +55,9 @@
       "urn": "urn:moos:kernel:hp-laptop.primary",
       "host": "hp-laptop",
       "http_local": "http://localhost:8000",
-      "http_lan": "http://192.168.1.14:8000",
+      "http_lan": "http://192.168.1.12:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
-      "mcp_sse_lan": "http://192.168.1.14:8080/sse",
+      "mcp_sse_lan": "http://192.168.1.12:8080/sse",
       "mcp_server": "moos-hp-laptop-primary",
       "expected_ontology_version": "3.16.2",
       "seats": [
@@ -81,26 +81,26 @@
   "router": {
     "name": "moos-router",
     "http_local": "http://localhost:9000",
-    "http_lan": "http://192.168.1.14:9000"
+    "http_lan": "http://192.168.1.12:9000"
   },
   "routers": {
     "hp-z440": {
       "host": "hp-z440",
       "http_local": "http://localhost:9000",
-      "http_lan": "http://192.168.1.13:9000",
-      "peers": ["http://192.168.1.14:9000", "http://172.29.0.32:9000"]
+      "http_lan": "http://192.168.1.15:9000",
+      "peers": ["http://192.168.1.12:9000", "http://172.29.0.32:9000"]
     },
     "hp-laptop": {
       "host": "hp-laptop",
       "http_local": "http://localhost:9000",
-      "http_lan": "http://192.168.1.14:9000",
-      "peers": ["http://172.29.0.32:9000", "http://192.168.1.13:9000"]
+      "http_lan": "http://192.168.1.12:9000",
+      "peers": ["http://172.29.0.32:9000", "http://192.168.1.15:9000"]
     },
     "hpprodesk": {
       "host": "hpprodesk",
       "http_local": "http://localhost:9000",
       "http_lan": "http://172.29.0.32:9000",
-      "peers": ["http://192.168.1.14:9000", "http://192.168.1.13:9000"]
+      "peers": ["http://192.168.1.12:9000", "http://192.168.1.15:9000"]
     }
   },
   "cloudflare": {
