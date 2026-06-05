@@ -12,7 +12,7 @@ Start the portable issue watcher from the ffs0 repo root. This is a deterministi
 Use this command in the current Z440 VS Code/Copilot conversation:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Watch-GitHubIssue.ps1 `
+pwsh -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Watch-GitHubIssue.ps1 `
   -Repo Collider-Data-Systems/ffs0 `
   -Issue 54 `
   -Profile z440-vscode-lead `
@@ -23,10 +23,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Watch-GitHub
 
 This runs as `session:sam.z440-vscode-projection-lead` / `agent:vscode.hp-z440.primary` and posts only conservative Z440 watcher acknowledgements for comments that explicitly ask for Z440.
 
+> Run with `pwsh` (PowerShell 7+), not Windows PowerShell 5.1. The 5.1 `ConvertFrom-Json` corrupts the comment-list JSON and silently detects zero new comments.
+
 ## hp-laptop Governance Command
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Watch-GitHubIssue.ps1 `
+pwsh -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Watch-GitHubIssue.ps1 `
   -Repo Collider-Data-Systems/ffs0 `
   -Issue 54 `
   -Profile hp-laptop-governance `

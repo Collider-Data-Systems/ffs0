@@ -41,14 +41,16 @@ Historical JSON/Markdown payloads in this folder are retained as replay/referenc
 
 Use the issue watcher for lightweight workstation coordination. It reads GitHub comments, tracks a profile-specific high-water mark under `tmp/issue-watch/`, and can post conservative auto-acknowledgements. It does not emit HG rewrites, change DNS/Cloudflare, handle secrets, write Calendar/Workspace state, or make repo edits.
 
+Run it with `pwsh` (PowerShell 7+), not Windows PowerShell 5.1 — 5.1 `ConvertFrom-Json` corrupts the comment-list JSON and silently detects zero new comments.
+
 Run it from Z440 VS Code lead:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile z440-vscode-lead -IntervalSeconds 180 -AutoReply -Watch
+pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile z440-vscode-lead -IntervalSeconds 180 -AutoReply -Watch
 ```
 
 Run it from hp-laptop governance with redacted cloudflared readback enabled:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile hp-laptop-governance -IntervalSeconds 180 -AutoReply -CloudflaredReadback -Watch
+pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile hp-laptop-governance -IntervalSeconds 180 -AutoReply -CloudflaredReadback -Watch
 ```

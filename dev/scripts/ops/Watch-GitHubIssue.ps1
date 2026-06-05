@@ -74,7 +74,10 @@ function Invoke-GhJson {
     if ($LASTEXITCODE -ne 0) {
         throw "gh command failed: gh $($Arguments -join ' ')"
     }
-    return ($output | Out-String)
+    # Join captured stdout lines directly. Do NOT pipe through Out-String:
+    # in Windows PowerShell 5.1 Out-String width-wraps the long single-line
+    # JSON, corrupting it so ConvertFrom-Json silently returns a truncated set.
+    return (@($output) -join "`n")
 }
 
 function Get-IssueComments {
@@ -83,11 +86,15 @@ function Get-IssueComments {
         [Parameter(Mandatory)][int]$IssueNumber
     )
 
+    # Listing payload deliberately omits comment bodies. Windows PowerShell 5.1
+    # ConvertFrom-Json silently collapses a large (~100KB+) array-with-bodies to
+    # a single element, breaking detection. Bodies are fetched lazily per new
+    # comment via Get-CommentBody.
     $json = Invoke-GhJson -Arguments @(
         "issue", "view", "$IssueNumber",
         "--repo", $RepoName,
         "--json", "comments",
-        "--jq", ".comments | map({node_id:.id, created_at:.createdAt, html_url:.url, user:.author.login, body:.body})"
+        "--jq", ".comments | map({node_id:.id, created_at:.createdAt, html_url:.url, user:.author.login})"
     )
     $comments = @($json | ConvertFrom-Json)
     $normalized = foreach ($comment in $comments) {
@@ -107,10 +114,26 @@ function Get-IssueComments {
             created_at = $comment.created_at
             html_url = $comment.html_url
             user = $comment.user
-            body = $comment.body
         }
     }
     return @($normalized | Sort-Object id)
+}
+
+function Get-CommentBody {
+    param(
+        [Parameter(Mandatory)][string]$RepoName,
+        [Parameter(Mandatory)][long]$CommentId
+    )
+
+    try {
+        $body = Invoke-GhJson -Arguments @(
+            "api", "repos/$RepoName/issues/comments/$CommentId", "--jq", ".body"
+        )
+        return [string]$body
+    } catch {
+        Write-Host "Could not fetch body for comment ${CommentId}: $($_.Exception.Message)" -ForegroundColor Yellow
+        return ""
+    }
 }
 
 function Read-LastSeenId {
@@ -395,11 +418,13 @@ function Invoke-IssuePoll {
     }
 
     foreach ($comment in $newComments) {
-        $preview = (($comment.body -replace "`r", '') -split "`n" | Select-Object -First 6) -join ' / '
+        $body = Get-CommentBody -RepoName $script:Repo -CommentId ([long]$comment.id)
+        $comment | Add-Member -NotePropertyName body -NotePropertyValue $body -Force
+        $preview = (($body -replace "`r", '') -split "`n" | Select-Object -First 6) -join ' / '
         Write-Host "[$(Get-Date -Format 'HH:mm:ss')] new #$script:Issue comment id $($comment.id): $($comment.html_url)"
         Write-Host "preview: $preview"
 
-        if ($script:AutoReply -and (Test-AutoReplyRelevant -Body $comment.body -ReplyToAnyZ440:$script:ReplyToAllZ440)) {
+        if ($script:AutoReply -and (Test-AutoReplyRelevant -Body $body -ReplyToAnyZ440:$script:ReplyToAllZ440)) {
             $replyBody = New-AutoReplyBody -Comment $comment -IncludeCloudflaredReadback:$script:CloudflaredReadback
             $null = Invoke-GhJson -Arguments @("issue", "comment", "$script:Issue", "--repo", $script:Repo, "--body", $replyBody)
             Write-Host "auto-reply posted for comment id $($comment.id)"
