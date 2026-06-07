@@ -121,15 +121,23 @@ jobs:
               }
             }
 
-            if (!itemId) { core.setFailed('Could not find or create project item.'); return; }
+            if (!itemId) {
+              core.warning('Could not find or create project item. Skipping project sync so repository checks remain non-blocking.');
+              return;
+            }
 
-            await github.graphql(`
-              mutation($pid: ID!, $iid: ID!, $fid: ID!, $oid: String!) {
-                updateProjectV2ItemFieldValue(input: {
-                  projectId: $pid, itemId: $iid, fieldId: $fid,
-                  value: { singleSelectOptionId: $oid }
-                }) { projectV2Item { id } }
-              }`, { pid: project.id, iid: itemId, fid: statusField.id, oid: statusOption.id });
+            try {
+              await github.graphql(`
+                mutation($pid: ID!, $iid: ID!, $fid: ID!, $oid: String!) {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: $pid, itemId: $iid, fieldId: $fid,
+                    value: { singleSelectOptionId: $oid }
+                  }) { projectV2Item { id } }
+                }`, { pid: project.id, iid: itemId, fid: statusField.id, oid: statusOption.id });
+            } catch (e) {
+              core.warning(`Could not update project item status. Skipping project sync: ${e.message}`);
+              return;
+            }
 
             core.info(`Synced to project: status=${statusName}`);
 
