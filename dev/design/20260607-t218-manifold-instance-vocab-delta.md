@@ -32,7 +32,11 @@ This delta adds the two that are missing: the **instance** rename and the **surf
   manifold's runtime. Plural-first by construction: a manifold has many instances (primary + twins +
   one-or-more per workstation). The current live occasion already shows this: `:8000` primary plus
   `:8001/:8002/:8003` twins are four instances of one operad.
-- **Semantics unchanged.** `instance := fold(log)` exposed at an endpoint. §M11 (liveness) and §M12
+- **Sense of "instance" (governance precision).** Meant **model-theoretically** — an instance is a
+  *model / realization of the theory* (the operad), the way a structure realizes a signature — **not**
+  the cloud/OOP "instance-of-a-class" sense. The doc adopts this reading so the rename does not silently
+  inherit the OOP overload Cowork flagged.
+- **Semantics unchanged.**`instance := fold(log)` exposed at an endpoint. §M11 (liveness) and §M12
   (admin capability) authority semantics are identical. This renames a node-type *label*, not topology
   — no relation changes, WF19 `opens-on` / `has-occupant` untouched.
 - **Migration: alias-first**, exactly parallel to D2 (`session→workspace`).
@@ -70,18 +74,39 @@ desktop *is* that substrate:
   pipeline automates in the F direction.
 - **No new node types** for screens/desktops/tabs. If we want them addressable, extend `channel.kind`
   (on top of D5): `workstation-surface`, `virtual-desktop`, `window`, `tab-group`, `browser-tab`,
-  `harness-pane` — derived/observed surfaces, redaction-safe, never authority.
+  `harness-pane` — derived/observed surfaces, redaction-safe, never authority. **Both lanes + governance
+  concur:** fold these D7 surface kinds and the D5 infra kinds into **one** `channel.kind` migration, not
+  two passes.
 
-**Conjecture (flagged, not asserted).** The surface stack is a strict F-image of the semantic stack:
-each semantic level has 0..n substrate realizations and the realization map preserves the nesting
-(a functor from the semantic poset to the substrate poset). Unproven — referred to the categorical seat
-(Karpathy) for the functoriality/colimit check.
+**Conjecture (flagged; reframed after ffs0#54 review).** Earlier wording said "strict F-image"; that
+overclaims. Converged statement to hand the categorical seat (Karpathy): the **surface poset is fibered
+over the semantic poset** — each semantic node carries a *fiber* of 0..n realizations — and realization
+is a **monotone, colimit-preserving, generally non-injective** map (two tabs → one channel; one
+workspace spread across four screens). That is precisely the **F (left-adjoint) side of F⊣G**, not a
+strict/injective image.
+
+The payoff (governance): the **non-injectivity is the projection-fidelity metric**, not a defect. In
+F⊣G the unit `η: x → G(F(x))` measures round-trip loss; a projection is lossless exactly where `η` is
+iso, measured per node. "How faithfully does the surface realize the semantics" = how close the unit is
+to an isomorphism — the **same number as HDC encode/decode fidelity**. Karpathy seat to prove
+"colimit-preserving functor, F side of an adjunction, with a measurable unit-defect," not "strict
+F-image."
 
 ## D8 — `realizes` / `realized-by` (surface ↔ semantic) — open, observed-first
 
 A harness-pane *realizes* a channel; a virtual-desktop *realizes* a workspace. Kept distinct from
-`presents-as` (D4, agent↔persona) and WF19 occupancy (session↔agent). Stage as derived/observed first;
-promote to a relation port-pair only if the projection pipeline needs to *write* it. Open.
+`presents-as` (D4, agent↔persona) and WF19 occupancy (`session has-occupant agent`). Stage as
+derived/observed first; promote to a relation port-pair only if the projection pipeline needs to
+*write* it. Open.
+
+## Sequencing (converged on ffs0#54 — lead + Cowork + governance)
+
+Land the **vocabulary/alias in the 4.0 bump alongside D1–D5**: D6's `instance` label + `kernel` URN
+read-alias is decided together with D2 (`session→workspace`) — both are alias-first label renames, so
+they are decided as one, not split. Ship the **hard ~59-site `kernel→instance` URN rewrite as a gated
+4.0.x point release**, once Doctor + `go test ./...` pass on the runtime lanes (`moos-kernel` /
+`moos-router` `feat/manifold-instances-vocab`). This keeps the 4.0 doc coherent — the rename is
+*decided* — without coupling the bump to runtime churn (build-gate = apply-gate, T218).
 
 ## Migration guards (inherit the T216 draft)
 
@@ -89,7 +114,9 @@ promote to a relation port-pair only if the projection pipeline needs to *write*
 - Surface layer (D7) modeled as derived/observed S0 + `channel.kind`; **no new authority node types**.
 - No opportunistic runtime bump from this thread; the runtime rename is gated by Doctor + `go test ./...`
   on `feat/manifold-instances-vocab`.
-- No secrets, machine IDs, or sensitive window/tab titles as durable facts.
+- No secrets, credentials, or sensitive window/tab *contents* as durable facts. (Structural workstation
+  labels like `hp-z440` / `hp-laptop` are fine — they are already part of kernel/instance URNs; the guard
+  is about secret values and private titles, not the topology labels this doc uses.)
 
 ## Cross-repo gluing (T218)
 
