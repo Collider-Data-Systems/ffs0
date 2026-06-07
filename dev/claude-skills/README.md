@@ -58,6 +58,9 @@ That bypasses discovery entirely. Use when a skill won't auto-trigger or auto-li
 | `moos-state-readback` | 10-sec open-of-round check: `git fetch` + log-range + running-state header + kernel PID/port + MCP `/healthz` + peer-handoff issue comments |
 | `moos-round-close` | End-of-round checklist: running-state update + atomic commit + push + optional issue comment |
 | `moos-rewrite-envelope` | Envelope-shape cheat sheet for `mcp__moos-kernel__apply_program` (field names, placement gotchas, additive vs standard MUTATE, PropertySpec rules) |
+| `moos-workstation-operator` | Workstation operator (Claude twin of `.github/agents/moos-workstation-operator.agent.md`): repo + runtime readback, MCP/session-context projection, IDE/affordance setup, multi-workstation handoff |
+
+> Note: the table above is illustrative, not exhaustive — `dev/claude-skills/` currently holds 13 skill directories; browse the folder for the full set.
 
 ## Adding a new skill
 

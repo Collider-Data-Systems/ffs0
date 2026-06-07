@@ -176,7 +176,7 @@ kb/
   research/              live doctrine (kernel spec, session notes, moos-diary)
 dev/
   scripts/               ops + utility scripts
-  claude-skills/         12 skill directories (synced to ~/.claude/skills/)
+  claude-skills/         13 skill directories (synced to ~/.claude/skills/)
   reference/
     research-archive/    past-round scratch, shipped plans, substrate lingo, seating snapshots
 secrets/                 GITIGNORED (local-first)
