@@ -37,3 +37,7 @@ When launched from the VS Code Agents window, run `.github/prompts/agent-worksta
 - Projection pipeline gate result when run.
 - Exact files edited and whether each edit is portable or local-only.
 - Deferred items for the next workstation.
+
+## Claude / Cowork twin
+
+The Claude Code / Cowork projection of this agent is `dev/claude-skills/moos-workstation-operator/SKILL.md` (same operator, Claude skill format). One operator, two harness surfaces — keep them in sync; when one changes, mirror the other and note any divergence.
