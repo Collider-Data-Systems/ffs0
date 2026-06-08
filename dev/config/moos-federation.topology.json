@@ -1,7 +1,7 @@
 
 {
   "schema_version": 1,
-  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=216 for hp-laptop/Z440 LAN rejoin. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
+  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=219 for Tailscale mesh. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
   "local_host": "auto",
   "expected_ontology_version": "3.16.2",
   "kernels": {
@@ -10,6 +10,7 @@
       "host": "hp-z440",
       "http_local": "http://localhost:8000",
       "http_lan": "http://192.168.1.15:8000",
+      "http_tailscale": "http://100.82.243.13:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_server": "moos-primary",
       "expected_ontology_version": "3.16.2",
@@ -26,6 +27,7 @@
       "host": "hp-z440",
       "http_local": "http://localhost:8001",
       "http_lan": "http://192.168.1.15:8001",
+      "http_tailscale": "http://100.82.243.13:8001",
       "mcp_sse_local": "http://localhost:9001/sse",
       "mcp_server": "moos-menno",
       "expected_ontology_version": "3.16.2",
@@ -36,6 +38,7 @@
       "host": "hp-z440",
       "http_local": "http://localhost:8002",
       "http_lan": "http://192.168.1.15:8002",
+      "http_tailscale": "http://100.82.243.13:8002",
       "mcp_sse_local": "http://localhost:9002/sse",
       "mcp_server": "moos-lola",
       "expected_ontology_version": "3.16.2",
@@ -46,6 +49,7 @@
       "host": "hp-z440",
       "http_local": "http://localhost:8003",
       "http_lan": "http://192.168.1.15:8003",
+      "http_tailscale": "http://100.82.243.13:8003",
       "mcp_sse_local": "http://localhost:9003/sse",
       "mcp_server": "moos-moos",
       "expected_ontology_version": "3.16.2",
@@ -56,8 +60,10 @@
       "host": "hp-laptop",
       "http_local": "http://localhost:8000",
       "http_lan": "http://192.168.1.10:8000",
+      "http_tailscale": "http://100.106.220.58:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_sse_lan": "http://192.168.1.10:8080/sse",
+      "mcp_sse_tailscale": "http://100.106.220.58:8080/sse",
       "mcp_server": "moos-hp-laptop-primary",
       "expected_ontology_version": "3.16.2",
       "seats": [
@@ -81,27 +87,38 @@
   "router": {
     "name": "moos-router",
     "http_local": "http://localhost:9000",
-    "http_lan": "http://192.168.1.10:9000"
+    "http_lan": "http://192.168.1.15:9000",
+    "http_tailscale": "http://100.82.243.13:9000"
   },
   "routers": {
     "hp-z440": {
       "host": "hp-z440",
       "http_local": "http://localhost:9000",
       "http_lan": "http://192.168.1.15:9000",
-      "peers": ["http://192.168.1.10:9000", "http://172.29.0.32:9000"]
+      "http_tailscale": "http://100.82.243.13:9000",
+      "peers": ["http://100.106.220.58:9000", "http://172.29.0.32:9000"]
     },
     "hp-laptop": {
       "host": "hp-laptop",
       "http_local": "http://localhost:9000",
       "http_lan": "http://192.168.1.10:9000",
-      "peers": ["http://172.29.0.32:9000", "http://192.168.1.15:9000"]
+      "http_tailscale": "http://100.106.220.58:9000",
+      "peers": ["http://172.29.0.32:9000", "http://100.82.243.13:9000"]
     },
     "hpprodesk": {
       "host": "hpprodesk",
       "http_local": "http://localhost:9000",
       "http_lan": "http://172.29.0.32:9000",
-      "peers": ["http://192.168.1.10:9000", "http://192.168.1.15:9000"]
+      "peers": ["http://100.106.220.58:9000", "http://100.82.243.13:9000"]
     }
+  },
+  "tailscale": {
+    "tailnet": "maassenhochrath@gmail.com",
+    "machines": {
+      "hp-z440": { "name": "desktop-42d00rd", "ip": "100.82.243.13" },
+      "hp-laptop": { "name": "lap-sam", "ip": "100.106.220.58" }
+    },
+    "note": "IPs are permanent for this tailnet. DHCP LAN IPs (192.168.1.x) kept as reference only. At home Tailscale routes direct (LAN); away it routes via DERP relay — same config either way."
   },
   "cloudflare": {
     "tunnel_id": "3b748eb8-9032-4e9f-a20c-a06d494e9b58",
