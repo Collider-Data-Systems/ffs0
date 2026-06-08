@@ -55,9 +55,9 @@
       "urn": "urn:moos:kernel:hp-laptop.primary",
       "host": "hp-laptop",
       "http_local": "http://localhost:8000",
-      "http_lan": "http://192.168.1.12:8000",
+      "http_lan": "http://192.168.1.10:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
-      "mcp_sse_lan": "http://192.168.1.12:8080/sse",
+      "mcp_sse_lan": "http://192.168.1.10:8080/sse",
       "mcp_server": "moos-hp-laptop-primary",
       "expected_ontology_version": "3.16.2",
       "seats": [
@@ -81,26 +81,26 @@
   "router": {
     "name": "moos-router",
     "http_local": "http://localhost:9000",
-    "http_lan": "http://192.168.1.12:9000"
+    "http_lan": "http://192.168.1.10:9000"
   },
   "routers": {
     "hp-z440": {
       "host": "hp-z440",
       "http_local": "http://localhost:9000",
       "http_lan": "http://192.168.1.15:9000",
-      "peers": ["http://192.168.1.12:9000", "http://172.29.0.32:9000"]
+      "peers": ["http://192.168.1.10:9000", "http://172.29.0.32:9000"]
     },
     "hp-laptop": {
       "host": "hp-laptop",
       "http_local": "http://localhost:9000",
-      "http_lan": "http://192.168.1.12:9000",
+      "http_lan": "http://192.168.1.10:9000",
       "peers": ["http://172.29.0.32:9000", "http://192.168.1.15:9000"]
     },
     "hpprodesk": {
       "host": "hpprodesk",
       "http_local": "http://localhost:9000",
       "http_lan": "http://172.29.0.32:9000",
-      "peers": ["http://192.168.1.12:9000", "http://192.168.1.15:9000"]
+      "peers": ["http://192.168.1.10:9000", "http://192.168.1.15:9000"]
     }
   },
   "cloudflare": {
