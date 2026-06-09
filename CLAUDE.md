@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+> **Mirror of `ffs0/AGENTS.md`** (the project SOT) · manual · source: `ffs0/AGENTS.md` · don't edit except emergency de-rot. Canonical cross-tool orientation — seat map, 4.0 vocabulary, S0→HG pipeline, SOT hierarchy — lives in `AGENTS.md`; this file holds Claude-specific deltas. *(Phase 1, branch `cowork-z440/config-overhaul-agents-sot`: header added; the duplication-trim of this body is a Phase-2 follow-up after ffs0#58 review — bodies intentionally kept until the mirror proves readable.)*
+
 Personal portable private workspace for mo:os research and operations.
 Owner: `urn:moos:user:sam` — pulled on every workstation.
 Machine-specific IDE config (MCP ports) is **gitignored** — copy `.vscode/mcp.json.example` → `.vscode/mcp.json` on first checkout.
