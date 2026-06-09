@@ -25,8 +25,8 @@ The Z440 human workspace is a Windows projection (S0 surface) of durable mo:os s
 Dry preview, then register logon tasks (elevated):
 
 ```powershell
-pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Start-Z440SessionDesktops.ps1 -DryRun
-pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\setup-autostart-z440.ps1
+pwsh -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Start-Z440SessionDesktops.ps1 -DryRun
+pwsh -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\setup-autostart-z440.ps1
 ```
 
 Windows 11 has no stable built-in virtual-desktop placement API. Without a compatible `VirtualDesktop` module the launcher only starts Desktop 1 and leaves Desktop 2+ as the authoritative session map; install one to let the manifest create/switch desktops before launch.
@@ -37,8 +37,8 @@ Lightweight workstation coordination only: reads comments, tracks a profile high
 
 ```powershell
 # Z440 VS Code lead
-pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile z440-vscode-lead -IntervalSeconds 180 -AutoReply -Watch
+pwsh -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile z440-vscode-lead -IntervalSeconds 180 -AutoReply -Watch
 
 # hp-laptop governance, with redacted cloudflared readback
-pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile hp-laptop-governance -IntervalSeconds 180 -AutoReply -CloudflaredReadback -Watch
+pwsh -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile hp-laptop-governance -IntervalSeconds 180 -AutoReply -CloudflaredReadback -Watch
 ```

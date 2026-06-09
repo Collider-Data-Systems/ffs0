@@ -3,7 +3,7 @@
 Primary directive for Antigravity IDE (Google Gemini) in the `ffs0` workspace.
 Owner: `urn:moos:user:sam` — pulled on every workstation.
 
-> **Mirror of `ffs0/AGENTS.md`** (the project SOT) · manual · don't edit except emergency de-rot. Canonical cross-tool orientation — seat map, 3-tier SOT hierarchy (HG→`AGENTS.md`→mirrors), S0→HG pipeline, 4.0 vocab, branching, safety — lives in `AGENTS.md` (Antigravity reads it natively). This file = AG-surface deltas (the `moos-diary` / multimodal-curation lane).
+> **Mirror of `AGENTS.md`** (the project SOT) · manual · don't edit except emergency de-rot. Canonical cross-tool orientation — seat map, 3-tier SOT hierarchy (HG→`AGENTS.md`→mirrors), S0→HG pipeline, 4.0 vocab, branching, safety — lives in `AGENTS.md` (Antigravity reads it natively). This file = AG-surface deltas (the `moos-diary` / multimodal-curation lane).
 
 On Z440, AG drives `session:sam.moos-diary` as `agent:antigravity.hp-z440`, emitting to `kernel:hp-z440.primary` (:8000 / MCP :8080); `hp-z440.moos` (:8003) is overflow-lane metadata (see the AGENTS.md seat table). `persona.moos-dachshund` (= Φ(purpose), D3) is the S4 context overlay. Lane: multimodal-curation + Labs Flow ingestion + diary-entry authoring.
 

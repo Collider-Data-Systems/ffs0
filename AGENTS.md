@@ -6,7 +6,7 @@
 ## SOT hierarchy (read this first)
 ```
 HG folded state · ontology.json · live /healthz readback   → SEMANTIC SOT (truth; state is derived from the log)
-THIS FILE  (ffs0/AGENTS.md, + local root AGENTS.md)         → authored PROJECTION SOT for tools (a hand-written F-image, until generated)
+THIS FILE  (`AGENTS.md`, repo root; the local fleet `AGENTS.md` is one level up, outside the repo)  → authored PROJECTION SOT for tools (a hand-written F-image, until generated)
 CLAUDE.md ×2 · .github/copilot-instructions.md · .agent/    → thin mirrors / tool-deltas only
 ```
 A Markdown file is **never** the final truth. HG is. This file is the best current F-projection of the project brief until `moos-config-projection` (Phase 4) generates it. **Live runtime truth: `kb/superset/running-state.md` (read it first for round-to-round state).**

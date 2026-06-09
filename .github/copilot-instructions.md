@@ -1,9 +1,9 @@
 # ffs0 Repository Instructions (Copilot)
 
-> **Mirror of `ffs0/AGENTS.md`** (the project SOT) · manual · don't edit except emergency de-rot. Copilot reads `AGENTS.md` natively — that is the canonical cross-tool brief (seat map, 3-tier SOT hierarchy, S0→HG pipeline, 4.0 vocab, branching, safety, skills). This file holds only Copilot-surface deltas.
+> **Mirror of `AGENTS.md`** (the project SOT) · manual · don't edit except emergency de-rot. Copilot reads `AGENTS.md` natively — that is the canonical cross-tool brief (seat map, 3-tier SOT hierarchy, S0→HG pipeline, 4.0 vocab, branching, safety, skills). This file holds only Copilot-surface deltas.
 
 ## Read first
-`ffs0/AGENTS.md` (project SOT) → `kb/superset/running-state.md` (live runtime/seat state). Folded HG + live `/healthz` outrank any doc; if a doc and live readback disagree, re-read — readback wins.
+`AGENTS.md` (project SOT) → `kb/superset/running-state.md` (live runtime/seat state). Folded HG + live `/healthz` outrank any doc; if a doc and live readback disagree, re-read — readback wins.
 
 ## Copilot-surface deltas (not in AGENTS.md)
 

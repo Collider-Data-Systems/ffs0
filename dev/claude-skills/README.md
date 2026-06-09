@@ -9,7 +9,8 @@ These are user-scoped skills (no `plugin:` prefix). Claude Code auto-scans `~/.c
 ## Install / sync
 
 ```powershell
-pwsh D:\HPZ440\ffs0\dev\scripts\sync-claude-skills.ps1
+# from the ffs0 repo root, on any machine:
+pwsh dev/scripts/sync-claude-skills.ps1
 ```
 
 Copies every `dev/claude-skills/<skill>/` into `$env:USERPROFILE\.claude\skills\` (replacing existing copies), then lists the installed `moos-*` skills. For Claude Desktop's Customizations panel, fully quit and restart the app after syncing. Run it on each machine after pulling `ffs0`.
