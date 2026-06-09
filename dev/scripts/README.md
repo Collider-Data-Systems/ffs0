@@ -59,7 +59,7 @@ Older projection files may still exist directly under `tmp/projections/`; treat 
 
 ## T193 HP ProDesk Bootstrap
 
-For workstation bring-up or refresh, select `.github/agents/moos-workstation-operator.agent.md` in the VS Code Agents window and run `.github/prompts/agent-workstation-open.prompt.md`. The prompt tells the workstation-side agent to read live running state, snapshot the three repos, check local `/healthz`, inspect MCP config without printing secrets, and report before topology edits or HG applies.
+For workstation bring-up or refresh, invoke the `moos-workstation-operator` skill (Claude) or read `AGENTS.md` + `kb/superset/running-state.md` (any harness): read live running state, snapshot the three repos, check local `/healthz`, inspect MCP config without printing secrets, and report before topology edits or HG applies.
 
 ### Session Pipeline Control Surface
 
@@ -90,11 +90,11 @@ For the Google Keep web UI, copy selected note text to the clipboard and run:
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode ClipboardStage -RunPipeline
 ```
 
-The same contract is captured as `.github/prompts/keep-ingest-any-harness.prompt.md` so VS Code/Copilot, Claude Desktop, Antigravity, Cursor, or a terminal agent can use the same source modes and review boundary.
+The same contract is captured as `dev/reference/keep-ingest-runbook.md` so VS Code/Copilot, Claude Desktop, Antigravity, Cursor, or a terminal agent can use the same source modes and review boundary.
 
 Proper affordance map for this lane:
 
-- VS Code prompt agent mode: `.github/agents/moos-workstation-operator.agent.md` via `.github/prompts/keep-ingest-any-harness.prompt.md`.
+- Operator: `moos-workstation-operator` skill (Claude) / `AGENTS.md` (any harness); Keep runbook: `dev/reference/keep-ingest-runbook.md`.
 - Runner modes: `Check`, `Stage`, `ClipboardStage`, `ApiAuthListen`, `ApiFetch`, `Pipeline`.
 - Skills: `moos-state-readback`, `moos-workspace-ingest`, `moos-session-context-projection`, `moos-tooling-dx`, `moos-rewrite-envelope`, and `moos-running-state-validator` when durable state docs are touched.
 - HG relations after review: `WF12 provides-kb/kb-source`, `WF18 composes/composed-by`, `WF19 pins-urn/pinned-by-session`, and `WF21 causes/caused-by`; `WF07 anchors/anchor` is only for explicit reviewed Calendar source-anchor apply batches after the runtime has loaded the repaired operad declaration.
