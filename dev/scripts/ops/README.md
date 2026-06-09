@@ -1,56 +1,44 @@
 # Ops Scripts
 
-Operational scripts and payloads for local kernel/federation management.
+> Part of the mo:os `ffs0` workspace. Project SOT: `../../../AGENTS.md`. Live state: `../../../kb/superset/running-state.md`.
 
-Current operators:
+Operational PowerShell helpers for local kernel/federation, the Windows-11 session-desktop projection, GitHub-issue coordination, and Keep ingest. Run scripts with `pwsh` (PowerShell 7+), not Windows PowerShell 5.1 (5.1 `ConvertFrom-Json` corrupts comment-list JSON).
 
-- `Test-MoosFederation.ps1` — doctor/start/verify/post helper for the local federation task surface.
-- `ops-snapshot.ps1` — local snapshot helper.
-- `Watch-GitHubIssue.ps1` — profile-aware GitHub issue watcher/autoresponder for coordination threads such as `ffs0#54`.
-- `setup-autostart-z440.ps1` — Z440 autostart helper.
-- `Start-Z440SessionDesktops.ps1` — Windows 11 startup launcher that maps virtual desktops to mo:os sessions using `dev/config/z440-session-desktops.json`.
-- `start_federation_laptop.ps1` — hp-laptop federation launcher.
+## Scripts
 
-## Z440 Windows 11 Session Desktops
+| Script | Purpose |
+|---|---|
+| `Test-MoosFederation.ps1` | Doctor / Start / VerifyPersona / PostProgram helper for the local federation + per-persona MCP surface. Reads `dev/config/moos-federation.topology.json` + `.vscode/mcp.json`. |
+| `ops-snapshot.ps1` | Local readback: per-repo git status + `/healthz` for the fleet. |
+| `Start-Z440SessionDesktops.ps1` | Windows-11 startup launcher mapping virtual desktops to mo:os sessions via `dev/config/z440-session-desktops.json`. |
+| `setup-autostart-z440.ps1` | Registers Z440 logon tasks (federation + session desktops). Elevated. |
+| `start_federation_laptop.ps1` | hp-laptop primary-kernel launcher (`:8000` / MCP `:8080`). No secondaries on laptop. |
+| `Watch-GitHubIssue.ps1` | Profile-aware GitHub-issue watcher / conservative auto-ack for coordination threads. |
+| `Invoke-KeepIngestHarness.ps1` | Google Keep clipboard/API capture + staging harness. Runbook: `dev/reference/keep-ingest-runbook.md`. |
 
-The Z440 human workspace is treated as a Windows projection of durable mo:os sessions. The map lives in `dev/config/z440-session-desktops.json`:
+`__init__.py` is a vestigial Python package marker; the `t*.json` / `t*.md` / `r15-*` files are dated replay/reference payloads (T173–T206). Older one-shot Python emitters live in `dev/reference/research-archive/scripts/legacy-emitters/`.
 
-- Desktop 1: `session:sam.z440-vscode-projection-lead` for the four-monitor VS Code projection cockpit.
-- Desktop 2: `session:sam.kernel-proper` for kernel/runtime work.
-- Desktop 3: `session:sam.steinberger-seat` for tooling, router, MCP, and DX work.
-- Desktop 4: `session:sam.karpathy-seat` for categorical/HDC/VSA research.
-- Desktop 5: `session:sam.moos-diary` for diary and multimodal work.
+## Z440 session desktops
 
-Run a dry startup preview:
+The Z440 human workspace is a Windows projection (S0 surface) of durable mo:os sessions. Desktop→session map: `dev/config/z440-session-desktops.json` (Desktop 1 = VS Code projection lead, 2 = kernel-proper, 3 = Steinberger seat, 4 = Karpathy seat, 5 = moos-diary).
+
+Dry preview, then register logon tasks (elevated):
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Start-Z440SessionDesktops.ps1 -DryRun
+pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Start-Z440SessionDesktops.ps1 -DryRun
+pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\setup-autostart-z440.ps1
 ```
 
-Register logon startup tasks from an elevated PowerShell:
+Windows 11 has no stable built-in virtual-desktop placement API. Without a compatible `VirtualDesktop` module the launcher only starts Desktop 1 and leaves Desktop 2+ as the authoritative session map; install one to let the manifest create/switch desktops before launch.
+
+## GitHub issue watcher
+
+Lightweight workstation coordination only: reads comments, tracks a profile high-water mark under `tmp/issue-watch/`, can post conservative auto-acks. It does not emit HG rewrites, touch DNS/Cloudflare/secrets, write Calendar/Workspace state, or edit the repo. Profiles: `z440-vscode-lead`, `hp-laptop-governance`.
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\setup-autostart-z440.ps1
-```
-
-Windows 11 does not expose a stable built-in PowerShell API for virtual desktop placement. If no compatible `VirtualDesktop` PowerShell module is installed, the launcher starts only Desktop 1 apps and leaves Desktop 2+ as the authoritative session map. After installing a compatible helper, the same manifest can create/switch desktops before launching startup apps.
-
-Historical JSON/Markdown payloads in this folder are retained as replay/reference artifacts. Older Python one-shot emitters were moved to `dev/reference/research-archive/scripts/legacy-emitters/`.
-
-## GitHub Issue Watcher
-
-Use the issue watcher for lightweight workstation coordination. It reads GitHub comments, tracks a profile-specific high-water mark under `tmp/issue-watch/`, and can post conservative auto-acknowledgements. It does not emit HG rewrites, change DNS/Cloudflare, handle secrets, write Calendar/Workspace state, or make repo edits.
-
-Run it with `pwsh` (PowerShell 7+), not Windows PowerShell 5.1 — 5.1 `ConvertFrom-Json` corrupts the comment-list JSON and silently detects zero new comments.
-
-Run it from Z440 VS Code lead:
-
-```powershell
+# Z440 VS Code lead
 pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile z440-vscode-lead -IntervalSeconds 180 -AutoReply -Watch
-```
 
-Run it from hp-laptop governance with redacted cloudflared readback enabled:
-
-```powershell
+# hp-laptop governance, with redacted cloudflared readback
 pwsh -NoProfile -ExecutionPolicy Bypass -File D:\HPZ440\ffs0\dev\scripts\ops\Watch-GitHubIssue.ps1 -Issue 54 -Profile hp-laptop-governance -IntervalSeconds 180 -AutoReply -CloudflaredReadback -Watch
 ```

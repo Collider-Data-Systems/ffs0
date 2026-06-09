@@ -1,65 +1,42 @@
 # ffs0
 
-Private portable workspace for mo:os research, ontology, projection lanes, skills, reports, and local operator artifacts. Runtime code lives in sibling repositories: `moos-kernel` and `moos-router`.
+> Part of the mo:os workspace. Project SOT: `AGENTS.md`. Live runtime/seat state: `kb/superset/running-state.md` (read it first for round-to-round state).
 
-## Current State
+Private portable control/research workspace for mo:os: ontology, knowledge base, projection lanes, skills, scripts, and local operator artifacts. The runtime code lives in sibling repos `moos-kernel` (Go kernel) and `moos-router` (federation). This repo is **not** the kernel — it is the workspace around it.
 
-Read `kb/superset/running-state.md` first. It is the hydration entrypoint for current T-day, kernel state, sessions, active lanes, and key URNs.
+Orientation (the rule, seat map, SOT hierarchy, F⊣G pipeline, vocabulary, branching, safety) lives in `AGENTS.md` — not duplicated here.
 
-As of T189, hp-laptop primary is live on ontology v3.16.1 with `session:sam.governance` as the active governance/projection lane. That session now pins the Calendar/time-fabric program family, the grouped T189/T200 recommendation carriers, 16 individual `calendar_event` observations from the Calendar proof, and the `program:sam.t189.surface-context-atlas` carrier. The current local pipeline projects HG state into session context, graph artifacts, static visuals, Calendar payloads, recommendation HG plans, reconciliation reports, a surface context atlas, and a local dashboard.
+## Layout
 
-Run the current projection lane with:
+| Path | Purpose |
+|------|---------|
+| `kb/superset/ontology.json` | Ontology source (S1). Version is authoritative in the file + live `/healthz`, not here. |
+| `kb/superset/running-state.md` | Hydration entrypoint — current T-day, kernel/router state, sessions, active lanes, key URNs. |
+| `kb/superset/instances/` | Instance-level state snapshots. |
+| `kb/moos-diary/` | Round wrap-ups and projection-ready diary material. |
+| `dev/scripts/` | Projection runners, dry planners, validators, ingest/writer scripts (`ops/`, `projections/`, `validation/`, `tests/`). |
+| `dev/claude-skills/` | Project skills (synced to `~/.claude/skills/` via `sync-claude-skills.ps1`). |
+| `dev/config/` | Federation topology, session-affordance, desktop maps. |
+| `dev/design/` | 4.0 / ontology design drafts (relation-first, rewrite-first; see `AGENTS.md` design discipline). |
+| `dev/reference/` | Runbooks (e.g. `keep-ingest-runbook.md`), `research-archive/`, papers, evaluations. |
+| `dev/moos-viz/` | Visualization build output. |
+| `secrets/` | Local-first, **gitignored** — never commit. |
+| `tmp/` | Generated projection artifacts — local unless a snapshot is explicitly requested. |
+
+Tool mirrors of `AGENTS.md`: `CLAUDE.md` (Claude Code), `.github/copilot-instructions.md` (Copilot), root `ANTIGRAVITY.md` (Antigravity). `.github/` holds only `copilot-instructions.md` + `workflows/` (the Project-sync Action).
+
+## Projection lane
+
+Run the local dry session pipeline:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\projections\run-session-pipeline.ps1
 ```
 
-The dashboard is generated at `tmp/projections/session_pipeline/index.html`.
-The atlas is generated at `tmp/projections/session_pipeline/atlas/surface_context_atlas.{json,md}` and explains the JSON API, JSONL log, Git repos, Calendar, dashboard, visuals, type/relation/program surface, existing HG anchors, and pending moves.
-For the practical filesystem/dashboard/scripts/skills manual, see `dev/scripts/projections/session-pipeline-operator-manual.md`.
-
-## Repository Role
-
-`ffs0` is not the kernel runtime. It is the research/control workspace around the runtime:
-
-- `kb/superset/ontology.json` is the current ontology source.
-- `kb/superset/running-state.md` is the current operating readback.
-- `kb/moos-diary/` holds projection-ready reports and selected diary material.
-- `dev/scripts/` holds dry planners, validators, projection runners, and explicit writer boundaries.
-- `dev/claude-skills/` holds project skills synced into agent harnesses.
-- `dev/reference/research-archive/` holds historical scratch, shipped plans, and prior-round context.
-- `secrets/` is local-first and gitignored.
-
-## Kernel And Applications
-
-The kernel is separate from applications that run on the HG.
-
-- `moos-kernel` is the OS-facing runtime program: fold the log, validate rewrites, enforce session/authority gates, expose transport and actuator boundaries.
-- `moos-router` is the federation/read-routing surface across sovereign kernels.
-- Application groups such as `my-tiny-data-collider` are domain uses of the HG through those kernels. They may include websites, DNS, servers, Calendar, GitHub, Workspace, and other external surfaces, but they are not the kernel codebase.
-
-There can be many application groups. `my-tiny-data-collider` may become the dominant one, but it should remain modeled as a group/purpose/program/channel family inside HG, not as the kernel itself.
-
-## Projection Discipline
-
-Use the F/G boundary consistently:
-
-- `F: HG -> external surface`: Calendar events, GitHub project rows, dashboards, DOT/SVG, website/DNS plans, IDE context packs.
-- `G: external observation -> HG`: `knowledge_item`, `claim`, `derivation`, `calendar_event`, status MUTATEs, or other typed graph evidence.
-
-Default to dry planners first. Writers and API calls are actuator boundaries and should be explicit. External surfaces need graph-derived identity so they can be ingested back without guesswork.
-
-## Current T189/T200 Priorities
-
-- Keep the session pipeline as the daily operator screen: Graphviz for deterministic review, Cytoscape.js for typed inspection, and gates that distinguish applied, pending, and deferred rows.
-- Finish the WF07 Calendar source-anchor operad cleanup so the 16 applied `calendar_event` nodes can link back to their source HG nodes without a deferred boundary.
-- Refresh GitHub Project #4 row identity so active items carry `HG URN` and board edits can become conservative G-direction rewrite candidates.
-- Grow `my-tiny-data-collider` as an application group on HG: websites, DNS, servers, Calendar, GitHub, Workspace, and content/data products as explicit external surfaces.
-- Keep public-facing organization/project content aligned with the graph while runtime repos stay focused on kernel and router substrate.
+Outputs under `tmp/projections/session_pipeline/`: session context pack, graph/DOT/SVG lenses, Calendar plan, recommendation reconciliation, surface context atlas, MVP gate, and a `index.html` dashboard. Operator detail: `dev/scripts/projections/session-pipeline-operator-manual.md`. F (project) / G (ingest) discipline and the skill map are in `AGENTS.md`.
 
 ## Safety
 
-- Never commit `secrets/` values or `.vscode/mcp.json`.
-- Do not use legacy `moos-config` for current runtime work.
-- Keep generated `tmp/projections/` artifacts local unless explicitly asked to preserve a snapshot.
-
+- Never commit `secrets/` values, API tokens, or `.vscode/mcp.json`.
+- `moos-config` is LEGACY — do not use for current runtime work.
+- Mutations (commit/push, DNS/Cloudflare, Calendar/Workspace writes, HG apply) are explicit boundary acts, never readback side effects — see `AGENTS.md`.
