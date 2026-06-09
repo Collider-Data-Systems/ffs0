@@ -1,7 +1,7 @@
 # AGENTS.md — mo:os project (ffs0)
 
 > **Authored projection SOT for tools.** Cross-tool brief read natively by Copilot, Cursor, Codex, Gemini/Antigravity. Claude reads it via `CLAUDE.md` `@import`.
-> **Status: Phase-1 draft (T=219), branch `cowork-z440/config-overhaul-agents-sot`, under team review on ffs0#58.** Owners place follow-ups; do not treat as final until merged.
+> **Status: Phase-1 (T=220) — APPROVED by Z440 VS Code lead + hp-laptop governance on ffs0#58 (PR #59); merged to `main`.** Phase-2 (mirror-body trim, `.claude/rules/`, Antigravity surface, `moos-config-projection`) tracked on #58.
 
 ## SOT hierarchy (read this first)
 ```
@@ -24,7 +24,7 @@ S0 conversation → chunker (moos-workspace-ingest) → knowledge_item → pinne
 F (project): `run-session-pipeline.ps1` + skill `moos-session-context-projection`. G (ingest): skills `moos-workspace-ingest` (text) / `moos-multimodal-ingest` (binary). Endgame: keep everything in HG + jsonl in memory; these `.md` files are a temporary crutch that Phase 4 makes *generated*.
 
 ## Seats — agent × workspace × instance × surface  ⟨projection-ready: Phase-4 moos-config-projection pilot⟩
-> The F-image of `channel`+`agent` nodes — lowest F⊣G unit defect, highest duplication payoff → first artifact `moos-config-projection` will generate. **4.0 aliases shown; URNs stay canonical (see Gate).**
+> The F-image of `channel`+`agent` nodes — lowest F⊣G unit defect, highest duplication payoff → first artifact `moos-config-projection` will generate. **4.0 aliases shown; URNs stay canonical (see Gate). If this table and live `/healthz`+HG readback disagree, the readback wins — re-read, don't force the table (it is an authored projection, not operational truth).**
 
 | Persona (=Φ(purpose), D3) | Agent (principal) | Workspace ⟵`session` (D2) | Instance ⟵`kernel` (D6) | Surface / IDE-instance (D7) | MCP |
 |---|---|---|---|---|---|
@@ -89,6 +89,7 @@ Never commit `secrets/` values, API tokens, or `.vscode/mcp.json`. Mutations (co
 - `.github/copilot-instructions.md` — thin mirror + Copilot-specific skill/prompt routing.
 - `.agent/` (Antigravity, Phase 3, path TBD via live readback) — AG surface mechanics only.
 Mirrors carry a header: source · manual/generated · source-commit · "don't edit except emergency de-rot." Duplication-trim of mirror bodies is a Phase-2 follow-up after this text stabilizes (do not gut bodies before the mirror proves readable).
+- **IDE surface (`*.code-workspace`):** tracked `ffs0.code-workspace` = portable baseline (tasks · extension recs · excludes); gitignored `*.local.code-workspace` = per-instance delta (multi-root layout · orientation · local roots) — a **D7 surface realization, never trunk-projected** (the `.gitignore` is the projection-fidelity boundary). Same baseline-first / local-divergence split as `AGENTS.md` ↔ `CLAUDE.md`.
 
 ---
 *Phase-1 draft, Cowork-Z440. Review on ffs0#58.*
