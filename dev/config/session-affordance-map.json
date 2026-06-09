@@ -18,7 +18,7 @@
       "mcp_server": "moos-hpprodesk-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-state-readback", "moos-tooling-dx", "moos-session-context-projection", "moos-rewrite-envelope"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona hpprodesk-vscode", "go test ./..."]
     },
@@ -32,7 +32,7 @@
       "mcp_server": "moos-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/z440-vscode-agent-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-session-context-projection", "moos-tooling-dx", "moos-state-readback", "moos-github-project-bridge"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona z440-vscode-lead", "dev/scripts/projections/run-session-pipeline.ps1"]
     },
@@ -46,7 +46,7 @@
       "mcp_server": "moos-primary",
       "workspace": "moos-kernel",
       "harnesses": ["Claude Code", "VS Code"],
-      "prompts": [".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-rewrite-envelope", "moos-state-readback"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona wolfram", "go test ./..."]
     },
@@ -62,7 +62,7 @@
       "topology_mcp_server": "moos-menno",
       "workspace": "moos-router-feat-type-map-routing",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/delegate-vscode-t166-overhaul.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-tooling-dx", "moos-session-context-projection", "moos-running-state-validator"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona steinberger", "go test ./..."]
     },
@@ -78,7 +78,7 @@
       "topology_mcp_server": "moos-lola",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/delegate-vscode-t166-overhaul.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-categorical-research", "moos-session-context-projection", "moos-state-readback"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona karpathy", "dev/scripts/projections/run-session-pipeline.ps1"]
     },
@@ -92,7 +92,7 @@
       "mcp_server": "moos-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["Antigravity"],
-      "prompts": [".github/prompts/delegate-ag-t166-overhaul.prompt.md"],
+      "prompts": [],
       "skills": ["moos-multimodal-ingest", "moos-state-readback"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona moos"]
     },
@@ -106,7 +106,7 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/keep-ingest-any-harness.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-state-readback", "moos-workspace-ingest", "moos-session-context-projection", "moos-tooling-dx", "moos-round-close", "moos-running-state-validator", "moos-cross-persona-audit", "moos-rewrite-envelope"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona guido", "dev/scripts/projections/run-session-pipeline.ps1"]
     },
@@ -123,7 +123,7 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "Calendar readback and recommendation reconciliation surfaces",
       "harnesses": ["VS Code", "Copilot", "Cowork"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/keep-ingest-any-harness.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-session-context-projection", "moos-workspace-ingest", "moos-rewrite-envelope", "moos-state-readback"],
       "validation": ["dev/scripts/projections/run-session-pipeline.ps1", "dev/scripts/tests/test_t194_t200_big_sprint_topology.jl"]
     },
@@ -140,7 +140,7 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "GitHub Project #4 / Collider-Data-Systems org surfaces",
       "harnesses": ["VS Code", "Copilot", "GitHub CLI"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-github-project-bridge", "moos-state-readback", "moos-rewrite-envelope", "moos-session-context-projection"],
       "validation": ["gh project view 4 --owner Collider-Data-Systems --format json", "dev/scripts/projections/run-session-pipeline.ps1"]
     },
@@ -157,7 +157,7 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "VS Code/Copilot transcript and debug-log staging",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-session-context-projection", "moos-workspace-ingest", "moos-rewrite-envelope", "moos-running-state-validator"],
       "validation": ["dev/scripts/t194_t200_big_sprint_topology.jl", "dev/scripts/projections/run-session-pipeline.ps1"]
     },
@@ -174,7 +174,7 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "my-tiny-data-collider application/domain surfaces",
       "harnesses": ["VS Code", "Copilot"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-session-context-projection", "moos-tooling-dx", "moos-github-project-bridge", "moos-rewrite-envelope"],
       "validation": ["dev/scripts/projections/run-session-pipeline.ps1", "gh repo view Collider-Data-Systems/.github --json name,isPrivate,url,defaultBranchRef"]
     },
@@ -191,7 +191,7 @@
       "mcp_server": "moos-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Claude Code", "Antigravity"],
-      "prompts": [".github/prompts/agent-workstation-open.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-state-readback", "moos-cross-persona-audit", "moos-tooling-dx", "moos-categorical-research", "moos-multimodal-ingest", "moos-rewrite-envelope"],
       "validation": ["Test-MoosFederation.ps1 -Mode Doctor", "Test-MoosFederation.ps1 -Mode VerifyPersona -Persona steinberger", "Test-MoosFederation.ps1 -Mode VerifyPersona -Persona karpathy"]
     },
@@ -204,7 +204,7 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "Google Workspace surfaces",
       "harnesses": ["Claude Desktop", "Cowork"],
-      "prompts": [".github/prompts/keep-ingest-any-harness.prompt.md", ".github/prompts/multi-workstation-git-flow.prompt.md"],
+      "prompts": [],
       "skills": ["moos-workspace-ingest", "moos-session-context-projection", "moos-state-readback"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona cowork-laptop"]
     },
@@ -217,7 +217,7 @@
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["Antigravity"],
-      "prompts": [".github/prompts/delegate-ag-t166-overhaul.prompt.md"],
+      "prompts": [],
       "skills": ["moos-multimodal-ingest", "moos-state-readback"],
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona ag-laptop"]
     }

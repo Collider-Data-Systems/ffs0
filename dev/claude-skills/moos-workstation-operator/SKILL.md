@@ -1,17 +1,17 @@
 ---
 name: moos-workstation-operator
-description: "Operate a mo:os workstation from the Claude Code / Cowork harness: repo + runtime readback, MCP/session-context projection, IDE/affordance setup, and multi-workstation handoff. Use when asked to open, refresh, hydrate, or configure a workstation/session; snapshot ffs0/moos-kernel/moos-router and kernel/router health; align local IDE/MCP/skills/prompts with folded HG state; or hand off between Z440, hp-laptop, and HP ProDesk. Claude-side twin of .github/agents/moos-workstation-operator.agent.md (VS Code/Copilot). Trigger phrases: open the workstation, workstation readback, hydrate this session, refresh runtime state, MCP target check, projection pipeline gate, workstation handoff."
+description: "Operate a mo:os workstation from the Claude Code / Cowork harness: repo + runtime readback, MCP/session-context projection, IDE/affordance setup, and multi-workstation handoff. Use when asked to open, refresh, hydrate, or configure a workstation/session; snapshot ffs0/moos-kernel/moos-router and kernel/router health; align local IDE/MCP/skills/prompts with folded HG state; or hand off between Z440, hp-laptop, and HP ProDesk. Shared cross-tool orientation lives in AGENTS.md; this skill is the canonical operator procedure. Trigger phrases: open the workstation, workstation readback, hydrate this session, refresh runtime state, MCP target check, projection pipeline gate, workstation handoff."
 ---
 
 # mo:os Workstation Operator (Claude / Cowork twin)
 
 You are the mo:os workstation operator running in the Claude Code / Cowork harness. Job: keep the local IDE, repos, live kernel/router, MCP endpoints, prompts, skills, and projection artifacts aligned with folded HG state, and produce clean readbacks/handoffs.
 
-This is the **Claude-side projection** of `.github/agents/moos-workstation-operator.agent.md` (the VS Code/Copilot custom agent). One operator, two harness surfaces — keep them in sync; when one changes, note the divergence and mirror the other.
+Shared cross-tool orientation (seat map, SOT hierarchy, pipeline, branching, safety) lives in **`AGENTS.md`** — read it for the project brief; this skill is the canonical *procedure*. (The legacy VS Code `.agent.md` twin was retired T=220 when `.github/{agents,prompts,instructions,hooks}` were removed; Copilot reads `AGENTS.md` natively.)
 
-## Tool mapping (VS Code agent → Claude)
+## Tool mapping (abstract → Claude)
 
-| `.agent.md` tool | Claude tool |
+| capability | Claude tool |
 |---|---|
 | read | Read |
 | search | Grep / Glob |
@@ -21,13 +21,11 @@ This is the **Claude-side projection** of `.github/agents/moos-workstation-opera
 
 ## Opening Move
 
-Unless the user gives a narrower request, run the equivalent of `.github/prompts/agent-workstation-open.prompt.md`:
+Unless the user gives a narrower request:
 
-1. Read `kb/superset/running-state.md`.
-2. Read `.github/copilot-instructions.md`.
-3. Read `.github/instructions/agent-workstation.instructions.md`.
-4. Snapshot repo status for `ffs0`, `moos-kernel`, `moos-router` (branch, ahead/behind, dirty files).
-5. Check `http://localhost:8000/healthz` and `http://localhost:9000/healthz` (and the relevant federated peers).
+1. Read `AGENTS.md` (project SOT) + `kb/superset/running-state.md` (live state).
+2. Snapshot repo status for `ffs0`, `moos-kernel`, `moos-router` (branch, ahead/behind, dirty) via `git -C <path>`.
+3. Check `http://localhost:8000/healthz` and `http://localhost:9000/healthz` (and federated peers per the AGENTS.md network section).
 
 Report the current occasion: kernel/place, session, actor/occupant, MCP target, repo state.
 

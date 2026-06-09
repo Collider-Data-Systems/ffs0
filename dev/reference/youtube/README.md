@@ -1,50 +1,20 @@
-# YouTube Reference Artifacts
+# YouTube transcript archive
 
-This folder stores YouTube transcript artifacts in normalized JSON form.
+> Part of the mo:os `ffs0` workspace. Project SOT: `../../../AGENTS.md`. Live state: `../../../kb/superset/running-state.md`.
 
-## Layout
+Static reference archive of YouTube transcripts in normalized JSON, captured for research hydration. Read-only artifacts — there is no live ingest tooling in this folder anymore (the old `ingest-youtube-url.ps1` / `save-youtube-transcript.ps1` scripts under `ffs0-factory-super\.agent\dev\` were retired). Treat this as a frozen corpus to G-ingest from, not a pipeline to run.
 
-- schema.json: JSON schema for one transcript artifact
-- entries/: individual transcript entries
-- lists/: source-list tracking with per-item status and kb_entry_path
-- dedupe-index.json: canonical/alias duplicate report
+## Contents
 
-## Standard intake flow (approved)
+| Path | What |
+|---|---|
+| `schema.json` | JSON Schema (draft-07) for one transcript entry — required fields: `id`, `source_type`, `source_url`, `retrieved_at`, `title`, `channel`, `language`, `summary`, `keywords`, `transcript` |
+| `entries/` | 19 transcript entries, `yt-<slug>-<timestamp>.json`; mostly ML/AI talks (Karpathy, MLST, Yi Ma, neurosymbolic, hypergraph transformers) + one Rick Astley debug fixture |
+| `lists/` | Source-list ledgers (`youtube-list-*.json`) with per-item `status` + `kb_entry_path` |
+| `dedupe-index.json` | Canonical/alias duplicate report (last generated 2026-03-29; 18 unique groups, 0 duplicates) |
 
-1. Run the standard ingest script for a URL.
-2. Update the active list ledger with status and path.
-3. Rebuild dedupe index.
-4. If duplicates are present, hard-prune aliases and rewrite list paths.
+Note: paths inside `dedupe-index.json` and the list ledgers point at a historical `FFS0_HPlaptop\ffs0-factory-super\.agent\...` capture location and are not current. The entries themselves are the source of truth.
 
-## Ingest command
+## Usage
 
-```powershell
-Set-Location .\ffs0-factory-super
-powershell -ExecutionPolicy Bypass -File .\.agent\dev\ingest-youtube-url.ps1 `
-  -Url "https://www.youtube.com/watch?v=VIDEO_ID" `
-  -Summary "Short summary"
-```
-
-The script returns JSON with status fields suitable for list updates.
-
-## Legacy/manual entry path
-
-1. Extract transcript text with your VS Code YouTube extension/tool.
-2. Save transcript text to a local file.
-3. Run script:
-
-```powershell
-Set-Location .\ffs0-factory-super
-.\.agent\dev\save-youtube-transcript.ps1 `
-  -Url "https://www.youtube.com/watch?v=VIDEO_ID" `
-  -Title "Video title" `
-  -Channel "Channel name" `
-  -Language "en" `
-  -TranscriptFile ".\tmp\transcript.txt" `
-  -Summary "Short summary" `
-  -Keywords "mcp","hydration","ontology"
-```
-
-## Promotion rule
-
-Keep these files in reference/ until a directed task promotes selected data into instance files for hydration.
+To pull a transcript into the HG as `knowledge_item` nodes, hand the entry file to the workspace ingest lane — skill `moos-workspace-ingest` (G in the F⊣G adjunction, WF12 provides-kb). Keep these files in `reference/` until a directed task promotes selected data into instance files.

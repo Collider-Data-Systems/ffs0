@@ -1,84 +1,45 @@
-# mo:os claude-code skills
+# mo:os Claude skills
 
-Shared Claude Code skills for the mo:os workspace. Live here so any machine checked out of ffs0 can install them locally.
+> Part of the mo:os `ffs0` workspace. Project SOT: `../../AGENTS.md`. Live state: `../../kb/superset/running-state.md`.
 
-## Install — two separate places, depending on which Claude surface
+Canonical source-of-truth for the mo:os Claude skills. They live in git (here in `ffs0`) so any checked-out machine — Z440, hp-laptop — installs the same set. `~/.claude/skills/` holds the **active copy**; this directory is the **shared origin**. Keep the two in sync with `sync-claude-skills.ps1` (below).
 
-Claude has two skill-discovery mechanisms and they are **not** linked:
+These are user-scoped skills (no `plugin:` prefix). Claude Code auto-scans `~/.claude/skills/*/SKILL.md` at session start; Claude Desktop's Customizations panel picks them up on restart.
 
-| Surface | How it finds skills | Where they live |
-|---|---|---|
-| **Claude Code runtime** (CLI, IDE plugin, claude-code chat) | Auto-scans `~/.claude/skills/*/SKILL.md` at session start; enumerates available skills in the session context | `~/.claude/skills/<skill-name>/SKILL.md` |
-| **Claude Desktop — Customize > Skills panel** | Shows only skills registered through its own UI flow ("Create skill", "Upload a skill", "Create with Claude"). Does NOT auto-scan the filesystem. | Separate internal location that the Desktop app manages |
+## Install / sync
 
-**Implication**: dropping files into `~/.claude/skills/` is enough for Claude Code to use them, but **not enough** to make them appear in the Customize panel. Both may be useful. Pick based on how you work.
-
-### Option A — filesystem drop (Claude Code runtime)
-
-Sufficient if you only need the skills to auto-trigger in claude-code sessions:
-
-```bash
-# PowerShell / Git Bash (Windows)
-cp -r dev/claude-skills/moos-state-readback "$USERPROFILE/.claude/skills/"
-cp -r dev/claude-skills/moos-round-close     "$USERPROFILE/.claude/skills/"
-cp -r dev/claude-skills/moos-rewrite-envelope "$USERPROFILE/.claude/skills/"
+```powershell
+# from the ffs0 repo root, on any machine:
+pwsh dev/scripts/sync-claude-skills.ps1
 ```
 
-On Linux / macOS: `~/.claude/skills/` is the destination.
+Copies every `dev/claude-skills/<skill>/` into `$env:USERPROFILE\.claude\skills\` (replacing existing copies), then lists the installed `moos-*` skills. For Claude Desktop's Customizations panel, fully quit and restart the app after syncing. Run it on each machine after pulling `ffs0`.
 
-**Test it worked**: open a new claude-code conversation. The opening system-reminder lists available skills. Your three moos-* entries should appear (no `plugin:` prefix — they're personal/filesystem-scanned).
+To confirm: open a new Claude Code conversation — the opening system-reminder lists available skills; the `moos-*` entries should appear. To bypass discovery entirely, point Claude at a path directly, e.g. `Run the instructions at ~/.claude/skills/moos-state-readback/SKILL.md`.
 
-If they don't appear in the session's available-skills list, Claude Code isn't discovering them for some reason (plugin conflict, version quirk, etc.) — fall back to Option B.
+## Current skills (13)
 
-### Option B — UI registration (Claude Desktop Customize panel)
+Grouped by role; each `SKILL.md` carries its own trigger `description` (the authoritative when-to-use) — not restated here. Index also in `AGENTS.md`.
 
-Needed if you want the skills visible in Customize > Skills panel, or if Option A isn't working:
-
-1. Open Claude Desktop.
-2. Customize > Skills.
-3. Click `+` > **Upload a skill**.
-4. Point at `dev/claude-skills/<skill-name>/SKILL.md` (or the whole directory if the dialog accepts folders). Repeat for each of the three.
-
-After registering, the panel shows them under "Personal skills" with Added by / Last updated metadata. They're now invokable via slash command and auto-triggered per the `description`.
-
-### Explicit invocation always works
-
-Whatever the discovery state, you can always point Claude at a skill by path:
-
-```
-Run the instructions at ~/.claude/skills/moos-state-readback/SKILL.md
-```
-
-That bypasses discovery entirely. Use when a skill won't auto-trigger or auto-list.
-
-## Current skills
-
-| Skill | Purpose |
+| Group | Skills |
 |---|---|
-| `moos-state-readback` | 10-sec open-of-round check: `git fetch` + log-range + running-state header + kernel PID/port + MCP `/healthz` + peer-handoff issue comments |
-| `moos-round-close` | End-of-round checklist: running-state update + atomic commit + push + optional issue comment |
-| `moos-rewrite-envelope` | Envelope-shape cheat sheet for `mcp__moos-kernel__apply_program` (field names, placement gotchas, additive vs standard MUTATE, PropertySpec rules) |
-| `moos-workstation-operator` | Workstation operator (Claude twin of `.github/agents/moos-workstation-operator.agent.md`): repo + runtime readback, MCP/session-context projection, IDE/affordance setup, multi-workstation handoff |
+| Authoring / ops | `moos-rewrite-envelope` · `moos-state-readback` · `moos-round-close` · `moos-running-state-validator` · `moos-cross-persona-audit` · `moos-workstation-operator` |
+| Projection (F) / ingest (G) | `moos-session-context-projection` · `moos-workspace-ingest` (text) · `moos-multimodal-ingest` (binary) · `moos-github-project-bridge` |
+| Seat lanes | `moos-categorical-research` (Karpathy) · `moos-tooling-dx` (Steinberger) · `moos-cowork-readback` (Cowork) |
 
-> Note: the table above is illustrative, not exhaustive — `dev/claude-skills/` currently holds 13 skill directories; browse the folder for the full set.
+## Adding a skill
 
-## Adding a new skill
+Create `dev/claude-skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`) and a body:
 
-```bash
-mkdir -p dev/claude-skills/my-new-skill
-# Write dev/claude-skills/my-new-skill/SKILL.md with YAML frontmatter:
-#   ---
-#   name: my-new-skill
-#   description: When to trigger and what this skill does.
-#   ---
-#
-#   # My New Skill
-#
-#   Body ...
+```markdown
+---
+name: my-new-skill
+description: When to trigger and what this skill does.
+---
+
+# My New Skill
+
+Body ...
 ```
 
-Commit + push. Install locally per above. Any machine pulling ffs0 and running the install step picks it up.
-
-## Why not `.claude/skills/` at ffs0 root?
-
-Claude Code auto-discovers skills from **home-dir** `~/.claude/skills/`, not from project-local paths. These skills are user-scoped config, not repo-scoped. The `dev/claude-skills/` location here is the **shared source-of-truth**; `~/.claude/skills/` is the **active copy**. Keep the two in sync via the install command above.
+Commit + push, then re-run `sync-claude-skills.ps1` on each machine. The sync script enumerates directories, so a new skill is installed with no edits to this file or the script.

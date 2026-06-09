@@ -18,9 +18,6 @@
     "git.autofetch": true,
     "git.pruneOnFetch": true,
     "git.openRepositoryInParentFolders": "never",
-    "chat.instructionsFilesLocations": {
-      ".github/instructions": true
-    },
     "chat.viewSessions.orientation": "stacked",
     "github.copilot.enable": {
       "*": true,

@@ -6,14 +6,14 @@
 ## SOT hierarchy (read this first)
 ```
 HG folded state · ontology.json · live /healthz readback   → SEMANTIC SOT (truth; state is derived from the log)
-THIS FILE  (ffs0/AGENTS.md, + local root AGENTS.md)         → authored PROJECTION SOT for tools (a hand-written F-image, until generated)
+THIS FILE  (`AGENTS.md`, repo root; the local fleet `AGENTS.md` is one level up, outside the repo)  → authored PROJECTION SOT for tools (a hand-written F-image, until generated)
 CLAUDE.md ×2 · .github/copilot-instructions.md · .agent/    → thin mirrors / tool-deltas only
 ```
 A Markdown file is **never** the final truth. HG is. This file is the best current F-projection of the project brief until `moos-config-projection` (Phase 4) generates it. **Live runtime truth: `kb/superset/running-state.md` (read it first for round-to-round state).**
 
 ## The rule (non-negotiable)
 Four rewrites only: **ADD · LINK · MUTATE · UNLINK**. **Log is truth. State is derived.** Nodes don't call things; relations don't carry messages; side effects only at actuator leaves via channels.
-Nomenclature — use: node · relation · rewrite · property · operad · port · rewrite_category WF01..WF21 · `_urn`/`_urns`. Never: edge · wire · field · mutation · schema · association · binding · `_ref`. *(Full do/never table in `ffs0/CLAUDE.md`.)*
+Nomenclature — use: node · relation · rewrite · property · operad · port · rewrite_category WF01..WF21 · `_urn`/`_urns`. Never: edge · wire · field · mutation · schema · association · binding · `_ref` · (for interaction nodes) transition/event/message. *(Authoritative vocabulary do/never block: `kb/superset/ontology.json`.)*
 
 ## Conversations are S0 (the F⊣G pipeline)
 IDE/agent conversations are **S0 substrate** — the raw rewriting layer that emits work, NOT data/code/doctrine. Reification path:
@@ -21,7 +21,10 @@ IDE/agent conversations are **S0 substrate** — the raw rewriting layer that em
 S0 conversation → chunker (moos-workspace-ingest) → knowledge_item → pinned to workspace (G-ingest, F⊣G adjunction)
   → programs/tasks delegate to tools/sub-agents/personae → F projects back out to Calendar/Git/social/network/IDE surfaces
 ```
-F (project): `run-session-pipeline.ps1` + skill `moos-session-context-projection`. G (ingest): skills `moos-workspace-ingest` (text) / `moos-multimodal-ingest` (binary). Endgame: keep everything in HG + jsonl in memory; these `.md` files are a temporary crutch that Phase 4 makes *generated*.
+F (project): `run-session-pipeline.ps1` + skill `moos-session-context-projection`. G (ingest): skills `moos-workspace-ingest` (text, WF12 provides-kb) / `moos-multimodal-ingest` (binary). Endgame: keep everything in HG + jsonl in memory; these `.md` files are a temporary crutch that Phase 4 makes *generated*.
+
+## Design-doc discipline (`dev/design/**`)
+Relation-first, rewrite-first. No OOP framing (no objects-with-payload, no static UML associations). Distinguish **operad** (admissible grammar / valid composition) from **instance** (realized topology + rewrite log). All state change is ADD/LINK/MUTATE/UNLINK — nothing else. Relations are topology (LINK results); rewrite_categories WF01–WF21 are op-families — don't conflate. Properties are typed/governed, never free-form payloads, never duplicate topology. Output: concise conclusions; **mark conjectures as conjectures** (don't assert unproven categorical claims as settled); open questions as 1–2 bullets. Authoritative refs: `running-state.md` + `ontology.json`.
 
 ## Seats — agent × workspace × instance × surface  ⟨projection-ready: Phase-4 moos-config-projection pilot⟩
 > The F-image of `channel`+`agent` nodes — lowest F⊣G unit defect, highest duplication payoff → first artifact `moos-config-projection` will generate. **4.0 aliases shown; URNs stay canonical (see Gate). If this table and live `/healthz`+HG readback disagree, the readback wins — re-read, don't force the table (it is an authored projection, not operational truth).**
@@ -87,7 +90,7 @@ Never commit `secrets/` values, API tokens, or `.vscode/mcp.json`. Mutations (co
 ## Tool-mirror map (this file is the source)
 - `CLAUDE.md` (ffs0 + root) — `@import` this + Claude-specific deltas only.
 - `.github/copilot-instructions.md` — thin mirror + Copilot-specific skill/prompt routing.
-- `.agent/` (Antigravity, Phase 3, path TBD via live readback) — AG surface mechanics only.
+- `ANTIGRAVITY.md` (root) — Antigravity's primary directive; the AG tool-mirror (parallel to CLAUDE.md / copilot). AG reads `AGENTS.md` natively; this carries the `moos-diary` / multimodal-curation lane deltas.
 Mirrors carry a header: source · manual/generated · source-commit · "don't edit except emergency de-rot." Duplication-trim of mirror bodies is a Phase-2 follow-up after this text stabilizes (do not gut bodies before the mirror proves readable).
 - **IDE surface (`*.code-workspace`):** tracked `ffs0.code-workspace` = portable baseline (tasks · extension recs · excludes); gitignored `*.local.code-workspace` = per-instance delta (multi-root layout · orientation · local roots) — a **D7 surface realization, never trunk-projected** (the `.gitignore` is the projection-fidelity boundary). Same baseline-first / local-divergence split as `AGENTS.md` ↔ `CLAUDE.md`.
 
