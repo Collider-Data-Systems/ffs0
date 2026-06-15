@@ -1,7 +1,7 @@
 
 {
   "schema_version": 1,
-  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=219 for Tailscale mesh. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
+  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=219 for Tailscale mesh. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands. T=226: HP ProDesk seat-parity rejoin in progress (ffs0#58 / prodesk-seat-parity branch) — converting ProDesk from dead LAN peer (172.29.0.32) to Tailscale mesh peer at ontology 3.16.2. Tailscale IP is a PENDING sentinel (TS-IP-PENDING-HPPRODESK) until ProDesk confirms tailnet join; not visible from lap-sam `tailscale status` at T=226. Do NOT treat the ProDesk peer as live until the sentinel is replaced with the real 100.x IP and /healthz answers 3.16.2.",
   "local_host": "auto",
   "expected_ontology_version": "3.16.2",
   "kernels": {
@@ -77,10 +77,12 @@
       "host": "hpprodesk",
       "http_local": "http://localhost:8000",
       "http_lan": "http://172.29.0.32:8000",
+      "http_tailscale": "http://TS-IP-PENDING-HPPRODESK:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_sse_lan": "http://172.29.0.32:8080/sse",
+      "mcp_sse_tailscale": "http://TS-IP-PENDING-HPPRODESK:8080/sse",
       "mcp_server": "moos-hpprodesk-primary",
-      "expected_ontology_version": "3.16.1",
+      "expected_ontology_version": "3.16.2",
       "seats": ["urn:moos:session:sam.hpprodesk-setup"]
     }
   },
