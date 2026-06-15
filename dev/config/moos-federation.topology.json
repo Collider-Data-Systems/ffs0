@@ -1,7 +1,7 @@
 
 {
   "schema_version": 1,
-  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=219 for Tailscale mesh. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands.",
+  "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=219 for Tailscale mesh. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands. T=226: HP ProDesk seat-parity rejoin — ProDesk joined the Tailscale mesh at 100.87.28.95 (confirmed via tailnet; /healthz returned ontology 3.16.2, t_day 226). Dead off-site LAN IP 172.29.0.32 replaced by the Tailscale IP in the hp-z440/hp-laptop router peer lists and ProDesk kernel endpoints. Routers must be restarted on hp-z440 and hp-laptop to pick up the re-added peer; Test-MoosFederation.ps1 -Mode Doctor then resolves all three hosts. (ffs0#58 / PR #62 / report ffs0#63.)",
   "local_host": "auto",
   "expected_ontology_version": "3.16.2",
   "kernels": {
@@ -76,11 +76,13 @@
       "urn": "urn:moos:kernel:hpprodesk.primary",
       "host": "hpprodesk",
       "http_local": "http://localhost:8000",
-      "http_lan": "http://172.29.0.32:8000",
+      "http_lan": "http://100.87.28.95:8000",
+      "http_tailscale": "http://100.87.28.95:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
-      "mcp_sse_lan": "http://172.29.0.32:8080/sse",
+      "mcp_sse_lan": "http://100.87.28.95:8080/sse",
+      "mcp_sse_tailscale": "http://100.87.28.95:8080/sse",
       "mcp_server": "moos-hpprodesk-primary",
-      "expected_ontology_version": "3.16.1",
+      "expected_ontology_version": "3.16.2",
       "seats": ["urn:moos:session:sam.hpprodesk-setup"]
     }
   },
@@ -96,19 +98,19 @@
       "http_local": "http://localhost:9000",
       "http_lan": "http://192.168.1.15:9000",
       "http_tailscale": "http://100.82.243.13:9000",
-      "peers": ["http://100.106.220.58:9000", "http://172.29.0.32:9000"]
+      "peers": ["http://100.106.220.58:9000", "http://100.87.28.95:9000"]
     },
     "hp-laptop": {
       "host": "hp-laptop",
       "http_local": "http://localhost:9000",
       "http_lan": "http://192.168.1.10:9000",
       "http_tailscale": "http://100.106.220.58:9000",
-      "peers": ["http://172.29.0.32:9000", "http://100.82.243.13:9000"]
+      "peers": ["http://100.87.28.95:9000", "http://100.82.243.13:9000"]
     },
     "hpprodesk": {
       "host": "hpprodesk",
       "http_local": "http://localhost:9000",
-      "http_lan": "http://172.29.0.32:9000",
+      "http_lan": "http://100.87.28.95:9000",
       "peers": ["http://100.106.220.58:9000", "http://100.82.243.13:9000"]
     }
   },
@@ -116,7 +118,8 @@
     "tailnet": "maassenhochrath@gmail.com",
     "machines": {
       "hp-z440": { "name": "desktop-42d00rd", "ip": "100.82.243.13" },
-      "hp-laptop": { "name": "lap-sam", "ip": "100.106.220.58" }
+      "hp-laptop": { "name": "lap-sam", "ip": "100.106.220.58" },
+      "hpprodesk": { "name": "desktop-3fc7c3f", "ip": "100.87.28.95" }
     },
     "note": "IPs are permanent for this tailnet. DHCP LAN IPs (192.168.1.x) kept as reference only. At home Tailscale routes direct (LAN); away it routes via DERP relay — same config either way."
   },
