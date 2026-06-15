@@ -11,7 +11,7 @@ A seat is `persona (=Φ(purpose)) × agent × workspace (session) × instance (k
 | # | Ingredient | Source of truth | hp-laptop / Z440 | HP ProDesk gap @ T=226 |
 |---|---|---|---|---|
 | 1 | Repos: `ffs0` + `moos-kernel` + `moos-router` cloned & current | `github.com/Collider-Data-Systems/*` | current | **pull to current** (`ffs0` was ≈T=198) |
-| 2 | Config SOT: `AGENTS.md` + `CLAUDE.md`×2 + `.github/copilot-instructions.md` + `ANTIGRAVITY.md` | `ffs0/AGENTS.md` (PR #59/#60, T=220) | present | **absent** — lands on pull #1 |
+| 2 | Config SOT: `AGENTS.md` + `CLAUDE.md`×2 + `.github/copilot-instructions.md` + `ANTIGRAVITY.md` | `AGENTS.md` (repo root; PR #59/#60, T=220) | present | **absent** — lands on pull #1 |
 | 3 | Skills: 13 skills synced to `~/.claude/skills/` | `dev/scripts/sync-claude-skills.ps1` | synced | **re-run sync** after pull |
 | 4 | IDE surface: tracked `ffs0.code-workspace` baseline + gitignored `*.local.code-workspace` delta | `ffs0` root | present | regenerate local delta |
 | 5 | Kernel: local `moos-kernel` built at ontology **3.16.2** + local `moos-router` | `moos-kernel`@`master` tip | 3.16.2 | **3.16.1 → rebuild to 3.16.2** |
@@ -60,7 +60,7 @@ Do not proceed past 3.16.1 — the seat must answer 3.16.2 to be equivalent.
 **7. Mesh activation (back on a parity machine, once step 0 yields the IP)** — replace the `TS-IP-PENDING-HPPRODESK` sentinel in `dev/config/moos-federation.topology.json` with the real `100.x` IP (kernel `http_tailscale`/`mcp_sse_tailscale`, the `tailscale.machines.hpprodesk` entry, and re-add the ProDesk router peer to the `hp-z440`/`hp-laptop` peer lists — currently *withheld* to avoid a dead-peer timeout regression). Restart the routers. `Test-MoosFederation.ps1 -Mode Doctor` should then resolve all three hosts.
 
 **8. Seat registration (#9)** — re-verify `vscode.hpprodesk.primary` / `sam.hpprodesk-setup` / WF19 `opens-on hpprodesk.primary` against the rebuilt 3.16.2 kernel. The T=193 bootstrap programs are reusable:
-`dev/scripts/ops/t193-hpprodesk-local-session-bootstrap.program.json` and `…-topology-materialization.program.json`. Emit to ProDesk `:8000` per emit discipline — **not** to laptop/Z440 (do not cross-emit the seat).
+`dev/scripts/ops/t193-hpprodesk-local-session-bootstrap.program.json` and `dev/scripts/ops/t193-hpprodesk-topology-materialization.program.json`. Emit to ProDesk `:8000` per emit discipline — **not** to laptop/Z440 (do not cross-emit the seat).
 
 ## What was done on the hp-laptop side this round (this branch)
 - `dev/config/moos-federation.topology.json`: ProDesk kernel bumped `3.16.1 → 3.16.2`; added `http_tailscale`/`mcp_sse_tailscale` with the `TS-IP-PENDING-HPPRODESK` sentinel; `source_of_truth` note records the rejoin. **Router peer re-add deliberately withheld** until the real IP exists (re-adding the dead `172.29.0.32` peer would re-introduce the federation timeout).

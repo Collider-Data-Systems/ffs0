@@ -76,10 +76,10 @@
       "urn": "urn:moos:kernel:hpprodesk.primary",
       "host": "hpprodesk",
       "http_local": "http://localhost:8000",
-      "http_lan": "http://172.29.0.32:8000",
+      "http_lan": "http://100.87.28.95:8000",
       "http_tailscale": "http://100.87.28.95:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
-      "mcp_sse_lan": "http://172.29.0.32:8080/sse",
+      "mcp_sse_lan": "http://100.87.28.95:8080/sse",
       "mcp_sse_tailscale": "http://100.87.28.95:8080/sse",
       "mcp_server": "moos-hpprodesk-primary",
       "expected_ontology_version": "3.16.2",
@@ -110,7 +110,7 @@
     "hpprodesk": {
       "host": "hpprodesk",
       "http_local": "http://localhost:9000",
-      "http_lan": "http://172.29.0.32:9000",
+      "http_lan": "http://100.87.28.95:9000",
       "peers": ["http://100.106.220.58:9000", "http://100.82.243.13:9000"]
     }
   },
