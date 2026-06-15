@@ -40,7 +40,7 @@ Relation-first, rewrite-first. No OOP framing (no objects-with-payload, no stati
 | Guido (governance) | `vscode.hp-laptop.copilot` | `sam.governance` | `hp-laptop.primary` :8000 | VS Code/Copilot · laptop | :8080 |
 | Cowork-laptop | `claude-cowork.hp-laptop` | `sam.laptop-cowork-workspace` | `hp-laptop.primary` :8000 | Claude Code · laptop | :8080 |
 | AG-laptop | `antigravity.hp-laptop` | `sam.laptop-moos-diary` | `hp-laptop.primary` :8000 | Antigravity · laptop | :8080 |
-| HP ProDesk | `vscode.hpprodesk.primary` | `sam.hpprodesk-setup` | `hpprodesk.primary` :8000 | VS Code · ProDesk | :8080 *(seat-parity rejoin in progress T=226 — Tailscale IP pending; runbook `dev/scripts/ops/t226-hpprodesk-seat-parity-rejoin.md`, ffs0#58)* |
+| HP ProDesk | `vscode.hpprodesk.primary` | `sam.hpprodesk-setup` | `hpprodesk.primary` :8000 | VS Code · ProDesk | :8080 *(rejoined T=226 — Tailscale `100.87.28.95`, kernel 3.16.2, seat verified; mesh wiring PR #62, awaits router restart)* |
 
 All URN prefixes are `urn:moos:<type>:<short>`. Emit discipline: Z440 personae emit to `hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; multi-workspace agents (Wolfram, Cowork) set `session_urn` explicitly (`session_urn` stays the canonical key per the Gate). Twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), not state replication. `sam.mvp-delivery` (hp-z440.primary) is a **dormant, occupant-less lane** (`has-occupant` UNLINKed T=219) — intentionally omitted from the active table.
 
