@@ -3,13 +3,11 @@
 # ProDesk is its own single-seat box (session:sam.hpprodesk-setup): one primary
 # kernel + one router. No menno/lola/moos twins here (those live on Z440).
 #
-# Persistence note: reboot persistence is ALREADY provided by the local
-# `moos-prodesk` scheduled task (logon trigger) -> C:\Users\Geurt\CDS\start-moos.ps1,
-# which is kept LOCAL + untracked per the fleet convention for machine startup
-# scripts (cf. Z440 D:\HPZ440\start_federation.ps1, hp-laptop's Startup .bat).
-# THIS tracked script is the reviewable parity mirror of that invocation plus
-# healthz readback + idempotent guards, for manual bring-up and reference. It is
-# NOT what the scheduled task runs; keep the two in sync if either changes.
+# Persistence: this IS the autostart single source of truth — the `moos-prodesk`
+# scheduled task (logon trigger) runs THIS tracked script (repointed T=227 from
+# the former local C:\Users\Geurt\CDS\start-moos.ps1, now superseded). Kernel and
+# router launch hidden (no console); use Watch-Moos.ps1 / Check-MoosOnline.ps1 to
+# observe. Idempotent guards make it safe to run manually while already up.
 #
 # Router shape = FULL 3-WAY PEER (Sam's #64 call): ProDesk peers out to hp-laptop
 # + Z440, matching routers.hpprodesk.peers in dev/config/moos-federation.topology.json.
@@ -43,7 +41,7 @@ if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     Write-Host "Starting moos primary kernel (ProDesk)..." -ForegroundColor Cyan
     Start-Process -FilePath $KernelExe `
         -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hpprodesk" `
-        -WindowStyle Normal
+        -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }
 
@@ -61,7 +59,7 @@ if (Get-Process -Name moos-router -ErrorAction SilentlyContinue) {
 } else {
     Write-Host "Starting moos router (ProDesk, peers: hp-laptop + Z440)..." -ForegroundColor Cyan
     $RouterArgs = "--listen :9000 --shard $Shard --default $LocalKernel --peer $PeerLaptop --peer $PeerZ440"
-    Start-Process -FilePath $RouterExe -ArgumentList $RouterArgs -WindowStyle Normal
+    Start-Process -FilePath $RouterExe -ArgumentList $RouterArgs -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }
 
