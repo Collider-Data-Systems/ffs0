@@ -1,0 +1,11 @@
+# built binaries
+moos-mcp/moos-mcp
+moos-lsp/moos-lsp
+
+# VS Code client build output
+moos-lsp/client/node_modules/
+moos-lsp/client/out/
+moos-lsp/client/*.vsix
+
+# go workspace local sum (keep go.work, drop the local sum)
+go.work.sum

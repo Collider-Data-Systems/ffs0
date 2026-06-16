@@ -1,5 +1,15 @@
 {
 	"servers": {
+		"moos-mcp": {
+			"type": "stdio",
+			"command": "${workspaceFolder}/dev/tools/moos-mcp/moos-mcp",
+			"args": [
+				"--base-url",
+				"http://localhost:8000",
+				"--actor",
+				"urn:moos:agent:vscode.hp-z440.primary"
+			]
+		},
 		"moos-hp-laptop-primary": {
 			"type": "sse",
 			"url": "http://localhost:8080/sse"

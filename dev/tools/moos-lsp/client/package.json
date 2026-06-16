@@ -1,0 +1,54 @@
+{
+  "name": "moos-lsp-client",
+  "displayName": "mo:os LSP",
+  "description": "Language server client for mo:os rewrite envelopes and programs.",
+  "version": "0.1.0",
+  "publisher": "collider-data-systems",
+  "private": true,
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["Programming Languages", "Linters"],
+  "activationEvents": [
+    "onLanguage:json",
+    "onLanguage:moos"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "moos",
+        "aliases": ["mo:os", "moos"],
+        "extensions": [".moos"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "configuration": {
+      "title": "mo:os LSP",
+      "properties": {
+        "moos.serverPath": {
+          "type": "string",
+          "default": "moos-lsp",
+          "description": "Path to the moos-lsp binary (built from dev/tools/moos-lsp)."
+        },
+        "moos.baseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Optional kernel base URL for live URN hover, e.g. http://localhost:8000."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0"
+  }
+}

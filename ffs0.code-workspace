@@ -243,6 +243,57 @@
         ],
         "group": "build",
       },
+      {
+        "label": "Tools: Build moos-mcp",
+        "type": "shell",
+        "command": "go",
+        "args": ["build", "-o", "moos-mcp", "."],
+        "options": {
+          "cwd": "${workspaceFolder:ffs0-private-workspace}/dev/tools/moos-mcp"
+        },
+        "group": "build",
+        "problemMatcher": ["$go"],
+      },
+      {
+        "label": "Tools: Build moos-lsp",
+        "type": "shell",
+        "command": "go",
+        "args": ["build", "-o", "moos-lsp", "."],
+        "options": {
+          "cwd": "${workspaceFolder:ffs0-private-workspace}/dev/tools/moos-lsp"
+        },
+        "group": "build",
+        "problemMatcher": ["$go"],
+      },
+      {
+        "label": "Tools: Test moos-lsp",
+        "type": "shell",
+        "command": "go",
+        "args": ["test", "./..."],
+        "options": {
+          "cwd": "${workspaceFolder:ffs0-private-workspace}/dev/tools/moos-lsp"
+        },
+        "group": "test",
+        "problemMatcher": ["$go"],
+      },
+      {
+        "label": "Tools: Regen moos-lsp symbols",
+        "type": "shell",
+        "command": "go",
+        "args": [
+          "run",
+          "./internal/ontology/gen",
+          "-ontology",
+          "${workspaceFolder:ffs0-private-workspace}/kb/superset/ontology.json",
+          "-out",
+          "internal/ontology/symbols.go"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:ffs0-private-workspace}/dev/tools/moos-lsp"
+        },
+        "group": "build",
+        "problemMatcher": ["$go"],
+      },
     ],
     "inputs": [
       {
