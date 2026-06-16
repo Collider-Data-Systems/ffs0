@@ -9,6 +9,42 @@ This directory contains sensitive credentials. **Never commit actual secrets.**
 - `api_providers.yaml` is a local provider/model registry for this workstation.
 - Root `.env` files are not authoritative here. If some downstream tool requires `.env`, generate it from `secrets/` as a compatibility projection.
 
+## Secret-surface policy (T=226, ffs0#64)
+
+The fleet keeps `api_keys.env`'s secret surface **near-zero**. A machine that
+moves between locations (e.g. HP ProDesk) must not accumulate long-lived secrets
+on disk. Two patterns carry almost everything:
+
+### GitHub auth
+
+No GitHub token belongs in `api_keys.env`. Run `gh auth login` once per machine
+(device/web flow); the token is stored in the **OS credential store (keyring)**,
+is per-machine, and is independently revocable at `github.com/settings/tokens`.
+`git`/`gh` operations use it automatically (`gh auth status` to confirm; `GH_TOKEN`
+/ `GITHUB_TOKEN` should be unset). A leaked `ghp_` PAT that ever lands in a file
+is treated as compromised — drop it from the file and **rotate** it on GitHub;
+nothing on a keyring-authenticated box reads it.
+
+### Keyless Google (DWD)
+
+Calendar writes and Keep ingest run on a **keyless domain-wide-delegation**
+service account, not on per-user OAuth token files or a downloaded
+`gcp-service-account.json` key:
+
+1. `gcloud auth application-default login` provides ADC (authorized_user).
+2. The ADC principal is granted `roles/iam.serviceAccountTokenCreator` on the
+   DWD service account.
+3. IAM `signJwt` mints a short-lived **delegated** token for
+   `sam@my-tiny-data-collider.nl` on demand — nothing long-lived on disk.
+
+The DWD SA OAuth client-ID must be allow-listed for the needed scopes in
+`admin.google.com` → Security → API controls → Domain-wide delegation
+(`…/auth/calendar.events`, `…/auth/keep.readonly`). Do **not** land
+`gcp-service-account.json` or `google_cloud_token.json` on a roaming machine.
+
+What legitimately remains a file secret: provider API keys you use locally
+(Gemini/OpenAI/Anthropic) and any Cloudflare Access service-token creds.
+
 ## Files (create locally)
 
 ### `api_keys.env`
@@ -52,6 +88,10 @@ It carries Calendar event-write scope only:
 `https://www.googleapis.com/auth/calendar.events`.
 
 ### `gcp-service-account.json`
+
+> **Prefer the keyless DWD path** (see "Keyless Google (DWD)" above) — do not
+> download a JSON key onto a roaming machine. The steps below are the legacy
+> key-file fallback, kept only for boxes where keyless ADC is not available.
 
 Download from Google Cloud Console → IAM → Service Accounts → Keys
 
