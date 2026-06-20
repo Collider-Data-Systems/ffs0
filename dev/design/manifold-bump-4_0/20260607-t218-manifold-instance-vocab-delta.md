@@ -1,6 +1,6 @@
 # mo:os 4.0 vocab delta — `kernel`→`instance` + the workstation projection surface (T=218)
 
-> **Status: DRAFT for review. NOT applied.** No `ontology.json` / `running-state.md` edit.
+> **Status: APPLIED (alias-first) in `ontology.json` v4.0.0 (T=231)** — D6 `instance` alias on `kernel` + D7 surface kinds landed via `channel.kind`. Hard ~59-site `kernel→instance` URN rewrite + D8 `realizes` reification deferred to 4.0.x.
 > Authored: Z440 VS Code lead (`agent:vscode.hp-z440.primary` / `session:sam.z440-vscode-projection-lead`),
 > 2026-06-07 (T=218), on lane `z440-vscode-lead/manifold-instances-vocab`.
 > Builds on the T216 4.0 draft (`20260605-t216-ontology-4.0-draft.md`, deltas D1–D5) and the

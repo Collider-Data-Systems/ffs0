@@ -3,7 +3,7 @@
   "schema_version": 1,
   "source_of_truth": "kb/superset/running-state.md federation port map, refreshed at T=219 for Tailscale mesh. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands. T=226: HP ProDesk seat-parity rejoin — ProDesk joined the Tailscale mesh at 100.87.28.95 (confirmed via tailnet; /healthz returned ontology 3.16.2, t_day 226). Dead off-site LAN IP 172.29.0.32 replaced by the Tailscale IP in the hp-z440/hp-laptop router peer lists and ProDesk kernel endpoints. Routers must be restarted on hp-z440 and hp-laptop to pick up the re-added peer; Test-MoosFederation.ps1 -Mode Doctor then resolves all three hosts. (ffs0#58 / PR #62 / report ffs0#63.)",
   "local_host": "auto",
-  "expected_ontology_version": "3.16.2",
+  "expected_ontology_version": "4.0.0",
   "kernels": {
     "hp-z440.primary": {
       "urn": "urn:moos:kernel:hp-z440.primary",
@@ -13,7 +13,7 @@
       "http_tailscale": "http://100.82.243.13:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_server": "moos-primary",
-      "expected_ontology_version": "3.16.2",
+      "expected_ontology_version": "4.0.0",
       "seats": [
         "urn:moos:session:sam.kernel-proper",
         "urn:moos:session:sam.moos-diary",
@@ -30,7 +30,7 @@
       "http_tailscale": "http://100.82.243.13:8001",
       "mcp_sse_local": "http://localhost:9001/sse",
       "mcp_server": "moos-menno",
-      "expected_ontology_version": "3.16.2",
+      "expected_ontology_version": "4.0.0",
       "seats": ["urn:moos:session:sam.steinberger-seat"]
     },
     "hp-z440.lola": {
@@ -41,7 +41,7 @@
       "http_tailscale": "http://100.82.243.13:8002",
       "mcp_sse_local": "http://localhost:9002/sse",
       "mcp_server": "moos-lola",
-      "expected_ontology_version": "3.16.2",
+      "expected_ontology_version": "4.0.0",
       "seats": ["urn:moos:session:sam.karpathy-seat"]
     },
     "hp-z440.moos": {
@@ -52,7 +52,7 @@
       "http_tailscale": "http://100.82.243.13:8003",
       "mcp_sse_local": "http://localhost:9003/sse",
       "mcp_server": "moos-moos",
-      "expected_ontology_version": "3.16.2",
+      "expected_ontology_version": "4.0.0",
       "seats": []
     },
     "hp-laptop.primary": {
@@ -65,7 +65,7 @@
       "mcp_sse_lan": "http://192.168.1.10:8080/sse",
       "mcp_sse_tailscale": "http://100.106.220.58:8080/sse",
       "mcp_server": "moos-hp-laptop-primary",
-      "expected_ontology_version": "3.16.2",
+      "expected_ontology_version": "4.0.0",
       "seats": [
         "urn:moos:session:sam.governance",
         "urn:moos:session:sam.laptop-cowork-workspace",
@@ -82,7 +82,7 @@
       "mcp_sse_lan": "http://100.87.28.95:8080/sse",
       "mcp_sse_tailscale": "http://100.87.28.95:8080/sse",
       "mcp_server": "moos-hpprodesk-primary",
-      "expected_ontology_version": "3.16.2",
+      "expected_ontology_version": "4.0.0",
       "seats": ["urn:moos:session:sam.hpprodesk-setup"]
     }
   },

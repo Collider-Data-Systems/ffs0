@@ -1,0 +1,50 @@
+[
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "node_urn": "urn:moos:grammar_fragment:v400-1-manifold-type",
+    "type_id": "grammar_fragment",
+    "properties": {
+      "name": { "value": "v400-1 manifold type", "mutability": "immutable" },
+      "fragment_kind": { "value": "type", "mutability": "immutable" },
+      "specification": { "value": { "change": "ADD S2 node-type `manifold` (D1), identity-first", "added_in_version": "4.0.0", "deferred": "spanning relations manifold->instance/workspace/channel + their WF", "precedent": "v3.14 derivation landed type-first before WF21 LINKs" }, "mutability": "mutable" },
+      "evidence_urns": { "value": ["urn:moos:session:sam.z440-cowork-workspace"], "mutability": "mutable" },
+      "status": { "value": "proposed", "mutability": "mutable" },
+      "created_at": { "value": "2026-06-20T23:45:00Z", "mutability": "immutable" }
+    }
+  },
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "node_urn": "urn:moos:grammar_fragment:v400-2-workstation-kind",
+    "type_id": "grammar_fragment",
+    "properties": {
+      "name": { "value": "v400-2 workstation.kind", "mutability": "immutable" },
+      "fragment_kind": { "value": "property", "mutability": "immutable" },
+      "specification": { "value": { "change": "ADD property workstation.kind enum {server,desktop,laptop,mobile,vm,edge}", "added_in_version": "4.0.0", "retires": "phantom device type (P1)" }, "mutability": "mutable" },
+      "evidence_urns": { "value": ["urn:moos:session:sam.z440-cowork-workspace"], "mutability": "mutable" },
+      "status": { "value": "proposed", "mutability": "mutable" },
+      "created_at": { "value": "2026-06-20T23:45:00Z", "mutability": "immutable" }
+    }
+  },
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "node_urn": "urn:moos:grammar_fragment:v400-3-channel-kind-surface-infra",
+    "type_id": "grammar_fragment",
+    "properties": {
+      "name": { "value": "v400-3 channel.kind surface+infra", "mutability": "immutable" },
+      "fragment_kind": { "value": "property", "mutability": "immutable" },
+      "specification": { "value": { "change": "channel.kind += 14 values: infra {domain,dns-zone,cloudflare-zone,cloudflare-tunnel,access-app,registrar,website-endpoint} + surface {workstation-surface,virtual-desktop,window,tab-group,browser-tab,harness-pane,keep-widget}", "added_in_version": "4.0.0", "folds": "D5 infra + D7 surface as P2", "deferred": "pip-window, compile-target" }, "mutability": "mutable" },
+      "evidence_urns": { "value": ["urn:moos:session:sam.z440-cowork-workspace"], "mutability": "mutable" },
+      "status": { "value": "proposed", "mutability": "mutable" },
+      "created_at": { "value": "2026-06-20T23:45:00Z", "mutability": "immutable" }
+    }
+  },
+  { "rewrite_type": "MUTATE", "actor": "urn:moos:kernel:hp-z440.primary", "target_urn": "urn:moos:grammar_fragment:v400-1-manifold-type", "field": "status", "new_value": "promoted" },
+  { "rewrite_type": "MUTATE", "actor": "urn:moos:kernel:hp-z440.primary", "target_urn": "urn:moos:grammar_fragment:v400-2-workstation-kind", "field": "status", "new_value": "promoted" },
+  { "rewrite_type": "MUTATE", "actor": "urn:moos:kernel:hp-z440.primary", "target_urn": "urn:moos:grammar_fragment:v400-3-channel-kind-surface-infra", "field": "status", "new_value": "promoted" },
+  { "rewrite_type": "MUTATE", "actor": "urn:moos:kernel:hp-z440.primary", "target_urn": "urn:moos:grammar_fragment:v400-1-manifold-type", "field": "status", "new_value": "merged" },
+  { "rewrite_type": "MUTATE", "actor": "urn:moos:kernel:hp-z440.primary", "target_urn": "urn:moos:grammar_fragment:v400-2-workstation-kind", "field": "status", "new_value": "merged" },
+  { "rewrite_type": "MUTATE", "actor": "urn:moos:kernel:hp-z440.primary", "target_urn": "urn:moos:grammar_fragment:v400-3-channel-kind-surface-infra", "field": "status", "new_value": "merged" }
+]
