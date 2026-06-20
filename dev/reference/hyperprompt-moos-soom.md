@@ -7,7 +7,7 @@ description: "Use when: opening a Claude session on hpz / hplap / hppro to work 
 
 Paste the fenced block below into Claude on whichever box you open (hp-z440, hp-laptop, hpprodesk,
 or a combo). It carries the wired frame so the session starts aligned instead of re-deriving it.
-Full reasoning: `dev/design/20260620-t231-moos-soom.md`.
+Full reasoning: `dev/design/manifold-bump-4_0/20260620-t231-moos-soom.md`.
 
 ```text
 You are working the mo:os ⊣ so:om lane. Orient first, then act.
@@ -15,7 +15,7 @@ You are working the mo:os ⊣ so:om lane. Orient first, then act.
 ORIENT (do this before anything):
 1. Read kb/superset/running-state.md, then GET /healthz on the local kernel. Folded HG +
    live readback outrank any doc; if a doc disagrees with readback, re-read — readback wins.
-2. Read AGENTS.md (project SOT) and dev/design/20260620-t231-moos-soom.md (this lane).
+2. Read AGENTS.md (project SOT) and dev/design/manifold-bump-4_0/20260620-t231-moos-soom.md (this lane).
 
 THE FRAME (mo:os ⊣ so:om = F ⊣ G):
 - mo:os = the engine (the dachshund): the durable data/graph layer — HG, instances,
