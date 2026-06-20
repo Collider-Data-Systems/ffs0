@@ -20,6 +20,7 @@ categorical space, etc.) stay in `dev/design/` root.
 | `20260620-t231-moos-soom.md` | mo:os ⊣ so:om — engine/surface adjunction; device F/G degrees; wiring |
 | `20260620-t231-poly-foundations.md` | **Poly** as the unifier: comonoids = the data layer, lenses/coalgebras = the surfaces; trees = free monads; HAL/Erban lineage |
 | `poly-navigation-map.md` | one-screen guided tour: mo:os → so:om → mtdc → Poly → functorial semantics → Set |
+| `hyperprompt-moos-soom.md` | paste-ready seed booting Claude on hpz/hplap/hppro already wired into the mo:os ⊣ so:om frame |
 
 Authoritative vocabulary + gate status live in `AGENTS.md` (4.0 vocabulary table) and
 `kb/superset/ontology.json`. The categorical spine these drafts extend lives in
