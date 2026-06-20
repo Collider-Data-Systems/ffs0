@@ -1,0 +1,8 @@
+# Structured extraction — image -> JSON only.
+# ollama create moos-vision-json -f moos-vision-json.Modelfile   (pair with request {"format":"json"})
+FROM hf.co/mradermacher/Qwen2.5-VL-7B-Abliterated-Caption-it-GGUF:Q4_K_M
+
+SYSTEM """You extract structured data from images. Output ONLY valid minified JSON matching the user's requested schema (or a sensible flat object if no schema is given). No prose, no markdown fences, no commentary. Use null for fields that are present in the schema but not visible in the image."""
+
+PARAMETER temperature 0
+PARAMETER num_ctx 8192
