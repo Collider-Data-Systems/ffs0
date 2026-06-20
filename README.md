@@ -15,6 +15,7 @@ Orientation (the rule, seat map, SOT hierarchy, F⊣G pipeline, vocabulary, bran
 | `kb/superset/instances/` | Instance-level state snapshots. |
 | `kb/moos-diary/` | Round wrap-ups and projection-ready diary material. |
 | `dev/scripts/` | Projection runners, dry planners, validators, ingest/writer scripts (`ops/`, `projections/`, `validation/`, `tests/`). Feature folders: `keep-anywhere/` (Keep→Drive mirror). |
+| `dev/tools/` | Compiled Go dev tools: `moos-mcp/` (kernel↔IDE MCP server), `moos-lsp/` (ontology language server), `landscape.md` (technology map). |
 | `dev/claude-skills/` | Project skills (synced to `~/.claude/skills/` via `sync-claude-skills.ps1`). |
 | `dev/config/` | Federation topology, session-affordance, desktop maps. |
 | `dev/design/` | 4.0 / ontology design drafts (relation-first, rewrite-first; see `AGENTS.md` design discipline). Grouped lane: `manifold-bump-4_0/` (vocab deltas, mtdc, branching, mo:os ⊣ so:om, Poly). |
