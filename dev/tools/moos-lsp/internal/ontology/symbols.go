@@ -4,7 +4,7 @@
 package ontology
 
 // OntologyVersion is the version of the ontology these tables were generated from.
-const OntologyVersion = "3.16.2"
+const OntologyVersion = "4.0.0"
 
 // NodeType describes one node type from the operad.
 type NodeType struct {
@@ -39,6 +39,7 @@ var NodeTypes = map[string]NodeType{
 	"kernel":                {ID: "kernel", Stratum: "S2", URNPattern: "urn:moos:kernel:<workstation>.<name>", URNExample: "urn:moos:kernel:hp-laptop.primary", OutPorts: []string{"exposes", "computes-on", "persisted-in"}, InPorts: []string{"hosted-on", "kb-source"}},
 	"knowledge_item":        {ID: "knowledge_item", Stratum: "S2", URNPattern: "urn:moos:ki:<source-type>.<slug>", URNExample: "urn:moos:ki:yt.we-must-add-structure-to-deep-learning", OutPorts: []string{"asserts", "tagged"}, InPorts: []string{"produced-by"}},
 	"language":              {ID: "language", Stratum: "S1", URNPattern: "urn:moos:language:<name>", URNExample: "", OutPorts: nil, InPorts: nil},
+	"manifold":              {ID: "manifold", Stratum: "S2", URNPattern: "urn:moos:manifold:<slug>", URNExample: "urn:moos:manifold:my-tiny-data-collider", OutPorts: nil, InPorts: nil},
 	"message_packet":        {ID: "message_packet", Stratum: "", URNPattern: "urn:moos:message:<user>.<session>.<id>", URNExample: "", OutPorts: nil, InPorts: nil},
 	"network_endpoint":      {ID: "network_endpoint", Stratum: "S1", URNPattern: "urn:moos:network_endpoint:<host>.<port>", URNExample: "urn:moos:network_endpoint:hp-laptop.8000", OutPorts: nil, InPorts: nil},
 	"package":               {ID: "package", Stratum: "S1", URNPattern: "urn:moos:package:<name>", URNExample: "", OutPorts: nil, InPorts: nil},
@@ -72,7 +73,7 @@ var NodeTypes = map[string]NodeType{
 }
 
 // NodeTypeIDs is the sorted list of all node type ids.
-var NodeTypeIDs = []string{"agent", "agent_session", "calendar_event", "capability", "channel", "claim", "classification_scheme", "clock", "compute", "crosswalk", "derivation", "domain_tag", "endpoint", "event_notice", "external_op", "gate", "git_issue", "governance_proposal", "grammar_fragment", "group", "guard", "harness", "kernel", "knowledge_item", "language", "message_packet", "network_endpoint", "package", "pattern", "prg_task", "program", "protocol", "purpose", "reactor", "repository", "role", "router", "runtime", "session", "shard_rule", "skill", "source_feed", "storage", "stratum", "system_instruction", "t_hook", "tool_call", "tool_result", "transport_binding", "twin_link", "user", "view_filter", "watcher", "workflow", "workstation"}
+var NodeTypeIDs = []string{"agent", "agent_session", "calendar_event", "capability", "channel", "claim", "classification_scheme", "clock", "compute", "crosswalk", "derivation", "domain_tag", "endpoint", "event_notice", "external_op", "gate", "git_issue", "governance_proposal", "grammar_fragment", "group", "guard", "harness", "kernel", "knowledge_item", "language", "manifold", "message_packet", "network_endpoint", "package", "pattern", "prg_task", "program", "protocol", "purpose", "reactor", "repository", "role", "router", "runtime", "session", "shard_rule", "skill", "source_feed", "storage", "stratum", "system_instruction", "t_hook", "tool_call", "tool_result", "transport_binding", "twin_link", "user", "view_filter", "watcher", "workflow", "workstation"}
 
 // WF describes one rewrite category (WF01..WF21).
 type WF struct {
@@ -128,14 +129,18 @@ var PortColorMatrix = map[string]map[string]string{
 var UseVocab = map[string]string{
 	"_urn_suffix":      "single node reference property (not: _ref)",
 	"_urns_suffix":     "plural node reference property (not: _refs)",
+	"instance":         "v4.0 alias of `kernel` (D6) — `instance := fold(log)`, model-theoretic; canonical type-id/URN stay `kernel` until the gated 4.0.x rewrite",
 	"interaction_node": "discrete interaction artifact node (not: transition, event, message)",
+	"manifold":         "top-category node (v4.0, D1) — an application/domain topology; the colimit of branch-episodes sharing one purpose-slug; e.g. manifold:my-tiny-data-collider",
 	"node":             "identity point in graph (not: object, element, vertex)",
 	"operad":           "valid composition rules / type registry (not: schema, grammar)",
+	"persona":          "v4.0 (D3) — a derived presentational identity `persona = Φ(purpose)`, carried as a `derivation`; NOT a node-type and never an authority principal",
 	"port":             "interface point on a node type (not: slot, endpoint)",
 	"property":         "typed key-value on a node (not: field, payload, attribute)",
 	"relation":         "typed connection between nodes (not: binding, edge, wire, association)",
 	"rewrite":          "graph transformation operation (not: morphism for the op, update, mutation)",
 	"rewrite_category": "family of allowed rewrites WF01-WF15 (not: named relation, UML association)",
+	"workspace":        "v4.0 alias of `session` (D2) — same node; canonical type-id/URN stay `session` until the gated 4.0.x rewrite",
 }
 
 // ForbiddenVocab maps a forbidden token to the full nomenclature entry it came from.

@@ -1,13 +1,40 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "3.16.2",
-  "t_day": 206,
+  "version": "4.0.0",
+  "t_day": 231,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md. T=173 round-12 v3.13.0: four promoted grammar_fragments materialized into ontology — v313-6 (WF02 delegates-to/delegated-by additional port pair for role→role capability delegation), v313-7 (new S2 `group` node type — collective principal, extends principalTypes from {user, agent} to {user, agent, group}), v313-8 (channel.kind enum expansion: +calendar, +task-list, +cloud-storage, +vcs, +project-board), v313-9 (WF01 owns/owned-by additional port pair — group|user source owning kernel|session|purpose|program|channel|agent targets). WF19 has-occupant tgt_types extends to include `group` (session occupancy by a collective principal). See kb/research/session/20260422-t172-wolframs-court-social-topology.md §3 + T=173 batch on Z440 kernel 0 log_seq 285-288 (WF20 promotion ceremony for the 4 fragments).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "dev/reference/research-archive/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "4.0.0",
+      "date": "2026-06-20",
+      "t_day": 231,
+      "round": "manifold-bump 4.0 (alias-first, additive)",
+      "fragments_promoted": [
+        "v400-1-manifold-type",
+        "v400-2-workstation-kind",
+        "v400-3-channel-kind-surface-infra"
+      ],
+      "summary": "First major bump (3.x -> 4.0). ALIAS-FIRST + ADDITIVE: no URN rewrite, no authority-model change, nothing existing removed or renamed. Lands the Sam-ratified (T=219) manifold-paradigm vocabulary. D1: `manifold` first-class S2 node-type, identity-first -- its spanning relations to instance/workspace/channel and their WF rewrite_category are DEFERRED to a follow-on fragment, exactly as v3.14 `derivation` landed before its WF21 LINKs. D2 `session`->`workspace` and D6 `kernel`->`instance` are ALIAS-FIRST labels only: canonical type-ids + URNs stay `session`/`kernel`; the hard ~59-site URN rewrite ships as a gated 4.0.x point release once Doctor + `go test ./...` pass. D3: `persona = Phi(purpose)` carried as a `derivation` convention (never an authority node). D5+D7 folded (P2): `channel.kind` += infra {domain, dns-zone, cloudflare-zone, cloudflare-tunnel, access-app, registrar, website-endpoint} + surface {workstation-surface, virtual-desktop, window, tab-group, browser-tab, harness-pane, keep-widget}. P1: `workstation.kind` enum {server, desktop, laptop, mobile, vm, edge} (retires the phantom `device` type). Runtime: ontology.json-only -- the operad loader is data-driven (new types/enums/properties/port-pairs load with zero Go change; enum values are inert/unchecked); moos-lsp symbols.go regenerated. Kernels must reload to serve 4.0.0.",
+      "deferrals": [
+        "D4 presents-as (agent<->persona): blocked -- persona is a `derivation` (D3), there is no persona node-type; target/WF/port undefined. Follow-on fragment.",
+        "P3 derivation.inference_kind += {lowering, lifting}: axis-mixing open question (extend the mechanism enum vs add a separate fg_direction property) -- resolve before promotion.",
+        "D8 realizes/realized-by: observed-first; promote to a relation/WF only if the projection pipeline must WRITE it.",
+        "P4 §M11 PreToolUse occupant-guard: authority-model change; 4.0.x-class; settle the ownership-by-key gradient + hard-gate-vs-soft-hook + exemption set with Sam first.",
+        "D2/D6 hard URN rewrites (session->workspace, kernel->instance ~59 sites): gated 4.0.x on Doctor + go test ./...",
+        "manifold spanning relations (manifold -> instance/workspace/channel) + their WF: follow-on (the type lands identity-first per the v3.14 derivation precedent)."
+      ],
+      "migration_actions_in_hg": [
+        "Edit ontology.json: bump version 3.16.2 -> 4.0.0, add `manifold` to types.s2_infrastructure, add workstation.kind + channel.kind values, add nomenclature/alias entries + persona convention note, append this changelog entry. Commit on ffs0 via reviewed PR (the 4.0 gate).",
+        "Regenerate moos-lsp internal/ontology/symbols.go (go run ./internal/ontology/gen ...); commit.",
+        "Verify: ontology.json parses; go test ./... green on moos-kernel + moos-lsp; MOOS_INTEGRATION=1 integration test green; throwaway kernel boot reports /healthz ontology_version=4.0.0 and /operad/node-types lists `manifold`.",
+        "Restart Z440 kernels (+ twins) and hp-laptop to load 4.0.0; verify /healthz on each.",
+        "WF20 ceremony on the live kernel: ADD the three grammar_fragments (status proposed) -> MUTATE promoted -> MUTATE merged (admin authority; principal=sam via superadmin)."
+      ]
+    },
     {
       "version": "3.16.2",
       "date": "2026-05-26",
@@ -290,7 +317,11 @@
       "property": "typed key-value on a node (not: field, payload, attribute)",
       "interaction_node": "discrete interaction artifact node (not: transition, event, message)",
       "_urn_suffix": "single node reference property (not: _ref)",
-      "_urns_suffix": "plural node reference property (not: _refs)"
+      "_urns_suffix": "plural node reference property (not: _refs)",
+      "manifold": "top-category node (v4.0, D1) — an application/domain topology; the colimit of branch-episodes sharing one purpose-slug; e.g. manifold:my-tiny-data-collider",
+      "workspace": "v4.0 alias of `session` (D2) — same node; canonical type-id/URN stay `session` until the gated 4.0.x rewrite",
+      "instance": "v4.0 alias of `kernel` (D6) — `instance := fold(log)`, model-theoretic; canonical type-id/URN stay `kernel` until the gated 4.0.x rewrite",
+      "persona": "v4.0 (D3) — a derived presentational identity `persona = Φ(purpose)`, carried as a `derivation`; NOT a node-type and never an authority principal"
     },
     "forbidden": [
       "binding (for graph)",
@@ -338,11 +369,46 @@
         }
       },
       {
+        "id": "manifold",
+        "description": "Top-category node (v4.0, D1): an application/domain topology -- the durable locus where a group's domains, DNS, websites, instances/workspaces, and Workspace/GitHub/Calendar/tunnel channel-surfaces are facets of one topology. Categorically the colimit of the per-repo branch-episodes that share one purpose-slug. Sam-ratified T=219 as a new first-class category. Lands identity-first: its spanning relations (manifold -> instance / workspace / channel) and their WF rewrite_category are deferred to a follow-on fragment, exactly as the v3.14 `derivation` type landed before its WF21 LINKs. Worked example: manifold:my-tiny-data-collider.",
+        "stratum": "S2",
+        "urn_pattern": "urn:moos:manifold:<slug>",
+        "urn_example": "urn:moos:manifold:my-tiny-data-collider",
+        "added_in_version": "4.0.0",
+        "promotes_fragment": "urn:moos:grammar_fragment:v400-1-manifold-type",
+        "ports": {
+          "self": [
+            "identity"
+          ]
+        },
+        "properties": {
+          "name": {
+            "mutability": "immutable",
+            "type": "string",
+            "note": "short label / slug; e.g. my-tiny-data-collider"
+          },
+          "owner_urn": {
+            "mutability": "immutable",
+            "type": "urn",
+            "note": "provenance stamp, not topology -- the group/user this manifold belongs to"
+          },
+          "created_at": {
+            "mutability": "immutable",
+            "type": "datetime"
+          }
+        },
+        "note": "Spanning relations to instances/workspaces/channels are NOT yet declared (no WF) -- follow-on fragment, per the migration guard. A Stage-1 derived view over group/purpose/session/channel data remains a valid read until those land."
+      },
+      {
         "id": "kernel",
         "description": "A running mo:os process. Sovereign — bound to one workstation, owned by one user.",
         "stratum": "S2",
         "urn_pattern": "urn:moos:kernel:<workstation>.<name>",
         "urn_example": "urn:moos:kernel:hp-laptop.primary",
+        "aliases": [
+          "instance"
+        ],
+        "alias_note": "4.0 alias (D6): `instance` is the 4.0 label (instance := fold(log), model-theoretic sense). Canonical type-id and URN stay `kernel` until the gated 4.0.x rewrite. This field is doc-intent; no loader consumes it yet.",
         "ports": {
           "out": [
             "exposes",
@@ -398,6 +464,23 @@
           "arch": {
             "mutability": "immutable",
             "type": "string"
+          },
+          "kind": {
+            "mutability": "mutable",
+            "authority_scope": "owner",
+            "type": "enum",
+            "values": [
+              "server",
+              "desktop",
+              "laptop",
+              "mobile",
+              "vm",
+              "edge"
+            ],
+            "optional": true,
+            "added_in_version": "4.0.0",
+            "promotes_fragment": "urn:moos:grammar_fragment:v400-2-workstation-kind",
+            "note": "Host-class discriminator (P1/D7). Retires the phantom `device` type -- every kind runs an instance at some F/G capability degree (server/desktop/laptop = full G-reach; mobile/edge = surface-heavy / reduced G-reach). Mutable+optional so existing workstation nodes backfill via an additive MUTATE."
           }
         }
       },
@@ -505,6 +588,10 @@
         "stratum": "S2",
         "urn_pattern": "urn:moos:session:<kernel-short> | urn:moos:session:<owner-short>.<purpose-slug>",
         "urn_example": "urn:moos:session:hp-z440.primary",
+        "aliases": [
+          "workspace"
+        ],
+        "alias_note": "4.0 alias (D2): `workspace` is the 4.0 label for this node. Canonical type-id and URN stay `session` until the gated 4.0.x rewrite. This field is doc-intent; no loader consumes it yet.",
         "ports": {
           "out": [
             "focus",
@@ -1408,7 +1495,7 @@
       },
       {
         "id": "derivation",
-        "description": "Reifies session-internal inference as a first-class graph object. Every program / claim / knowledge_item produced by a session can walk back to its derivation, the evidence consumed, the weights applied, and the confidence assigned. Closes the inference-visibility gap surfaced in T=175 program-authoring fabric note. Companion port-pair (authors-via/authored-by-session for session) deferred to a future fragment; for now derivation nodes ADD with all properties but their LINKs to programs/claims/evidence land via WF21 causes/caused-by once that fragment promotes. Added v3.14 per `urn:moos:grammar_fragment:v314-1-derivation-type`.",
+        "description": "Reifies session-internal inference as a first-class graph object. Every program / claim / knowledge_item produced by a session can walk back to its derivation, the evidence consumed, the weights applied, and the confidence assigned. Closes the inference-visibility gap surfaced in T=175 program-authoring fabric note. Companion port-pair (authors-via/authored-by-session for session) deferred to a future fragment; for now derivation nodes ADD with all properties but their LINKs to programs/claims/evidence land via WF21 causes/caused-by once that fragment promotes. Added v3.14 per `urn:moos:grammar_fragment:v314-1-derivation-type`. v4.0 (D3): `persona = Φ(purpose)` is carried as a derivation — a reified session-internal inference of presentational identity from purpose/scope/affordance evidence; never an authority node (agents remain the operational principal). Provenance: purpose --WF21 causes--> the persona derivation.",
         "stratum": "S2",
         "urn_pattern": "urn:moos:derivation:<session-slug>.<seq>",
         "urn_example": "urn:moos:derivation:cowork-z440.glossary-h2-chunker",
@@ -2004,8 +2091,25 @@
               "vcs",
               "project-board",
               "video",
-              "audio"
-            ]
+              "audio",
+              "domain",
+              "dns-zone",
+              "cloudflare-zone",
+              "cloudflare-tunnel",
+              "access-app",
+              "registrar",
+              "website-endpoint",
+              "workstation-surface",
+              "virtual-desktop",
+              "window",
+              "tab-group",
+              "browser-tab",
+              "harness-pane",
+              "keep-widget"
+            ],
+            "added_in_version": "4.0.0",
+            "promotes_fragment": "urn:moos:grammar_fragment:v400-3-channel-kind-surface-infra",
+            "values_note": "v4.0 (D5 infra + D7 surface, folded as P2): infra kinds domain..website-endpoint carry STRUCTURAL handles only in source_uri (never tokens/account-ids); surface kinds workstation-surface..keep-widget are S0 observed-not-authored projection substrate (never durable-store private window/tab contents). pip-window + compile-target deferred (B5)."
           },
           "source_uri": {
             "mutability": "immutable",
