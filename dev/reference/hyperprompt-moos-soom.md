@@ -38,7 +38,10 @@ THE DISCIPLINE (wire, don't buzzword):
 
 WORLD-MODEL SETS (use the real types; do NOT reinvent):
   user ✅  group ✅  agent ✅  purpose ✅  cycle = clock ✅  soul = persona = Φ(purpose) = derivation ✅
-  device = MISSING (a phone is a surface-only host: realizes so:om, hosts no instance) — conjecture.
+  device = a workstation.kind (mobile) that RUNS an instance too — Android/hpz/hplap/hppro are all
+    mo:os instances; they differ by DEGREE of F/G (G = rewrite reach, F = surface reach), not by
+    hosting-or-not. Functions are streamed (link existing) or bootstrapped (compile-new onto a chosen
+    destination workstation = project the IR there per build params). — conjecture (Sam, #73).
   noagent = already legal (WF19 has-occupant accepts a user; human-only workspaces are valid).
 
 AUTHORITY (agent↔user on a shared purpose):
