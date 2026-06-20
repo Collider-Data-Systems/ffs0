@@ -740,6 +740,51 @@ External dependencies & 0 \\
 \end{center}
 
 %% -----------------------------------------------------------------
+\section{Future Direction: A Polynomial Interaction Layer}
+\label{sec:poly}
+
+The development above factors syntax from semantics via Lawvere theories and
+types composition via the wiring-diagram operad $\mathcal{W}$. We sketch a
+single setting that subsumes both and adds an interaction layer the present
+account lacks: the category $\mathbf{Poly}$ of polynomial functors
+\cite{niu2024poly,spivak2021abacus}. This section is a research direction; the
+claims are conjectural recastings of the implemented kernel, not yet proved
+against it.
+
+A \emph{polynomial functor} is $p(Y) = \sum_{i \in p(1)} Y^{p[i]}$, where the
+\emph{positions} $p(1)$ are the states an interface may occupy and, at each
+position $i$, the \emph{directions} $p[i]$ are the inputs admissible there. A
+morphism $p \to q$ in $\mathbf{Poly}$ is a dependent lens: a forward map on
+positions $p(1) \to q(1)$ together with, for each position, a backward map on
+directions $q[\varphi i] \to p[i]$. A lens is thus precisely a
+projection/ingestion pair at one interface.
+
+Three facts organize the recasting. First, comonoids in $(\mathbf{Poly},
+\triangleleft, y)$ are exactly small categories \cite{ahman2016directed}:
+positions are objects, directions are outgoing morphisms, comultiplication is
+composition. Hence the Container Category $\mathcal{C}$
+(Section~\ref{sec:container}) is conjecturally a $\mathbf{Poly}$-comonoid, with
+the four rewrites generating its directions; a folded instance
+$\mathit{state}(t)$ is a $\mathbf{Set}$-valued model of that comonoid, recovering
+the functorial semantics of Section~\ref{sec:background}. Second, the free monad
+$m_p$ on a polynomial is the set of $p$-trees, so repository structures
+(branch/worktree DAGs) and nested wiring are free-monad terms over a branching
+polynomial. Third, a Moore machine with states $S$, inputs $A$, outputs $B$ is a
+lens $S\,y^{S} \to B\,y^{A}$; a live user/agent surface is therefore a
+\emph{polynomial coalgebra}, its interface the polynomial $B\,y^{A}$.
+
+Under this reading the kernel and its surfaces inhabit one category: the data
+layer is the comonoids of $\mathbf{Poly}$, and the interaction layer---surfaces
+as polynomials, the MCP bridge and Data Lens of Section~\ref{sec:implementation}
+as lenses---are its morphisms and coalgebras. The Recursive Semantic Bridge
+$F\colon \mathbf{Syn}\to\mathbf{Sem}$ and its ingestion adjoint become the
+forward and backward legs of these lenses. Two questions remain open: whether an
+instance is best presented as a cofunctor out of the comonoid or as a bimodule
+into $\mathbf{Set}$ (which determines how the federation sheaf glues), and
+whether an instance's capability degree refines to a sub-polynomial relation,
+giving the backend-selection of distributed evaluation a clean order.
+
+%% -----------------------------------------------------------------
 \section{Related Work}
 \label{sec:related}
 
