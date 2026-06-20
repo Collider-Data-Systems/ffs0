@@ -29,7 +29,7 @@ Outputs under `tmp/projections/session_pipeline/`: session pack, graph/DOT/SVG l
 ## Workspace
 ```
 kb/superset/   ontology.json (S1, v3.16.2) + running-state.md (hydration entrypoint)
-kb/research/   live doctrine · kb/moos-diary/ round wrap-ups
+kb/moos-diary/ round wrap-ups  (doctrine moved: dev/reference/research-archive/ + dev/design/manifold-bump-4_0/)
 dev/           scripts/ (ops+projections · keep-anywhere/ Keep→Drive mirror) · tools/ (Go: moos-mcp · moos-lsp · landscape.md) · claude-skills/ (13) · config/ · design/ (4.0 drafts · manifold-bump-4_0/ = vocab deltas·mtdc·branching·mo:os⊣so:om·Poly) · reference/ (runbooks + research-archive)
 secrets/       GITIGNORED, local-first
 .github/       copilot-instructions.md (Copilot mirror) + workflows/ (Project-sync Action)
