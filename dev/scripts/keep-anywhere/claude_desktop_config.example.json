@@ -1,5 +1,5 @@
 {
-  "_comment": "Example Claude Desktop MCP config for Keep-anywhere. Copy the relevant blocks into your real claude_desktop_config.json (Windows: %APPDATA%\\Claude\\claude_desktop_config.json). Claude Desktop requires STRICT JSON (no comments) — delete this _comment key. Fill secrets from environment, not inline. See dev/reference/keep-anywhere-runbook.md.",
+  "_comment": "Example Claude Desktop MCP config for Keep-anywhere. Copy the relevant blocks into your real claude_desktop_config.json (Windows: %APPDATA%\\Claude\\claude_desktop_config.json). Claude Desktop requires STRICT JSON (no comments) — delete this _comment key. Fill secrets from environment, not inline. See dev/scripts/keep-anywhere/README.md.",
   "mcpServers": {
     "google-drive": {
       "_comment": "The unifier: reads the Drive 'keep-mirror' folder the Z440 job syncs to. Works on every device that has Claude Desktop. Authenticate per its own README (OAuth).",

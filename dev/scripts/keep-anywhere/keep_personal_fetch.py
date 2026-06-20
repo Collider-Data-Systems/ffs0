@@ -89,7 +89,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Mirror personal Google Keep notes to Markdown.")
     ap.add_argument("--out", default="scratch/keep/mirror/personal", help="Output directory.")
     ap.add_argument("--email", default=os.environ.get("KEEP_EMAIL", ""), help="Account email (or KEEP_EMAIL).")
-    ap.add_argument("--include-archived", action="store_true", default=True)
+    ap.add_argument("--exclude-archived", action="store_true",
+                    help="Skip archived notes (default: include them).")
     args = ap.parse_args()
 
     email = args.email
@@ -122,10 +123,13 @@ def main() -> int:
     for note in keep.all():
         if getattr(note, "trashed", False):
             continue
-        if getattr(note, "archived", False) and not args.include_archived:
+        if getattr(note, "archived", False) and args.exclude_archived:
             continue
         md, rec = render_note(note)
-        name = f"{(rec['updated'] or rec['created'] or '')[:10]}_{safe_slug(rec['title'], rec['id'])}.md"
+        # Include a short note-ID suffix so notes that share a title+date don't collide.
+        date = (rec["updated"] or rec["created"] or "")[:10]
+        note_id = re.sub(r"[^A-Za-z0-9]+", "", rec["id"])[-8:] or "note"
+        name = f"{date}_{safe_slug(rec['title'], note_id)}_{note_id}.md"
         with open(os.path.join(args.out, name), "w", encoding="utf-8") as fh:
             fh.write(md)
         rec["file"] = name
