@@ -57,22 +57,22 @@ surface  —realizes→  channel / workspace          (D8; observed-first, S0 su
 ```
 A user/group **delegates** an agent; an agent **occupies** a workspace; an agent **may present-as** a persona derived from purpose; IDE/harness panes/windows/tabs are **S0 surfaces** that project and evidence the workspace — never authority principals, never durable truth until G-ingested.
 
-## 4.0 vocabulary (manifold paradigm) — ALIAS-FIRST, GATED
+## 4.0 vocabulary (manifold paradigm) — ALIAS-FIRST; ADDITIVE BUMP LANDED (ontology v4.0.0, T=231)
 First mention dual-names: `workspace (session)`, `instance (kernel)`; thereafter the 4.0 term where context is clear.
-**GATE: this is prose only. URNs, runtime type IDs, and relation semantics stay `session`/`kernel`/etc. until the reviewed 4.0 (ontology bump) / 4.0.x (hard URN rewrite) gates. This file authorizes no ontology or URN change.**
+**The additive, alias-first 4.0 bump is APPLIED (`ontology.json` v4.0.0, T=231): `manifold` type, `workstation.kind`, `channel.kind` infra+surface, `workspace`/`instance` aliases, `persona`-as-derivation. STILL GATED: the hard URN / runtime-type-id rewrite (`session`/`kernel` stay canonical until the reviewed 4.0.x) plus the deferred relations. This file authorizes no URN change.**
 
 | Δ | Change | Status |
 |---|---|---|
-| D1 | `manifold` — new top category (application/domain grouping; colimit of branch-episodes) | ✅ Sam-ratified |
-| D2 | `session` → `workspace` (alias-first) | ✅ Sam-ratified |
-| D3 | `persona = Φ(purpose)` as a `derivation`, not authority | ✅ Sam-ratified |
-| D4 | `presents-as` (agent↔persona relation) | endorsed (#57); implied by D3 |
-| D5 | `channel.kind` expansion (infra: domain/dns-zone/cloudflare-*/registrar; surface: workstation-surface/virtual-desktop/window/tab-group/browser-tab/harness-pane) | endorsed (T216 draft) |
-| D6 | `kernel` → `instance` (`instance := fold(log)`); alias in 4.0, hard ~59-site URN rewrite gated to 4.0.x | ✅ Sam-ratified |
-| D7 | workstation surface layer — S0 projection substrate (desktops/windows/panes/tabs), observed-not-authored | endorsed (#57) |
-| D8 | `realizes / realized-by` (surface↔channel/workspace), observed-first | endorsed (#57) |
+| D1 | `manifold` — new top category (application/domain grouping; colimit of branch-episodes) | ✅ LANDED v4.0.0 (S2 type, identity-first; spanning relations deferred) |
+| D2 | `session` → `workspace` (alias-first) | ✅ LANDED v4.0.0 (alias on `session`; URN rewrite → 4.0.x) |
+| D3 | `persona = Φ(purpose)` as a `derivation`, not authority | ✅ LANDED v4.0.0 (derivation convention + nomenclature) |
+| D4 | `presents-as` (agent↔persona relation) | ⏸ DEFERRED → 4.0.x (no persona node — persona is a derivation; WF/target undefined) |
+| D5 | `channel.kind` expansion (infra: domain/dns-zone/cloudflare-*/registrar; surface: workstation-surface/virtual-desktop/window/tab-group/browser-tab/harness-pane) | ✅ LANDED v4.0.0 (folded with D7) |
+| D6 | `kernel` → `instance` (`instance := fold(log)`); alias in 4.0, hard ~59-site URN rewrite gated to 4.0.x | ✅ LANDED v4.0.0 (alias on `kernel`; URN rewrite → 4.0.x) |
+| D7 | workstation surface layer — S0 projection substrate (desktops/windows/panes/tabs), observed-not-authored | ✅ LANDED v4.0.0 (addressability via channel.kind; doctrine = observed-only) |
+| D8 | `realizes / realized-by` (surface↔channel/workspace), observed-first | ⏸ DEFERRED → 4.0.x (observed-first; reify only if the pipeline must write it) |
 
-`my-tiny-data-collider` is the worked example manifold (4 domains + Cloudflare/Workspace/GitHub/tunnel surfaces). 4.0 is developed **parallel** to current code; **current code = living spec to 4.0.**
+Grammar_fragments (`dev/design/manifold-bump-4_0/20260620-t231-grammar-fragment-proposals.md`): **P1** `workstation.kind` + **P2** `channel.kind +=` LANDED v4.0.0 (`v400-2`/`v400-3`); **P3** `inference_kind += {lowering,lifting}` + **P4** §M11 occupant-guard DEFERRED (axis-mixing / authority-model). `my-tiny-data-collider` is the worked example manifold. The 4.0 additive core is now **current code**; the URN-rewrite tail (4.0.x) remains parallel-dev.
 
 ## Skills (capabilities; model-invoked by description) — `dev/claude-skills/` (synced to `~/.claude/skills/`)
 Authoring/ops: `moos-rewrite-envelope` · `moos-state-readback` · `moos-round-close` · `moos-running-state-validator` · `moos-cross-persona-audit` · `moos-workstation-operator`.
