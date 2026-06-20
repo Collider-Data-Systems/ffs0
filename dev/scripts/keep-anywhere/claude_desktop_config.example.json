@@ -1,0 +1,19 @@
+{
+  "_comment": "Example Claude Desktop MCP config for Keep-anywhere. Copy the relevant blocks into your real claude_desktop_config.json (Windows: %APPDATA%\\Claude\\claude_desktop_config.json). Claude Desktop requires STRICT JSON (no comments) — delete this _comment key. Fill secrets from environment, not inline. See dev/scripts/keep-anywhere/README.md.",
+  "mcpServers": {
+    "google-drive": {
+      "_comment": "The unifier: reads the Drive 'keep-mirror' folder the Z440 job syncs to. Works on every device that has Claude Desktop. Authenticate per its own README (OAuth).",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gdrive"]
+    },
+    "google-keep-personal": {
+      "_comment": "Optional LIVE personal-account access via a community gkeepapi-based Keep MCP. Vet the server source before use — it runs with your Google master token. Replace <keep-mcp-package> with the server you chose.",
+      "command": "uvx",
+      "args": ["<keep-mcp-package>"],
+      "env": {
+        "GOOGLE_EMAIL": "you@gmail.com",
+        "GOOGLE_MASTER_TOKEN": "${KEEP_MASTER_TOKEN}"
+      }
+    }
+  }
+}
