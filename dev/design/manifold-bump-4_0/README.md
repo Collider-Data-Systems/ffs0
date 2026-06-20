@@ -18,6 +18,11 @@ categorical space, etc.) stay in `dev/design/` root.
 | `20260607-t218-branching-strategy.md` | `branch = F(session)` / `merge = G(branch)`; manifold = colimit |
 | `20260605-t216-mtdc-channel-inventory-dry-plan.md` | `my-tiny-data-collider` worked-example manifold (domains + surfaces) |
 | `20260620-t231-moos-soom.md` | mo:os ⊣ so:om — engine/surface adjunction; device F/G degrees; wiring |
+| `20260620-t231-poly-foundations.md` | **Poly** as the unifier: comonoids = the data layer, lenses/coalgebras = the surfaces; trees = free monads; HAL/Erban lineage |
+| `poly-navigation-map.md` | one-screen guided tour: mo:os → so:om → mtdc → Poly → functorial semantics → Set |
 
 Authoritative vocabulary + gate status live in `AGENTS.md` (4.0 vocabulary table) and
-`kb/superset/ontology.json`.
+`kb/superset/ontology.json`. The categorical spine these drafts extend lives in
+`dev/reference/research-archive/20260420-t170-functorial-semantics-explicit.md` and the ACT 2026
+paper `dev/reference/papers/act2026/main.tex` (which now carries a `\section{Future Direction: A
+Polynomial Interaction Layer}`).
