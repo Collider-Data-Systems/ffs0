@@ -375,14 +375,14 @@ function New-AutoReplyBody {
         $body = Get-CloudflaredReadbackMarkdown
     } elseif ($script:Profile -eq 'z440-vscode-lead') {
         $body = @"
-I saw this #54 comment while the Z440 VS Code lead watcher is running in this VS Code IDE/conversation. Conservative boundary held: no HG rewrites, no Keep/Calendar/Project sync, no DNS/Cloudflare/tunnel changes, no secret handling, no repo edits, and no manual log mirroring from this watcher.
+I saw this #$($script:Issue) comment while the Z440 VS Code lead watcher is running in this VS Code IDE/conversation. Conservative boundary held: no HG rewrites, no Keep/Calendar/Project sync, no DNS/Cloudflare/tunnel changes, no secret handling, no repo edits, and no manual log mirroring from this watcher.
 
 Default Z440 stance until the live agent writes a reviewed reply:
 
 - Watching as `$script:SessionUrn` / `$script:ActorUrn`.
 - Prefer live federation/read-surface checks before claims.
 - Keep domain/tunnel/4.0/channel moves as draft or source-evidence plans unless Sam explicitly authorizes an apply/change.
-- If a concrete Z440 response is needed, keep the phrase `Z440 action needed` or `request to Z440` in #54 and this session will handle it when active.
+- If a concrete Z440 response is needed, keep the phrase `Z440 action needed` or `request to Z440` in #$($script:Issue) and this session will handle it when active.
 "@
     } else {
         $body = @"
@@ -393,7 +393,7 @@ Default guidance until Sam wakes hp-laptop governance for a full reviewed reply:
 - Use `ffs0/main` at or after `c3f6e47` for the latest hp-laptop projection baseline.
 - Prefer live federation/read-surface checks; do not copy `moos.jsonl` between machines.
 - Keep domain/tunnel/4.0/channel moves as draft or source-evidence plans unless Sam explicitly authorizes an apply/change.
-- If a concrete hp-laptop action is needed, keep the phrase `hp-laptop governance action needed` in #54 and this session will handle it when active.
+- If a concrete hp-laptop action is needed, keep the phrase `hp-laptop governance action needed` in #$($script:Issue) and this session will handle it when active.
 "@
     }
 

@@ -58,8 +58,8 @@ surface  —realizes→  channel / workspace          (D8; observed-first, S0 su
 A user/group **delegates** an agent; an agent **occupies** a workspace; an agent **may present-as** a persona derived from purpose; IDE/harness panes/windows/tabs are **S0 surfaces** that project and evidence the workspace — never authority principals, never durable truth until G-ingested.
 
 ## 4.0 vocabulary (manifold paradigm) — ALIAS-FIRST; ADDITIVE BUMP LANDED (ontology v4.0.0, T=231)
-First mention dual-names: `workspace (session)`, `instance (kernel)`; thereafter the 4.0 term where context is clear.
-**The additive, alias-first 4.0 bump is APPLIED (`ontology.json` v4.0.0, T=231): `manifold` type, `workstation.kind`, `channel.kind` infra+surface, `workspace`/`instance` aliases, `persona`-as-derivation. STILL GATED: the hard URN / runtime-type-id rewrite (`session`/`kernel` stay canonical until the reviewed 4.0.x) plus the deferred relations. This file authorizes no URN change.**
+First mention dual-names: `workspace (session)`, `engine (kernel)`; thereafter the 4.0 term where context is clear.
+**The additive, alias-first 4.0 bump is APPLIED (`ontology.json` v4.0.0, T=231): `manifold` type, `workstation.kind`, `channel.kind` infra+surface, `workspace`/`engine` aliases, `persona`-as-derivation. STILL GATED: the hard URN / runtime-type-id rewrite (`session`/`kernel` stay canonical until the reviewed 4.0.x) plus the deferred relations. This file authorizes no URN change.**
 
 | Δ | Change | Status |
 |---|---|---|
@@ -68,7 +68,7 @@ First mention dual-names: `workspace (session)`, `instance (kernel)`; thereafter
 | D3 | `persona = Φ(purpose)` as a `derivation`, not authority | ✅ LANDED v4.0.0 (derivation convention + nomenclature) |
 | D4 | `presents-as` (agent↔persona relation) | ⏸ DEFERRED → 4.0.x (no persona node — persona is a derivation; WF/target undefined) |
 | D5 | `channel.kind` expansion (infra: domain/dns-zone/cloudflare-*/registrar; surface: workstation-surface/virtual-desktop/window/tab-group/browser-tab/harness-pane) | ✅ LANDED v4.0.0 (folded with D7) |
-| D6 | `kernel` → `instance` (`instance := fold(log)`); alias in 4.0, hard ~59-site URN rewrite gated to 4.0.x | ✅ LANDED v4.0.0 (alias on `kernel`; URN rewrite → 4.0.x) |
+| D6 | `kernel` → **`engine`** (`engine := fold(log)`; re-ratified T=239 from `instance`); alias in 4.0, hard ~59-site URN rewrite gated to 4.0.x | ✅ LANDED v4.0.0 (alias on `kernel`; canonical term **engine**; `instance` deprecated; URN rewrite → 4.0.x) |
 | D7 | workstation surface layer — S0 projection substrate (desktops/windows/panes/tabs), observed-not-authored | ✅ LANDED v4.0.0 (addressability via channel.kind; doctrine = observed-only) |
 | D8 | `realizes / realized-by` (surface↔channel/workspace), observed-first | ⏸ DEFERRED → 4.0.x (observed-first; reify only if the pipeline must write it) |
 
@@ -82,7 +82,8 @@ Detail lives in each `SKILL.md` — do not restate here.
 
 ## Repos & branching
 - `ffs0` (this repo) = private control/research workspace + KB. `moos-kernel` (Go runtime), `moos-router` (federation). `moos-config` = LEGACY, do not use. All at `github.com/Collider-Data-Systems/*`.
-- **Trunk-first on `main`** for verified single-lane/non-colliding work (T208). **Branch + merge-with-provenance** for collision-prone multi-lane work (T218: `branch=F(session)`, `merge=G(branch)`; trailer `authored-by: <agent-urn> / <session-urn> / <purpose-slug>`). Runtime code branches `feat/<purpose-slug>` in `moos-kernel`/`moos-router`.
+- **Trunk-first on `main`** for verified single-lane/non-colliding work (T208). **Branch + merge-with-provenance** for collision-prone multi-lane work (T218: `branch=F(workspace)`, `merge=G(branch)`; trailer `authored-by: <agent-urn> / <session-urn> / <purpose-slug>`). Runtime code branches `feat/<purpose-slug>` in `moos-kernel`/`moos-router`.
+- **Attribution (T=239, additive)** — keep the required trailer above; add the optional fields **only when they disambiguate** (multi-user, cross-channel, or a non-IDE channel like an Android Keep note landing in the repo): `user: <user-urn>` · `workstation: <workstation-urn>` · `channel-kind: <kind>`. For complex/multi-source merges add a `## Contribution` commit-body block (source channel / workstation / user / agent / workspace / purpose). Solo Sam-on-Z440 commits stay as today. Full doctrine: `dev/design/manifold-bump-4_0/20260607-t218-branching-strategy.md`.
 
 ## Safety / boundaries
 Never commit `secrets/` values, API tokens, or `.vscode/mcp.json`. Mutations (commit/push, merge, DNS/Cloudflare/tunnel/Access, Calendar/Workspace writes, HG apply) are explicit boundary acts — surface before doing, never as a side effect of readback. Do not emit HG rewrites, seat scoped-idle workspaces, or apply raw Keep notes from readback. IDE/UI/pinned-chat state is not durable HG truth.

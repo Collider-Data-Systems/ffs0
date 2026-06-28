@@ -135,3 +135,44 @@ idle in the kernel. No running without an occupant, echoed in version control.
 
 Same shape, two levels. This keeps the branching doctrine and the 4.0 vocabulary from
 drifting apart. Final naming is owned by `20260605-t216-ontology-4.0-draft.md`.
+
+**E5 — Extended attribution for multi-user / multi-workstation / multi-channel (adopted T=239, additive).**
+
+The E2 trailer names the agent (occupant), workspace, and intent — but not *which user* drove it,
+*which workstation* it ran on, or *which channel* the contribution entered through. That gap surfaces
+the moment more than one user or a non-IDE channel touches a repo: Menno/Lola (engines on Z440), the
+buddy on ProDesk, or an Android **Keep note** (`channel.kind: keep-widget`) ingested into the repo are
+all indistinguishable under the bare trailer.
+
+**Convention — additive; a field is required ONLY when it disambiguates. Solo Sam-on-Z440 stays as E2.**
+
+```text
+authored-by: <agent-urn> / <session-urn> / <purpose-slug>
+user: <user-urn>               # when the driver is not the default repo user (Menno, Lola, the buddy)
+workstation: <workstation-urn> # when not implied by the session's opens-on engine
+channel-kind: <kind>           # when the contribution entered via a non-IDE channel (keep-widget, mail, …)
+```
+
+For complex/multi-source merges (e.g. a Keep note folded with an IDE edit), add a body block:
+
+```markdown
+## Contribution
+- source channel: keep-widget (Android Google Keep)
+- workstation:    urn:moos:workstation:android-sam   (kind: mobile)
+- user:           urn:moos:user:sam
+- agent:          urn:moos:agent:claude-cowork.hp-z440
+- workspace:      urn:moos:session:sam.z440-cowork-workspace
+- purpose:        keep-sync
+```
+
+Worked cases:
+- **Menno on Z440** — `authored-by: agent:vscode.hp-z440.menno / session:sam.steinberger-seat / <slug>` **+ `user: urn:moos:user:menno`** (the disambiguator: Menno's engine runs on Sam's Z440, but the *driver* is Menno).
+- **Buddy on ProDesk** — add `user: <buddy-urn>` + `workstation: urn:moos:workstation:hpprodesk`.
+- **Keep note from Android** — add `channel-kind: keep-widget` + `workstation: urn:moos:workstation:android-…` (kind `mobile`) + the `## Contribution` block; the G-ingest that lifts the note (`moos-workspace-ingest`) carries the same channel/workstation into the `knowledge_item` provenance, so git and HG agree.
+
+Git/doc-only (no ontology change). Composes with E4 (workspace = colimit of its branch-episodes); these
+fields just make *who / where / through-what* legible at the merge point — the legibility §M11 gives
+envelopes. **Naming (T=239):** the canonical 4.0 alias for `kernel` is now **`engine`** (re-ratified from
+`instance`); URNs stay `kernel`/`session` until 4.0.x. Mirrored in `AGENTS.md` "Repos & branching".
+
+authored-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / t239-catchup

@@ -129,7 +129,7 @@ var PortColorMatrix = map[string]map[string]string{
 var UseVocab = map[string]string{
 	"_urn_suffix":      "single node reference property (not: _ref)",
 	"_urns_suffix":     "plural node reference property (not: _refs)",
-	"instance":         "v4.0 alias of `kernel` (D6) — `instance := fold(log)`, model-theoretic; canonical type-id/URN stay `kernel` until the gated 4.0.x rewrite",
+	"engine":           "v4.0 canonical alias of `kernel` (D6 — re-ratified T=239 from `instance`): the mo:os **engine** (`engine := fold(log)`, model-theoretic). Canonical type-id/URN stay `kernel` until the gated 4.0.x rewrite. (`instance` = now-deprecated prior alias.)",
 	"interaction_node": "discrete interaction artifact node (not: transition, event, message)",
 	"manifold":         "top-category node (v4.0, D1) — an application/domain topology; the colimit of branch-episodes sharing one purpose-slug; e.g. manifold:my-tiny-data-collider",
 	"node":             "identity point in graph (not: object, element, vertex)",
