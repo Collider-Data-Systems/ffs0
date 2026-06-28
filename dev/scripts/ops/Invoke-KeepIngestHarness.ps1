@@ -16,7 +16,7 @@ param(
     [string]$ServiceAccountClientId = '100056768598448764528',
     [string]$CloudLoginHint = 'maassenhochrath@gmail.com',
     [string]$DelegatedSubject = 'sam@my-tiny-data-collider.nl',
-    [string]$KeepScope = 'https://www.googleapis.com/auth/keep.readonly',
+    [string]$KeepScope = 'https://www.googleapis.com/auth/keep',
     [switch]$UseCalendarOAuthClient,
     [switch]$OpenBrowser,
     [switch]$SkipLiveState,
@@ -299,16 +299,43 @@ function Invoke-GoogleCloudToken {
     }
 }
 
+function Set-AdcSignerToken {
+    # Keyless: mint the IAM signJwt signer token straight from ADC
+    # (`gcloud auth application-default print-access-token`). Replaces the legacy
+    # OAuth-loopback ApiCloudToken pre-step — same clean ADC identity as Get-Secrets.ps1.
+    if (-not (Get-Command gcloud -ErrorAction SilentlyContinue)) {
+        throw 'gcloud not found. Install Cloud SDK + run: gcloud auth application-default login'
+    }
+    $adc = (& gcloud auth application-default print-access-token 2>$null)
+    if ([string]::IsNullOrWhiteSpace($adc)) {
+        throw 'No ADC token (keyless). Run: gcloud auth application-default login'
+    }
+    $exp = (Get-Date).AddMinutes(50).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+    $dir = Split-Path -Parent $CloudTokenPath
+    if ($dir -and -not (Test-Path $dir)) { New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+    [pscustomobject]@{ access_token = $adc; expires_at = $exp } |
+        ConvertTo-Json | Set-Content -Path $CloudTokenPath -Encoding ascii
+    Write-Host "ADC signer token minted -> $CloudTokenPath (keyless, ~50m)" -ForegroundColor DarkCyan
+}
+
 function Invoke-KeepDelegatedKeylessToken {
-    & $script:NodeExe 'dev\scripts\google_keep_service_account_token.mjs' `
-        '--client-email' $ServiceAccountEmail `
-        '--client-id' $ServiceAccountClientId `
-        '--signer-token' $CloudTokenPath `
-        '--token' $TokenPath `
-        '--scope' $KeepScope `
-        '--subject' $DelegatedSubject
-    if ($LASTEXITCODE -ne 0) {
-        throw "Google Keep keyless delegated-token helper failed with exit code $LASTEXITCODE"
+    # One-command keyless: ADC -> signJwt(SA) -> delegated Workspace token. No OAuth loopback.
+    Set-AdcSignerToken
+    try {
+        & $script:NodeExe 'dev\scripts\google_keep_service_account_token.mjs' `
+            '--client-email' $ServiceAccountEmail `
+            '--client-id' $ServiceAccountClientId `
+            '--signer-token' $CloudTokenPath `
+            '--token' $TokenPath `
+            '--scope' $KeepScope `
+            '--subject' $DelegatedSubject
+        if ($LASTEXITCODE -ne 0) {
+            throw "Google Keep keyless delegated-token helper failed with exit code $LASTEXITCODE"
+        }
+    }
+    finally {
+        # Keyless posture: don't leave the broad cloud-platform signer on disk.
+        if (Test-Path $CloudTokenPath) { Remove-Item -Force $CloudTokenPath }
     }
 }
 
