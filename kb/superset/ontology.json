@@ -320,7 +320,7 @@
       "_urns_suffix": "plural node reference property (not: _refs)",
       "manifold": "top-category node (v4.0, D1) — an application/domain topology; the colimit of branch-episodes sharing one purpose-slug; e.g. manifold:my-tiny-data-collider",
       "workspace": "v4.0 alias of `session` (D2) — same node; canonical type-id/URN stay `session` until the gated 4.0.x rewrite",
-      "instance": "v4.0 alias of `kernel` (D6) — `instance := fold(log)`, model-theoretic; canonical type-id/URN stay `kernel` until the gated 4.0.x rewrite",
+      "engine": "v4.0 canonical alias of `kernel` (D6 — re-ratified T=239 from `instance`): the mo:os **engine** (`engine := fold(log)`, model-theoretic). Canonical type-id/URN stay `kernel` until the gated 4.0.x rewrite. (`instance` = now-deprecated prior alias.)",
       "persona": "v4.0 (D3) — a derived presentational identity `persona = Φ(purpose)`, carried as a `derivation`; NOT a node-type and never an authority principal"
     },
     "forbidden": [
@@ -406,9 +406,9 @@
         "urn_pattern": "urn:moos:kernel:<workstation>.<name>",
         "urn_example": "urn:moos:kernel:hp-laptop.primary",
         "aliases": [
-          "instance"
+          "engine"
         ],
-        "alias_note": "4.0 alias (D6): `instance` is the 4.0 label (instance := fold(log), model-theoretic sense). Canonical type-id and URN stay `kernel` until the gated 4.0.x rewrite. This field is doc-intent; no loader consumes it yet.",
+        "alias_note": "4.0 alias (D6 — re-ratified T=239): `engine` is the canonical 4.0 label (the mo:os engine; engine := fold(log), model-theoretic) — replaces the earlier `instance` alias. Canonical type-id and URN stay `kernel` until the gated 4.0.x rewrite. This field is doc-intent; no loader consumes it yet.",
         "ports": {
           "out": [
             "exposes",
