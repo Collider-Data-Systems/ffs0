@@ -16,7 +16,10 @@ param(
     [string]$ServiceAccountClientId = '100056768598448764528',
     [string]$CloudLoginHint = 'maassenhochrath@gmail.com',
     [string]$DelegatedSubject = 'sam@my-tiny-data-collider.nl',
-    [string]$KeepScope = 'https://www.googleapis.com/auth/keep',
+    # Least-privilege default: an ingest is a read. Pass the full scope
+    # (https://www.googleapis.com/auth/keep) explicitly for the projection/write path.
+    # NOTE: keep.readonly must be in the DWD allow-list for this default to mint.
+    [string]$KeepScope = 'https://www.googleapis.com/auth/keep.readonly',
     [switch]$UseCalendarOAuthClient,
     [switch]$OpenBrowser,
     [switch]$SkipLiveState,
@@ -335,7 +338,13 @@ function Invoke-KeepDelegatedKeylessToken {
     }
     finally {
         # Keyless posture: don't leave the broad cloud-platform signer on disk.
-        if (Test-Path $CloudTokenPath) { Remove-Item -Force $CloudTokenPath }
+        # Best-effort — cleanup must never mask the real failure from the helper above.
+        try {
+            if (Test-Path $CloudTokenPath) { Remove-Item -Force $CloudTokenPath -ErrorAction Stop }
+        }
+        catch {
+            Write-Warning "Could not remove signer token ${CloudTokenPath}: $($_.Exception.Message)"
+        }
     }
 }
 
