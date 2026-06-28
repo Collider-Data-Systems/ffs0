@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "purpose": "Provider-swappable model config for the so:om surface (the user<->agent F/G chat element / pip — Sam's 'harness'). Keyless-first: the default + fallbacks need NO api key. Resolved #64 / T=239.",
+  "note": "IDE agents (Antigravity = Google-AI plan, Claude Code = its plan) bring their own auth — NOT these keys. This config is only for a self-built chat/pip element.",
+  "default": "gemini-flash",
+  "fallback": ["gemini-flash-vertex", "ollama-local"],
+  "providers": {
+    "gemini-flash": {
+      "provider": "google-aistudio",
+      "model": "gemini-2.5-flash",
+      "auth": "api-key",
+      "env": "GEMINI_API_KEY",
+      "secret": "gemini-api-key",
+      "note": "AI-Studio endpoint, simplest. Key fetched from Secret Manager by Get-Secrets.ps1. OPTIONAL — prefer Vertex if you don't want any key. Set `model` to the current Flash id."
+    },
+    "gemini-flash-vertex": {
+      "provider": "google-vertex",
+      "model": "gemini-2.5-flash",
+      "auth": "adc",
+      "project": "mailmind-ai-djbuw",
+      "location": "europe-west4",
+      "note": "Vertex via ADC — ZERO api key (the keyless path). Needs aiplatform.googleapis.com enabled. Same Flash model, no secret to manage."
+    },
+    "ollama-local": {
+      "provider": "ollama",
+      "model": "qwen3:14b",
+      "auth": "none",
+      "base_url": "http://localhost:11434",
+      "vision_model": "moos-diary-vision",
+      "note": "Offline fallback on the Z440 RTX 3060. Swap `model` for a smaller/faster one (gemma3:12b, phi4) for a snappier pip."
+    },
+    "anthropic": {
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5",
+      "auth": "api-key",
+      "env": "ANTHROPIC_API_KEY",
+      "secret": "anthropic-api-key",
+      "enabled": false,
+      "note": "Second-brain option — add a key in Secret Manager only if you want it. Claude Code itself runs on its own plan, not this key."
+    }
+  }
+}

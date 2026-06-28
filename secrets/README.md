@@ -2,6 +2,31 @@
 
 This directory contains sensitive credentials. **Never commit actual secrets.**
 
+## Resolved architecture (T=239, #64) — keyless + Secret Manager
+
+The per-machine `api_keys.env` is **retired as the source of truth** (offline fallback only).
+Each secret type now has one home, and per device the *only* setup is two OAuth logins — nothing copied:
+
+| Secret type | Home | How a device gets it |
+|---|---|---|
+| GitHub / git | **OS keyring** | `gh auth login` once per machine (per-device, revocable) |
+| GCP — Vertex models, Secret Manager, Calendar/Keep DWD | **ADC** (no key) | `gcloud auth login` + `gcloud auth application-default login` once per machine |
+| Provider API keys (Gemini AI-Studio / OpenAI / Anthropic) | **Google Secret Manager** (`mailmind-ai-djbuw`) | `dev/scripts/ops/Get-Secrets.ps1` fetches them into env at session start (via ADC — no file) |
+| Calendar / Keep | **keyless DWD SA** (`moos-keep-ingest`) | delegated token via IAM `signJwt` (see "Keyless Google" below) |
+
+**Gemini Flash via Vertex needs no key at all** (ADC) — so the AI-Studio Gemini key is *optional*.
+Store a provider key once and you never touch a file again:
+
+```powershell
+printf '%s' '<NEW_KEY>' | gcloud secrets create gemini-api-key --data-file=- --project=mailmind-ai-djbuw
+. dev\scripts\ops\Get-Secrets.ps1   # dot-source: loads Secret Manager keys into THIS shell's env
+```
+
+The chat-pip / so:om-surface model is **provider-swappable** in `dev/config/model-providers.json`
+(`gemini-flash` → `gemini-flash-vertex` → `ollama-local`). IDE agents (Antigravity = Google-AI plan,
+Claude Code = its plan) bring **their own** auth — not these keys. Sections below are the detailed
+reference for the keyring / DWD / legacy-key-file paths.
+
 ## Canonical role
 
 - `secrets/` is the Secret bindings surface for this workspace.
