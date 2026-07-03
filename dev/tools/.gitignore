@@ -1,6 +1,8 @@
 # built binaries
 moos-mcp/moos-mcp
+moos-mcp/moos-mcp.exe
 moos-lsp/moos-lsp
+moos-lsp/moos-lsp.exe
 
 # VS Code client build output
 moos-lsp/client/node_modules/

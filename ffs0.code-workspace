@@ -18,7 +18,7 @@
     "git.autofetch": true,
     "git.pruneOnFetch": true,
     "git.openRepositoryInParentFolders": "never",
-    "chat.viewSessions.orientation": "stacked",
+    "chat.viewSessions.orientation": "sideBySide",
     "github.copilot.enable": {
       "*": true,
       "plaintext": false,
@@ -65,6 +65,8 @@
     },
     "terminal.integrated.cwd": "${workspaceFolder:ffs0-private-workspace}",
     "powershell.cwd": "ffs0-private-workspace",
+    "moos.serverPath": "${workspaceFolder:ffs0-private-workspace}/dev/tools/moos-lsp/moos-lsp.exe",
+    "moos.baseUrl": "http://localhost:8000",
   },
   "extensions": {
     "recommendations": [
@@ -80,6 +82,13 @@
       "eamodio.gitlens",
       "thedangander.jsonl-lab",
       "mechatroner.rainbow-csv",
+      "collider-data-systems.moos-lsp-client",
+      "rust-lang.rust-analyzer",
+      "llvm-vs-code-extensions.vscode-clangd",
+      "llvm-vs-code-extensions.vscode-mlir",
+      "vadimcn.vscode-lldb",
+      "ms-vscode.cmake-tools",
+      "tamasfe.even-better-toml",
     ],
   },
   "tasks": {

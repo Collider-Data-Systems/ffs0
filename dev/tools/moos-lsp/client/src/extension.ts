@@ -10,7 +10,7 @@ let client: LanguageClient | undefined;
 
 export function activate(context: vscode.ExtensionContext): void {
   const config = vscode.workspace.getConfiguration("moos");
-  const serverPath = config.get<string>("serverPath", "moos-lsp");
+  const serverPath = resolveWorkspaceVariables(config.get<string>("serverPath", "moos-lsp"));
   const baseUrl = config.get<string>("baseUrl", "");
 
   const args: string[] = [];
@@ -39,4 +39,14 @@ export function activate(context: vscode.ExtensionContext): void {
 
 export function deactivate(): Thenable<void> | undefined {
   return client?.stop();
+}
+
+function resolveWorkspaceVariables(value: string): string {
+  return value.replace(/\$\{workspaceFolder(?::([^}]+))?\}/g, (_match, folderName: string | undefined) => {
+    const folders = vscode.workspace.workspaceFolders ?? [];
+    const folder = folderName
+      ? folders.find((candidate) => candidate.name === folderName)
+      : folders[0];
+    return folder?.uri.fsPath ?? _match;
+  });
 }

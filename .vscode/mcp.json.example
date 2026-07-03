@@ -1,13 +1,23 @@
 {
 	"servers": {
-		"moos-mcp": {
+		"moos-mcp-z440-lead": {
 			"type": "stdio",
-			"command": "${workspaceFolder}/dev/tools/moos-mcp/moos-mcp",
+			"command": "${workspaceFolder:ffs0-private-workspace}/dev/tools/moos-mcp/moos-mcp.exe",
 			"args": [
 				"--base-url",
 				"http://localhost:8000",
 				"--actor",
 				"urn:moos:agent:vscode.hp-z440.primary"
+			]
+		},
+		"moos-mcp-karpathy": {
+			"type": "stdio",
+			"command": "${workspaceFolder:ffs0-private-workspace}/dev/tools/moos-mcp/moos-mcp.exe",
+			"args": [
+				"--base-url",
+				"http://localhost:8000",
+				"--actor",
+				"urn:moos:agent:vscode.hp-z440.lola"
 			]
 		},
 		"moos-hp-laptop-primary": {
