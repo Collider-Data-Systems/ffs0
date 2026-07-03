@@ -35,6 +35,7 @@ var (
 func main() {
 	flag.StringVar(&handlers.KernelBaseURL, "base-url", os.Getenv("MOOS_BASE_URL"),
 		"Optional kernel base URL for live URN hover (or MOOS_BASE_URL).")
+	flag.Bool("stdio", true, "Run the language server over stdio. Accepted for VS Code languageclient compatibility.")
 	flag.Parse()
 
 	commonlog.Configure(1, nil)
