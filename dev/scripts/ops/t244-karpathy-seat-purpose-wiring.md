@@ -32,7 +32,7 @@ if the lane wants them pinned.
 ## Z440 review checklist (before apply)
 
 - [ ] `node_lookup urn:moos:session:sam.karpathy-seat` — exists, no existing
-      `has-purpose` edge (avoid duplicate-relation surprise).
+      `has-purpose` relation (avoid duplicate-relation surprise).
 - [ ] `node_lookup urn:moos:purpose:sam.compiler-lowering` — must NOT exist yet.
 - [ ] Confirm agent `vscode.hp-z440.lola` occupies exactly one session, or keep
       the explicit `session_urn` (it's set).
