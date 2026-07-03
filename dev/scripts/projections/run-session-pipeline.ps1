@@ -138,6 +138,12 @@ try {
             "--harness-evidence" $HarnessEvidence `
             "--focus" $Focus
     }
+    Invoke-Step "Config projection (seat-table drift check, warn-only)" {
+        # spec section 4(a): non-fatal in the dry pipeline; blocking in moos-round-close.
+        & python "dev\scripts\projections\config_projection.py" --mode check
+        if ($LASTEXITCODE -ne 0) { Write-Warning "seat-table drift — resolution: config_projection.py --mode write (never hand-edit)" }
+        cmd /c exit 0   # warn-only: do not fail the dry pipeline
+    }
     Invoke-Step "Graph artifact projection" { & $Julia "dev\scripts\graph_artifact_projection.jl" "--base-url" $ProjectionBaseUrl "--context-agent-urns" $ActorUrn }
     Invoke-Step "Temporal calendar graph artifact projection" {
         & $Julia "dev\scripts\graph_artifact_projection.jl" `

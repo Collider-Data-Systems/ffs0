@@ -1,0 +1,21 @@
+# moos-config-projection drift gate (#58 Phase-4, spec section 4).
+# Cloud runners cannot reach a live engine/router, so this job enforces what IS
+# checkable offline: the fenced generated region exists and is intact. The full
+# HG byte-compare runs where an engine lives: blocking in moos-round-close, warn
+# in run-session-pipeline.ps1 (both wired by the same script with no flags).
+name: config-drift
+on:
+  pull_request:
+    paths: ["AGENTS.md", "dev/scripts/projections/config_projection.py", "dev/config/seat-display.json"]
+  push:
+    branches: [main]
+    paths: ["AGENTS.md"]
+jobs:
+  fence-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: drift check (offline -> fence integrity)
+        run: python dev/scripts/projections/config_projection.py --mode check --offline-ok

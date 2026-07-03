@@ -5,7 +5,16 @@ description: "Phase-4 spec (#58) for moos-config-projection — the F-direction 
 
 # moos-config-projection — generating tool-config markdown FROM folded HG (#58 Phase-4)
 
-> **Status: design draft (S0 → pending G-ingest). Conjecture-marked. GATE: prose/design only —
+> **STATUS UPDATE (T=244): Artifact A LANDED.** `config_projection.py` now implements
+> `--mode write` (fenced region in `AGENTS.md`, first-adoption replaced the hand-authored
+> seat table after the §6 acceptance test passed: semantic-equal fold, 11 rows via router
+> fan-in incl. cross-kernel seats — Q1 resolved as router-read), byte-exact `--mode check`
+> (blocking in `moos-round-close` step 0; warn-stage in `run-session-pipeline.ps1`;
+> fence-integrity in CI `.github/workflows/config-drift.yml`), idempotent re-write, and a
+> shrink-guard against partial fan-ins. Display enrichment: `dev/config/seat-display.json`
+> (Q2 persona-nodes still open). Artifacts B/C remain future slices.
+>
+> **Original status: design draft (S0 → pending G-ingest). Conjecture-marked. GATE: prose/design only —
 > this authorizes no ontology or URN change, applies no kernel rewrite, touches no secrets or
 > `.vscode/mcp.json`.** Authored T231, Cowork-Z440, on the #58 Phase-4 lane. Reconciled against
 > `AGENTS.md` (Phase-1 merged, PR #59), `run-session-pipeline.ps1` + its README +
