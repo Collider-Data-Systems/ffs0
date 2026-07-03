@@ -9,7 +9,7 @@ on:
     paths: ["AGENTS.md", "dev/scripts/projections/config_projection.py", "dev/config/seat-display.json"]
   push:
     branches: [main]
-    paths: ["AGENTS.md"]
+    paths: ["AGENTS.md", "dev/scripts/projections/config_projection.py", "dev/config/seat-display.json"]
 jobs:
   fence-integrity:
     runs-on: ubuntu-latest

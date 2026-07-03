@@ -28,6 +28,7 @@ import argparse, json, os, sys, urllib.request, re
 
 FENCE_BEGIN = "<!-- BEGIN GENERATED: moos-config-projection seat-table v1 (source: HG /state has-occupant via router fan-in; persona/surface/mcp = seat-display config; do not hand-edit — regenerate with --mode write) -->"
 FENCE_END   = "<!-- END GENERATED: moos-config-projection seat-table -->"
+FENCE_BEGIN_STABLE = "<!-- BEGIN GENERATED: moos-config-projection seat-table"   # version-independent locator
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
 def get_json(url, timeout=20):
@@ -113,12 +114,10 @@ def render_region(rows):
 
 def find_region(txt):
     """Return (start, end) spans of the fenced region incl. fences, or None."""
-    b = txt.find(FENCE_BEGIN.split(" v1 ")[0])          # tolerate version-suffix churn in BEGIN
+    b = txt.find(FENCE_BEGIN_STABLE)                    # version-independent (survives v2, v3, ...)
     if b < 0: return None
     e = txt.find(FENCE_END, b)
     if e < 0: return None
-    b_line_end = txt.find("\n", b)
-    begin_full = txt[b:b_line_end] if b_line_end > 0 else txt[b:]
     return (b, e + len(FENCE_END))
 
 def find_authored_table(txt):
