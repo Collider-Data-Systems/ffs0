@@ -29,18 +29,21 @@ Relation-first, rewrite-first. No OOP framing (no objects-with-payload, no stati
 ## Seats — agent × workspace × instance × surface  ⟨projection-ready: Phase-4 moos-config-projection pilot⟩
 > The F-image of `channel`+`agent` nodes — lowest F⊣G unit defect, highest duplication payoff → first artifact `moos-config-projection` will generate. **4.0 aliases shown; URNs stay canonical (see Gate). If this table and live `/healthz`+HG readback disagree, the readback wins — re-read, don't force the table (it is an authored projection, not operational truth).**
 
-| Persona (=Φ(purpose), D3) | Agent (principal) | Workspace ⟵`session` (D2) | Instance ⟵`kernel` (D6) | Surface / IDE-instance (D7) | MCP |
+<!-- BEGIN GENERATED: moos-config-projection seat-table v1 (source: HG /state has-occupant via router fan-in; persona/surface/mcp = seat-display config; do not hand-edit — regenerate with --mode write) -->
+| Persona (=Φ(purpose), D3·config) | Agent (HG principal) | Workspace ⟵`session` (HG·D2) | Engine ⟵`kernel` (HG opens-on·D6) | Surface / IDE-instance (D7·config) | MCP (config) |
 |---|---|---|---|---|---|
-| Wolfram | `claude-code.hp-z440` | `sam.kernel-proper` | `hp-z440.primary` :8000 | Claude Code pane · Z440 | :8080 |
-| Steinberger | `vscode.hp-z440.menno` | `sam.steinberger-seat` | `hp-z440.menno` :8001 *(emits :8000 pre-§M9)* | VS Code · Z440 | :8080 *(opens-on :9001)* |
-| Karpathy | `vscode.hp-z440.lola` | `sam.karpathy-seat` | `hp-z440.lola` :8002 *(emits :8000 pre-§M9)* | VS Code · Z440 | :8080 *(opens-on :9002)* |
-| Moos / AG-Z440 | `antigravity.hp-z440` | `sam.moos-diary` | `hp-z440.primary` :8000 | Antigravity · Z440 | :8080 |
-| Cowork-Z440 | `claude-cowork.hp-z440` | `sam.z440-cowork-workspace` | `hp-z440.primary` :8000 | Claude Code/Cowork pane · Z440 | :8080 |
-| Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-vscode-projection-lead` *(+ `sam.z440-primary-vscode-setup`)* | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 | :8080 |
-| Guido (governance) | `vscode.hp-laptop.copilot` | `sam.governance` | `hp-laptop.primary` :8000 | VS Code/Copilot · laptop | :8080 |
-| Cowork-laptop | `claude-cowork.hp-laptop` | `sam.laptop-cowork-workspace` | `hp-laptop.primary` :8000 | Claude Code · laptop | :8080 |
-| AG-laptop | `antigravity.hp-laptop` | `sam.laptop-moos-diary` | `hp-laptop.primary` :8000 | Antigravity · laptop | :8080 |
-| HP ProDesk | `vscode.hpprodesk.primary` | `sam.hpprodesk-setup` | `hpprodesk.primary` :8000 | VS Code · ProDesk | :8080 *(rejoined T=226 — Tailscale `100.87.28.95`, kernel 3.16.2, seat verified; mesh wiring PR #62, awaits router restart)* |
+| Wolfram | `claude-code.hp-z440` | `sam.kernel-proper` | `hp-z440.primary` :8000 | Claude Code · Z440 (desktop 2) · `moos-kernel` | moos-primary |
+| Moos / AG-Z440 | `antigravity.hp-z440` | `sam.moos-diary` | `hp-z440.primary` :8000 | Antigravity · Z440 (desktop 5) · `ffs0.code-workspace` | moos-primary |
+| Cowork-Z440 | `claude-cowork.hp-z440` | `sam.z440-cowork-workspace` | `hp-z440.primary` :8000 | Claude Code / Cowork pane · Z440 · `ffs0.code-workspace` | moos-primary |
+| Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-primary-vscode-setup` | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 · `ffs0.code-workspace` | moos-primary |
+| Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-vscode-projection-lead` | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 · `ffs0.code-workspace` | moos-primary |
+| Steinberger | `vscode.hp-z440.menno` | `sam.steinberger-seat` | `hp-z440.menno` :8001 *(emits `hp-z440.primary` pre-§M9)* | VS Code · Z440 (desktop 3) · `moos-router` | moos-primary *(opens-on `moos-menno`)* |
+| Karpathy | `vscode.hp-z440.lola` | `sam.karpathy-seat` | `hp-z440.lola` :8002 *(emits `hp-z440.primary` pre-§M9)* | VS Code · Z440 (desktop 4) · `ffs0.code-workspace` | moos-primary *(opens-on `moos-lola`)* |
+| Guido (governance) | `vscode.hp-laptop.copilot` | `sam.governance` | `hp-laptop.primary` :8000 | VS Code / Copilot · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
+| Cowork-laptop | `claude-cowork.hp-laptop` | `sam.laptop-cowork-workspace` | `hp-laptop.primary` :8000 | Claude Code · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
+| AG-laptop | `antigravity.hp-laptop` | `sam.laptop-moos-diary` | `hp-laptop.primary` :8000 | Antigravity · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
+| HP ProDesk | `vscode.hpprodesk.primary` | `sam.hpprodesk-setup` | `hpprodesk.primary` :8000 | VS Code · ProDesk · `ffs0.code-workspace` | moos-hpprodesk-primary |
+<!-- END GENERATED: moos-config-projection seat-table -->
 
 All URN prefixes are `urn:moos:<type>:<short>`. Emit discipline: Z440 personae emit to `hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; multi-workspace agents (Wolfram, Cowork) set `session_urn` explicitly (`session_urn` stays the canonical key per the Gate). Twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), not state replication. `sam.mvp-delivery` (hp-z440.primary) is a **dormant, occupant-less lane** (`has-occupant` UNLINKed T=219) — intentionally omitted from the active table.
 

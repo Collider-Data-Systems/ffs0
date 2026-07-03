@@ -15,6 +15,18 @@ The shape of every round's closing ritual. Runs as a small checklist; each step 
 
 ## Steps
 
+### 0. Seat-table drift gate (BLOCKING — #58 Phase-4)
+
+```bash
+python dev/scripts/projections/config_projection.py --mode check
+```
+
+Exit 0 required to proceed. On FAIL the resolution is **regenerate, never hand-edit**:
+`python dev/scripts/projections/config_projection.py --mode write`, review the `AGENTS.md`
+diff, include it in this round's commit. (The generated seat table is the fenced region in
+`AGENTS.md`; authority spine = HG `/state` via the router fan-in — spec
+`dev/design/manifold-bump-4_0/20260620-t231-moos-config-projection-spec.md` §4.)
+
 ### 1. Update `kb/superset/running-state.md`
 
 Minimum required edits:
