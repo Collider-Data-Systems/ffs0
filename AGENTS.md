@@ -34,7 +34,7 @@ Relation-first, rewrite-first. No OOP framing (no objects-with-payload, no stati
 |---|---|---|---|---|---|
 | Wolfram | `claude-code.hp-z440` | `sam.kernel-proper` | `hp-z440.primary` :8000 | Claude Code · Z440 (desktop 2) · `moos-kernel` | moos-primary |
 | Moos / AG-Z440 | `antigravity.hp-z440` | `sam.moos-diary` | `hp-z440.primary` :8000 | Antigravity · Z440 (desktop 5) · `ffs0.code-workspace` | moos-primary |
-| Cowork-Z440 | `claude-cowork.hp-z440` | `sam.z440-cowork-workspace` | `hp-z440.primary` :8000 | Claude Code / Cowork pane · Z440 · `ffs0.code-workspace` | moos-primary |
+| Zappa | `claude-cowork.hp-z440` | `sam.z440-cowork-workspace` | `hp-z440.primary` :8000 | Claude Code / Cowork pane · Z440 · `ffs0.code-workspace` | moos-primary |
 | Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-primary-vscode-setup` | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 · `ffs0.code-workspace` | moos-primary |
 | Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-vscode-projection-lead` | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 · `ffs0.code-workspace` | moos-primary |
 | Steinberger | `vscode.hp-z440.menno` | `sam.steinberger-seat` | `hp-z440.menno` :8001 *(emits `hp-z440.primary` pre-§M9)* | VS Code · Z440 (desktop 3) · `moos-router` | moos-primary *(opens-on `moos-menno`)* |

@@ -1,0 +1,129 @@
+{
+ "envelopes": [
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:session:sam.mvp-delivery",
+   "field": "status",
+   "new_value": "abandoned",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:session:sam.round10-session-generalization",
+   "field": "status",
+   "new_value": "abandoned"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:session:sam.moos-diary",
+   "field": "status",
+   "new_value": "active"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:purpose:sam.build-moos-diary",
+   "field": "status",
+   "new_value": "open"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.t161",
+   "field": "status",
+   "new_value": "completed",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.t162-presentation",
+   "field": "status",
+   "new_value": "completed",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.t190.z440-vscode-projection-lead-transition",
+   "field": "status",
+   "new_value": "completed",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.round10-session-generalization",
+   "field": "status",
+   "new_value": "completed",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.mvp-g1-session-layer",
+   "field": "status",
+   "new_value": "completed",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.mvp-delivery",
+   "field": "status",
+   "new_value": "completed",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.t163",
+   "field": "status",
+   "new_value": "archived",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.mvp-g2-approver-reactor",
+   "field": "status",
+   "new_value": "archived",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.mvp-g4-moos-viz-live",
+   "field": "status",
+   "new_value": "archived",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.mvp-g5-hdc-query-demo",
+   "field": "status",
+   "new_value": "archived",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.mvp-g3-first-channel",
+   "field": "status",
+   "new_value": "archived",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "MUTATE",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "target_urn": "urn:moos:program:sam.t162",
+   "field": "status",
+   "new_value": "archived",
+   "rewrite_category": "WF18"
+  }
+ ]
+}
