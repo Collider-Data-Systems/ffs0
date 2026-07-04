@@ -158,6 +158,21 @@ try {
             "--context-agent-urns" $ActorUrn `
             "--out-base" "tmp/projections/session_pipeline/graph_artifacts/temporal_calendar_engineering"
     }
+    Invoke-Step "Compiler-lowering frontier lens (T244+)" {
+        # New-frontier lens so the current arc renders from day one (the T187/T189/T200+ presets
+        # above are retained as historical lenses; re-rooting them is tracked in the hygiene doc).
+        & $Julia "dev\scripts\graph_artifact_projection.jl" `
+            "--base-url" $ProjectionBaseUrl `
+            "--root-urn" "urn:moos:purpose:sam.compiler-lowering" `
+            "--root-urns" "urn:moos:purpose:sam.compiler-lowering;urn:moos:session:sam.karpathy-seat;urn:moos:agent:vscode.hp-z440.lola" `
+            "--radius" "2" `
+            "--wfs" "WF18,WF19,WF21" `
+            "--ports" "causes,caused-by,composes,composed-by,has-purpose,purpose-of-session,pinned-by-session,pins-urn,has-occupant,is-occupant-of,opens-on" `
+            "--types" "agent,derivation,kernel,knowledge_item,program,purpose,session" `
+            "--match" "compiler|lowering|mlir|moos-ir|karpathy|hdc|categorical|xdsl|llvm" `
+            "--context-agent-urns" $ActorUrn `
+            "--out-base" "tmp/projections/session_pipeline/graph_artifacts/compiler_lowering_engineering"
+    }
     Invoke-Step "T189 recommendation graph artifact projection" {
         & $Julia "dev\scripts\graph_artifact_projection.jl" `
             "--base-url" $ProjectionBaseUrl `
@@ -226,11 +241,16 @@ try {
 
     Invoke-Step "T189 recommendation reconciliation" { & $Julia "dev\scripts\t189_recommendation_reconciliation.jl" "--base-url" $ProjectionBaseUrl }
 
-    Invoke-Step "Session pipeline MVP gate" {
+    Invoke-Step "Session pipeline MVP gate (pre-atlas, warn-only)" {
+        # T244+ fix: this first gate used to THROW on fail, which skipped the atlas stage and
+        # left surface_context_atlas.* stale (observed 5-day lag). Fail semantics live in the
+        # final "gate with atlas" step; here we only surface the verdict.
         & $Julia "dev\scripts\session_pipeline_mvp_gate.jl" `
             "--base-url" $ProjectionBaseUrl `
             "--session-urn" $SessionUrn `
             "--actor-urn" $ActorUrn
+        if ($LASTEXITCODE -ne 0) { Write-Warning "MVP gate pre-atlas verdict: FAIL (final gate below is authoritative)" }
+        $global:LASTEXITCODE = 0
     }
 
     Invoke-Step "Surface context atlas" { & $Julia "dev\scripts\surface_context_atlas.jl" "--base-url" $ProjectionBaseUrl }

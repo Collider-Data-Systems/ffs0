@@ -26,7 +26,8 @@ agent  —presents-as→  persona (= Φ(purpose))             (presentation, NOT
 - **Skills to mount:** `moos-rewrite-envelope`, `moos-state-readback`
 - **Prompt-delta:** Go runtime lane (§M11+§M12 gates). Multi-workspace agent → set `session_urn` explicitly. Validate `go test ./...`.
 
-### Cowork-Z440 — workspace curation / ingest
+### Zappa (Cowork-Z440) — workspace curation / ingest
+> Persona named T244+ (Sam): **Zappa** = Φ(`purpose:sam.cowork-workspace-curation`); persona key `zappa` (legacy `cowork-z440`). Identity URNs unchanged.
 - **Agent:** `urn:moos:agent:claude-cowork.hp-z440`
 - **Workspace (session):** `urn:moos:session:sam.z440-cowork-workspace`
 - **Engine (kernel):** `hp-z440.primary` :8000 (emit-target)

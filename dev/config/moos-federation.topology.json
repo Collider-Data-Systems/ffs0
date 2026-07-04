@@ -18,7 +18,6 @@
         "urn:moos:session:sam.kernel-proper",
         "urn:moos:session:sam.moos-diary",
         "urn:moos:session:sam.z440-cowork-workspace",
-        "urn:moos:session:sam.mvp-delivery",
         "urn:moos:session:sam.z440-vscode-projection-lead"
       ]
     },
@@ -173,7 +172,8 @@
       "emit_kernel": "hp-z440.primary",
       "mcp_server": "moos-primary"
     },
-    "cowork-z440": {
+    "zappa": {
+      "legacy_key": "cowork-z440",
       "actor_urn": "urn:moos:agent:claude-cowork.hp-z440",
       "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
       "opens_on_kernel": "hp-z440.primary",

@@ -3,7 +3,7 @@ param(
     [ValidateSet('Doctor', 'Start', 'VerifyPersona', 'PostProgram')]
     [string]$Mode = 'Doctor',
 
-    [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'cowork-z440', 'z440-vscode-lead', 'guido', 'cowork-laptop', 'ag-laptop', 'hpprodesk-vscode')]
+    [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'zappa', 'z440-vscode-lead', 'guido', 'cowork-laptop', 'ag-laptop', 'hpprodesk-vscode')]
     [string]$Persona,
 
     [string]$PayloadPath,

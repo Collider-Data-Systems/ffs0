@@ -1,0 +1,134 @@
+{
+ "envelopes": [
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.kernel-proper.has-purpose.kernel-implementation-z440",
+   "src_urn": "urn:moos:session:sam.kernel-proper",
+   "src_port": "has-purpose",
+   "tgt_urn": "urn:moos:purpose:sam.kernel-implementation-z440",
+   "tgt_port": "purpose-of-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.kernel-proper.pins-urn.kernel-implementation-z440",
+   "src_urn": "urn:moos:session:sam.kernel-proper",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:purpose:sam.kernel-implementation-z440",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.steinberger-seat.has-purpose.tooling-ergonomics-and-dx",
+   "src_urn": "urn:moos:session:sam.steinberger-seat",
+   "src_port": "has-purpose",
+   "tgt_urn": "urn:moos:purpose:sam.tooling-ergonomics-and-dx",
+   "tgt_port": "purpose-of-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.steinberger-seat.pins-urn.tooling-ergonomics-and-dx",
+   "src_urn": "urn:moos:session:sam.steinberger-seat",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:purpose:sam.tooling-ergonomics-and-dx",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.z440-cowork-workspace.has-purpose.cowork-workspace-curation",
+   "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "src_port": "has-purpose",
+   "tgt_urn": "urn:moos:purpose:sam.cowork-workspace-curation",
+   "tgt_port": "purpose-of-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.z440-cowork-workspace.pins-urn.cowork-workspace-curation",
+   "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:purpose:sam.cowork-workspace-curation",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.moos-diary.has-purpose.multimodal-curation-and-diary",
+   "src_urn": "urn:moos:session:sam.moos-diary",
+   "src_port": "has-purpose",
+   "tgt_urn": "urn:moos:purpose:sam.multimodal-curation-and-diary",
+   "tgt_port": "purpose-of-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.moos-diary.pins-urn.multimodal-curation-and-diary",
+   "src_urn": "urn:moos:session:sam.moos-diary",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:purpose:sam.multimodal-curation-and-diary",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.karpathy-seat.pins-urn.hdc-vsa-categorical-bridge",
+   "src_urn": "urn:moos:session:sam.karpathy-seat",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:purpose:sam.hdc-vsa-categorical-bridge",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.z440-cowork-workspace.pins-urn.mvp-sovereign-knowledge-os",
+   "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:purpose:sam.mvp-sovereign-knowledge-os",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.z440-cowork-workspace.pins-urn.github-project-board-sync",
+   "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:purpose:sam.github-project-board-sync",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.z440-cowork-workspace.pins-urn.coherent-session-doctrine",
+   "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:purpose:sam.coherent-session-doctrine",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t245.sam.moos-diary.pins-urn.build-moos-diary",
+   "src_urn": "urn:moos:session:sam.moos-diary",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:purpose:sam.build-moos-diary",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  }
+ ]
+}
