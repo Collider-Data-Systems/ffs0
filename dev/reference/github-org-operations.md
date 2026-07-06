@@ -51,21 +51,21 @@
 
 ## Hardening queue (from the T=247 five-agent audit)
 
-> **T=248 status:** Q4 legacy project #1 **CLOSED** ✓ · demo-repository **ARCHIVED** ✓ (both executed by Zappa under the T248 catch-up goal). Remaining four are hard owner-gated: 2FA flip + org secret = UI/value only Sam has; rulesets + team-permission changes = classifier requires Sam's explicit per-action words or his own hands. **Least-privilege evidence (T248): MoosT2025 has ZERO commits in any repo** — dropping both teams' repo permission to Read is zero-disruption (org owners keep admin by ownership).
+> **T=248 status:** Q4 legacy project #1 **CLOSED** ✓ · demo-repository **ARCHIVED** ✓ (both executed by Zappa under the T248 catch-up goal). Remaining four are hard owner-gated: 2FA flip + org secret = UI/value only Sam has; rulesets + team-permission changes = classifier requires Sam's explicit per-action words or his own hands. **Least-privilege evidence (T248): MoosT2025 has ZERO commits in any repo** (per `GET /repos/<r>/commits?author=MoosT2025` across all 4 active repos, all empty) — dropping both teams' repo permission to Read is zero-disruption (org owners keep admin by ownership).
 
 Owner-action (Sam, org settings UI unless noted):
 1. **Enable org 2FA requirement** — biggest gap. Precondition met: Sam's People-page readback (T=247 screenshot) shows **both accounts already have 2FA enabled** → flipping the requirement carries no lockout risk (still vault MoosT2025 recovery codes in `secrets/`).
 2. **Restrict member repo-deletion / visibility-change to owners** — MoosT2025 currently can delete/expose any repo incl. ffs0.
 3. **Downgrade MoosT2025 to least privilege** — write/maintain on the repos it actually pushes to, not admin-everywhere (needs `admin:org` or UI).
 4. **Enable security defaults** — secret scanning + push protection on public repos (free); dependabot alerts.
-5. **demo-repository** — archive or delete (stock demo, 2 still-enabled stock Actions, occupies a private-repo slot).
+5. ~~**demo-repository** — archive or delete~~ **DONE T=248: archived** (reversible; its 2 stock Actions are inert on an archived repo).
 6. Decide: plan upgrade if server-side protection on ffs0 matters.
 
 Zappa-executable (queued):
 - **Q1** replicate project-sync.yml to moos-kernel + moos-router (after the ffs0 repoint merges).
 - **Q2** rulesets on public repos (block force-push + deletion on default branch; free) — **blocked by the harness classifier T=247** (org-governance mutation needs Sam's explicit go or a permission rule). Ready-to-run: `gh api -X POST repos/Collider-Data-Systems/<repo>/rulesets` with `{"name":"protect-default-branch","target":"branch","enforcement":"active","conditions":{"ref_name":{"include":["~DEFAULT_BRANCH"],"exclude":[]}},"rules":[{"type":"non_fast_forward"},{"type":"deletion"}]}` for `moos-kernel` · `moos-router` · `.github`.
 - **Q3** `SECURITY.md` in `.github` (vuln-reporting channel for the public repos).
-- **Q4** close legacy project `MSD21091969/#1` (post-merge, Sam's go).
+- ~~**Q4** close legacy project `MSD21091969/#1`~~ **DONE T=248: closed** (20 items retained, reopenable).
 - **Q5** board hygiene: delete/rename "New field 8" (3 items carry a 2026-04-21 date — decide keep-as-"Legacy Date" vs drop).
 - **Q6** notification SPOF: add a scheduled Action or org webhook alerting on force-push / member-change / repo-deletion (audit-log retention on Free is 90 days).
 
