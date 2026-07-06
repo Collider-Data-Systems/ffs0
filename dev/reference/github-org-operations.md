@@ -51,6 +51,8 @@
 
 ## Hardening queue (from the T=247 five-agent audit)
 
+> **T=248 status:** Q4 legacy project #1 **CLOSED** ✓ · demo-repository **ARCHIVED** ✓ (both executed by Zappa under the T248 catch-up goal). Remaining four are hard owner-gated: 2FA flip + org secret = UI/value only Sam has; rulesets + team-permission changes = classifier requires Sam's explicit per-action words or his own hands. **Least-privilege evidence (T248): MoosT2025 has ZERO commits in any repo** — dropping both teams' repo permission to Read is zero-disruption (org owners keep admin by ownership).
+
 Owner-action (Sam, org settings UI unless noted):
 1. **Enable org 2FA requirement** — biggest gap. Precondition met: Sam's People-page readback (T=247 screenshot) shows **both accounts already have 2FA enabled** → flipping the requirement carries no lockout risk (still vault MoosT2025 recovery codes in `secrets/`).
 2. **Restrict member repo-deletion / visibility-change to owners** — MoosT2025 currently can delete/expose any repo incl. ffs0.
