@@ -1,0 +1,16 @@
+{
+  "target_url": "http://localhost:8000/programs",
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "persona": "zappa",
+  "approval_basis": "T247 spine-reification, batch Z440. Backfill the P1 workstation.kind property (landed v4.0.0, never backfilled) onto the Z440 workstation node, whose log is sovereign on hp-z440.primary (§M9). additive MUTATE — kind was absent; mutable, authority_scope owner. DRAFTED, NOT APPLIED.",
+  "envelopes": [
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:workstation:hp-z440",
+      "field": "kind",
+      "new_value": "desktop",
+      "rewrite_category": "WF01"
+    }
+  ]
+}
