@@ -1,6 +1,6 @@
 ---
 name: moos-running-state-validator
-description: Validate `kb/superset/running-state.md` for consistency against actual HG state across both kernels. Use at round close (after `moos-round-close`) and at round open (after `moos-state-readback`) to catch drift between the doctrine summary and the live kernel logs. Checks: T-day matches `/healthz` t_day on both kernels; ontology version matches both kernels' runtime version; cited log_seq ranges resolve to actual rewrites; cited URNs resolve via `/state/nodes`; round-entry chronology is monotonic; no orphaned references to retired notes. Trigger on: round open / round close, "did running-state drift?", post-merge after a doctrine commit, or whenever a hydrating reader (new persona, new conversation) hits a citation that doesn't resolve.
+description: Validate `kb/superset/running-state.md` for consistency against actual HG state across both kernels. Use at round close (after `moos-round-close`) and at round open (after `moos-state-readback`) to catch drift between the doctrine summary and the live kernel logs. Checks: T-day matches `/healthz` t_day on both kernels; ontology version matches both kernels' runtime version; cited log_seq ranges resolve to actual rewrites; log_len vs max_log_seq integrity per kernel (multi-writer duplicate detection, moos-kernel#40); cited URNs resolve via `/state/nodes`; round-entry chronology is monotonic; no orphaned references to retired notes. Trigger on: round open / round close, "did running-state drift?", post-merge after a doctrine commit, or whenever a hydrating reader (new persona, new conversation) hits a citation that doesn't resolve.
 ---
 
 # moos-running-state-validator
@@ -36,11 +36,20 @@ Top of `running-state.md` should match both kernels' runtime:
 ### Pass 2 — log_seq citations resolve
 
 Every entry that cites `log_seq N..M` or `log_seq=N` should:
-- Be ≤ that kernel's current `log_len`
+- Be ≤ that kernel's current **`max_log_seq`** (fall back to `log_len` on pre-4c99df8 kernels that don't expose it)
 - Resolve to a real rewrite via `GET /log?from=N` or `GET /log?from=N&to=M`
 - Stamp the right kernel (Z440 :8000 vs hp-laptop :8000 — entries usually say which)
 
 Common drift: round-N entry says "log_seq 600–627" but kernel has been restarted with a partial log; or rounds got re-ordered.
+
+### Pass 2b — log_len vs max_log_seq integrity (moos-kernel#40 (d))
+
+`/healthz` serves both counters as one atomic snapshot since `4c99df8`. Compare per kernel:
+
+- **`log_len == max_log_seq`** — clean single-writer log. ✓
+- **`log_len > max_log_seq`** — the replayed file carries **multi-writer duplicate entries**; the delta is the cumulative duplicate count (hp-laptop's historical Δ17). Report the delta and treat **`max_log_seq` as the canonical citation key** — len-based citations overshoot by the delta (e.g. the ffs0#105 trio is seq 1556–1558, not 1573–1575). Not new corruption by itself, but if the delta GREW since the last validated round, a second writer got in — escalate to ops (find the process; see moos-kernel#40 (e)).
+- **`log_len < max_log_seq`** — seqs were stamped for rewrites whose persist failed (the counter never rolls back on Append error). Benign gap; note it, don't alarm.
+- Field absent → kernel predates the fix; note "pre-#40 binary, integrity unverifiable" instead of skipping silently.
 
 ### Pass 3 — URN citations resolve
 
