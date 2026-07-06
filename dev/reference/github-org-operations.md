@@ -21,7 +21,7 @@
 | When | What | How |
 |---|---|---|
 | Round-open | Board audit: unattached open items, open orphans (no HG URN), status drift | `pwsh -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Sync-ProjectBoard.ps1` (read-only) |
-| New issue/PR lands | Auto-added with Status via the Action (ffs0 today); manual: `-Mode Attach -Repo <r> -Number <n> -HgUrn <urn> …` | populate HG URN at attach time — it's the G-direction round-trip key |
+| New issue/PR lands | **Standing rule (Sam, T=247): always add with details — never bare.** The Action auto-adds Status-only; the creating seat immediately backfills the full field set via `-Mode Attach -Repo <r> -Number <n> -HgUrn <urn> -AgentId <id> -OwnerRole <role> -Category <cat> -Phase <phase>` in the same breath | `HG URN` is the G-direction round-trip key; a Status-only card is an orphan |
 | Work starts on a card | Status → In Progress (Action does it on reopen/synchronize; manual via board UI or Attach) | |
 | Round-close | F-direction sweep so the board reflects the round | `Sync-ProjectBoard.ps1 -Mode Sweep` (dry-run), then `-Apply` |
 | Milestones | Re-snapshot the board into `dev/reference/board-baseline-t<N>.json` | the GraphQL export in the bridge SKILL.md |
