@@ -55,10 +55,29 @@ function resolveWorkspaceVariables(value: string): string {
 
 function resolveServerPath(value: string): string {
   const resolved = resolveWorkspaceVariables(value);
-  if (resolved !== "moos-lsp") {
+  if (resolved === "moos-lsp") {
+    return findWorkspaceServerBinary() ?? resolved;
+  }
+  if (!looksLikeFilePath(resolved) || fs.existsSync(resolved)) {
     return resolved;
   }
-  return findWorkspaceServerBinary() ?? resolved;
+
+  const workspaceServerPath = findWorkspaceServerBinary();
+  if (workspaceServerPath) {
+    void vscode.window.showWarningMessage(
+      `mo:os LSP: configured moos.serverPath does not exist (${resolved}) — likely a stale synced user setting; clear or fix it. Using workspace server: ${workspaceServerPath}`,
+    );
+    return workspaceServerPath;
+  }
+
+  void vscode.window.showWarningMessage(
+    `mo:os LSP: configured moos.serverPath does not exist (${resolved}) and no workspace server binary was found — clear or fix the setting. Falling back to moos-lsp on PATH.`,
+  );
+  return "moos-lsp";
+}
+
+function looksLikeFilePath(value: string): boolean {
+  return path.isAbsolute(value) || value.includes("/") || value.includes("\\") || value.startsWith(".");
 }
 
 function findWorkspaceServerBinary(): string | undefined {
