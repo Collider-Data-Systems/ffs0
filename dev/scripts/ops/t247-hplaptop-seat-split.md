@@ -2,8 +2,15 @@
 
 Sam ratified option (b) on the ffs0#99 finding-6 thread: split the hp-laptop topology.
 
+> **T247 amendment (#99 HOLD correction):** the governance occupant is
+> `agent:claude-cowork.hp-laptop` — Sam's screenshots proved the laptop Claude driver is
+> the Claude **Desktop/Cowork** app, not a CLI `claude-code` install. `claude-code.hp-laptop`
+> is retired as a legacy principal (exists in the fold, no live occupancy). This makes the
+> agent multi-workspace (governance + laptop-cowork-workspace) → explicit `session_urn` on
+> every envelope it authors.
+
 - **John Lydon** (governance, formerly Guido) = the **Claude** agent
-  `agent:claude-code.hp-laptop` on `session:sam.governance` — occupancy rotates to it.
+  `agent:claude-cowork.hp-laptop` on `session:sam.governance` — occupancy rotates to it.
 - **Guido** = the **VS Code/Copilot** instance `agent:vscode.hp-laptop.copilot` on a
   NEW seat `session:sam.laptop-vscode-lead` (laptop IDE-projection lead, mirroring the
   Z440 VS Code lead; ffs0#89 was this instance's introduction).
@@ -17,7 +24,7 @@ seats — not one principal with a lying surface token.
 
 1. UNLINK `sam.governance` has-occupant → `vscode.hp-laptop.copilot`
    (rel `urn:moos:rel:session.sam.governance.has-occupant.agent.vscode.hp-laptop-copilot`)
-2. LINK `sam.governance` has-occupant → `claude-code.hp-laptop` (WF19; UNLINK+LINK
+2. LINK `sam.governance` has-occupant → `claude-cowork.hp-laptop` (WF19; UNLINK+LINK
    rotation per the T194 precedent — mirror direction of the T194 apply)
 3. ADD `purpose:sam.laptop-vscode-lead-operations` (T194 purpose property shape)
 4. ADD `session:sam.laptop-vscode-lead` (T194 session property shape)
@@ -27,8 +34,8 @@ seats — not one principal with a lying surface token.
 8. LINK pins-urn → the new purpose (WF19 scope root; MVP-gate pattern per #90)
 
 Actor discipline: kernel actor on WF19 LINK/UNLINK (T194 precedent), agent actor
-`claude-code.hp-laptop` + explicit `session_urn` on the ADDs (valid post-envelope-2).
-`agent:claude-code.hp-laptop` verified existing (v4) — no agent ADD needed.
+`claude-cowork.hp-laptop` + explicit `session_urn` on the ADDs (valid post-envelope-2).
+`agent:claude-cowork.hp-laptop` verified existing (v4) — no agent ADD needed.
 
 ## Apply status
 
@@ -62,4 +69,4 @@ TWO orphan stdio sidecars alive concurrently with the HTTP engine, all three on 
 get their own log path or refuse a log already held by a listening engine — belongs in
 the moos-tooling-dx lane.
 
-authored-by: agent:claude-code.hp-laptop / session:sam.governance / t247-hplaptop-seat-split
+authored-by: agent:claude-cowork.hp-laptop / session:sam.governance / t247-hplaptop-seat-split

@@ -52,4 +52,4 @@ secret-free. No secrets, no `git` unless the user makes it an explicit boundary 
 Surface HG apply / commit for review. IDE/chat state is S0 substrate, not durable HG
 truth until G-ingested.
 
-authored-by: agent:claude-code.hp-laptop / session:sam.governance / t247-hplaptop-seat-split
+authored-by: agent:claude-cowork.hp-laptop / session:sam.governance / t247-hplaptop-seat-split

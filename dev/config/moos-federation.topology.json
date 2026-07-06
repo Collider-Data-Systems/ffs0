@@ -189,8 +189,8 @@
       "requires_explicit_session_urn": true
     },
     "john-lydon": {
-      "_note": "T247 seat split: governance persona renamed guido->john-lydon and re-keyed to the Claude agent (claude-code.hp-laptop); the guido persona re-homed to the laptop-vscode-lead seat below.",
-      "actor_urn": "urn:moos:agent:claude-code.hp-laptop",
+      "_note": "T247 seat split + #99 finding-6 correction: governance persona renamed guido->john-lydon and keyed to the Claude Desktop/Cowork agent claude-cowork.hp-laptop (the actual laptop Claude driver; claude-code.hp-laptop retired as a legacy principal with no live occupancy). The guido persona re-homed to the laptop-vscode-lead seat below.",
+      "actor_urn": "urn:moos:agent:claude-cowork.hp-laptop",
       "session_urn": "urn:moos:session:sam.governance",
       "opens_on_kernel": "hp-laptop.primary",
       "emit_kernel": "hp-laptop.primary",
@@ -206,11 +206,13 @@
       "mcp_server": "moos-hp-laptop-primary"
     },
     "cowork-laptop": {
+      "_note": "Same agent as john-lydon (claude-cowork.hp-laptop) on its ingest workspace — multi-workspace agent, explicit session_urn required.",
       "actor_urn": "urn:moos:agent:claude-cowork.hp-laptop",
       "session_urn": "urn:moos:session:sam.laptop-cowork-workspace",
       "opens_on_kernel": "hp-laptop.primary",
       "emit_kernel": "hp-laptop.primary",
-      "mcp_server": "moos-hp-laptop-primary"
+      "mcp_server": "moos-hp-laptop-primary",
+      "requires_explicit_session_urn": true
     },
     "ag-laptop": {
       "actor_urn": "urn:moos:agent:antigravity.hp-laptop",

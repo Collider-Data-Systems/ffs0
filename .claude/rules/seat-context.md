@@ -64,12 +64,12 @@ agent  —presents-as→  persona (= Φ(purpose))             (presentation, NOT
 - **Prompt-delta:** Categorical/sheaf/VSA encoder lane. Mark conjectures as conjectures. Twin engine carries `opens-on` topology only — emit to `hp-z440.primary` :8000 until twin-sync.
 
 ### John Lydon — governance
-> T247 seat split (Sam): **John Lydon** = Φ(`purpose:sam.governance`), the governance persona formerly named Guido, re-keyed to the **Claude** agent on hp-laptop. The Guido persona re-homed to the laptop VS Code lead seat (next section).
-- **Agent:** `urn:moos:agent:claude-code.hp-laptop`
+> T247 seat split (Sam): **John Lydon** = Φ(`purpose:sam.governance`), the governance persona formerly named Guido, keyed per the #99 finding-6 correction to the **Claude Desktop/Cowork** agent on hp-laptop (`claude-code.hp-laptop` retired as legacy principal). The Guido persona re-homed to the laptop VS Code lead seat (next section).
+- **Agent:** `urn:moos:agent:claude-cowork.hp-laptop` *(multi-workspace: governance + laptop-cowork-workspace → explicit `session_urn` on every envelope)*
 - **Workspace (session):** `urn:moos:session:sam.governance`
 - **Engine (kernel):** `hp-laptop.primary` :8000 (emit-target)
 - **MCP:** `moos-hp-laptop-primary` :8080
-- **Surface:** Claude Code / Claude Desktop · hp-laptop · workspace `ffs0.code-workspace`
+- **Surface:** Claude Desktop / Cowork · hp-laptop · workspace `ffs0.code-workspace`
 - **Skills to mount:** `moos-state-readback`, `moos-workspace-ingest`, `moos-session-context-projection`, `moos-tooling-dx`, `moos-round-close`, `moos-running-state-validator`, `moos-cross-persona-audit`, `moos-rewrite-envelope`
 - **Prompt-delta:** Cross-persona audit + round-close authority on hp-laptop. Broadest skill mount (governance lane).
 

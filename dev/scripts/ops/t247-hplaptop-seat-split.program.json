@@ -2,7 +2,7 @@
   "target_url": "http://localhost:8000/programs",
   "target_kernel": "urn:moos:kernel:hp-laptop.primary",
   "persona": "john-lydon",
-  "approval_basis": "Sam ratified option (b) on the ffs0#99 finding-6 thread (T247): split the hp-laptop seat topology. John Lydon (Claude, agent:claude-code.hp-laptop) takes sam.governance via UNLINK+LINK occupancy rotation (T194 precedent, mirror direction); Guido (Copilot, agent:vscode.hp-laptop.copilot) gets a new laptop VS Code lead seat with its own purpose, occupancy, opens-on, and scope-root pin.",
+  "approval_basis": "Sam ratified option (b) on the ffs0#99 finding-6 thread (T247), amended per the #99 HOLD correction (the laptop Claude driver is the Claude Desktop/Cowork app): split the hp-laptop seat topology. John Lydon (Claude Desktop/Cowork, agent:claude-cowork.hp-laptop) takes sam.governance via UNLINK+LINK occupancy rotation (T194 precedent, mirror direction); Guido (Copilot, agent:vscode.hp-laptop.copilot) gets a new laptop VS Code lead seat with its own purpose, occupancy, opens-on, and scope-root pin.",
   "envelopes": [
     {
       "rewrite_type": "UNLINK",
@@ -12,16 +12,16 @@
     {
       "rewrite_type": "LINK",
       "actor": "urn:moos:kernel:hp-laptop.primary",
-      "relation_urn": "urn:moos:rel:session.sam.governance.has-occupant.agent.claude-code.hp-laptop",
+      "relation_urn": "urn:moos:rel:session.sam.governance.has-occupant.agent.claude-cowork.hp-laptop",
       "src_urn": "urn:moos:session:sam.governance",
       "src_port": "has-occupant",
-      "tgt_urn": "urn:moos:agent:claude-code.hp-laptop",
+      "tgt_urn": "urn:moos:agent:claude-cowork.hp-laptop",
       "tgt_port": "is-occupant-of",
       "rewrite_category": "WF19"
     },
     {
       "rewrite_type": "ADD",
-      "actor": "urn:moos:agent:claude-code.hp-laptop",
+      "actor": "urn:moos:agent:claude-cowork.hp-laptop",
       "session_urn": "urn:moos:session:sam.governance",
       "node_urn": "urn:moos:purpose:sam.laptop-vscode-lead-operations",
       "type_id": "purpose",
@@ -54,7 +54,7 @@
     },
     {
       "rewrite_type": "ADD",
-      "actor": "urn:moos:agent:claude-code.hp-laptop",
+      "actor": "urn:moos:agent:claude-cowork.hp-laptop",
       "session_urn": "urn:moos:session:sam.governance",
       "node_urn": "urn:moos:session:sam.laptop-vscode-lead",
       "type_id": "session",
