@@ -14,6 +14,7 @@ Operational PowerShell helpers for local kernel/federation, the Windows-11 sessi
 | `setup-autostart-z440.ps1` | Registers Z440 logon tasks (federation + session desktops). Elevated. |
 | `start_federation_laptop.ps1` | hp-laptop primary-kernel launcher (`:8000` / MCP `:8080`). No secondaries on laptop. |
 | `Watch-GitHubIssue.ps1` | Profile-aware GitHub-issue watcher / conservative auto-ack for coordination threads. |
+| `Sync-ProjectBoard.ps1` | mo:os board (org project #4) operator: Audit (read-only, default) / Attach / Sweep (`-Apply` to mutate). No HG rewrites. Runbook: `dev/reference/github-org-operations.md`. |
 | `Invoke-KeepIngestHarness.ps1` | Google Keep clipboard/API capture + staging harness. Runbook: `dev/reference/keep-ingest-runbook.md`. |
 
 `__init__.py` is a vestigial Python package marker; the `t*.json` / `t*.md` / `r15-*` files are dated replay/reference payloads (T173–T206). Older one-shot Python emitters live in `dev/reference/research-archive/scripts/legacy-emitters/`.
