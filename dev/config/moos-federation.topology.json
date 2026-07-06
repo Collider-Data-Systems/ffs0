@@ -189,14 +189,21 @@
       "requires_explicit_session_urn": true
     },
     "john-lydon": {
-      "legacy_key": "guido",
-      "actor_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
-      "legacy_actor_urn": "urn:moos:agent:claude-code.hp-laptop",
+      "_note": "T247 seat split: governance persona renamed guido->john-lydon and re-keyed to the Claude agent (claude-code.hp-laptop); the guido persona re-homed to the laptop-vscode-lead seat below.",
+      "actor_urn": "urn:moos:agent:claude-code.hp-laptop",
       "session_urn": "urn:moos:session:sam.governance",
       "opens_on_kernel": "hp-laptop.primary",
       "emit_kernel": "hp-laptop.primary",
       "mcp_server": "moos-hp-laptop-primary",
       "requires_explicit_session_urn": true
+    },
+    "guido": {
+      "_note": "T247: Guido persona re-homed from governance to the new laptop VS Code lead seat (VS Code/Copilot instance).",
+      "actor_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "session_urn": "urn:moos:session:sam.laptop-vscode-lead",
+      "opens_on_kernel": "hp-laptop.primary",
+      "emit_kernel": "hp-laptop.primary",
+      "mcp_server": "moos-hp-laptop-primary"
     },
     "cowork-laptop": {
       "actor_urn": "urn:moos:agent:claude-cowork.hp-laptop",

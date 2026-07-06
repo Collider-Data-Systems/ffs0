@@ -101,15 +101,27 @@
       "legacy_key": "guido-governance",
       "host": "hp-laptop",
       "session_urn": "urn:moos:session:sam.governance",
+      "actor_urn": "urn:moos:agent:claude-code.hp-laptop",
+      "emit_kernel": "urn:moos:kernel:hp-laptop.primary",
+      "mcp_server": "moos-hp-laptop-primary",
+      "workspace": "ffs0.code-workspace",
+      "harnesses": ["Claude Code", "Claude Desktop"],
+      "prompts": [],
+      "skills": ["moos-state-readback", "moos-workspace-ingest", "moos-session-context-projection", "moos-tooling-dx", "moos-round-close", "moos-running-state-validator", "moos-cross-persona-audit", "moos-rewrite-envelope"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona john-lydon", "dev/scripts/projections/run-session-pipeline.ps1"]
+    },
+    {
+      "key": "guido-laptop-vscode-lead",
+      "host": "hp-laptop",
+      "session_urn": "urn:moos:session:sam.laptop-vscode-lead",
       "actor_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
-      "legacy_actor_urn": "urn:moos:agent:claude-code.hp-laptop",
       "emit_kernel": "urn:moos:kernel:hp-laptop.primary",
       "mcp_server": "moos-hp-laptop-primary",
       "workspace": "ffs0.code-workspace",
       "harnesses": ["VS Code", "Copilot"],
       "prompts": [],
-      "skills": ["moos-state-readback", "moos-workspace-ingest", "moos-session-context-projection", "moos-tooling-dx", "moos-round-close", "moos-running-state-validator", "moos-cross-persona-audit", "moos-rewrite-envelope"],
-      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona john-lydon", "dev/scripts/projections/run-session-pipeline.ps1"]
+      "skills": ["moos-state-readback", "moos-session-context-projection", "moos-tooling-dx"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona guido"]
     },
     {
       "key": "t200plus-calendar-readback",

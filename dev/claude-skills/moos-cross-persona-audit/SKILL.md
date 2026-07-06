@@ -26,13 +26,17 @@ Round-close discipline for the John Lydon / governance lane. Walks the §9 invar
 ## Persona seat conventions
 
 ```
-agent:    urn:moos:agent:vscode.hp-laptop.copilot  (John Lydon / hp-laptop VS Code)
+agent:    urn:moos:agent:claude-code.hp-laptop  (John Lydon / hp-laptop Claude Code)
 session:  urn:moos:session:sam.governance
 kernel:   kernel:hp-laptop.primary  (port 8000 HTTP, 8080 MCP)
 branch:   john-lydon/r<NN>-<topic>  (per-round per-topic; round-close commits ride main via PR)
 ```
 
-The legacy `urn:moos:agent:claude-code.hp-laptop` actor is only valid when Claude Code is actually live and WF19 occupancy has been explicitly restored. The skill is invokable from any persona seat (read-only, no actor required for queries), but interpretation + posting the comment is John-Lydon-lane-specific.
+T247 seat split: `urn:moos:agent:vscode.hp-laptop.copilot` is the separate **Guido**
+laptop-VS-Code-lead seat (`session:sam.laptop-vscode-lead`), not an alias of this one;
+governance occupancy belongs to `claude-code.hp-laptop`. The skill is invokable from any
+persona seat (read-only, no actor required for queries), but interpretation + posting the
+comment is John-Lydon-lane-specific.
 
 ## The N-invariant checklist (round-15+)
 

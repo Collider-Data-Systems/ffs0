@@ -17,8 +17,8 @@ $ErrorActionPreference = 'Stop'
 # T244+: persona key rename cowork-z440 -> zappa; accept the legacy key as an alias.
 if ($Persona -eq 'cowork-z440') { $Persona = 'zappa' }
 
-# T247: persona key rename guido -> john-lydon; accept the legacy key as an alias.
-if ($Persona -eq 'guido') { $Persona = 'john-lydon' }
+# T247 seat split: 'guido' is a live persona key again (laptop VS Code lead seat);
+# governance is 'john-lydon'. No alias shim — both keys resolve directly from topology.
 
 $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..\..')
 if (-not $TopologyPath) {

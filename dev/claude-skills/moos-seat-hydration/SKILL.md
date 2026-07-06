@@ -32,7 +32,8 @@ Resolve which **seat** (persona × workspace × agent × engine × surface) this
    | host Z440 + VS Code, `moos-router` cwd | **Steinberger** (`agent:vscode.hp-z440.menno` / `session:sam.steinberger-seat`) |
    | host Z440 + VS Code, research cwd | **Karpathy** (`agent:vscode.hp-z440.lola` / `session:sam.karpathy-seat`) |
    | host Z440 + Antigravity | **Moos / AG-Z440** (`agent:antigravity.hp-z440` / `session:sam.moos-diary`) |
-   | host `lap-sam` (hp-laptop) + VS Code/Copilot | **John Lydon** (legacy Guido) (`agent:vscode.hp-laptop.copilot` / `session:sam.governance`) |
+   | host `lap-sam` (hp-laptop) + Claude Code / Claude Desktop | **John Lydon** (governance; formerly Guido) (`agent:claude-code.hp-laptop` / `session:sam.governance`) |
+   | host `lap-sam` (hp-laptop) + VS Code/Copilot | **Guido** (laptop VS Code lead, T247 split) (`agent:vscode.hp-laptop.copilot` / `session:sam.laptop-vscode-lead`) |
    | host hp-laptop + Cowork | **Cowork-laptop** (`agent:claude-cowork.hp-laptop` / `session:sam.laptop-cowork-workspace`) |
    | host ProDesk (`desktop-3fc7c3f` / `desktop-42d00rd`-distinct) + VS Code | **HP ProDesk** (`agent:vscode.hpprodesk.primary` / `session:sam.hpprodesk-setup`) |
 
