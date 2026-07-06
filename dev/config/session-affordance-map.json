@@ -97,6 +97,33 @@
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona moos"]
     },
     {
+      "key": "zappa-cowork-curation",
+      "legacy_key": "cowork-z440",
+      "host": "hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "actor_urn": "urn:moos:agent:claude-cowork.hp-z440",
+      "emit_kernel": "urn:moos:kernel:hp-z440.primary",
+      "mcp_server": "moos-primary",
+      "workspace": "ffs0.code-workspace",
+      "harnesses": ["Claude Desktop", "Cowork"],
+      "prompts": [],
+      "skills": ["moos-cowork-readback", "moos-workspace-ingest", "moos-multimodal-ingest", "moos-session-context-projection", "moos-rewrite-envelope"],
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona zappa", "dev/scripts/projections/run-session-pipeline.ps1"]
+    },
+    {
+      "key": "z440-vscode-primary-setup",
+      "host": "hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-primary-vscode-setup",
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.primary",
+      "emit_kernel": "urn:moos:kernel:hp-z440.primary",
+      "mcp_server": "moos-primary",
+      "workspace": "ffs0.code-workspace",
+      "harnesses": ["VS Code", "Copilot"],
+      "prompts": [],
+      "skills": ["moos-session-context-projection", "moos-tooling-dx", "moos-state-readback"],
+      "validation": ["curl -s http://localhost:8000/state/relations/src/urn:moos:session:sam.z440-primary-vscode-setup", "Test-MoosFederation.ps1 -Mode VerifyPersona -Persona z440-vscode-lead"]
+    },
+    {
       "key": "john-lydon-governance",
       "legacy_key": "guido-governance",
       "host": "hp-laptop",
