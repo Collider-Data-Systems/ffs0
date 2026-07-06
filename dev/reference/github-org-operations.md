@@ -34,6 +34,7 @@
 - **`PROJECTS_TOKEN`** (ffs0 Actions secret, set 2026-03-24) — PAT for board writes. **Unverified since the T244 PAT revocations** — if Action runs log "Project not accessible", mint a fine-grained PAT (org `Collider-Data-Systems`, Projects read/write) and update the secret. Record expiry here when rotated.
 - **Board built-ins** (6, all on): item-closed→Done, PR-merged→Done, auto-close-issue, auto-add-sub-issues, PR-linked, item-added→Todo.
 - **`Watch-GitHubIssue.ps1`** — issue-comment coordination poller (ffs0#54 default); separate concern, unchanged.
+- **Copilot billing is usage-based for this org** (banner observed T=247) — every PR-route Copilot review has a marginal cost; keep the one-review-per-PR cadence, don't re-request on trivial pushes. Sam can set a per-user budget in org settings.
 
 ## Token / scope table
 
@@ -51,7 +52,7 @@
 ## Hardening queue (from the T=247 five-agent audit)
 
 Owner-action (Sam, org settings UI unless noted):
-1. **Enable org 2FA requirement** — biggest gap. *First* confirm `MoosT2025` has 2FA + recovery codes vaulted (`secrets/`): enabling auto-removes non-compliant accounts.
+1. **Enable org 2FA requirement** — biggest gap. Precondition met: Sam's People-page readback (T=247 screenshot) shows **both accounts already have 2FA enabled** → flipping the requirement carries no lockout risk (still vault MoosT2025 recovery codes in `secrets/`).
 2. **Restrict member repo-deletion / visibility-change to owners** — MoosT2025 currently can delete/expose any repo incl. ffs0.
 3. **Downgrade MoosT2025 to least privilege** — write/maintain on the repos it actually pushes to, not admin-everywhere (needs `admin:org` or UI).
 4. **Enable security defaults** — secret scanning + push protection on public repos (free); dependabot alerts.
