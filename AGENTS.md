@@ -39,9 +39,10 @@ Relation-first, rewrite-first. No OOP framing (no objects-with-payload, no stati
 | Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-vscode-projection-lead` | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 · `ffs0.code-workspace` | moos-primary |
 | Steinberger | `vscode.hp-z440.menno` | `sam.steinberger-seat` | `hp-z440.menno` :8001 *(emits `hp-z440.primary` pre-§M9)* | VS Code · Z440 (desktop 3) · `moos-router` | moos-primary *(opens-on `moos-menno`)* |
 | Karpathy | `vscode.hp-z440.lola` | `sam.karpathy-seat` | `hp-z440.lola` :8002 *(emits `hp-z440.primary` pre-§M9)* | VS Code · Z440 (desktop 4) · `ffs0.code-workspace` | moos-primary *(opens-on `moos-lola`)* |
-| John Lydon (governance) | `vscode.hp-laptop.copilot` | `sam.governance` | `hp-laptop.primary` :8000 | VS Code / Copilot · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
-| Cowork-laptop | `claude-cowork.hp-laptop` | `sam.laptop-cowork-workspace` | `hp-laptop.primary` :8000 | Claude Code · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
+| John Lydon (governance) | `claude-cowork.hp-laptop` | `sam.governance` | `hp-laptop.primary` :8000 | Claude Desktop / Cowork · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
+| John Lydon (governance) | `claude-cowork.hp-laptop` | `sam.laptop-cowork-workspace` | `hp-laptop.primary` :8000 | Claude Desktop / Cowork · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
 | AG-laptop | `antigravity.hp-laptop` | `sam.laptop-moos-diary` | `hp-laptop.primary` :8000 | Antigravity · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
+| Guido (laptop VS Code lead) | `vscode.hp-laptop.copilot` | `sam.laptop-vscode-lead` | `hp-laptop.primary` :8000 | VS Code / Copilot · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
 | HP ProDesk | `vscode.hpprodesk.primary` | `sam.hpprodesk-setup` | `hpprodesk.primary` :8000 | VS Code · ProDesk · `ffs0.code-workspace` | moos-hpprodesk-primary |
 <!-- END GENERATED: moos-config-projection seat-table -->
 
