@@ -142,6 +142,8 @@ function Test-KernelHealth {
         Status = 'unknown'
         Ontology = ''
         LogLen = ''
+        MaxLogSeq = ''
+        LogIntegrity = ''
         Derivation = 'unknown'
         Error = ''
     }
@@ -153,6 +155,32 @@ function Test-KernelHealth {
         $result.LogLen = [string]$health.log_len
         if ($expectedOntologyVersion -and $result.Ontology -ne $expectedOntologyVersion) {
             $result.Error = "expected ontology $expectedOntologyVersion"
+        }
+
+        # Pass 2b (moos-kernel#40 (d)): log_len vs max_log_seq integrity.
+        # /healthz serves both counters as one lock snapshot since moos-kernel
+        # 4c99df8. Four cases per the validator skill's Pass 2b semantics.
+        if ($health.PSObject.Properties['max_log_seq']) {
+            $logLen = [int64]$health.log_len
+            $maxSeq = [int64]$health.max_log_seq
+            $result.MaxLogSeq = [string]$maxSeq
+            if ($logLen -eq $maxSeq) {
+                $result.LogIntegrity = 'clean'
+            }
+            elseif ($logLen -gt $maxSeq) {
+                # Replayed multi-writer duplicates. max_log_seq is the canonical
+                # citation key from here on; len-based citations overshoot by the
+                # delta (pre-#42 running-state entries stay grandfathered as
+                # len-based — annotate on next touch, never retro-edit).
+                $result.LogIntegrity = "drift: $($logLen - $maxSeq) duplicate entries (cite max_log_seq=$maxSeq)"
+            }
+            else {
+                $result.LogIntegrity = "persist-gap: $($maxSeq - $logLen) stamped-not-persisted (benign)"
+            }
+        }
+        else {
+            $result.MaxLogSeq = 'n/a'
+            $result.LogIntegrity = 'deployment-lag: pre-#42 binary, integrity unverifiable'
         }
 
         $nodeTypes = Invoke-MoosGet -BaseUrl $baseUrl -Path 'operad/node-types'
