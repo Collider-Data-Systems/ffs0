@@ -8,10 +8,10 @@
 | Entity | State |
 |---|---|
 | Org | `Collider-Data-Systems` · GitHub **Free** · created 2026-04-12 · billing → owner account |
-| Accounts | `MSD21091969` (Sam, sole **owner**) · `MoosT2025` (agent account, member — **effective admin on all repos incl. ffs0** via teams) |
-| Teams | `sam`, `moos` — identical membership (both accounts), both grant **admin on all 5 repos**. Zero least-privilege separation today. HG: proto-groups pending v3.13 `group` nodes. |
-| Repos | `ffs0` (private) · `moos-kernel` (public) · `moos-router` (public) · `.github` (public, org profile) · `demo-repository` (private, stock demo — archival candidate) |
-| Projects | org **#4 "mo:os"** = the board (`channel:github.project.mo-os`). User project `MSD21091969/#1` = legacy duplicate (20 items) — close after the Action repoint merges. |
+| Accounts | `MSD21091969` (Sam, sole **owner**). ~~`MoosT2025`~~ **removed from the org T=248** (Sam; zero commits ever — see least-privilege evidence below). Caveat: any PATs it owned died with it — if `PROJECTS_TOKEN` was its, the sync Action warn+skips until the org secret lands with a fresh Sam-minted fine-grained PAT. |
+| Teams | `sam`, `moos` — since T=248 both contain only `MSD21091969` (owner); their admin grants are inert. HG: proto-groups pending v3.13 `group` nodes. |
+| Repos | `ffs0` (private) · `moos-kernel` (public) · `moos-router` (public) · `.github` (public, org profile) · `demo-repository` (private, **archived T=248**) |
+| Projects | org **#4 "mo:os"** = the board (`channel:github.project.mo-os`). User project `MSD21091969/#1` = legacy duplicate — **closed T=248** (20 items retained). |
 | Board | private; 84 items at baseline; 6 built-in workflows on; **no auto-add-from-repo** (plan-gated) — auto-add rides `.github/workflows/project-sync.yml` instead |
 
 **Plan constraints (Free):** no branch protection / rulesets on **private** repos (ffs0 is guardrail-less server-side — local discipline is the only gate); rulesets **are free on public repos**; built-in project auto-add workflow unavailable.
@@ -54,9 +54,9 @@
 > **T=248 status:** Q4 legacy project #1 **CLOSED** ✓ · demo-repository **ARCHIVED** ✓ (both executed by Zappa under the T248 catch-up goal). Remaining four are hard owner-gated: 2FA flip + org secret = UI/value only Sam has; rulesets + team-permission changes = classifier requires Sam's explicit per-action words or his own hands. **Least-privilege evidence (T248): MoosT2025 has ZERO commits in any repo** (per `GET /repos/<r>/commits?author=MoosT2025` across all 4 active repos, all empty) — dropping both teams' repo permission to Read is zero-disruption (org owners keep admin by ownership).
 
 Owner-action (Sam, org settings UI unless noted):
-1. **Enable org 2FA requirement** — biggest gap. Precondition met: Sam's People-page readback (T=247 screenshot) shows **both accounts already have 2FA enabled** → flipping the requirement carries no lockout risk (still vault MoosT2025 recovery codes in `secrets/`).
-2. **Restrict member repo-deletion / visibility-change to owners** — MoosT2025 currently can delete/expose any repo incl. ffs0.
-3. **Downgrade MoosT2025 to least privilege** — write/maintain on the repos it actually pushes to, not admin-everywhere (needs `admin:org` or UI).
+1. **Enable org 2FA requirement** — biggest gap. Trivially safe since T=248: the org's only account is the owner, who has 2FA.
+2. **Restrict member repo-deletion / visibility-change to owners** — moot while the org has no non-owner members (T=248); set it before inviting any future member or agent account.
+3. ~~**Downgrade MoosT2025 to least privilege**~~ **DONE T=248: account removed from the org entirely** (Sam) — verified: no access to any private repo, both teams solo.
 4. **Enable security defaults** — secret scanning + push protection on public repos (free); dependabot alerts.
 5. ~~**demo-repository** — archive or delete~~ **DONE T=248: archived** (reversible; its 2 stock Actions are inert on an archived repo).
 6. Decide: plan upgrade if server-side protection on ffs0 matters.
