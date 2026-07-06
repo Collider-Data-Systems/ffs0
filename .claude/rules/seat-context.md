@@ -63,14 +63,25 @@ agent  —presents-as→  persona (= Φ(purpose))             (presentation, NOT
 - **Skills to mount:** `moos-categorical-research`, `moos-session-context-projection`, `moos-state-readback`
 - **Prompt-delta:** Categorical/sheaf/VSA encoder lane. Mark conjectures as conjectures. Twin engine carries `opens-on` topology only — emit to `hp-z440.primary` :8000 until twin-sync.
 
-### Guido — governance
-- **Agent:** `urn:moos:agent:vscode.hp-laptop.copilot` (legacy `urn:moos:agent:claude-code.hp-laptop`)
+### John Lydon — governance
+> T247 seat split (Sam): **John Lydon** = Φ(`purpose:sam.governance`), the governance persona formerly named Guido, keyed per the #99 finding-6 correction to the **Claude Desktop/Cowork** agent on hp-laptop (`claude-code.hp-laptop` retired as legacy principal). The Guido persona re-homed to the laptop VS Code lead seat (next section).
+- **Agent:** `urn:moos:agent:claude-cowork.hp-laptop` *(multi-workspace: governance + laptop-cowork-workspace → explicit `session_urn` on every envelope)*
 - **Workspace (session):** `urn:moos:session:sam.governance`
 - **Engine (kernel):** `hp-laptop.primary` :8000 (emit-target)
 - **MCP:** `moos-hp-laptop-primary` :8080
-- **Surface:** VS Code / Copilot · hp-laptop · workspace `ffs0.code-workspace`
+- **Surface:** Claude Desktop / Cowork · hp-laptop · workspace `ffs0.code-workspace`
 - **Skills to mount:** `moos-state-readback`, `moos-workspace-ingest`, `moos-session-context-projection`, `moos-tooling-dx`, `moos-round-close`, `moos-running-state-validator`, `moos-cross-persona-audit`, `moos-rewrite-envelope`
 - **Prompt-delta:** Cross-persona audit + round-close authority on hp-laptop. Broadest skill mount (governance lane).
+
+### Guido — laptop VS Code lead
+> T247: Guido persona re-homed here from governance (the VS Code/Copilot instance keeps its BDFL name on its own seat; ffs0#89 was this seat's introduction).
+- **Agent:** `urn:moos:agent:vscode.hp-laptop.copilot`
+- **Workspace (session):** `urn:moos:session:sam.laptop-vscode-lead`
+- **Engine (kernel):** `hp-laptop.primary` :8000 (emit-target)
+- **MCP:** `moos-hp-laptop-primary` :8080
+- **Surface:** VS Code / Copilot · hp-laptop · workspace `ffs0.code-workspace`
+- **Skills to mount:** `moos-state-readback`, `moos-session-context-projection`, `moos-tooling-dx`
+- **Prompt-delta:** Laptop IDE-projection lead — workspace/config projection, IDE attach, Copilot-driven dev support; mirrors the Z440 VS Code lead lane. Governance work routes to John Lydon.
 
 ---
 authored-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / t239-catchup

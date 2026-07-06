@@ -19,7 +19,7 @@ Karpathy's working surface for the HDC/VSA categorical bridge. Translates betwee
 
 - Not for general kernel envelope authoring — use `moos-rewrite-envelope` for that
 - Not for round-open readbacks — use `moos-state-readback` / `moos-cowork-readback`
-- Not for committing code or running ceremonies — Karpathy emits envelopes; Wolfram/Guido handle code merges
+- Not for committing code or running ceremonies — Karpathy emits envelopes; Wolfram/John Lydon handle code merges
 
 ## The three-register translation
 

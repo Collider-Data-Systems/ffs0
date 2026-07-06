@@ -3,7 +3,7 @@ param(
     [ValidateSet('Doctor', 'Start', 'VerifyPersona', 'PostProgram')]
     [string]$Mode = 'Doctor',
 
-    [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'zappa', 'cowork-z440', 'z440-vscode-lead', 'guido', 'cowork-laptop', 'ag-laptop', 'hpprodesk-vscode')]
+    [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'zappa', 'cowork-z440', 'z440-vscode-lead', 'john-lydon', 'guido', 'cowork-laptop', 'ag-laptop', 'hpprodesk-vscode')]
     [string]$Persona,
 
     [string]$PayloadPath,
@@ -16,6 +16,9 @@ $ErrorActionPreference = 'Stop'
 
 # T244+: persona key rename cowork-z440 -> zappa; accept the legacy key as an alias.
 if ($Persona -eq 'cowork-z440') { $Persona = 'zappa' }
+
+# T247 seat split: 'guido' is a live persona key again (laptop VS Code lead seat);
+# governance is 'john-lydon'. No alias shim — both keys resolve directly from topology.
 
 $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..\..')
 if (-not $TopologyPath) {

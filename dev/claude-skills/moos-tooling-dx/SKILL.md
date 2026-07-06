@@ -21,7 +21,7 @@ Steinberger's working surface for tooling, IDE attachment, and developer-experie
 ## What this skill is NOT
 
 - Not for kernel implementation — that's Wolfram's lane
-- Not for governance / audit — that's Guido's lane
+- Not for governance / audit — that's John Lydon's lane
 - Not for ad-hoc one-off scripts — those go in `dev/scripts/ops/` directly without doctrine
 
 ## Steinberger seat conventions
@@ -43,7 +43,7 @@ Steinberger's working surface for tooling, IDE attachment, and developer-experie
 - **actor_urn** is the principal placed in rewrite envelopes. It must match the HG occupant or carry an explicit reviewed reason.
 - **mounted tool** is a WF19 `mounts-tool` affordance. A mounted tool can be invokable without being the current occupant.
 
-When these disagree, do a readback before touching MCP or prompt config: query the session's WF19 relations, check local process/harness evidence, then either rotate occupancy with a reviewed program or stage the IDE conversation as G-ingest evidence. Do not keep using `agent:claude-code.hp-laptop` merely because a stale prompt named it; on hp-laptop VS Code/Copilot the current governance occupant is `agent:vscode.hp-laptop.copilot` until live HG says otherwise.
+When these disagree, do a readback before touching MCP or prompt config: query the session's WF19 relations, check local process/harness evidence, then either rotate occupancy with a reviewed program or stage the IDE conversation as G-ingest evidence. Do not keep using `agent:claude-code.hp-laptop` merely because a stale prompt named it — it is a retired legacy principal (#99 finding-6); post-T247-split the governance occupant is `agent:claude-cowork.hp-laptop` (Claude Desktop/Cowork) and the laptop VS Code/Copilot instance is `agent:vscode.hp-laptop.copilot` on `session:sam.laptop-vscode-lead`, until live HG says otherwise.
 
 ## The DX-friction-as-claim pattern
 
@@ -132,7 +132,7 @@ A shell command becomes a script when (a) it's run more than 3 times, (b) it has
 - `moos-rewrite-envelope` — envelope shapes, gates
 - `moos-session-context-projection` — dry session context packs for IDE / agent / harness handoff
 - `moos-state-readback` — round-open
-- `moos-running-state-validator` — state-doc consistency (Guido's lane; co-validation)
+- `moos-running-state-validator` — state-doc consistency (John Lydon's lane; co-validation)
 - `derivation:t172.wolframs-court` (on log) — Steinberger seat origin doctrine
 - `derivation:t175.program-authoring-fabric` (on log) — leaves as the fluid-execution boundary; relevant for tool_call / external_op design
 - `D:\HPZ440\start_federation.ps1` — Z440 startup script

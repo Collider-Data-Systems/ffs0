@@ -213,7 +213,7 @@ function Test-AutoReplyRelevant {
             if (-not $isZ440Side) { return $false }
             if ($ReplyToAnyZ440) { return $true }
 
-            $asksOrHandoff = $Body -match '(hp-laptop governance action needed|hp-laptop governance|governance request|request to hp-laptop|Guido|open item|action needed|guidance|blocked|question|handoff|please reply|please post|requested redacted|config request)'
+            $asksOrHandoff = $Body -match '(hp-laptop governance action needed|hp-laptop governance|governance request|request to hp-laptop|John Lydon|Guido|open item|action needed|guidance|blocked|question|handoff|please reply|please post|requested redacted|config request)'
             return $asksOrHandoff
         }
         'z440-vscode-lead' {
