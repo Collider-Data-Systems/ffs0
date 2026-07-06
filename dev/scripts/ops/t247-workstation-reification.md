@@ -38,28 +38,31 @@ Each workstation node's log is sovereign on the box it describes:
 
 ## Review before apply (two envelope-shape confirmations)
 
-Drafted with the kernel actor (infrastructure backfill) mirroring the b1b lifecycle-MUTATE and the
-`sam.owns.hp-z440` relation shape. A reviewer / the `moos-rewrite-envelope` skill must confirm:
+Drafted with the kernel actor (infrastructure backfill). Two envelope-shape lessons surfaced on
+apply and are now baked into these files:
 
-1. **Additive-MUTATE for a previously-absent optional property.** `kind` was never set, so this may
-   need the full additive-MUTATE PropertySpec path rather than the plain `field`/`new_value` form
-   (which targets a property already in `mutate_scope`). If additive, the envelope carries the spec
-   (mutability/authority_scope/stratum_origin), not just the value.
-2. **`rewrite_category` for a workstation property set / node ADD.** WF01 is used as a placeholder
-   (the base topology family, matching the owns relation). Confirm the correct WF for a workstation
-   S2 property MUTATE and a workstation ADD.
+1. **Additive MUTATE drops `rewrite_category`.** `kind` was absent, so this is the additive-MUTATE
+   path (`moos-rewrite-envelope`): `{rewrite_type, actor, target_urn, field, new_value}` only — the
+   runtime auto-injects the PropertySpec from the ontology. The initial draft wrongly carried a
+   placeholder `rewrite_category` (that is the *standard*-MUTATE path, for a field already on the
+   node). Removed.
+2. **A workstation ADD needs all three required immutables.** The type spec requires immutable
+   `hostname`, `os`, `arch` (+ mutable `kind`); the first ADD attempt omitted `os`/`arch` and set
+   `hostname` mutable → `operad: required immutable property "os" missing`. The phone ADD now
+   carries `hostname=sam-android`, `os=android`, `arch=arm64` (immutable), `kind=mobile` (mutable),
+   matching the existing-node format (`os=windows`, `arch=amd64`).
 
-## Apply (boundary act — awaiting Sam's go)
+## Apply — DONE (T=247)
 
-```powershell
-# batch Z440
-dev\scripts\ops\...  POST -> http://localhost:8000/programs   (envelopes bare array)
-# batch laptop
-dev\scripts\ops\...  POST -> http://100.106.220.58:8000/programs
-```
-After apply: re-probe `kind` on all three nodes; confirm `workstation:sam-android` resolves and
-`sam.owns.sam-android` links; then the phone is a first-class `workstation: <urn>` value in every
-Keep-ingest provenance trailer (git and HG agree, per T239).
+Applied via `Test-MoosFederation.ps1 -Mode PostProgram` (kernel actor; §M11/§M12 bypassed for
+infrastructure). Verified in the fold:
+- `workstation:hp-z440 kind=desktop` (on hp-z440.primary)
+- `workstation:hp-laptop kind=laptop` (on hp-laptop.primary)
+- `workstation:sam-android` resolves — `kind=mobile os=android arch=arm64 hostname=sam-android`
+- `user:sam —owns→ workstation:sam-android` (`urn:moos:rel:sam.owns.sam-android`)
+
+The phone is now a first-class `workstation: <urn>` value for every Keep-ingest provenance trailer
+(git and HG agree, per T239).
 
 ## NOT in scope
 

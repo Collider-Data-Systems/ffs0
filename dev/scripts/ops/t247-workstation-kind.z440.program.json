@@ -9,8 +9,7 @@
       "actor": "urn:moos:kernel:hp-z440.primary",
       "target_urn": "urn:moos:workstation:hp-z440",
       "field": "kind",
-      "new_value": "desktop",
-      "rewrite_category": "WF01"
+      "new_value": "desktop"
     }
   ]
 }

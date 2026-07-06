@@ -9,8 +9,7 @@
       "actor": "urn:moos:kernel:hp-laptop.primary",
       "target_urn": "urn:moos:workstation:hp-laptop",
       "field": "kind",
-      "new_value": "laptop",
-      "rewrite_category": "WF01"
+      "new_value": "laptop"
     },
     {
       "rewrite_type": "ADD",
@@ -20,8 +19,20 @@
       "properties": {
         "hostname": {
           "value": "sam-android",
-          "mutability": "mutable",
-          "authority_scope": "owner",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "os": {
+          "value": "android",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "arch": {
+          "value": "arm64",
+          "mutability": "immutable",
+          "authority_scope": "",
           "stratum_origin": 2
         },
         "kind": {
