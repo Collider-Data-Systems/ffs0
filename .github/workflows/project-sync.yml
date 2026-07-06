@@ -16,8 +16,11 @@ jobs:
   sync-project-item:
     runs-on: ubuntu-latest
     env:
-      PROJECT_OWNER: MSD21091969
-      PROJECT_NUMBER: "1"
+      # T=247 takeover: org board #4 is the live board (see dev/reference/github-org-operations.md).
+      # github.token cannot write org Projects v2 — PROJECTS_TOKEN (PAT with project scope) is required;
+      # the script warns + skips if the token lacks access, so repo checks stay non-blocking.
+      PROJECT_OWNER: Collider-Data-Systems
+      PROJECT_NUMBER: "4"
       STATUS_FIELD_NAME: Status
       STATUS_TODO: Todo
       STATUS_IN_PROGRESS: In Progress
@@ -26,7 +29,7 @@ jobs:
       - name: Sync item with project board
         uses: actions/github-script@v8
         with:
-          github-token: ${{ github.token }}
+          github-token: ${{ secrets.PROJECTS_TOKEN || github.token }}
           script: |
             const owner      = process.env.PROJECT_OWNER;
             const projectNum = Number(process.env.PROJECT_NUMBER);
