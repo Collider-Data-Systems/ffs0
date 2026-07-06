@@ -25,4 +25,16 @@ Mid-arc, the loop caught Sam's go-ahead on moos-kernel#40 (the Δ17 multi-writer
 - ffs0#112: one laptop surface act (stale user-level `moos.serverPath`); optional hardening split to #117 (Karpathy).
 - Owner hardening queue in `dev/reference/github-org-operations.md`: 2FA flip (no-lockout verified), `PROJECTS_TOKEN` → org secret, Q2 rulesets (classifier-blocked, command ready), Q4 legacy project close, demo-repository archive, MoosT2025 least-privilege.
 
+## Close-out (T=247 night, same session)
+
+Every tail above closed before the day ended:
+
+- **moos-kernel#40(d)** landed both halves — doctrine (ffs0#116) and Guido's Doctor executable (ffs0#121, verified against a real replay of hp-laptop's own log: `drift: 17 duplicate entries` reproduced exactly).
+- **moos-kernel#40(e)** executed by Sam on hp-laptop, with a live demonstration of the exact hazard the fix targets: the old Claude Desktop config's sidecar, now running the *new* binary, won the single-writer lock ahead of the booting kernel and blocked it — zero corruption, wrong process owned the log, resolved by killing the sidecar. Config permanently repointed to `mcp-remote http://localhost:8080/sse` afterward. Z440's four kernels (Zappa) followed, order-free, no incident. **`moos-kernel#44`** (the tracking issue born mid-arc for this exact step) closed the whole thing.
+- **ffs0#112** closed by Karpathy once the fallback (#117/#120) was verified; a genuine sub-finding fell out of the wrap-up receipt — the moos-lsp extension had never actually been installed in hp-laptop's VS Code, so no fix in this arc had been seen working in a live editor there. Split to **#122**, closed same night: two packaging blockers found and fixed (a corrupt `npx` cache entry, then the manifest fields from this diary's original note), extension built, installed, and editor-verified — live warning rendered, server spawned via workspace discovery. A trailing 2-line manifest fix (#123) followed to make the install path reproducible for future boxes.
+- **One new, harmless finding** surfaced during the Z440 restart: all 3 dormant twin kernels show the Δ40-shaped symptom (`log_len > max_log_seq`) but from an unrelated cause — pre-`log_seq`-field seed lines from April default to zero and get miscounted as duplicates. Filed as **moos-kernel#45**, low priority, does not touch anything load-bearing.
+- Owner hardening queue is unchanged and still open — none of it was urgent enough to block the deploy arc.
+
+**Board at close: 99 items, exactly 1 open (#45).** Ledger: `kb/superset/running-state.md` T=247 night-close entry, `8c943cc`.
+
 authored-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / github-takeover-t247
