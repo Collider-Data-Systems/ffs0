@@ -1,15 +1,15 @@
 # AGENTS.md — mo:os project (ffs0)
 
 > **Authored projection SOT for tools.** Cross-tool brief read natively by Copilot, Cursor, Codex, Gemini/Antigravity. Claude reads it via `CLAUDE.md` `@import`.
-> **Status: Phase-1 (T=220) — APPROVED by Z440 VS Code lead + hp-laptop governance on ffs0#58 (PR #59); merged to `main`.** Phase-2 (mirror-body trim, `.claude/rules/`, Antigravity surface, `moos-config-projection`) tracked on #58.
+> **Status: Phases 1–4 COMPLETE (#58 closed T=244+).** Phase-1 approved on ffs0#58 (PR #59); Phase-2 mirror trim + `.claude/rules/` live; Phase-3 Antigravity canary proven; Phase-4 `moos-config-projection` generates the seat table below (`--mode check` = blocking drift gate at round-close step 0).
 
 ## SOT hierarchy (read this first)
 ```
 HG folded state · ontology.json · live /healthz readback   → SEMANTIC SOT (truth; state is derived from the log)
-THIS FILE  (`AGENTS.md`, repo root; the local fleet `AGENTS.md` is one level up, outside the repo)  → authored PROJECTION SOT for tools (a hand-written F-image, until generated)
-CLAUDE.md ×2 · .github/copilot-instructions.md · .agent/    → thin mirrors / tool-deltas only
+THIS FILE  (`AGENTS.md`, repo root; the local fleet `AGENTS.md` is one level up, outside the repo)  → authored PROJECTION SOT for tools (an F-image; the seat table is machine-generated, the prose is authored)
+CLAUDE.md ×2 · .github/copilot-instructions.md · ANTIGRAVITY.md · .claude/rules/    → thin mirrors / tool-deltas only
 ```
-A Markdown file is **never** the final truth. HG is. This file is the best current F-projection of the project brief until `moos-config-projection` (Phase 4) generates it. **Live runtime truth: `kb/superset/running-state.md` (read it first for round-to-round state).**
+A Markdown file is **never** the final truth. HG is. This file is the best current F-projection of the project brief; `moos-config-projection` (Phase 4, landed) already generates the seat table — the remaining prose is authored. **Live runtime truth: `kb/superset/running-state.md` (read it first for round-to-round state).**
 
 ## The rule (non-negotiable)
 Four rewrites only: **ADD · LINK · MUTATE · UNLINK**. **Log is truth. State is derived.** Nodes don't call things; relations don't carry messages; side effects only at actuator leaves via channels.
@@ -21,13 +21,13 @@ IDE/agent conversations are **S0 substrate** — the raw rewriting layer that em
 S0 conversation → chunker (moos-workspace-ingest) → knowledge_item → pinned to workspace (G-ingest, F⊣G adjunction)
   → programs/tasks delegate to tools/sub-agents/personae → F projects back out to Calendar/Git/social/network/IDE surfaces
 ```
-F (project): `run-session-pipeline.ps1` + skill `moos-session-context-projection`. G (ingest): skills `moos-workspace-ingest` (text, WF12 provides-kb) / `moos-multimodal-ingest` (binary). Endgame: keep everything in HG + jsonl in memory; these `.md` files are a temporary crutch that Phase 4 makes *generated*.
+F (project): `run-session-pipeline.ps1` + skill `moos-session-context-projection`. G (ingest): skills `moos-workspace-ingest` (text, WF12 provides-kb) / `moos-multimodal-ingest` (binary). Endgame: keep everything in HG + jsonl in memory; these `.md` files are a temporary crutch being made *generated* piecewise (Phase 4 landed for the seat table; prose is next).
 
 ## Design-doc discipline (`dev/design/**`)
 Relation-first, rewrite-first. No OOP framing (no objects-with-payload, no static UML associations). Distinguish **operad** (admissible grammar / valid composition) from **instance** (realized topology + rewrite log). All state change is ADD/LINK/MUTATE/UNLINK — nothing else. Relations are topology (LINK results); rewrite_categories WF01–WF21 are op-families — don't conflate. Properties are typed/governed, never free-form payloads, never duplicate topology. Output: concise conclusions; **mark conjectures as conjectures** (don't assert unproven categorical claims as settled); open questions as 1–2 bullets. Authoritative refs: `running-state.md` + `ontology.json`.
 
-## Seats — agent × workspace × instance × surface  ⟨projection-ready: Phase-4 moos-config-projection pilot⟩
-> The F-image of `channel`+`agent` nodes — lowest F⊣G unit defect, highest duplication payoff → first artifact `moos-config-projection` will generate. **4.0 aliases shown; URNs stay canonical (see Gate). If this table and live `/healthz`+HG readback disagree, the readback wins — re-read, don't force the table (it is an authored projection, not operational truth).**
+## Seats — agent × workspace × engine × surface  ⟨GENERATED — Phase-4 moos-config-projection, landed⟩
+> The F-image of `channel`+`agent` nodes — the first Phase-4 generated artifact: `config_projection.py --mode write` folds it from router fan-in `/state` has-occupant relations + seat-display config; `--mode check` is the blocking drift gate at round-close step 0. Never hand-edit the fenced region. **4.0 aliases shown; URNs stay canonical (see Gate). If this table and live `/healthz`+HG readback disagree, the readback wins — re-read, don't force the table (it is an authored projection, not operational truth).**
 
 <!-- BEGIN GENERATED: moos-config-projection seat-table v1 (source: HG /state has-occupant via router fan-in; persona/surface/mcp = seat-display config; do not hand-edit — regenerate with --mode write) -->
 | Persona (=Φ(purpose), D3·config) | Agent (HG principal) | Workspace ⟵`session` (HG·D2) | Engine ⟵`kernel` (HG opens-on·D6) | Surface / IDE-instance (D7·config) | MCP (config) |
@@ -47,14 +47,14 @@ Relation-first, rewrite-first. No OOP framing (no objects-with-payload, no stati
 
 All URN prefixes are `urn:moos:<type>:<short>`. Emit discipline: Z440 personae emit to `hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; multi-workspace agents (Wolfram, Cowork) set `session_urn` explicitly (`session_urn` stays the canonical key per the Gate). Twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), not state replication. `sam.mvp-delivery` (hp-z440.primary) is a **dormant, occupant-less lane** (`has-occupant` UNLINKed T=219) — intentionally omitted from the active table.
 
-## Network / federation (T=219, Tailscale mesh)
-Z440 (`desktop-42d00rd`) `100.82.243.13` (Tailscale) / `192.168.1.15` (LAN). hp-laptop (`lap-sam`) `100.106.220.58` (Tailscale) / `192.168.1.10` (LAN). Federation router fans in cross-box over Tailscale (DHCP-drift retired). Kernels `:8000` (+Z440 twins `:8001-8003`), MCP `:8080` (Z440 twins' opens-on MCP `:9001/:9002/:9003`), router `:9000`. Live detail → `dev/config/moos-federation.topology.json`.
+## Network / federation (T=219 Tailscale mesh · T=226 ProDesk rejoin)
+Z440 (`desktop-42d00rd`) `100.82.243.13` (Tailscale) / `192.168.1.15` (LAN). hp-laptop (`lap-sam`) `100.106.220.58` (Tailscale) / `192.168.1.10` (LAN). HP ProDesk (`desktop-3fc7c3f`) `100.87.28.95` (Tailscale; mostly powered off — expect Doctor-mode drift flags while down). Federation router fans in cross-box over Tailscale (DHCP-drift retired). Kernels `:8000` (+Z440 twins `:8001-8003`), MCP `:8080` (Z440 twins' opens-on MCP `:9001/:9002/:9003`), router `:9000`. Live detail → `dev/config/moos-federation.topology.json`.
 
 ## Relational spine (4.0 vocabulary; alias-first)
 ```
 user/group  —WF02 delegates-to→  agent          (authority/delegation)
 workspace(session)  —WF19 has-occupant→  agent   (liveness/occupancy)
-workspace(session)  —WF19 opens-on→  instance(kernel)   (topology intent)
+workspace(session)  —WF19 opens-on→  engine(kernel)   (topology intent)
 agent  —presents-as→  persona (= Φ(purpose))     (D4; presentation, NOT authority)
 surface  —realizes→  channel / workspace          (D8; observed-first, S0 substrate)
 ```
@@ -79,8 +79,9 @@ Grammar_fragments (`dev/design/manifold-bump-4_0/20260620-t231-grammar-fragment-
 
 ## Skills (capabilities; model-invoked by description) — `dev/claude-skills/` (synced to `~/.claude/skills/`)
 Authoring/ops: `moos-rewrite-envelope` · `moos-state-readback` · `moos-round-close` · `moos-running-state-validator` · `moos-cross-persona-audit` · `moos-workstation-operator`.
+Orientation: `moos-seat-hydration` (seat readback + hydration; used by `/orient` + the `.claude/agents/` cards).
 Projection/ingest: `moos-session-context-projection` (F) · `moos-workspace-ingest` (G text) · `moos-multimodal-ingest` (G binary) · `moos-github-project-bridge`.
-Seat lanes: `moos-categorical-research` (Karpathy) · `moos-tooling-dx` (Steinberger) · `moos-cowork-readback` (Cowork).
+Seat lanes: `moos-categorical-research` + `moos-compiler-lowering` (Karpathy) · `moos-tooling-dx` (Steinberger) · `moos-cowork-readback` (Cowork).
 Detail lives in each `SKILL.md` — do not restate here.
 
 ## Repos & branching
@@ -95,7 +96,7 @@ Never commit `secrets/` values, API tokens, or `.vscode/mcp.json`. Mutations (co
 - `CLAUDE.md` (ffs0 + root) — `@import` this + Claude-specific deltas only.
 - `.github/copilot-instructions.md` — thin mirror + Copilot-specific skill/prompt routing.
 - `ANTIGRAVITY.md` (root) — Antigravity's primary directive; the AG tool-mirror (parallel to CLAUDE.md / copilot). AG reads `AGENTS.md` natively; this carries the `moos-diary` / multimodal-curation lane deltas.
-Mirrors carry a header: source · manual/generated · source-commit · "don't edit except emergency de-rot." Duplication-trim of mirror bodies is a Phase-2 follow-up after this text stabilizes (do not gut bodies before the mirror proves readable).
+Mirrors carry a header: source · manual/generated · source-commit · "don't edit except emergency de-rot." (Phase-2 mirror-body trim landed — mirrors are deltas-only.)
 - **IDE surface (`*.code-workspace`):** tracked `ffs0.code-workspace` = portable baseline (tasks · extension recs · excludes); gitignored `*.local.code-workspace` = per-instance delta (multi-root layout · orientation · local roots) — a **D7 surface realization, never trunk-projected** (the `.gitignore` is the projection-fidelity boundary). Same baseline-first / local-divergence split as `AGENTS.md` ↔ `CLAUDE.md`.
 
 ---
