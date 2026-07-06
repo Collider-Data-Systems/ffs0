@@ -8,8 +8,8 @@
     "urn:moos:agent:antigravity.hp-z440":      { "persona": "Moos / AG-Z440",    "surface": "Antigravity · Z440 (desktop 5) · `ffs0.code-workspace`" },
     "urn:moos:agent:claude-cowork.hp-z440":    { "persona": "Zappa",             "surface": "Claude Code / Cowork pane · Z440 · `ffs0.code-workspace`" },
     "urn:moos:agent:vscode.hp-z440.primary":   { "persona": "Z440 VS Code lead", "surface": "VS Code/Copilot pane · Z440 · `ffs0.code-workspace`" },
-    "urn:moos:agent:vscode.hp-laptop.copilot": { "persona": "Guido (governance)","surface": "VS Code / Copilot · hp-laptop · `ffs0.code-workspace`" },
-    "urn:moos:agent:claude-cowork.hp-laptop":  { "persona": "Cowork-laptop",     "surface": "Claude Code · hp-laptop · `ffs0.code-workspace`" },
+    "urn:moos:agent:vscode.hp-laptop.copilot": { "persona": "Guido (laptop VS Code lead)","surface": "VS Code / Copilot · hp-laptop · `ffs0.code-workspace`" },
+    "urn:moos:agent:claude-cowork.hp-laptop":  { "persona": "John Lydon (governance)","surface": "Claude Desktop / Cowork · hp-laptop · `ffs0.code-workspace`" },
     "urn:moos:agent:antigravity.hp-laptop":    { "persona": "AG-laptop",         "surface": "Antigravity · hp-laptop · `ffs0.code-workspace`" },
     "urn:moos:agent:vscode.hpprodesk.primary": { "persona": "HP ProDesk",        "surface": "VS Code · ProDesk · `ffs0.code-workspace`" }
   }

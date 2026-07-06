@@ -51,7 +51,7 @@ curl -sS 'http://localhost:8000/state/relations/src/urn:moos:session:sam.<host>-
 
 ### Step 4 — opens-on pins the kernel
 
-Same query, filter `src_port == "opens-on"`. Expected: `tgt_urn == "urn:moos:kernel:hp-<host>.primary"`. If missing the session is orphan at the host-facet level — escalate to Wolfram (Z440) or Guido (hp-laptop).
+Same query, filter `src_port == "opens-on"`. Expected: `tgt_urn == "urn:moos:kernel:hp-<host>.primary"`. If missing the session is orphan at the host-facet level — escalate to Wolfram (Z440) or John Lydon (hp-laptop).
 
 ### Step 5 — pinned channels resolve
 
@@ -129,7 +129,7 @@ cowork readback: ANOMALY
 | `has-occupant` points at someone else | Rotation happened | Sam's call whether to rotate back; do NOT freelance a rotation from readback |
 | channel node 404 | Channel UNLINKed / kernel restored from a stale log | Route to Wolfram for re-ADD; the scope_pins property still references the URN |
 | channel `status=archived` | Surface retired | Skip in chunker; update scope_pins to drop archived channels in next round (requires MUTATE, not this skill) |
-| kernel `/healthz` 500 / connection refused | Kernel is down or restarting | Wait ~5s + retry; if persistent, route to Wolfram (Z440) or Guido (hp-laptop); do NOT emit work during kernel-down window |
+| kernel `/healthz` 500 / connection refused | Kernel is down or restarting | Wait ~5s + retry; if persistent, route to Wolfram (Z440) or John Lydon (hp-laptop); do NOT emit work during kernel-down window |
 | `local_t` frozen since last readback | Heartbeat dead; either session off-duty or your Cowork process died | Check Cowork process state first; if alive, emit any envelope to tick |
 
 ## Cross-references

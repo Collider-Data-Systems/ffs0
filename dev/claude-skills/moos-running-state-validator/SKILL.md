@@ -5,7 +5,7 @@ description: Validate `kb/superset/running-state.md` for consistency against act
 
 # moos-running-state-validator
 
-Guido's lane skill. The hydration entrypoint `kb/superset/running-state.md` is read by every persona at session-open as the canonical "what's happening now" surface. It's hand-authored across rounds; without validation, drift accumulates — cited log_seqs fall behind actual logs, ontology versions stamp incorrectly, retired URNs linger in citations.
+John Lydon's lane skill. The hydration entrypoint `kb/superset/running-state.md` is read by every persona at session-open as the canonical "what's happening now" surface. It's hand-authored across rounds; without validation, drift accumulates — cited log_seqs fall behind actual logs, ontology versions stamp incorrectly, retired URNs linger in citations.
 
 This skill walks the document against the live kernel state on both machines and reports drift before any reader hydrates from a stale picture.
 
@@ -114,4 +114,4 @@ verdict: GREEN.
 
 ## Status
 
-**Round-13 deliverable** (T=176). Guido lane skill — Guido authors and primarily uses; Wolfram + Cowork can invoke for sanity. Forward iteration: as the lattice grows, additional passes for board-item / project-#4 consistency, federation-router config consistency, and per-machine sovereignty audit (per §M9).
+**Round-13 deliverable** (T=176). John Lydon lane skill — John Lydon authors and primarily uses; Wolfram + Cowork can invoke for sanity. Forward iteration: as the lattice grows, additional passes for board-item / project-#4 consistency, federation-router config consistency, and per-machine sovereignty audit (per §M9).

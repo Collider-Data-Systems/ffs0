@@ -15,7 +15,7 @@ HG ↔ GitHub Projects v2 sync. The mo:os board (Collider-Data-Systems/projects/
 
 What this skill does NOT do:
 
-- Create GitHub issues or PRs. Those are authored by humans / coding agents (me, Guido, AG, future Cowork). The bridge ATTACHES existing issues/PRs to the board and sets custom fields.
+- Create GitHub issues or PRs. Those are authored by humans / coding agents (me, John Lydon, AG, future Cowork). The bridge ATTACHES existing issues/PRs to the board and sets custom fields.
 - Sync repo contents, branches, CI status. Out of scope.
 - Decide merge readiness. That's review-cycle, not board state.
 
