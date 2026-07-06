@@ -160,22 +160,28 @@ function Test-KernelHealth {
         # Pass 2b (moos-kernel#40 (d)): log_len vs max_log_seq integrity.
         # /healthz serves both counters as one lock snapshot since moos-kernel
         # 4c99df8. Four cases per the validator skill's Pass 2b semantics.
+        # Since the moos-kernel#45 fix, healthz also serves log_seq_missing —
+        # pre-log_seq-era seed lines (deserialize to seq 0) that are legacy,
+        # not duplicates; subtract them before drift classification.
         if ($health.PSObject.Properties['max_log_seq']) {
             $logLen = [int64]$health.log_len
             $maxSeq = [int64]$health.max_log_seq
+            $preSeq = if ($health.PSObject.Properties['log_seq_missing']) { [int64]$health.log_seq_missing } else { [int64]0 }
             $result.MaxLogSeq = [string]$maxSeq
-            if ($logLen -eq $maxSeq) {
-                $result.LogIntegrity = 'clean'
+            $effectiveLen = $logLen - $preSeq
+            $legacyNote = if ($preSeq -gt 0) { " ($preSeq pre-seq legacy entries)" } else { '' }
+            if ($effectiveLen -eq $maxSeq) {
+                $result.LogIntegrity = "clean$legacyNote"
             }
-            elseif ($logLen -gt $maxSeq) {
+            elseif ($effectiveLen -gt $maxSeq) {
                 # Replayed multi-writer duplicates. max_log_seq is the canonical
                 # citation key from here on; len-based citations overshoot by the
                 # delta (pre-#42 running-state entries stay grandfathered as
                 # len-based — annotate on next touch, never retro-edit).
-                $result.LogIntegrity = "drift: $($logLen - $maxSeq) duplicate entries (cite max_log_seq=$maxSeq)"
+                $result.LogIntegrity = "drift: $($effectiveLen - $maxSeq) duplicate entries (cite max_log_seq=$maxSeq)$legacyNote"
             }
             else {
-                $result.LogIntegrity = "persist-gap: $($maxSeq - $logLen) stamped-not-persisted (benign)"
+                $result.LogIntegrity = "persist-gap: $($maxSeq - $effectiveLen) stamped-not-persisted (benign)$legacyNote"
             }
         }
         else {

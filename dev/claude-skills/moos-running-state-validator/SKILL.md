@@ -52,6 +52,7 @@ Common drift: round-N entry says "log_seq 600–627" but kernel has been restart
 - **`log_len > max_log_seq`** — the replayed file carries **multi-writer duplicate entries**; the delta is the cumulative duplicate count (hp-laptop's historical Δ17). Report the delta and treat **`max_log_seq` as the canonical citation key** — len-based citations overshoot by the delta (e.g. the ffs0#105 trio is seq 1556–1558, not 1573–1575). Not new corruption by itself, but if the delta GREW since the last validated round, a second writer got in — escalate to ops (find the process; see moos-kernel#40 (e)).
 - **`log_len < max_log_seq`** — seqs were stamped for rewrites whose persist failed (the counter never rolls back on Append error). Benign gap; note it, don't alarm.
 - Field absent → kernel predates the fix; note "pre-#40 binary, integrity unverifiable" instead of skipping silently.
+- **`log_seq_missing` (since the moos-kernel#45 fix):** healthz also counts entries persisted before the `log_seq` field existed (April-era seed lines; deserialize to seq 0 — real seqs start at 1). These are legacy, NOT duplicates: classify drift on **`(log_len − log_seq_missing)` vs `max_log_seq`**. The Z440 twins carry 3 each; with the subtraction they read clean.
 
 ### Pass 3 — URN citations resolve
 
