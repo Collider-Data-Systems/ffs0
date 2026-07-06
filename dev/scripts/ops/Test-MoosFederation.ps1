@@ -222,6 +222,105 @@ function Test-RouterNode {
     [pscustomobject]$result
 }
 
+function Test-RouterDrift {
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)]$Router,
+        [Parameter(Mandatory)]$Topology
+    )
+
+    $baseUrl = Get-RouterUrl -Router $Router
+    $expectedPeers = @()
+    if ($Router.peers) { $expectedPeers = @($Router.peers | ForEach-Object { $_.TrimEnd('/') } | Sort-Object) }
+
+    # Build expected kernel URLs for this router's host
+    $expectedKernels = @()
+    foreach ($kp in $Topology.kernels.PSObject.Properties) {
+        $kernel = $kp.Value
+        if ($kernel.host -eq $Router.host) {
+            if ($kernel.http_local) { $expectedKernels += $kernel.http_local.TrimEnd('/') }
+        } else {
+            if ($kernel.http_tailscale) { $expectedKernels += $kernel.http_tailscale.TrimEnd('/') }
+        }
+    }
+    $expectedKernels = @($expectedKernels | Sort-Object)
+
+    # Query live /healthz to get actual fan-in kernel URLs
+    $liveKernels = @()
+    try {
+        $health = Invoke-MoosGet -BaseUrl $baseUrl -Path 'healthz'
+        if ($health.kernels) {
+            $liveKernels = @($health.kernels | ForEach-Object { $_.url.TrimEnd('/') } | Sort-Object)
+        }
+    }
+    catch {
+        return [pscustomobject]@{
+            Router = $Name
+            Check = 'health-unreachable'
+            Status = 'error'
+            Detail = $_.Exception.Message
+            Suggestion = ''
+        }
+    }
+
+    $results = @()
+
+    # Compare expected kernels vs live kernels
+    $missingKernels = @($expectedKernels | Where-Object { $_ -notin $liveKernels })
+    $extraKernels = @($liveKernels | Where-Object { $_ -notin $expectedKernels })
+
+    if ($missingKernels.Count -gt 0) {
+        $results += [pscustomobject]@{
+            Router = $Name
+            Check = 'missing-kernels'
+            Status = 'drift'
+            Detail = ($missingKernels -join ', ')
+            Suggestion = "POST $baseUrl/admin/topology/reload or restart router with updated --shard flags"
+        }
+    }
+    if ($extraKernels.Count -gt 0) {
+        $results += [pscustomobject]@{
+            Router = $Name
+            Check = 'extra-kernels'
+            Status = 'info'
+            Detail = ($extraKernels -join ', ')
+            Suggestion = 'kernel in live fan-in not in topology file (may be from --shard flags)'
+        }
+    }
+
+    # Compare expected peers vs configured (we can only check configured, not live fan-in peers)
+    # The /healthz endpoint doesn't report peers, so we compare topology file vs what was configured.
+    if ($expectedPeers.Count -gt 0) {
+        # Check if each expected peer is reachable via a quick /healthz probe
+        foreach ($peer in $expectedPeers) {
+            try {
+                Invoke-MoosGet -BaseUrl $peer -Path 'healthz' | Out-Null
+            }
+            catch {
+                $results += [pscustomobject]@{
+                    Router = $Name
+                    Check = 'peer-unreachable'
+                    Status = 'drift'
+                    Detail = $peer
+                    Suggestion = "Peer from topology file is not reachable; POST $baseUrl/admin/topology/reload after fixing network"
+                }
+            }
+        }
+    }
+
+    if ($results.Count -eq 0) {
+        $results += [pscustomobject]@{
+            Router = $Name
+            Check = 'topology-drift'
+            Status = 'ok'
+            Detail = "kernels $($liveKernels.Count)/$($expectedKernels.Count), peers $($expectedPeers.Count)"
+            Suggestion = ''
+        }
+    }
+
+    $results
+}
+
 function Test-CloudflareTopology {
     param([Parameter(Mandatory)]$Cloudflare)
     $startup = if ($Cloudflare.startup_bat) { [string]$Cloudflare.startup_bat } else { '' }
@@ -469,6 +568,13 @@ switch ($Mode) {
                 Test-RouterHealth -Name $routerProperty.Name -Router $routerProperty.Value
             }
             $routerResults | Format-Table -AutoSize
+
+            Write-Host ''
+            Write-Host 'Router topology drift' -ForegroundColor Cyan
+            $driftResults = foreach ($routerProperty in $topology.routers.PSObject.Properties) {
+                Test-RouterDrift -Name $routerProperty.Name -Router $routerProperty.Value -Topology $topology
+            }
+            $driftResults | Format-Table -AutoSize
 
             Write-Host ''
             Write-Host 'Federated node lookup' -ForegroundColor Cyan
