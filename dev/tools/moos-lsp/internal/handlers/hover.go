@@ -55,7 +55,11 @@ func wfDoc(w ontology.WF) string {
 	if len(w.PortPairs) > 0 {
 		var pairs []string
 		for _, p := range w.PortPairs {
-			pairs = append(pairs, fmt.Sprintf("`%s→%s`", p[0], p[1]))
+			detail := fmt.Sprintf("`%s→%s`", p.SrcPort, p.TgtPort)
+			if len(p.SrcTypes) > 0 || len(p.TgtTypes) > 0 {
+				detail += fmt.Sprintf(" (%s → %s)", strings.Join(p.SrcTypes, ", "), strings.Join(p.TgtTypes, ", "))
+			}
+			pairs = append(pairs, detail)
 		}
 		fmt.Fprintf(&b, "- port pairs: %s\n", strings.Join(pairs, ", "))
 	}

@@ -120,8 +120,10 @@ func emit(b *strings.Builder, o *rawOntology) {
 	p("var NodeTypeIDs = %s\n\n", strSliceFromTypes(all))
 
 	// WF table.
+	p("// PortPair describes one declared source/target port pair for a WF.\n")
+	p("type PortPair struct {\n\tSrcPort, TgtPort string\n\tSrcTypes, TgtTypes []string\n}\n\n")
 	p("// WF describes one rewrite category (WF01..WF21).\n")
-	p("type WF struct {\n\tID, Name, Description string\n\tAllowedRewrites, SrcTypes, TgtTypes []string\n\tPortPairs [][2]string\n}\n\n")
+	p("type WF struct {\n\tID, Name, Description string\n\tAllowedRewrites, SrcTypes, TgtTypes []string\n\tPortPairs []PortPair\n}\n\n")
 
 	p("// WFs maps a WF id to its definition.\n")
 	p("var WFs = map[string]WF{\n")
@@ -187,11 +189,11 @@ func emit(b *strings.Builder, o *rawOntology) {
 	known := map[string]bool{}
 	for _, w := range o.RewriteCategories {
 		for _, pr := range wfPairs(w) {
-			if _, ok := srcPortToWF[pr[0]]; !ok {
-				srcPortToWF[pr[0]] = w.ID
+			if _, ok := srcPortToWF[pr.SrcPort]; !ok {
+				srcPortToWF[pr.SrcPort] = w.ID
 			}
-			known[pr[0]] = true
-			known[pr[1]] = true
+			known[pr.SrcPort] = true
+			known[pr.TgtPort] = true
 		}
 	}
 	for _, t := range all {
@@ -214,22 +216,22 @@ func emit(b *strings.Builder, o *rawOntology) {
 	p("}\n")
 }
 
-func wfPairs(w rawWF) [][2]string {
+func wfPairs(w rawWF) []portPair {
 	seen := map[[2]string]bool{}
-	var out [][2]string
-	add := func(s, t string) {
+	var out []portPair
+	add := func(s, t string, srcTypes, tgtTypes []string) {
 		if s == "" && t == "" {
 			return
 		}
 		key := [2]string{s, t}
 		if !seen[key] {
 			seen[key] = true
-			out = append(out, key)
+			out = append(out, portPair{SrcPort: s, TgtPort: t, SrcTypes: srcTypes, TgtTypes: tgtTypes})
 		}
 	}
-	add(w.SrcPort, w.TgtPort)
+	add(w.SrcPort, w.TgtPort, w.SrcTypes, w.TgtTypes)
 	for _, a := range w.Additional {
-		add(a.SrcPort, a.TgtPort)
+		add(a.SrcPort, a.TgtPort, a.SrcTypes, a.TgtTypes)
 	}
 	return out
 }
@@ -288,15 +290,15 @@ func strSliceFromTypes(ts []rawType) string {
 	return strSlice(ids)
 }
 
-func pairSlice(pairs [][2]string) string {
+func pairSlice(pairs []portPair) string {
 	if len(pairs) == 0 {
 		return "nil"
 	}
 	parts := make([]string, len(pairs))
 	for i, p := range pairs {
-		parts[i] = fmt.Sprintf("{%q, %q}", p[0], p[1])
+		parts[i] = fmt.Sprintf("{SrcPort: %q, TgtPort: %q, SrcTypes: %s, TgtTypes: %s}", p.SrcPort, p.TgtPort, strSlice(p.SrcTypes), strSlice(p.TgtTypes))
 	}
-	return "[][2]string{" + strings.Join(parts, ", ") + "}"
+	return "[]PortPair{" + strings.Join(parts, ", ") + "}"
 }
 
 func sortedKeys[V any](m map[string]V) []string {

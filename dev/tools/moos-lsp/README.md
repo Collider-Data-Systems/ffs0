@@ -12,7 +12,8 @@ JetBrains) live ontology intelligence, driven by symbol tables **generated from
   - unknown `type_id` (not in the operad)
   - unknown `rewrite_category`, or a WF that doesn't allow the `rewrite_type`
   - LINK `(src_port → tgt_port)` not a declared pair of the WF
-  - src/tgt URN type outside the WF's `src_types` / `tgt_types`
+  - src/tgt URN type outside the declared port pair's `src_types` / `tgt_types`
+    (falling back to the WF-level constraints when the pair has no narrower rule)
   - malformed URN / unknown type segment
   - forbidden-vocabulary lint (`edge`, `wire`, `morphism`, `payload`, `_ref`, …)
 - **Completion** for `rewrite_type`, `type_id`, `rewrite_category` (WF ids),
@@ -57,4 +58,5 @@ go test ./internal/handlers/
 
 - Go-to-definition on a URN → its ADD log entry.
 - True port-color diagnostics (needs a port→color map exported from the ontology).
+- Legacy `op` / `envelope_data` wrapper extraction if old `external_op` files stay active.
 - A tree-sitter grammar + semantic tokens for `.moos` files.

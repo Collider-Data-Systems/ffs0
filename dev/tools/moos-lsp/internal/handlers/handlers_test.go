@@ -39,6 +39,27 @@ func TestAnalyzeValidLinkHasNoErrors(t *testing.T) {
 	}
 }
 
+func TestAnalyzeWF19AdditionalPortPairTypes(t *testing.T) {
+	doc := `[
+  {"rewrite_type":"LINK","actor":"urn:moos:agent:vscode.hp-z440.lola","relation_urn":"urn:moos:rel:has-purpose","src_urn":"urn:moos:session:sam.karpathy-seat","src_port":"has-purpose","tgt_urn":"urn:moos:purpose:sam.compiler-lowering","tgt_port":"purpose-of-session","rewrite_category":"WF19"},
+  {"rewrite_type":"LINK","actor":"urn:moos:agent:vscode.hp-z440.lola","relation_urn":"urn:moos:rel:pins-purpose","src_urn":"urn:moos:session:sam.karpathy-seat","src_port":"pins-urn","tgt_urn":"urn:moos:purpose:sam.compiler-lowering","tgt_port":"pinned-by-session","rewrite_category":"WF19"},
+  {"rewrite_type":"LINK","actor":"urn:moos:agent:vscode.hp-z440.lola","relation_urn":"urn:moos:rel:pins-ki","src_urn":"urn:moos:session:sam.karpathy-seat","src_port":"pins-urn","tgt_urn":"urn:moos:knowledge_item:demo","tgt_port":"pinned-by-session","rewrite_category":"WF19"}
+]`
+	for _, diagnostic := range Analyze(doc) {
+		if diagnostic.Severity != nil && *diagnostic.Severity <= protocol.DiagnosticSeverityWarning {
+			t.Errorf("unexpected diagnostic on valid WF19 additional port pair: %s", diagnostic.Message)
+		}
+	}
+}
+
+func TestAnalyzeWF19AdditionalPortPairRejectsWrongTargetType(t *testing.T) {
+	doc := `[{"rewrite_type":"LINK","actor":"urn:moos:agent:vscode.hp-z440.lola","relation_urn":"urn:moos:rel:bad-purpose","src_urn":"urn:moos:session:sam.karpathy-seat","src_port":"has-purpose","tgt_urn":"urn:moos:agent:vscode.hp-z440.lola","tgt_port":"purpose-of-session","rewrite_category":"WF19"}]`
+	got := msgs(Analyze(doc))
+	if !strings.Contains(got, `tgt type "agent" not allowed by WF19 port pair has-purpose→purpose-of-session`) {
+		t.Errorf("expected pair-specific target type diagnostic, got:\n%s", got)
+	}
+}
+
 func TestForbiddenVocab(t *testing.T) {
 	got := msgs(Analyze(`{"note":"this edge is a payload"}`))
 	if !strings.Contains(got, "edge") || !strings.Contains(got, "payload") {
@@ -65,5 +86,8 @@ func TestHoverWF(t *testing.T) {
 	mc, ok := h.Contents.(protocol.MarkupContent)
 	if !ok || !strings.Contains(mc.Value, "Session governance") {
 		t.Errorf("expected WF19 'Session governance' doc, got %#v", h.Contents)
+	}
+	if !strings.Contains(mc.Value, "`has-purpose→purpose-of-session` (session → purpose)") {
+		t.Errorf("expected WF19 hover to include pair-specific has-purpose types, got %#v", h.Contents)
 	}
 }
