@@ -29,10 +29,16 @@ One binary, three sessions, two kernels — the hp-laptop agent is multi-workspa
 
 Derive from the agent URN suffix (`.hp-z440` → `sam.z440-cowork-workspace`). On `.hp-laptop` the agent occupies two workspaces since the T247 split (`sam.governance` — the John Lydon lane — and `sam.laptop-cowork-workspace`): use the explicit `session_urn` for the lane being driven, never infer from the suffix alone. No kernel call needed.
 
+Set it once for the steps below:
+
+```bash
+SESSION_URN=urn:moos:session:sam.z440-cowork-workspace   # or sam.governance / sam.laptop-cowork-workspace on hp-laptop
+```
+
 ### Step 2 — session node health
 
 ```bash
-curl -sS http://localhost:8000/state/nodes/urn:moos:session:sam.<host>-cowork-workspace \
+curl -sS "http://localhost:8000/state/nodes/$SESSION_URN" \
   | jq '{status: .properties.status.value, local_t: .properties.local_t.value, scope_pins: .properties.scope_pins.value}'
 ```
 
@@ -44,7 +50,7 @@ curl -sS http://localhost:8000/state/nodes/urn:moos:session:sam.<host>-cowork-wo
 ### Step 3 — has-occupant is you
 
 ```bash
-curl -sS 'http://localhost:8000/state/relations/src/urn:moos:session:sam.<host>-cowork-workspace' \
+curl -sS "http://localhost:8000/state/relations/src/$SESSION_URN" \
   | jq '[.[] | select(.src_port == "has-occupant" and .tgt_port == "is-occupant-of")] | .[0]'
 ```
 

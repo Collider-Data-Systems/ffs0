@@ -13,7 +13,7 @@ workspace(session)  —WF19 has-occupant→  agent           (liveness)
 workspace(session)  —WF19 opens-on→  engine(kernel)       (topology intent)
 agent  —presents-as→  persona (= Φ(purpose))             (presentation, NOT authority)
 ```
-**Emit discipline:** Z440 personae emit to `engine hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; the twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), **not** state replication — they emit to :8000 today. Multi-workspace agents (Wolfram, Zappa `claude-cowork.hp-z440`, John Lydon `claude-cowork.hp-laptop`) set `session_urn` explicitly.
+**Emit discipline:** Z440 personae emit to engine `hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; the twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), **not** state replication — they emit to :8000 today. Multi-workspace agents (Wolfram, Zappa `claude-cowork.hp-z440`, John Lydon `claude-cowork.hp-laptop`) set `session_urn` explicitly.
 
 ## Active seats
 
