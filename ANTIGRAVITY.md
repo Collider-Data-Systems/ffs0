@@ -20,7 +20,8 @@ Owner: `urn:moos:user:sam` — pulled on every workstation.
 - Diary entries under `kb/moos-diary/` (md + media; raw media fine, chunk before doctrine).
 - Categorical/HDC reasoning → skill `moos-categorical-research`.
 
-AG does NOT own: kernel Go code (Wolfram), doctrine review (Guido), the other court lanes
+AG does NOT own: kernel Go code (Wolfram), doctrine review (John Lydon — governance on
+hp-laptop; Guido = laptop VS Code lead since the T247 split), the other court lanes
 (Karpathy HDC / Steinberger DX). `my-tiny-data-collider` is an HG application group/domain,
 not the `moos-kernel` codebase — Workspace/DNS/Calendar/GitHub are projection/ingest surfaces.
 

@@ -13,7 +13,7 @@ workspace(session)  —WF19 has-occupant→  agent           (liveness)
 workspace(session)  —WF19 opens-on→  engine(kernel)       (topology intent)
 agent  —presents-as→  persona (= Φ(purpose))             (presentation, NOT authority)
 ```
-**Emit discipline:** Z440 personae emit to `engine hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; the twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), **not** state replication — they emit to :8000 today. Multi-workspace agents (Wolfram, Cowork) set `session_urn` explicitly.
+**Emit discipline:** Z440 personae emit to `engine hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; the twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), **not** state replication — they emit to :8000 today. Multi-workspace agents (Wolfram, Zappa `claude-cowork.hp-z440`, John Lydon `claude-cowork.hp-laptop`) set `session_urn` explicitly.
 
 ## Active seats
 
@@ -50,7 +50,7 @@ agent  —presents-as→  persona (= Φ(purpose))             (presentation, NOT
 - **Workspace (session):** `urn:moos:session:sam.steinberger-seat`
 - **Engine (kernel):** `hp-z440.menno` :8001 **(opens-on topology intent; emits to :8000 pre-§M9)**
 - **MCP:** `moos-primary` :8080 (topology `moos-menno`, opens-on :9001)
-- **Surface:** VS Code · Z440 (desktop 3) · workspace `moos-router-feat-type-map-routing`
+- **Surface:** VS Code · Z440 (desktop 3) · workspace `moos-router`
 - **Skills to mount:** `moos-tooling-dx`, `moos-session-context-projection`, `moos-running-state-validator`
 - **Prompt-delta:** DX / MCP-wiring / shell-reification lane. Twin engine carries `opens-on` topology only — emit to `hp-z440.primary` :8000 until twin-sync.
 

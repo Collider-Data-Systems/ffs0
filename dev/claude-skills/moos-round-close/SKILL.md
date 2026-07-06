@@ -10,7 +10,7 @@ The shape of every round's closing ritual. Runs as a small checklist; each step 
 ## Preconditions
 
 - HG rewrites (if any) have landed via `mcp__moos-kernel__apply_program` and you've verified affected URNs via `node_lookup`.
-- Research / doctrine notes (if any) are written under `kb/research/...` with dated filename (`YYYYMMDD-t<N>-<slug>.md`).
+- Research / doctrine notes (if any) are written under the active design lane (e.g. `dev/design/manifold-bump-4_0/`) with dated filename (`YYYYMMDD-t<N>-<slug>.md`) — `kb/research/` is retired (archive: `dev/reference/research-archive/`).
 - `git status` on the repo(s) you touched shows the intended changes, nothing accidentally staged.
 
 ## Steps
@@ -32,7 +32,7 @@ diff, include it in this round's commit. (The generated seat table is the fenced
 Minimum required edits:
 
 - **Header `> Updated:` line** — bump T-day + add a 1-sentence summary of what this round shipped.
-- **Ontology block** — if v3.X was bumped, update `runtime` vs `on disk` in the Kernel — hp-laptop section.
+- **Ontology block** — if the ontology version (v4.x) was bumped, update `runtime` vs `on disk` in the Kernel — hp-laptop section.
 - **New "T=N round M — <slug>" section** inserted before `## MVP delivery` (or whatever section is the chronological next-newer marker) with:
   - Date + CEST timestamp
   - 1-paragraph framing of what the round was
