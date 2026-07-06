@@ -21,7 +21,7 @@ cd client && npm install && npm run compile
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `moos.serverPath` | `moos-lsp` | Path to the built server binary (put it on PATH or set an absolute path). |
+| `moos.serverPath` | `moos-lsp` | Path to the built server binary. When left at the default, the client first looks for `dev/tools/moos-lsp/moos-lsp(.exe)` in the open workspace before falling back to PATH. |
 | `moos.baseUrl` | `""` | Optional kernel base URL for live URN hover, e.g. `http://localhost:8000`. |
 
 ## Scope

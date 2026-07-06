@@ -147,17 +147,28 @@ func checkPortsAndTypes(text string, e map[string]any, wf string) []protocol.Dia
 	}
 	var d []protocol.Diagnostic
 	sp, tp := str(e["src_port"]), str(e["tgt_port"])
-	if len(w.PortPairs) > 0 && (sp != "" || tp != "") && !pairDeclared(w, sp, tp) {
+	pair, hasPair := declaredPair(w, sp, tp)
+	if len(w.PortPairs) > 0 && (sp != "" || tp != "") && !hasPair {
 		d = append(d, diag(protocol.DiagnosticSeverityWarning, locate(text, q(sp)),
 			fmt.Sprintf("(%s → %s) is not a declared port pair of %s; expected one of %s", sp, tp, wf, pairsString(w))))
 	}
-	if st := urnType(str(e["src_urn"])); st != "" && !typeAllowed(w.SrcTypes, st) {
-		d = append(d, diag(protocol.DiagnosticSeverityWarning, locate(text, q(str(e["src_urn"]))),
-			fmt.Sprintf("src type %q not allowed by %s (src_types: %s)", st, wf, strings.Join(w.SrcTypes, ", "))))
+	srcTypes := w.SrcTypes
+	tgtTypes := w.TgtTypes
+	if hasPair {
+		if len(pair.SrcTypes) > 0 {
+			srcTypes = pair.SrcTypes
+		}
+		if len(pair.TgtTypes) > 0 {
+			tgtTypes = pair.TgtTypes
+		}
 	}
-	if tt := urnType(str(e["tgt_urn"])); tt != "" && !typeAllowed(w.TgtTypes, tt) {
+	if st := urnType(str(e["src_urn"])); st != "" && !typeAllowed(srcTypes, st) {
+		d = append(d, diag(protocol.DiagnosticSeverityWarning, locate(text, q(str(e["src_urn"]))),
+			fmt.Sprintf("src type %q not allowed by %s %s(src_types: %s)", st, wf, pairSuffix(hasPair, sp, tp), strings.Join(srcTypes, ", "))))
+	}
+	if tt := urnType(str(e["tgt_urn"])); tt != "" && !typeAllowed(tgtTypes, tt) {
 		d = append(d, diag(protocol.DiagnosticSeverityWarning, locate(text, q(str(e["tgt_urn"]))),
-			fmt.Sprintf("tgt type %q not allowed by %s (tgt_types: %s)", tt, wf, strings.Join(w.TgtTypes, ", "))))
+			fmt.Sprintf("tgt type %q not allowed by %s %s(tgt_types: %s)", tt, wf, pairSuffix(hasPair, sp, tp), strings.Join(tgtTypes, ", "))))
 	}
 	return d
 }
@@ -225,13 +236,13 @@ func wholeWordOffsets(text, tok string) []int {
 	}
 }
 
-func pairDeclared(w ontology.WF, sp, tp string) bool {
+func declaredPair(w ontology.WF, sp, tp string) (ontology.PortPair, bool) {
 	for _, p := range w.PortPairs {
-		if p[0] == sp && p[1] == tp {
-			return true
+		if p.SrcPort == sp && p.TgtPort == tp {
+			return p, true
 		}
 	}
-	return false
+	return ontology.PortPair{}, false
 }
 
 func typeAllowed(allowed []string, t string) bool {
@@ -244,9 +255,16 @@ func typeAllowed(allowed []string, t string) bool {
 func pairsString(w ontology.WF) string {
 	var parts []string
 	for _, p := range w.PortPairs {
-		parts = append(parts, fmt.Sprintf("%s→%s", p[0], p[1]))
+		parts = append(parts, fmt.Sprintf("%s→%s", p.SrcPort, p.TgtPort))
 	}
 	return strings.Join(parts, ", ")
+}
+
+func pairSuffix(hasPair bool, sp, tp string) string {
+	if !hasPair {
+		return ""
+	}
+	return fmt.Sprintf("port pair %s→%s ", sp, tp)
 }
 
 func diag(sev protocol.DiagnosticSeverity, rng protocol.Range, msg string) protocol.Diagnostic {

@@ -1,3 +1,5 @@
+import * as fs from "fs";
+import * as path from "path";
 import * as vscode from "vscode";
 import {
   LanguageClient,
@@ -10,7 +12,7 @@ let client: LanguageClient | undefined;
 
 export function activate(context: vscode.ExtensionContext): void {
   const config = vscode.workspace.getConfiguration("moos");
-  const serverPath = resolveWorkspaceVariables(config.get<string>("serverPath", "moos-lsp"));
+  const serverPath = resolveServerPath(config.get<string>("serverPath", "moos-lsp"));
   const baseUrl = config.get<string>("baseUrl", "");
 
   const args: string[] = [];
@@ -49,4 +51,27 @@ function resolveWorkspaceVariables(value: string): string {
       : folders[0];
     return folder?.uri.fsPath ?? _match;
   });
+}
+
+function resolveServerPath(value: string): string {
+  const resolved = resolveWorkspaceVariables(value);
+  if (resolved !== "moos-lsp") {
+    return resolved;
+  }
+  return findWorkspaceServerBinary() ?? resolved;
+}
+
+function findWorkspaceServerBinary(): string | undefined {
+  const executableName = process.platform === "win32" ? "moos-lsp.exe" : "moos-lsp";
+  const folders = vscode.workspace.workspaceFolders ?? [];
+  for (const folder of folders) {
+    const roots = [folder.uri.fsPath, path.join(folder.uri.fsPath, "ffs0")];
+    for (const root of roots) {
+      const candidatePath = path.join(root, "dev", "tools", "moos-lsp", executableName);
+      if (fs.existsSync(candidatePath)) {
+        return candidatePath;
+      }
+    }
+  }
+  return undefined;
 }
