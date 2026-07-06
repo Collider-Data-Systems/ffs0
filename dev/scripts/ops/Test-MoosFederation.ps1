@@ -168,9 +168,18 @@ function Test-KernelHealth {
             $maxSeq = [int64]$health.max_log_seq
             $preSeq = if ($health.PSObject.Properties['log_seq_missing']) { [int64]$health.log_seq_missing } else { [int64]0 }
             $result.MaxLogSeq = [string]$maxSeq
+            if ($preSeq -lt 0 -or $preSeq -gt $logLen) {
+                # A healthz that reports log_seq_missing outside [0, log_len] is
+                # itself inconsistent — surface that instead of misclassifying.
+                $result.LogIntegrity = "inconsistent healthz: log_seq_missing=$preSeq outside [0, log_len=$logLen]"
+                $preSeq = [int64]0
+            }
             $effectiveLen = $logLen - $preSeq
             $legacyNote = if ($preSeq -gt 0) { " ($preSeq pre-seq legacy entries)" } else { '' }
-            if ($effectiveLen -eq $maxSeq) {
+            if ($result.LogIntegrity) {
+                # inconsistency already recorded above — leave it in place
+            }
+            elseif ($effectiveLen -eq $maxSeq) {
                 $result.LogIntegrity = "clean$legacyNote"
             }
             elseif ($effectiveLen -gt $maxSeq) {
