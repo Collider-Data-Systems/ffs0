@@ -1,6 +1,6 @@
 # Section 11 - Hardware and Network
 
-> **Archived T=247** — salvaged from branch `karpathy/r14-section-1-10` (last commit 2026-04-26; never merged; the branch is deleted). Practice-era draft: kernel counts/topology reflect r14, not current state — see `running-state.md`.
+> **Archived T=247** — salvaged verbatim from branch `karpathy/r14-section-1-10` (last commit 2026-04-26; never merged; the branch is deleted). Practice-era draft preserved as-written: every present-tense claim below ("currently runs", counts, topology) describes the **r14 snapshot**, not current state — live truth is `kb/superset/running-state.md`.
 
 
 > Round-14 working draft for the Steinberger lane.
