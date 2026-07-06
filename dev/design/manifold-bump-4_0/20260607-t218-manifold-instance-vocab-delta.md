@@ -138,3 +138,21 @@ provenance trailer (`authored-by: <agent-urn> / <session-urn> / manifold-instanc
 2. D7 addressability: `channel.kind` additions vs a thin derived `surface` view for screens/desktops/tabs.
 3. D8 `realizes/realized-by`: reify now, or stay observed-only?
 4. Sequencing: does `kernel→instance` ship in the same 4.0 bump as D1–D5, or a later point release?
+
+## D4 reification debt — persona-label ledger (appended T=247, Zappa; per ffs0#99)
+
+The persona "court" lives ONLY in the F-projection until D4 `presents-as` reifies: labels are
+carried in `dev/config/seat-display.json` + `moos-federation.topology.json` personas block +
+`.claude/agents/*.md` cards. Every rename grows the set a future D4 apply must fold in:
+**Zappa** (T244+, ex `cowork-z440`, legacy_key kept) and **John Lydon** (T247, ex `guido`,
+PR #98). When D4 lands, one `presents-as` relation per seat replaces these three authored
+surfaces as the source; the configs become display cache.
+
+Operational notes from the renames (ffs0#99):
+- The seat-table regenerate (`config_projection.py --mode write`) is coupled to full-fleet
+  reachability — the shrink-guard refuses when a kernel is down (by design; renames while
+  ProDesk is off must ride `--allow-shrink` deliberately or wait).
+- **Finding 6 (design):** agent principal URNs bake the SURFACE into identity
+  (`vscode.hp-laptop.copilot` posting from Claude Code). Precedent for repair exists (the T239
+  guido re-ratification with a legacy alias), but the pattern is fleet-wide — queue an
+  agent-URN re-ratification review for the 4.0.x lane alongside the hard rename.
