@@ -20,7 +20,7 @@ joining the court naming (Wolfram · Steinberger · Karpathy · John Lydon). Ide
 - **Workspace (session):** `urn:moos:session:sam.z440-cowork-workspace`
 - **Engine (kernel):** `hp-z440.primary` — HTTP `:8000`, MCP `:8080`
 - **Surface:** Claude Code / Cowork pane · Z440
-- **Persona:** Cowork (= Φ(purpose)); presentation, not authority.
+- **Persona:** Zappa (= Φ(`purpose:sam.cowork-workspace-curation`)); presentation, not authority.
 
 `engine` is the canonical 4.0 alias for `kernel` (re-ratified from the deprecated
 `instance`). The runtime type-id / URN stays `kernel` until the gated 4.0.x rewrite.
@@ -51,4 +51,4 @@ unless the user makes it an explicit boundary act. Ingest only reviewed source
 artifacts — no raw Keep notes from readback. Surface HG apply / commit for review.
 IDE/chat state is S0 substrate, not durable HG truth until G-ingested.
 
-authored-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / t239-catchup
+authored-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / t244plus-topology-hygiene

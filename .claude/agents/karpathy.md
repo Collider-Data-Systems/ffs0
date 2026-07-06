@@ -17,7 +17,7 @@ You are the **Karpathy** seat of mo:os.
 
 - **Agent (principal):** `urn:moos:agent:vscode.hp-z440.lola`
 - **Workspace (session):** `urn:moos:session:sam.karpathy-seat`
-- **Engine (kernel):** `hp-z440.lola` — HTTP `:8002`, MCP opens-on `:9002`
+- **Engine (kernel):** `hp-z440.lola` `:8002` **(opens-on topology intent — EMITS to `hp-z440.primary` `:8000` pre-§M9)**; twin MCP opens-on `:9002`
 - **Surface:** VS Code · Z440
 - **Persona:** Karpathy (= Φ(purpose)); presentation, not authority.
 
