@@ -97,7 +97,8 @@
       "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona moos"]
     },
     {
-      "key": "guido-governance",
+      "key": "john-lydon-governance",
+      "legacy_key": "guido-governance",
       "host": "hp-laptop",
       "session_urn": "urn:moos:session:sam.governance",
       "actor_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
@@ -108,7 +109,7 @@
       "harnesses": ["VS Code", "Copilot"],
       "prompts": [],
       "skills": ["moos-state-readback", "moos-workspace-ingest", "moos-session-context-projection", "moos-tooling-dx", "moos-round-close", "moos-running-state-validator", "moos-cross-persona-audit", "moos-rewrite-envelope"],
-      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona guido", "dev/scripts/projections/run-session-pipeline.ps1"]
+      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona john-lydon", "dev/scripts/projections/run-session-pipeline.ps1"]
     },
     {
       "key": "t200plus-calendar-readback",

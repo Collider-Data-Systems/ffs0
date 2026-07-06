@@ -21,7 +21,7 @@ Steinberger's working surface for tooling, IDE attachment, and developer-experie
 ## What this skill is NOT
 
 - Not for kernel implementation — that's Wolfram's lane
-- Not for governance / audit — that's Guido's lane
+- Not for governance / audit — that's John Lydon's lane
 - Not for ad-hoc one-off scripts — those go in `dev/scripts/ops/` directly without doctrine
 
 ## Steinberger seat conventions
@@ -132,7 +132,7 @@ A shell command becomes a script when (a) it's run more than 3 times, (b) it has
 - `moos-rewrite-envelope` — envelope shapes, gates
 - `moos-session-context-projection` — dry session context packs for IDE / agent / harness handoff
 - `moos-state-readback` — round-open
-- `moos-running-state-validator` — state-doc consistency (Guido's lane; co-validation)
+- `moos-running-state-validator` — state-doc consistency (John Lydon's lane; co-validation)
 - `derivation:t172.wolframs-court` (on log) — Steinberger seat origin doctrine
 - `derivation:t175.program-authoring-fabric` (on log) — leaves as the fluid-execution boundary; relevant for tool_call / external_op design
 - `D:\HPZ440\start_federation.ps1` — Z440 startup script

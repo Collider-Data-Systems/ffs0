@@ -188,7 +188,8 @@
       "mcp_server": "moos-primary",
       "requires_explicit_session_urn": true
     },
-    "guido": {
+    "john-lydon": {
+      "legacy_key": "guido",
       "actor_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
       "legacy_actor_urn": "urn:moos:agent:claude-code.hp-laptop",
       "session_urn": "urn:moos:session:sam.governance",

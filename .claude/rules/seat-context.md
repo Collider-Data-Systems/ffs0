@@ -63,7 +63,8 @@ agent  —presents-as→  persona (= Φ(purpose))             (presentation, NOT
 - **Skills to mount:** `moos-categorical-research`, `moos-session-context-projection`, `moos-state-readback`
 - **Prompt-delta:** Categorical/sheaf/VSA encoder lane. Mark conjectures as conjectures. Twin engine carries `opens-on` topology only — emit to `hp-z440.primary` :8000 until twin-sync.
 
-### Guido — governance
+### John Lydon (Guido) — governance
+> Persona named T247 (Sam): **John Lydon** = Φ(`purpose:sam.governance`); persona key `john-lydon` (legacy `guido`). Identity URNs unchanged.
 - **Agent:** `urn:moos:agent:vscode.hp-laptop.copilot` (legacy `urn:moos:agent:claude-code.hp-laptop`)
 - **Workspace (session):** `urn:moos:session:sam.governance`
 - **Engine (kernel):** `hp-laptop.primary` :8000 (emit-target)

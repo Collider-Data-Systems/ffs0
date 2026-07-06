@@ -5,11 +5,11 @@ description: Multi-persona / multi-kernel / contribution-log audit at round clos
 
 # moos-cross-persona-audit
 
-Round-close discipline for the Guido / governance lane. Walks the §9 invariant checklist across both kernels in 30-60 seconds and reports drift in a single comment on the round-vehicle issue.
+Round-close discipline for the John Lydon / governance lane. Walks the §9 invariant checklist across both kernels in 30-60 seconds and reports drift in a single comment on the round-vehicle issue.
 
 ## When to run
 
-**Firm trigger** — round-close, after each persona has posted their closeout comment. Guido runs this skill, posts AUDIT GREEN or AUDIT FINDINGS list to the round-vehicle issue.
+**Firm trigger** — round-close, after each persona has posted their closeout comment. John Lydon runs this skill, posts AUDIT GREEN or AUDIT FINDINGS list to the round-vehicle issue.
 
 **On-demand triggers** — drift suspected (e.g. Wolfram pushes a doctrine commit and you want to verify referential integrity); host-runner-fired specialist derivation arrives (verify A.4 emit-target adherence); ontology bump promoted (verify A.9/A.10/A.11 backfill completeness); user asks "did the round drift?".
 
@@ -26,13 +26,13 @@ Round-close discipline for the Guido / governance lane. Walks the §9 invariant 
 ## Persona seat conventions
 
 ```
-agent:    urn:moos:agent:vscode.hp-laptop.copilot  (Guido / hp-laptop VS Code)
+agent:    urn:moos:agent:vscode.hp-laptop.copilot  (John Lydon / hp-laptop VS Code)
 session:  urn:moos:session:sam.governance
 kernel:   kernel:hp-laptop.primary  (port 8000 HTTP, 8080 MCP)
-branch:   guido/r<NN>-<topic>  (per-round per-topic; round-close commits ride main via PR)
+branch:   john-lydon/r<NN>-<topic>  (per-round per-topic; round-close commits ride main via PR)
 ```
 
-The legacy `urn:moos:agent:claude-code.hp-laptop` actor is only valid when Claude Code is actually live and WF19 occupancy has been explicitly restored. The skill is invokable from any persona seat (read-only, no actor required for queries), but interpretation + posting the comment is Guido-lane-specific.
+The legacy `urn:moos:agent:claude-code.hp-laptop` actor is only valid when Claude Code is actually live and WF19 occupancy has been explicitly restored. The skill is invokable from any persona seat (read-only, no actor required for queries), but interpretation + posting the comment is John-Lydon-lane-specific.
 
 ## The N-invariant checklist (round-15+)
 
@@ -213,7 +213,7 @@ Outcome: A.9/A.10/A.11 reified as `claim:guido.*` ADDs at hp-laptop log_seq 757-
 Single round-vehicle comment:
 
 ```
-## [Guido] Round-N audit — AUDIT <GREEN|FINDINGS>
+## [John Lydon] Round-N audit — AUDIT <GREEN|FINDINGS>
 
 | # | Invariant | Result |
 |---|---|---|
@@ -223,7 +223,7 @@ Single round-vehicle comment:
 
 [FINDINGS list if any, with remediation pointers]
 
-— Guido, session:sam.governance, kernel:hp-laptop.primary, T=NNN
+— John Lydon, session:sam.governance, kernel:hp-laptop.primary, T=NNN
 ```
 
 ## Cross-references
