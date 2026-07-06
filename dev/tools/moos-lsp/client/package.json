@@ -5,6 +5,11 @@
   "version": "0.1.0",
   "publisher": "collider-data-systems",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Collider-Data-Systems/ffs0.git"
+  },
+  "license": "UNLICENSED",
   "engines": {
     "vscode": "^1.90.0"
   },
