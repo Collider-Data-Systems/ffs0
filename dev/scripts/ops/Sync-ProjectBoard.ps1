@@ -136,8 +136,8 @@ switch ($Mode) {
 
     'Audit' {
         Write-Section "Board audit — $Org project #$($Cache.project_number) ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))"
-        $board = Get-BoardItems
-        $open = Get-OpenRepoItems
+        $board = @(Get-BoardItems)
+        $open = @(Get-OpenRepoItems)
 
         $onBoard = @{}
         foreach ($b in $board) { $onBoard["$($b.Repo)#$($b.Number)"] = $b }
@@ -188,8 +188,8 @@ switch ($Mode) {
 
     'Sweep' {
         Write-Section "F-direction sweep $(if ($Apply) { '(APPLY)' } else { '(dry-run — pass -Apply to execute)' })"
-        $board = Get-BoardItems
-        $open = Get-OpenRepoItems
+        $board = @(Get-BoardItems)
+        $open = @(Get-OpenRepoItems)
         $onBoard = @{}
         foreach ($b in $board) { $onBoard["$($b.Repo)#$($b.Number)"] = $b }
 
