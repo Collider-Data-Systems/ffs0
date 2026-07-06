@@ -7,7 +7,7 @@
 
 | Entity | State |
 |---|---|
-| Org | `Collider-Data-Systems` · GitHub **Free** · created 2026-04-12 · billing `maassenhochrath@gmail.com` |
+| Org | `Collider-Data-Systems` · GitHub **Free** · created 2026-04-12 · billing → owner account |
 | Accounts | `MSD21091969` (Sam, sole **owner**) · `MoosT2025` (agent account, member — **effective admin on all repos incl. ffs0** via teams) |
 | Teams | `sam`, `moos` — identical membership (both accounts), both grant **admin on all 5 repos**. Zero least-privilege separation today. HG: proto-groups pending v3.13 `group` nodes. |
 | Repos | `ffs0` (private) · `moos-kernel` (public) · `moos-router` (public) · `.github` (public, org profile) · `demo-repository` (private, stock demo — archival candidate) |

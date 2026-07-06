@@ -11,8 +11,7 @@ param(
     [ValidateSet('Audit', 'Attach', 'Sweep')]
     [string]$Mode = 'Audit',
 
-    # Attach mode
-    [ValidateSet('ffs0', 'moos-kernel', 'moos-router')]
+    # Attach mode — any org repo (Audit/Sweep scan only $TrackedRepos)
     [string]$Repo,
     [int]$Number,
     [string]$HgUrn,
@@ -177,7 +176,7 @@ switch ($Mode) {
         if (-not $Repo -or -not $Number) { throw 'Attach mode requires -Repo and -Number.' }
         Write-Section "Attach $Org/$Repo#$Number to board"
         $nodeId = Get-ContentNodeId -RepoName $Repo -Num $Number
-        $itemId = Add-BoardItem -ContentNodeId $nodeId   # idempotent: re-add returns the existing item
+        $itemId = Add-BoardItem -ContentNodeId $nodeId   # idempotent: re-add returns the existing item (verified live T=247 against an already-attached card)
         Write-Host "item: $itemId" -ForegroundColor Gray
         if ($HgUrn)     { Set-ItemField -ItemId $itemId -FieldName 'HG URN' -Text $HgUrn;            Write-Host "  HG URN = $HgUrn" -ForegroundColor Green }
         if ($AgentId)   { Set-ItemField -ItemId $itemId -FieldName 'Agent ID' -Text $AgentId;        Write-Host "  Agent ID = $AgentId" -ForegroundColor Green }
