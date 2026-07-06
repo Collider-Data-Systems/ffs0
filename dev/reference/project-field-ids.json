@@ -1,0 +1,61 @@
+{
+  "_comment": "GitHub Projects v2 field-ID cache for the mo:os board — moos-github-project-bridge Phase 1 artifact. Field IDs are project-scoped and stable; re-fetch on 'unknown field' errors via the query in the skill doc.",
+  "fetched": { "t_day": 247, "date": "2026-07-06", "by": "agent:claude-cowork.hp-z440" },
+  "org": "Collider-Data-Systems",
+  "project_number": 4,
+  "project_id": "PVT_kwDOEGql9M4BVUTp",
+  "source_uri": "https://github.com/orgs/Collider-Data-Systems/projects/4",
+  "hg_channel": "urn:moos:channel:github.project.mo-os",
+  "hg_purpose": "urn:moos:purpose:sam.github-project-board-sync",
+  "fields": {
+    "Title": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6tc", "type": "TITLE" },
+    "Assignees": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6tg", "type": "ASSIGNEES" },
+    "Status": {
+      "id": "PVTSSF_lADOEGql9M4BVUTpzhQw6tk",
+      "type": "SINGLE_SELECT",
+      "options": { "Todo": "f75ad846", "In Progress": "47fc9ee4", "Done": "98236657" }
+    },
+    "Labels": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6to", "type": "LABELS" },
+    "Linked pull requests": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6ts", "type": "LINKED_PULL_REQUESTS" },
+    "Milestone": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6tw", "type": "MILESTONE" },
+    "Repository": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6t0", "type": "REPOSITORY" },
+    "Reviewers": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6t8", "type": "REVIEWERS" },
+    "Parent issue": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uA", "type": "PARENT_ISSUE" },
+    "Sub-issues progress": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uE", "type": "SUB_ISSUES_PROGRESS" },
+    "Created": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uI", "type": "CREATED" },
+    "Updated": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uM", "type": "UPDATED" },
+    "Closed": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uQ", "type": "CLOSED" },
+    "PRG": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uU", "type": "TEXT" },
+    "Phase": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uY", "type": "TEXT" },
+    "Agent ID": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uc", "type": "TEXT" },
+    "HG URN": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6ug", "type": "TEXT" },
+    "Owner Role": {
+      "id": "PVTSSF_lADOEGql9M4BVUTpzhQw6uk",
+      "type": "SINGLE_SELECT",
+      "options": { "user": "b11368e4", "admin": "809e4555", "group": "6f4a21d2", "agent": "2c8b2d7e" }
+    },
+    "Collider Category": {
+      "id": "PVTSSF_lADOEGql9M4BVUTpzhQw6uo",
+      "type": "SINGLE_SELECT",
+      "options": { "delegation_task": "e08996ec", "channel_message": "d4b803bb", "agent_session": "db0bdc4c", "ptp_family": "bd7a33c6", "other": "a7b8edca" }
+    },
+    "Branch Role": {
+      "id": "PVTSSF_lADOEGql9M4BVUTpzhQw6us",
+      "type": "SINGLE_SELECT",
+      "options": { "feature": "d68e3611", "hotfix": "33ec7ba3", "agent": "a43a970c", "admin": "cfa18e6f", "release": "8b52a1dd" }
+    },
+    "New field 8": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uw", "type": "DATE", "_note": "UI-created stray, no data — deletion candidate" },
+    "Iteration": { "id": "PVTIF_lADOEGql9M4BVUTpzhQw6u0", "type": "ITERATION" }
+  },
+  "agent_board_ids": {
+    "_comment": "HG agent.board_id readback T=247 — authoritative values differ from the skill-doc examples",
+    "agent:claude-code.hp-z440": "AGENT-CLAUDE-CODE-Z440",
+    "agent:claude-cowork.hp-z440": "AGENT-COWORK-Z440",
+    "agent:claude-cowork.hp-laptop": "AGENT-COWORK-HPLAP",
+    "agent:vscode.hp-laptop.copilot": "AGENT-VSCODE-COPILOT-HP-LAPTOP"
+  },
+  "workflows_enabled_t247": [
+    "Item closed", "Pull request merged", "Auto-close issue",
+    "Auto-add sub-issues to project", "Pull request linked to issue", "Item added to project"
+  ]
+}
