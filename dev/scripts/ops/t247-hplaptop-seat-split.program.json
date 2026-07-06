@@ -21,8 +21,7 @@
     },
     {
       "rewrite_type": "ADD",
-      "actor": "urn:moos:agent:claude-cowork.hp-laptop",
-      "session_urn": "urn:moos:session:sam.governance",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
       "node_urn": "urn:moos:purpose:sam.laptop-vscode-lead-operations",
       "type_id": "purpose",
       "properties": {
@@ -54,8 +53,7 @@
     },
     {
       "rewrite_type": "ADD",
-      "actor": "urn:moos:agent:claude-cowork.hp-laptop",
-      "session_urn": "urn:moos:session:sam.governance",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
       "node_urn": "urn:moos:session:sam.laptop-vscode-lead",
       "type_id": "session",
       "properties": {
