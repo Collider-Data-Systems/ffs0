@@ -121,7 +121,7 @@
       "harnesses": ["VS Code", "Copilot"],
       "prompts": [],
       "skills": ["moos-session-context-projection", "moos-tooling-dx", "moos-state-readback"],
-      "validation": ["Test-MoosFederation.ps1 -Mode VerifyPersona -Persona z440-vscode-lead"]
+      "validation": ["curl -s http://localhost:8000/state/relations/src/urn:moos:session:sam.z440-primary-vscode-setup", "Test-MoosFederation.ps1 -Mode VerifyPersona -Persona z440-vscode-lead"]
     },
     {
       "key": "john-lydon-governance",
