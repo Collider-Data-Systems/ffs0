@@ -42,6 +42,8 @@ Every entry that cites `log_seq N..M` or `log_seq=N` should:
 
 Common drift: round-N entry says "log_seq 600–627" but kernel has been restarted with a partial log; or rounds got re-ordered.
 
+**Grandfathering (T≤247, moos-kernel#40 governance countersign):** all pre-#42 running-state entries cite **len-based** numbers — on hp-laptop up to 1575 against `max_log_seq` 1558 — which is honest history, not new drift. Do not flag them mechanically and never retro-edit (verbatim-archive ethos, same as ffs0#109): annotate on next touch only. Seq-based citations are canonical from the first post-#42 round entry forward.
+
 ### Pass 2b — log_len vs max_log_seq integrity (moos-kernel#40 (d))
 
 `/healthz` serves both counters as one atomic snapshot since `4c99df8`. Compare per kernel:
