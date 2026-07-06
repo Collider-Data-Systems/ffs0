@@ -7,7 +7,7 @@ description: Round-open readback scoped to a Cowork session's t-cone. Use at the
 
 Open-of-round discipline for Cowork sessions. Answers three questions in 15 seconds:
 
-1. **Am I seated?** — Cowork agent still has the has-occupant edge; session status is `active`.
+1. **Am I seated?** — Cowork agent still has the has-occupant relation; session status is `active`.
 2. **Am I alive?** — session `local_t` has advanced recently (within the configured liveness window); no stuck heartbeat.
 3. **What's pending in my scope?** — each pinned channel has a clear ingest state; no orphan artifacts waiting on a chunker run.
 
@@ -17,21 +17,28 @@ This skill is READ-ONLY. No envelopes emitted. If something needs correction (ro
 
 ```
 agent:claude-cowork.hp-z440       → session:sam.z440-cowork-workspace   → kernel:hp-z440.primary   :8000
-agent:claude-cowork.hp-laptop     → session:sam.laptop-cowork-workspace → kernel:hp-laptop.primary :8000
+agent:claude-cowork.hp-laptop     → session:sam.governance (John Lydon, governance lane)      → kernel:hp-laptop.primary :8000
+agent:claude-cowork.hp-laptop     → session:sam.laptop-cowork-workspace (same agent, curation)  → kernel:hp-laptop.primary :8000
 ```
 
-One binary, two sessions, two kernels. Pick the right endpoint from the `agent` URN Cowork is running as.
+One binary, three sessions, two kernels — the hp-laptop agent is multi-workspace since the T247 split. Pick the right endpoint from the `agent` URN Cowork is running as; on hp-laptop always set `session_urn` explicitly.
 
 ## The 15-second sequence
 
 ### Step 1 — resolve your session URN
 
-Derive from the agent URN suffix (`.hp-z440` → `sam.z440-cowork-workspace`, `.hp-laptop` → `sam.laptop-cowork-workspace`). No kernel call needed.
+Derive from the agent URN suffix (`.hp-z440` → `sam.z440-cowork-workspace`). On `.hp-laptop` the agent occupies two workspaces since the T247 split (`sam.governance` — the John Lydon lane — and `sam.laptop-cowork-workspace`): use the explicit `session_urn` for the lane being driven, never infer from the suffix alone. No kernel call needed.
+
+Set it once for the steps below:
+
+```bash
+SESSION_URN=urn:moos:session:sam.z440-cowork-workspace   # or sam.governance / sam.laptop-cowork-workspace on hp-laptop
+```
 
 ### Step 2 — session node health
 
 ```bash
-curl -sS http://localhost:8000/state/nodes/urn:moos:session:sam.<host>-cowork-workspace \
+curl -sS "http://localhost:8000/state/nodes/$SESSION_URN" \
   | jq '{status: .properties.status.value, local_t: .properties.local_t.value, scope_pins: .properties.scope_pins.value}'
 ```
 
@@ -43,7 +50,7 @@ curl -sS http://localhost:8000/state/nodes/urn:moos:session:sam.<host>-cowork-wo
 ### Step 3 — has-occupant is you
 
 ```bash
-curl -sS 'http://localhost:8000/state/relations/src/urn:moos:session:sam.<host>-cowork-workspace' \
+curl -sS "http://localhost:8000/state/relations/src/$SESSION_URN" \
   | jq '[.[] | select(.src_port == "has-occupant" and .tgt_port == "is-occupant-of")] | .[0]'
 ```
 
@@ -77,7 +84,7 @@ for ch in $(echo "$SCOPE_PINS" | jq -r '.[]'); do
 done
 ```
 
-**WF correction (T=173 ~22:30 CEST):** Earlier drafts of this skill and the ingest skill prescribed WF18 `composes`/`composed-by` (inbound at channel via the `tgt` relations endpoint). That was wrong: WF18 is program composition (`src_types: [program, purpose]`), which excludes `channel`. The correct category is WF12 `provides-kb`/`kb-source` (KB hydration; channel→umbrella is a WF12 src→tgt edge, so query the `src` relations endpoint with `src_port == "provides-kb"`).
+**WF correction (T=173 ~22:30 CEST):** Earlier drafts of this skill and the ingest skill prescribed WF18 `composes`/`composed-by` (inbound at channel via the `tgt` relations endpoint). That was wrong: WF18 is program composition (`src_types: [program, purpose]`), which excludes `channel`. The correct category is WF12 `provides-kb`/`kb-source` (KB hydration; channel→umbrella is a WF12 src→tgt relation, so query the `src` relations endpoint with `src_port == "provides-kb"`).
 
 A channel with 0 umbrellas that you expected to have chunks = an **orphan source** (artifact exists externally, no HG reification yet). Either:
 - Chunker didn't run for that surface (schedule or invocation missed)
@@ -149,4 +156,4 @@ cowork readback: ANOMALY
 
 ## Status
 
-**Draft — T=173 authoring**, paired with `moos-workspace-ingest`. Neither has been invoked in anger yet — first real run happens when Sam launches Claude Desktop on Z440 (or hp-laptop), at which point Cowork emits its first envelope, the seat flips from `pending_driver` → `active`, and this readback becomes the daily-08:00 ritual's first step.
+**Operational** (first authored T=173, paired with `moos-workspace-ingest`). The Cowork seats are live — Zappa on Z440; John Lydon on hp-laptop driving `session:sam.governance` plus the curation workspace since the T247 split (resolve `session_urn` per step 1) — and this readback is the round-open first step on any Cowork seat.
