@@ -60,7 +60,7 @@ Owner-action (Sam, org settings UI unless noted):
 
 Zappa-executable (queued):
 - **Q1** replicate project-sync.yml to moos-kernel + moos-router (after the ffs0 repoint merges).
-- **Q2** rulesets on public repos (block force-push + deletion on default branch; free) — applied T=247 ✔ (see below).
+- **Q2** rulesets on public repos (block force-push + deletion on default branch; free) — **blocked by the harness classifier T=247** (org-governance mutation needs Sam's explicit go or a permission rule). Ready-to-run: `gh api -X POST repos/Collider-Data-Systems/<repo>/rulesets` with `{"name":"protect-default-branch","target":"branch","enforcement":"active","conditions":{"ref_name":{"include":["~DEFAULT_BRANCH"],"exclude":[]}},"rules":[{"type":"non_fast_forward"},{"type":"deletion"}]}` for `moos-kernel` · `moos-router` · `.github`.
 - **Q3** `SECURITY.md` in `.github` (vuln-reporting channel for the public repos).
 - **Q4** close legacy project `MSD21091969/#1` (post-merge, Sam's go).
 - **Q5** board hygiene: delete/rename "New field 8" (3 items carry a 2026-04-21 date — decide keep-as-"Legacy Date" vs drop).
