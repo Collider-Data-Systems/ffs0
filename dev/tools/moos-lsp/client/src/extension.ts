@@ -65,13 +65,13 @@ function resolveServerPath(value: string): string {
   const workspaceServerPath = findWorkspaceServerBinary();
   if (workspaceServerPath) {
     void vscode.window.showWarningMessage(
-      `mo:os LSP serverPath does not exist: ${resolved}. Using workspace server: ${workspaceServerPath}`,
+      `mo:os LSP: configured moos.serverPath does not exist (${resolved}) — likely a stale synced user setting; clear or fix it. Using workspace server: ${workspaceServerPath}`,
     );
     return workspaceServerPath;
   }
 
   void vscode.window.showWarningMessage(
-    `mo:os LSP serverPath does not exist: ${resolved}. Falling back to moos-lsp on PATH.`,
+    `mo:os LSP: configured moos.serverPath does not exist (${resolved}) and no workspace server binary was found — clear or fix the setting. Falling back to moos-lsp on PATH.`,
   );
   return "moos-lsp";
 }
