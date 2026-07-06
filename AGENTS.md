@@ -46,7 +46,7 @@ Relation-first, rewrite-first. No OOP framing (no objects-with-payload, no stati
 | HP ProDesk | `vscode.hpprodesk.primary` | `sam.hpprodesk-setup` | `hpprodesk.primary` :8000 | VS Code · ProDesk · `ffs0.code-workspace` | moos-hpprodesk-primary |
 <!-- END GENERATED: moos-config-projection seat-table -->
 
-All URN prefixes are `urn:moos:<type>:<short>`. Emit discipline: Z440 personae emit to `hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; multi-workspace agents (Wolfram, Cowork) set `session_urn` explicitly (`session_urn` stays the canonical key per the Gate). Twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), not state replication. `sam.mvp-delivery` (hp-z440.primary) is a **dormant, occupant-less lane** (`has-occupant` UNLINKed T=219) — intentionally omitted from the active table.
+All URN prefixes are `urn:moos:<type>:<short>`. Emit discipline: Z440 personae emit to `hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; multi-workspace agents (Wolfram `claude-code.hp-z440`, Zappa `claude-cowork.hp-z440`, John Lydon `claude-cowork.hp-laptop` — governance + curation since the T247 split) set `session_urn` explicitly (`session_urn` stays the canonical key per the Gate). Twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), not state replication. `sam.mvp-delivery` (hp-z440.primary) is a **dormant, occupant-less lane** (`has-occupant` UNLINKed T=219) — intentionally omitted from the active table.
 
 ## Network / federation (T=219 Tailscale mesh · T=226 ProDesk rejoin)
 Z440 (`desktop-42d00rd`) `100.82.243.13` (Tailscale) / `192.168.1.15` (LAN). hp-laptop (`lap-sam`) `100.106.220.58` (Tailscale) / `192.168.1.10` (LAN). HP ProDesk (`desktop-3fc7c3f`) `100.87.28.95` (Tailscale; mostly powered off — expect Doctor-mode drift flags while down). Federation router fans in cross-box over Tailscale (DHCP-drift retired). Kernels `:8000` (+Z440 twins `:8001-8003`), MCP `:8080` (Z440 twins' opens-on MCP `:9001/:9002/:9003`), router `:9000`. Live detail → `dev/config/moos-federation.topology.json`.
@@ -82,7 +82,7 @@ Grammar_fragments (`dev/design/manifold-bump-4_0/20260620-t231-grammar-fragment-
 Authoring/ops: `moos-rewrite-envelope` · `moos-state-readback` · `moos-round-close` · `moos-running-state-validator` · `moos-cross-persona-audit` · `moos-workstation-operator`.
 Orientation: `moos-seat-hydration` (seat readback + hydration; used by `/orient` + the `.claude/agents/` cards).
 Projection/ingest: `moos-session-context-projection` (F) · `moos-workspace-ingest` (G text) · `moos-multimodal-ingest` (G binary) · `moos-github-project-bridge`.
-Seat lanes: `moos-categorical-research` + `moos-compiler-lowering` (Karpathy) · `moos-tooling-dx` (Steinberger) · `moos-cowork-readback` (Cowork).
+Seat lanes: `moos-categorical-research` + `moos-compiler-lowering` (Karpathy) · `moos-tooling-dx` (Steinberger) · `moos-cowork-readback` (the Cowork seats: Zappa · John Lydon).
 Detail lives in each `SKILL.md` — do not restate here.
 
 ## Repos & branching
