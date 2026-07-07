@@ -42,7 +42,14 @@ T189 caught the same class of drift with Julia: launching `dev\scripts\google_ca
 Twins are sovereign folds. `user:moos` living on `kernel:hp-z440.moos` (:8003) is invisible to a
 `/state/nodes` query on the primary (:8000) — and that is correct behavior, not drift. Before
 claiming a node is "missing from the HG", check **every kernel whose graph could legitimately hold
-it**: per-kernel `GET :800N/state/nodes/<urn>` (Z440 twins :8001-:8003) or the router fan-in (:9000).
+it** — explicitly, matching the curl style of the rest of this skill:
+
+```bash
+# per-kernel node existence (Z440: primary :8000 + twins :8001-:8003)
+for p in 8000 8001 8002 8003; do curl -sS http://localhost:$p/state/nodes/urn:moos:user:moos; echo; done
+# or one shot via the router fan-in
+curl -sS http://localhost:9000/healthz
+```
 
 Motivating incidents (T=248, two false "missing node" deltas in ONE day, same root cause):
 1. ~11:00 — "`user:moos` doesn't exist; GitHub team description is ahead of the HG" → he'd been on
