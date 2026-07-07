@@ -11,7 +11,7 @@
 
 ## 0. The commission
 
-We now have, live and verified: **engines** (four on Z440, each with an owner on its own fold),
+We now have, live and verified: **engines** (`engine` ⟵ 4.0 alias of `kernel`, dual-named here once per house rule; four on Z440, each with an owner on its own fold),
 **users** (sam, menno, lola, moos — one per engine, per the type doctrine), **delegates** (the
 agent principals: `claude-cowork.hp-z440` and friends), and **personae** (the band: Wolfram,
 Steinberger, Karpathy, Zappa, John Lydon, Guido, Moos — Φ(purpose), presentation not authority).

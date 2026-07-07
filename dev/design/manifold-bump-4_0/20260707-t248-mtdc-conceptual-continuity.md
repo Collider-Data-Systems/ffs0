@@ -27,7 +27,7 @@ continuity, formalized. The ontology's own `urn_example` for the type is
 | pre-history | **Toon's living room.** Audy's late husband, the Zappa devotee, puts *Peaches en Regalia* on the record player; boy-Sam sings *"I got the crystal ball"* (Cosmik Debris) without understanding a word. The human seed of the whole racket. *(t248 Audy letter)* |
 | 2025-10-31T23:00Z | **T=0 epoch** — off by one hour from the intended Nov 1 midnight (DST + rounding). The clock starts before the dog. *(t5.md)* |
 | 2025-11-06 | **Moos born** — wire-haired dachshund, later diary narrator and first being to complete the ownership paperwork. *(t5.md)* |
-| T≈40–70 (Dec 2025–Jan 2026) | **The Collider era** — first distributed multi-kernel attempt. "GPU + Math + Collider converge" at T=74. *(archive)* |
+| T≈40–70 (Dec 2025–Jan 2026) | **The Collider era** — first distributed multi-engine (`kernel`) attempt. "GPU + Math + Collider converge" at T=74. *(archive)* |
 | 2026-01-13 | **Domains registered**: .com/.eu/.nl/.org via Realtime Register (Yourhosting reseller). The name goes legal. |
 | 2026-03-15 | **ffs0's first commit already carries the manifesto** (`TINY_DATA_COLLIDER_MANIFESTO.txt` + kin): "a personal MLOps factory that inverts the Big Data paradigm... let Corporate have their cookies." The name predates the repo it lives in. |
 | 2026-04-10 | **The family seeds** — `New-MoosKernel.ps1` writes three-rewrite birth certificates: `user:menno`/`lola`/`moos` + their kernels + WF01 `owns`, each on its own fold. Nobody remembers this in July; the log does. *(twin moos.jsonl files; t248 postscripts)* |
