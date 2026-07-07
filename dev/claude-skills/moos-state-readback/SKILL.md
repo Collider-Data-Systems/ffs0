@@ -37,6 +37,20 @@ T189 caught the same class of drift with Julia: launching `dev\scripts\google_ca
 
 `#29` is ambiguous when three repos have their own PR sequences. Write `moos-kernel#29` or `ffs0#33` — every time, even when the context "obviously" implies one. On multi-machine handoffs (hp-laptop, Z440), the context doesn't always carry.
 
+## Cardinal rule — node-existence claims need the right fold
+
+Twins are sovereign folds. `user:moos` living on `kernel:hp-z440.moos` (:8003) is invisible to a
+`/state/nodes` query on the primary (:8000) — and that is correct behavior, not drift. Before
+claiming a node is "missing from the HG", check **every kernel whose graph could legitimately hold
+it**: per-kernel `GET :800N/state/nodes/<urn>` (Z440 twins :8001-:8003) or the router fan-in (:9000).
+
+Motivating incidents (T=248, two false "missing node" deltas in ONE day, same root cause):
+1. ~11:00 — "`user:moos` doesn't exist; GitHub team description is ahead of the HG" → he'd been on
+   `kernel:hp-z440.moos`'s own graph since 2026-04-10.
+2. ~11:41 — the Lola-letter honesty clause: "the lola/menno ceremony hasn't been performed yet" →
+   `user:lola`/`user:menno` + WF01 owns had been on their twins' graphs since the same April seed.
+Both were primary-only readbacks that survived into authored text before live folds falsified them.
+
 ## What to check (in parallel)
 
 Run the following as parallel `Bash` calls in a single tool use. Nothing here modifies state — all read-only.
