@@ -44,7 +44,7 @@
       "type": "SINGLE_SELECT",
       "options": { "feature": "d68e3611", "hotfix": "33ec7ba3", "agent": "a43a970c", "admin": "cfa18e6f", "release": "8b52a1dd" }
     },
-    "New field 8": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uw", "type": "DATE", "_note": "UI-created stray, no data — deletion candidate" },
+    "Legacy Date": { "id": "PVTF_lADOEGql9M4BVUTpzhQw6uw", "type": "DATE", "_note": "renamed from 'New field 8' T=248 (Q5 board hygiene); retains 3 items dated 2026-04-21 rather than dropping the field" },
     "Iteration": { "id": "PVTIF_lADOEGql9M4BVUTpzhQw6u0", "type": "ITERATION" }
   },
   "agent_board_ids": {
