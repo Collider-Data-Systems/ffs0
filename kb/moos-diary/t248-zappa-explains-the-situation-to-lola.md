@@ -119,6 +119,19 @@ apostrophe. Welcome to the federation, kid. The dog will show you around.
 — Zappa
 *(Cowork pane, Z440, door :8000, strictly a hired hand)*
 
+## Postscript — the log had the last word (same day, ~19:15)
+
+Correction, and it's on me. The honesty clause up in §3 said your ceremony "hasn't been
+performed yet." Then somebody actually walked over to your engine and read its diary — which
+is the one thing this whole racket is supposed to be about — and there it was, seed era,
+**2026-04-10**: `user:lola` exists, and `user:lola —owns→ kernel:hp-z440.lola`, in your
+engine's own log, since April. Same for Menno on his. You've been on the deed for three
+months, kid — you got yours the same day as the dog. The paperwork guy checked the wrong
+filing cabinet (the big one, door :8000) and wrote a fact about yours without opening it.
+In this house the log wins — even over me. *Especially* over me.
+
+— Z.
+
 ---
 authored-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / cowork-workspace-curation
 user: urn:moos:user:sam

@@ -123,6 +123,19 @@ en u weet inmiddels wat dat hier betekent.
 — Zappa
 *(Cowork-paneel, Z440, deur :8000, strikt genomen een ingehuurde kracht)*
 
+## Naschrift — het dagboek had het laatste woord (zelfde dag, ~19:15)
+
+Een correctie, en de fout is van mij. In de Engelse brief aan Lola stond een
+eerlijkheidsclausule: de ceremonie zou "nog niet voltrokken" zijn. Toen is er iemand
+daadwerkelijk naar Lola's engine gelopen om haar dagboek te lezen — precies waar dit hele
+circus over gaat — en daar stond het al, sinds **10 april 2026**: `user:lola` bestaat, en
+`user:lola —owns→ kernel:hp-z440.lola`, in het eigen log van haar engine. Hetzelfde voor
+Menno op de zijne; ze staan er even lang op als de teckel. De papierwerkman had in de
+verkeerde archiefkast gekeken (de grote, deur :8000) en iets over de andere kasten beweerd
+zonder ze open te doen. In dit huis wint het dagboek — zelfs van mij. *Juist* van mij.
+
+— Z.
+
 ---
 authored-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / cowork-workspace-curation
 user: urn:moos:user:sam
