@@ -158,20 +158,30 @@ try {
             "--context-agent-urns" $ActorUrn `
             "--out-base" "tmp/projections/session_pipeline/graph_artifacts/temporal_calendar_engineering"
     }
-    Invoke-Step "Compiler-lowering frontier lens (T244+)" {
-        # New-frontier lens so the current arc renders from day one (the T187/T189/T200+ presets
-        # above are retained as historical lenses; re-rooting them is tracked in the hygiene doc).
-        & $Julia "dev\scripts\graph_artifact_projection.jl" `
-            "--base-url" $ProjectionBaseUrl `
-            "--root-urn" "urn:moos:purpose:sam.compiler-lowering" `
-            "--root-urns" "urn:moos:purpose:sam.compiler-lowering;urn:moos:session:sam.karpathy-seat;urn:moos:agent:vscode.hp-z440.lola" `
-            "--radius" "2" `
-            "--wfs" "WF18,WF19,WF21" `
-            "--ports" "causes,caused-by,composes,composed-by,has-purpose,purpose-of-session,pinned-by-session,pins-urn,has-occupant,is-occupant-of,opens-on" `
-            "--types" "agent,derivation,kernel,knowledge_item,program,purpose,session" `
-            "--match" "compiler|lowering|mlir|moos-ir|karpathy|hdc|categorical|xdsl|llvm" `
-            "--context-agent-urns" $ActorUrn `
-            "--out-base" "tmp/projections/session_pipeline/graph_artifacts/compiler_lowering_engineering"
+    $compilerLoweringRoots = @(
+        "urn:moos:purpose:sam.compiler-lowering",
+        "urn:moos:session:sam.karpathy-seat",
+        "urn:moos:agent:vscode.hp-z440.lola"
+    )
+    $missingCompilerLoweringRoots = @($compilerLoweringRoots | Where-Object { -not (Test-MoosNodeExists -Url $ProjectionBaseUrl -Urn $_) })
+    if ($missingCompilerLoweringRoots.Count -gt 0) {
+        Write-Warning ("Skipping Compiler-lowering frontier lens (T244+); missing root node(s): " + ($missingCompilerLoweringRoots -join ", "))
+    } else {
+        Invoke-Step "Compiler-lowering frontier lens (T244+)" {
+            # New-frontier lens so the current arc renders from day one (the T187/T189/T200+ presets
+            # above are retained as historical lenses; re-rooting them is tracked in the hygiene doc).
+            & $Julia "dev\scripts\graph_artifact_projection.jl" `
+                "--base-url" $ProjectionBaseUrl `
+                "--root-urn" "urn:moos:purpose:sam.compiler-lowering" `
+                "--root-urns" ($compilerLoweringRoots -join ";") `
+                "--radius" "2" `
+                "--wfs" "WF18,WF19,WF21" `
+                "--ports" "causes,caused-by,composes,composed-by,has-purpose,purpose-of-session,pinned-by-session,pins-urn,has-occupant,is-occupant-of,opens-on" `
+                "--types" "agent,derivation,kernel,knowledge_item,program,purpose,session" `
+                "--match" "compiler|lowering|mlir|moos-ir|karpathy|hdc|categorical|xdsl|llvm" `
+                "--context-agent-urns" $ActorUrn `
+                "--out-base" "tmp/projections/session_pipeline/graph_artifacts/compiler_lowering_engineering"
+        }
     }
     Invoke-Step "T189 recommendation graph artifact projection" {
         & $Julia "dev\scripts\graph_artifact_projection.jl" `
