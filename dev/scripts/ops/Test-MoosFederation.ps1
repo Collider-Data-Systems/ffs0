@@ -513,7 +513,7 @@ function Test-Persona {
         $occupant = $relations | Where-Object { $_.src_port -eq 'has-occupant' -and $_.tgt_urn -eq $resolved.Config.actor_urn } | Select-Object -First 1
         $purpose = $relations | Where-Object { $_.src_port -eq 'has-purpose' } | Select-Object -First 1
         $opensOn = $relations | Where-Object { $_.src_port -eq 'opens-on' -and $_.tgt_urn -eq $resolved.OpensOnKernel.urn } | Select-Object -First 1
-        $purposeTarget = if ($purpose) { [string]$purpose.tgt_urn } else { [string]$resolved.Config.session_urn }
+        $purposeTarget = if ($purpose) { [string]$purpose.tgt_urn } else { '(none)' }
         $rows += [pscustomObject]@{ Check = 'has-occupant'; Target = $resolved.Config.actor_urn; Status = if ($occupant) { 'ok' } else { 'missing' }; Detail = "checked on $($resolved.EmitUrl)" }
         $rows += [pscustomObject]@{ Check = 'has-purpose'; Target = $purposeTarget; Status = if ($purpose) { 'ok' } else { 'missing' }; Detail = 'purpose used for persona projection' }
         $rows += [pscustomObject]@{ Check = 'opens-on-link'; Target = $resolved.OpensOnKernel.urn; Status = if ($opensOn) { 'ok' } else { 'missing' }; Detail = 'topology intent stored on receiving kernel' }
