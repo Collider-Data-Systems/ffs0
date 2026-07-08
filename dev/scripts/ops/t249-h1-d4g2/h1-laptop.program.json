@@ -1,0 +1,63 @@
+[
+ {
+  "rewrite_type": "ADD",
+  "actor": "urn:moos:kernel:hp-laptop.primary",
+  "node_urn": "urn:moos:workstation:hp-z440",
+  "type_id": "workstation",
+  "properties": {
+   "hostname": {
+    "value": "hp-z440",
+    "mutability": "immutable",
+    "authority_scope": "",
+    "stratum_origin": 2
+   },
+   "os": {
+    "value": "windows",
+    "mutability": "immutable",
+    "authority_scope": "",
+    "stratum_origin": 2
+   },
+   "arch": {
+    "value": "amd64",
+    "mutability": "immutable",
+    "authority_scope": "",
+    "stratum_origin": 2
+   },
+   "created_at": {
+    "value": "2026-07-08T19:50:00Z",
+    "mutability": "immutable",
+    "authority_scope": "",
+    "stratum_origin": 2
+   },
+   "kind": {
+    "value": "desktop",
+    "mutability": "mutable",
+    "authority_scope": "owner",
+    "stratum_origin": 2
+   }
+  }
+ },
+ {
+  "rewrite_type": "LINK",
+  "actor": "urn:moos:kernel:hp-laptop.primary",
+  "relation_urn": "urn:moos:rel:t249.sam.owns.workstation-hp-z440",
+  "src_urn": "urn:moos:user:sam",
+  "src_port": "owns",
+  "tgt_urn": "urn:moos:workstation:hp-z440",
+  "tgt_port": "child",
+  "rewrite_category": "WF01"
+ },
+ {
+  "rewrite_type": "UNLINK",
+  "actor": "urn:moos:kernel:hp-laptop.primary",
+  "relation_urn": "urn:moos:rel:sam.owns.hp-z440"
+ },
+ {
+  "rewrite_type": "MUTATE",
+  "actor": "urn:moos:kernel:hp-laptop.primary",
+  "target_urn": "urn:moos:session:20260403.claude-code",
+  "field": "status",
+  "new_value": "closed",
+  "rewrite_category": "WF07"
+ }
+]

@@ -1,0 +1,10 @@
+[
+ {
+  "rewrite_type": "MUTATE",
+  "actor": "urn:moos:kernel:hp-z440.primary",
+  "target_urn": "urn:moos:session:vscode-codex-hp-z440.t161",
+  "field": "status",
+  "new_value": "closed",
+  "rewrite_category": "WF07"
+ }
+]

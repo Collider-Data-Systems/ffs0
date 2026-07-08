@@ -1,0 +1,12 @@
+[
+ {
+  "rewrite_type": "LINK",
+  "actor": "urn:moos:kernel:hp-z440.moos",
+  "relation_urn": "urn:moos:rel:t249.hp-z440.hosts.moos",
+  "src_urn": "urn:moos:workstation:hp-z440",
+  "src_port": "hosts",
+  "tgt_urn": "urn:moos:kernel:hp-z440.moos",
+  "tgt_port": "hosted-on",
+  "rewrite_category": "WF03"
+ }
+]
