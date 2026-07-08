@@ -1,0 +1,43 @@
+{
+ "_STATUS": "STAGED, Sam-gated \u2014 D8 fragment for surface->realizes->channel edge. Demonstrated write-need via expected-REJECT on :8899. Ceremony: rides next WF20.",
+ "envelopes": [
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:kernel:hp-laptop.primary",
+   "node_urn": "urn:moos:grammar_fragment:d8-surface-realizes",
+   "type_id": "grammar_fragment",
+   "properties": {
+    "name": {
+     "value": "d8 surface->realizes",
+     "mutability": "immutable"
+    },
+    "fragment_kind": {
+     "value": "node_and_port",
+     "mutability": "immutable"
+    },
+    "specification": {
+     "value": {
+      "change": "Add new node type 'surface'. Add new additional pair 'realizes / realized-by' (WF04) from 'surface' to 'channel'. This satisfies the D8 write-need for projecting channels to workspace surfaces.",
+      "added_in_version": "4.0.2-proposed",
+      "source": "AG t250 note + Sam ruling ③ D8 prove-then-land"
+     },
+     "mutability": "mutable"
+    },
+    "evidence_urns": {
+     "value": [
+      "urn:moos:session:sam.laptop-moos-diary"
+     ],
+     "mutability": "mutable"
+    },
+    "status": {
+     "value": "proposed",
+     "mutability": "mutable"
+    },
+    "created_at": {
+     "value": "2026-07-08T22:50:00Z",
+     "mutability": "immutable"
+    }
+   }
+  }
+ ]
+}

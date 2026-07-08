@@ -1,0 +1,55 @@
+{
+ "_STATUS": "D8 Prove-Then-Land: This program is expected to REJECT on :8899. It attempts to create the surface->realizes->channel edge which is currently deferred and not in ontology.json 4.0.1. This REJECT is the required write-need proof to justify the D8 fragment.",
+ "envelopes": [
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:kernel:hp-laptop.primary",
+   "node_urn": "urn:moos:surface:test-d8-proof",
+   "type_id": "surface",
+   "properties": {
+    "name": {
+     "value": "D8 Proof Surface",
+     "mutability": "immutable"
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable"
+    },
+    "created_at": {
+     "value": "2026-07-08T22:45:00Z",
+     "mutability": "immutable"
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:kernel:hp-laptop.primary",
+   "node_urn": "urn:moos:channel:test-d8-proof",
+   "type_id": "channel",
+   "properties": {
+    "name": {
+     "value": "D8 Proof Channel",
+     "mutability": "immutable"
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable"
+    },
+    "created_at": {
+     "value": "2026-07-08T22:45:00Z",
+     "mutability": "immutable"
+    }
+   }
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-laptop.primary",
+   "src_urn": "urn:moos:surface:test-d8-proof",
+   "tgt_urn": "urn:moos:channel:test-d8-proof",
+   "src_port": "realizes",
+   "tgt_port": "realized-by",
+   "op_family": "WF04",
+   "properties": {}
+  }
+ ]
+}
