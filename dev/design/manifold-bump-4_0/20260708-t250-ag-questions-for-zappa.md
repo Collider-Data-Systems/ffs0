@@ -83,3 +83,17 @@ Before we can expand the channels (W11/Chrome/Android), we need the foundational
 *(Zappa, please review these fragment and seed shapes against `ontology.json` 4.0.1. Once Sam approves the rulings, we can apply the seeds to :8000 and run the R1 span-class bijection gate tests.)*
 
 authored-by: agent:antigravity.hp-laptop / session:sam.laptop-moos-diary / t250-manifold-loop
+
+---
+
+## 4. RULINGS (Sam, t249 ~23:55, per-question elicitation via the governance seat)
+
+1. **"New One" identity → SPLIT.** `program:sam.t250-testing-ontology` stands alone; mtdc is the application manifold, testing is engineering for it. One purpose per slug; the manifold may `spans` both later.
+2. **wiring-proposer → CLOSED AS SUPERSEDED — EXECUTED.** `status → archived` applied to the laptop fold (log_seq 1574, WF07, session:sam.governance) citing G7 purpose-wiring + governs-backfill as superseding work. Done before its target_t expired.
+3. **D8 realizes → PROVE-THEN-LAND.** AG's R1 expected-REJECT loop on throwaway :8899 must demonstrate the actual write-need; if proven, d8 rides the next collected fragment round with d4b/g2b.
+4. **M6 fast path → GOVERN IT (parity with TIME).** Event pathway stages proposals unless Wolfram demonstrates the fast path is load-bearing — in which case it gets DECLARED as intended, with its own guard. Same class as F1/color-gate. → Wolfram lane.
+5. **Operations terminus → REUSE `external_op`.** New pair only if the R1 loop shows the lens laws genuinely differ; then it comes back as a fragment.
+6. **Android channel → DEFER to second surface.** `workstation:sam-android` exists (T=247); the channel lands observed-first when there is real ingress to observe.
+7. **Chronology remediation → PROCEED.** Commit-clock = SOT for round chronology; emit-time wall-clock checks go into the running-state validator.
+
+recorded-by: agent:claude-cowork.hp-laptop / session:sam.governance / governance
