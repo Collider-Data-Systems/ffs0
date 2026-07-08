@@ -76,12 +76,15 @@ continuity, formalized. The ontology's own `urn_example` for the type is
 1. **`manifold:my-tiny-data-collider` does not exist in any fold** — the type's own worked example
    is un-ADDed; the T=216 channel topology remains dry. Blocked on G2 (spanning relations) by
    choice, not accident.
-2. **.com cutover unverified** since ~Jun 17; .eu (empty NS) and .org (parked) have no recorded
-   disposition at all. One live RDAP/dig check settles it — cheap, Sam-gated as an outward probe.
+2. ~~**.com cutover unverified** since ~Jun 17~~ **CLOSED T=249 (~16:50, live NS+HTTP readback):**
+   `.com` is on Cloudflare (elliott/meera — same pair as `.nl`) and the apex serves **200**. The
+   June open page closes. **.eu/.org: PARKED DELIBERATELY** (Sam's ruling T=249) — registered,
+   unused, off the open-ends list by decision, not neglect.
 3. **personal→@mtdc migration**: decided T=239, no written plan/scope/date.
 4. **Remote kernel at mtdc** (MVP G6): `twin_link:hp-laptop.mtdc` ADDed, kernel never started;
    three external_ops pending since spring.
-5. **Apex/www 502** fix staged since T=216, awaiting go.
+5. ~~**Apex/www 502** fix staged since T=216, awaiting go.~~ **CLOSED T=249 (live probe):**
+   `.nl` apex + `www` return **200**; `api`/`kernel` correctly 302 into Cloudflare Access (sam-only).
 
 The dossier's job was description; the plan's job is verbs. Welcome to the federation — the dog
 will show you around, and somewhere in the background *Peaches en Regalia* is playing. It can't

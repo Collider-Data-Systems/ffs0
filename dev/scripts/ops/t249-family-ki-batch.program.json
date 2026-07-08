@@ -1,0 +1,343 @@
+{
+ "envelopes": [
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:ki:diary.moos-diary-entries-batch-01",
+   "type_id": "knowledge_item",
+   "properties": {
+    "title": {
+     "value": "Moos diary entries batch 01",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_url": {
+     "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_type": {
+     "value": "video",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "language": {
+     "value": "en",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "retrieved_at": {
+     "value": "2026-07-08T15:00:00Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-08T15:00:00Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "kernel",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:channel:local.moos-footage",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "summary": {
+     "value": "Core diary narrative videos from Moos. The sovereign dog establishes the log.",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "status": {
+     "value": "raw",
+     "mutability": "mutable",
+     "authority_scope": "kernel",
+     "stratum_origin": 2
+    },
+    "media_kind": {
+     "value": "video",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "media_meta": {
+     "value": "{\"files\": [\"Moos_diary_entry_202604210945.mp4\", \"Moos_diary_entry_202604210945_2.mp4\", \"Moos_diary_entry_202604210945_3.mp4\", \"Moos_diary_entry_202604210945_4.mp4\"]}",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "ingest_actor": {
+     "value": "urn:moos:agent:antigravity.hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:moos",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:ki:diary.moos-remarks-batch-01",
+   "type_id": "knowledge_item",
+   "properties": {
+    "title": {
+     "value": "Moos remarks and talks batch 01",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_url": {
+     "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_type": {
+     "value": "video",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "language": {
+     "value": "en",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "retrieved_at": {
+     "value": "2026-07-08T15:00:00Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-08T15:00:00Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "kernel",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:channel:local.moos-footage",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "summary": {
+     "value": "Supplemental video remarks and physical evidence of Moos navigating the workspace.",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "status": {
+     "value": "raw",
+     "mutability": "mutable",
+     "authority_scope": "kernel",
+     "stratum_origin": 2
+    },
+    "media_kind": {
+     "value": "video",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "media_meta": {
+     "value": "{\"files\": [\"Dachshund_Moos_diary_202604210945.mp4\", \"Dachshund_Moos_remarks_202604210945.mp4\", \"Dachshund_Moos_remarks_202604210945_2.mp4\", \"Dachshund_Moos_talks_202604210945.mp4\"]}",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "ingest_actor": {
+     "value": "urn:moos:agent:antigravity.hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:moos",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:ki:photo.moos-family-seeds-media",
+   "type_id": "knowledge_item",
+   "properties": {
+    "title": {
+     "value": "Family seeds WhatsApp media",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_url": {
+     "value": "file:///D:/HPZ440/ffs0/kb/moos-diary/",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_type": {
+     "value": "photo",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "language": {
+     "value": "en",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "retrieved_at": {
+     "value": "2026-07-08T15:00:00Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-08T15:00:00Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "kernel",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:channel:local.moos-footage",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "summary": {
+     "value": "Raw visual artifacts from the family layer (Menno, Lola, Moos) ingested from the phone.",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "status": {
+     "value": "raw",
+     "mutability": "mutable",
+     "authority_scope": "kernel",
+     "stratum_origin": 2
+    },
+    "media_kind": {
+     "value": "image",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "media_meta": {
+     "value": "{\"files\": [\"WhatsApp Video 2026-04-21 at 09.45.32.mp4\", \"WhatsApp_Image_2026-03-20_202604210945.jpeg\", \"WhatsApp_Image_2026-03-25_202604210945.jpeg\"]}",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "ingest_actor": {
+     "value": "urn:moos:agent:antigravity.hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:moos",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t249.moos-footage.provides-kb.diary-moos-diary-entries-batch-01",
+   "src_urn": "urn:moos:channel:local.moos-footage",
+   "src_port": "provides-kb",
+   "tgt_urn": "urn:moos:ki:diary.moos-diary-entries-batch-01",
+   "tgt_port": "kb-source",
+   "rewrite_category": "WF12"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t249.moos-footage.provides-kb.diary-moos-remarks-batch-01",
+   "src_urn": "urn:moos:channel:local.moos-footage",
+   "src_port": "provides-kb",
+   "tgt_urn": "urn:moos:ki:diary.moos-remarks-batch-01",
+   "tgt_port": "kb-source",
+   "rewrite_category": "WF12"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t249.moos-footage.provides-kb.photo-moos-family-seeds-media",
+   "src_urn": "urn:moos:channel:local.moos-footage",
+   "src_port": "provides-kb",
+   "tgt_urn": "urn:moos:ki:photo.moos-family-seeds-media",
+   "tgt_port": "kb-source",
+   "rewrite_category": "WF12"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t249.sam.moos-diary.pins-urn.diary-moos-diary-entries-batch-01",
+   "src_urn": "urn:moos:session:sam.moos-diary",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:ki:diary.moos-diary-entries-batch-01",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t249.sam.moos-diary.pins-urn.diary-moos-remarks-batch-01",
+   "src_urn": "urn:moos:session:sam.moos-diary",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:ki:diary.moos-remarks-batch-01",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t249.sam.moos-diary.pins-urn.photo-moos-family-seeds-media",
+   "src_urn": "urn:moos:session:sam.moos-diary",
+   "src_port": "pins-urn",
+   "tgt_urn": "urn:moos:ki:photo.moos-family-seeds-media",
+   "tgt_port": "pinned-by-session",
+   "rewrite_category": "WF19"
+  }
+ ]
+}

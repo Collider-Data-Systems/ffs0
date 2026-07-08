@@ -59,7 +59,7 @@ Owner-action (Sam, org settings UI unless noted):
 3. ~~**Downgrade MoosT2025 to least privilege**~~ **DONE T=248: account removed from the org entirely** (Sam) — verified: no access to any private repo, both teams solo.
 4. ~~**Enable security defaults** — secret scanning + push protection on public repos (free); dependabot alerts.~~ **DONE T=248 (~04:15, Zappa on Sam's explicit authorization):** `secret_scanning` + `secret_scanning_push_protection` = enabled and dependabot vulnerability-alerts on for **moos-kernel**, **moos-router**, **`.github`** (`PATCH /repos/<r>` + `PUT /repos/<r>/vulnerability-alerts`; re-read-verified `ss=enabled pp=enabled`). Reversible; free on public repos. (Executed via `gh api` with the owner token — needs repo-admin, which ownership grants; no `admin:org` required.)
 5. ~~**demo-repository** — archive or delete~~ **DONE T=248: archived** (reversible; its 2 stock Actions are inert on an archived repo).
-6. Decide: plan upgrade if server-side protection on ffs0 matters.
+6. ~~Decide: plan upgrade if server-side protection on ffs0 matters.~~ **DECIDED T=249 (Sam): accept Free-tier limits** — no plan upgrade. ffs0 stays guarded by local discipline + the T249 worktree-per-branch doctrine; org audit-log alerting (member-change etc.) stays platform-limited (90-day retention, no API on Free) = **accepted risk, documented**. Revisit only if a second human principal gets write access.
 
 Zappa-executable (queued):
 - **Q1** replicate project-sync.yml to moos-kernel + moos-router (after the ffs0 repoint merges).
