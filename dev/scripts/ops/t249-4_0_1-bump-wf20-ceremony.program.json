@@ -93,7 +93,7 @@
       },
       "specification": {
         "value": {
-          "change": "WF19 mutate_scope -= {status,turn_count,role,seat_role} (keep {local_t,context_urn}); WF07 mutate_scope -= {turn_count,role} (status RETAINED as-applied — sole grant for calendar_event/prg_task/program lifecycles, ffs0#139 review catch; full removal waits for per-tgt_type scopes)",
+          "change": "WF19 mutate_scope -= {status,turn_count,role,seat_role} (keep {local_t,context_urn}); WF07 mutate_scope -= {turn_count} only (status retained: sole calendar/prg_task/program lifecycle grant; role retained: agent_session.role live/non-deprecated — ffs0#139 reviews); full removal waits for per-tgt_type scopes",
           "added_in_version": "4.0.1",
           "class": "subtractive, no new authority",
           "source": "20260708-t249-governance-authority-note.md §6"
