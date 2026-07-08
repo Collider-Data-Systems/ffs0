@@ -1,0 +1,81 @@
+{
+ "_STATUS": "STAGED, Sam-gated \u2014 Round-1 fragments in the CORRECTED shapes (AG's same-port additional-pair drafts would shadow primaries and break ~48 live WF21 edges; see Zappa review, ffs0#140 t250 relay comment). Ceremony: proposed -> promoted -> merged + ONE reviewed ontology PR, per t249 pattern.",
+ "envelopes": [
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "node_urn": "urn:moos:grammar_fragment:d4b-wf21-purpose-src",
+   "type_id": "grammar_fragment",
+   "properties": {
+    "name": {
+     "value": "d4b WF21 purpose-as-src",
+     "mutability": "immutable"
+    },
+    "fragment_kind": {
+     "value": "port",
+     "mutability": "immutable"
+    },
+    "specification": {
+     "value": {
+      "change": "WF21 WF-level src_types += purpose (tgt_types already includes derivation). Enables purpose --causes--> derivation: the Phi(purpose) provenance leg for the persona court. NOT an additional pair \u2014 a same-port pair would shadow the primary and retype all live causal edges.",
+      "added_in_version": "4.0.2-proposed",
+      "source": "AG t250 note \u00a72 (intent) + Zappa shape review ffs0#140 (corrected mechanics) + baseline #143 \u00a75.2"
+     },
+     "mutability": "mutable"
+    },
+    "evidence_urns": {
+     "value": [
+      "urn:moos:session:sam.z440-cowork-workspace"
+     ],
+     "mutability": "mutable"
+    },
+    "status": {
+     "value": "proposed",
+     "mutability": "mutable"
+    },
+    "created_at": {
+     "value": "2026-07-08T22:40:00Z",
+     "mutability": "immutable"
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "node_urn": "urn:moos:grammar_fragment:g2b-wf01-manifold-tgt",
+   "type_id": "grammar_fragment",
+   "properties": {
+    "name": {
+     "value": "g2b WF01 manifold-as-tgt",
+     "mutability": "immutable"
+    },
+    "fragment_kind": {
+     "value": "port",
+     "mutability": "immutable"
+    },
+    "specification": {
+     "value": {
+      "change": "WF01 existing owns/owned-by additional pair (v313-9): tgt_types += manifold. Enables user/group --owns--> manifold as topology (mtdc ownership; currently owner_urn stamp only). purpose-as-owner REJECTED by doctrine: ownership stays outside the colimit diagram (G2 note).",
+      "added_in_version": "4.0.2-proposed",
+      "source": "AG t250 note \u00a72 (intent) + Zappa shape review ffs0#140 (corrected mechanics) + baseline #143 \u00a75.2"
+     },
+     "mutability": "mutable"
+    },
+    "evidence_urns": {
+     "value": [
+      "urn:moos:session:sam.z440-cowork-workspace"
+     ],
+     "mutability": "mutable"
+    },
+    "status": {
+     "value": "proposed",
+     "mutability": "mutable"
+    },
+    "created_at": {
+     "value": "2026-07-08T22:40:00Z",
+     "mutability": "immutable"
+    }
+   }
+  }
+ ]
+}
