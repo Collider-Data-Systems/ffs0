@@ -37,8 +37,11 @@ Relation-first, rewrite-first. No OOP framing (no objects-with-payload, no stati
 | Zappa | `claude-cowork.hp-z440` | `sam.z440-cowork-workspace` | `hp-z440.primary` :8000 | Claude Code / Cowork pane · Z440 · `ffs0.code-workspace` | moos-primary |
 | Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-primary-vscode-setup` | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 · `ffs0.code-workspace` | moos-primary |
 | Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-vscode-projection-lead` | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 · `ffs0.code-workspace` | moos-primary |
+| Φ(purpose)? | `menno` | `menno.birth-workspace` | `hp-z440.menno` :8001 | — | — |
 | Steinberger | `vscode.hp-z440.menno` | `sam.steinberger-seat` | `hp-z440.menno` :8001 *(emits `hp-z440.primary` pre-§M9)* | VS Code · Z440 (desktop 3) · `moos-router` | moos-primary *(opens-on `moos-menno`)* |
+| Φ(purpose)? | `lola` | `lola.birth-workspace` | `hp-z440.lola` :8002 | — | — |
 | Karpathy | `vscode.hp-z440.lola` | `sam.karpathy-seat` | `hp-z440.lola` :8002 *(emits `hp-z440.primary` pre-§M9)* | VS Code · Z440 (desktop 4) · `ffs0.code-workspace` | moos-primary *(opens-on `moos-lola`)* |
+| Φ(purpose)? | `moos` | `moos.birth-workspace` | `hp-z440.moos` :8003 | — | — |
 | John Lydon (governance) | `claude-cowork.hp-laptop` | `sam.governance` | `hp-laptop.primary` :8000 | Claude Desktop / Cowork · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
 | John Lydon (governance) | `claude-cowork.hp-laptop` | `sam.laptop-cowork-workspace` | `hp-laptop.primary` :8000 | Claude Desktop / Cowork · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
 | AG-laptop | `antigravity.hp-laptop` | `sam.laptop-moos-diary` | `hp-laptop.primary` :8000 | Antigravity · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |

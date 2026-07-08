@@ -1,0 +1,86 @@
+{
+ "envelopes": [
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:kernel:hp-z440.lola",
+   "node_urn": "urn:moos:session:lola.birth-workspace",
+   "type_id": "session",
+   "properties": {
+    "started_at": {
+     "value": "2026-07-08T15:55:00Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-08T15:55:00Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "local_t": {
+     "value": 0,
+     "mutability": "mutable",
+     "authority_scope": "kernel",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:lola",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "text": {
+     "value": "Birth workspace (R2, t249): lola's stage — minimal liveness kit per governance authority note §4. Owner-occupied; opens-on kernel:hp-z440.lola.",
+     "mutability": "mutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:kernel:hp-z440.lola",
+   "node_urn": "urn:moos:role:superadmin",
+   "type_id": "role",
+   "properties": {
+    "name": {
+     "value": "superadmin",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 1
+    }
+   }
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.lola",
+   "relation_urn": "urn:moos:rel:session.lola.birth-workspace.has-occupant.user.lola",
+   "src_urn": "urn:moos:session:lola.birth-workspace",
+   "src_port": "has-occupant",
+   "tgt_urn": "urn:moos:user:lola",
+   "tgt_port": "is-occupant-of",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.lola",
+   "relation_urn": "urn:moos:rel:user.lola.governs.role.superadmin",
+   "src_urn": "urn:moos:user:lola",
+   "src_port": "governs",
+   "tgt_urn": "urn:moos:role:superadmin",
+   "tgt_port": "governed-by",
+   "rewrite_category": "WF02"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.lola",
+   "relation_urn": "urn:moos:rel:session.lola.birth-workspace.opens-on.kernel.hp-z440-lola",
+   "src_urn": "urn:moos:session:lola.birth-workspace",
+   "src_port": "opens-on",
+   "tgt_urn": "urn:moos:kernel:hp-z440.lola",
+   "tgt_port": "occupied-by",
+   "rewrite_category": "WF19"
+  }
+ ]
+}
