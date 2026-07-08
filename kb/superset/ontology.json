@@ -20,7 +20,7 @@
         "g6b-orphan-property-adoption",
         "f1-source-type-values"
       ],
-      "summary": "ADDITIVE + one subtractive scope-prune. D4 lands: WF19 additional pair presents-as/presented-by (agent -> derivation) — persona = Phi(purpose) as derivation instance, presentation never authority (at-most-one per agent). G2 lands: WF18 additional pair spans/spanned-by (manifold -> purpose/program/session/channel/group) — the two-level-colimit cocone legs; manifold stops being relation-less. g6a prunes deprecated session fields (status/turn_count/role/seat_role) from WF19 + WF07 mutate_scope (removal scheduled since v3.10/v3.13). g6b adopts orphaned mutable properties into WF02 mutate_scope (capability.max_rewrites, agent.invocation_protocol, agent.board_id). f1 trues knowledge_item.source_type enum to live state (+photo,video,diary,keep,task,chat,doc; enforcement = Decision B 'enforce', sequenced AFTER this bump — moos-kernel lane). Prose-vs-gate parity note added to port_color_compatibility (kernel#50: declared_pairs_by_wf is NOT loaded; only matrix is). Decisions A (soft-hook-first) + B (enforce) recorded by Sam t249. STILL GATED: hard URN rewrite, P4 hard gate, D8 realizes."
+      "summary": "ADDITIVE + one subtractive scope-prune. D4 lands: WF19 additional pair presents-as/presented-by (agent -> derivation) — persona = Phi(purpose) as derivation instance, presentation never authority (at-most-one per agent). G2 lands: WF18 additional pair spans/spanned-by (manifold -> purpose/program/session/channel/group) — the two-level-colimit cocone legs; manifold stops being relation-less. g6a prunes deprecated session fields from mutate_scopes: WF19 -> [local_t, context_urn]; WF07 -> [status] (turn_count/role removed; status RETAINED as-applied — sole MUTATE grant for calendar_event/prg_task/program lifecycles, per ffs0#139 review; full removal waits for per-tgt_type scopes). g6b adopts orphaned mutable properties into WF02 mutate_scope (capability.max_rewrites, agent.invocation_protocol, agent.board_id). f1 trues knowledge_item.source_type enum to live state (+photo,video,diary,keep,task,chat,doc; enforcement = Decision B 'enforce', sequenced AFTER this bump — moos-kernel lane). Prose-vs-gate parity note added to port_color_compatibility (kernel#50: declared_pairs_by_wf is NOT loaded; only matrix is). Decisions A (soft-hook-first) + B (enforce) recorded by Sam t249. STILL GATED: hard URN rewrite, P4 hard gate, D8 realizes."
     },
     {
       "version": "4.0.0",
@@ -3908,8 +3908,11 @@
         }
       ],
       "authority": "principal or delegate",
-      "mutate_scope": [],
-      "sync_mode": "eventual"
+      "mutate_scope": [
+        "status"
+      ],
+      "sync_mode": "eventual",
+      "mutate_scope_note": "g6a as-applied (4.0.1): removed deprecated session-shaped turn_count/role only. status RETAINED — calendar_event/prg_task/program lifecycles have no other WF granting it (Copilot catch on ffs0#139; g6a's own open-note anticipated the type-blind-scope hazard). Full removal waits for per-tgt_type scopes."
     },
     {
       "id": "WF08",
