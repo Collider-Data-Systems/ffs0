@@ -1,0 +1,267 @@
+[
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "node_urn": "urn:moos:grammar_fragment:d4-presents-as",
+    "type_id": "grammar_fragment",
+    "properties": {
+      "name": {
+        "value": "d4 presents-as pair",
+        "mutability": "immutable"
+      },
+      "fragment_kind": {
+        "value": "port",
+        "mutability": "immutable"
+      },
+      "specification": {
+        "value": {
+          "change": "WF19 additional_port_pair presents-as/presented-by, agent -> derivation; persona = Phi(purpose) as derivation instance (D3); presentation never authority; at-most-one per agent",
+          "added_in_version": "4.0.1",
+          "source": "20260708-t249-karpathy-identity-shape-note.md §1",
+          "conjectures_excluded": "C2 counit reading stays conjecture"
+        },
+        "mutability": "mutable"
+      },
+      "evidence_urns": {
+        "value": [
+          "urn:moos:session:sam.z440-cowork-workspace"
+        ],
+        "mutability": "mutable"
+      },
+      "status": {
+        "value": "proposed",
+        "mutability": "mutable"
+      },
+      "created_at": {
+        "value": "2026-07-08T16:15:00Z",
+        "mutability": "immutable"
+      }
+    }
+  },
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "node_urn": "urn:moos:grammar_fragment:g2-manifold-spans",
+    "type_id": "grammar_fragment",
+    "properties": {
+      "name": {
+        "value": "g2 manifold spans pair",
+        "mutability": "immutable"
+      },
+      "fragment_kind": {
+        "value": "port",
+        "mutability": "immutable"
+      },
+      "specification": {
+        "value": {
+          "change": "WF18 src_types += manifold; additional_port_pair spans/spanned-by, manifold -> {purpose,program,session,channel,group}; two-level-colimit cocone legs (t218-E4)",
+          "added_in_version": "4.0.1",
+          "source": "20260708-t249-karpathy-identity-shape-note.md §2",
+          "ownership_note": "owner stays WF01/owner_urn — not a spanning leg (C4)"
+        },
+        "mutability": "mutable"
+      },
+      "evidence_urns": {
+        "value": [
+          "urn:moos:session:sam.z440-cowork-workspace"
+        ],
+        "mutability": "mutable"
+      },
+      "status": {
+        "value": "proposed",
+        "mutability": "mutable"
+      },
+      "created_at": {
+        "value": "2026-07-08T16:15:00Z",
+        "mutability": "immutable"
+      }
+    }
+  },
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "node_urn": "urn:moos:grammar_fragment:g6a-mutate-scope-prune",
+    "type_id": "grammar_fragment",
+    "properties": {
+      "name": {
+        "value": "g6a mutate_scope prune",
+        "mutability": "immutable"
+      },
+      "fragment_kind": {
+        "value": "wf_clause",
+        "mutability": "immutable"
+      },
+      "specification": {
+        "value": {
+          "change": "WF19 mutate_scope -= {status,turn_count,role,seat_role} (keep {local_t,context_urn}); WF07 mutate_scope -= {turn_count} only (status retained: sole calendar/prg_task/program lifecycle grant; role retained: agent_session.role live/non-deprecated — ffs0#139 reviews); full removal waits for per-tgt_type scopes",
+          "added_in_version": "4.0.1",
+          "class": "subtractive, no new authority",
+          "source": "20260708-t249-governance-authority-note.md §6"
+        },
+        "mutability": "mutable"
+      },
+      "evidence_urns": {
+        "value": [
+          "urn:moos:session:sam.z440-cowork-workspace"
+        ],
+        "mutability": "mutable"
+      },
+      "status": {
+        "value": "proposed",
+        "mutability": "mutable"
+      },
+      "created_at": {
+        "value": "2026-07-08T16:15:00Z",
+        "mutability": "immutable"
+      }
+    }
+  },
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "node_urn": "urn:moos:grammar_fragment:g6b-orphan-property-adoption",
+    "type_id": "grammar_fragment",
+    "properties": {
+      "name": {
+        "value": "g6b orphan property adoption",
+        "mutability": "immutable"
+      },
+      "fragment_kind": {
+        "value": "wf_clause",
+        "mutability": "immutable"
+      },
+      "specification": {
+        "value": {
+          "change": "WF02 mutate_scope += {max_rewrites, invocation_protocol, board_id} — orphaned mutable/owner properties gain a legal MUTATE home",
+          "added_in_version": "4.0.1",
+          "class": "mild authority widening, reviewed separately from g6a",
+          "source": "20260708-t249-governance-authority-note.md §6"
+        },
+        "mutability": "mutable"
+      },
+      "evidence_urns": {
+        "value": [
+          "urn:moos:session:sam.z440-cowork-workspace"
+        ],
+        "mutability": "mutable"
+      },
+      "status": {
+        "value": "proposed",
+        "mutability": "mutable"
+      },
+      "created_at": {
+        "value": "2026-07-08T16:15:00Z",
+        "mutability": "immutable"
+      }
+    }
+  },
+  {
+    "rewrite_type": "ADD",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "node_urn": "urn:moos:grammar_fragment:f1-source-type-values",
+    "type_id": "grammar_fragment",
+    "properties": {
+      "name": {
+        "value": "f1 source_type enum true-up",
+        "mutability": "immutable"
+      },
+      "fragment_kind": {
+        "value": "property",
+        "mutability": "immutable"
+      },
+      "specification": {
+        "value": {
+          "change": "knowledge_item.source_type enum += {photo,video,diary,keep,task,chat,doc} — registry trued to live state (photo/video existed unenforced since t244)",
+          "added_in_version": "4.0.1",
+          "enforcement": "Decision B 'enforce' (Sam t249), kernel-side AFTER this bump — prose-vs-gate parity",
+          "source": "ffs0#138 fragment 5"
+        },
+        "mutability": "mutable"
+      },
+      "evidence_urns": {
+        "value": [
+          "urn:moos:session:sam.z440-cowork-workspace"
+        ],
+        "mutability": "mutable"
+      },
+      "status": {
+        "value": "proposed",
+        "mutability": "mutable"
+      },
+      "created_at": {
+        "value": "2026-07-08T16:15:00Z",
+        "mutability": "immutable"
+      }
+    }
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:d4-presents-as",
+    "field": "status",
+    "new_value": "promoted"
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:g2-manifold-spans",
+    "field": "status",
+    "new_value": "promoted"
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:g6a-mutate-scope-prune",
+    "field": "status",
+    "new_value": "promoted"
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:g6b-orphan-property-adoption",
+    "field": "status",
+    "new_value": "promoted"
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:f1-source-type-values",
+    "field": "status",
+    "new_value": "promoted"
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:d4-presents-as",
+    "field": "status",
+    "new_value": "merged"
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:g2-manifold-spans",
+    "field": "status",
+    "new_value": "merged"
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:g6a-mutate-scope-prune",
+    "field": "status",
+    "new_value": "merged"
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:g6b-orphan-property-adoption",
+    "field": "status",
+    "new_value": "merged"
+  },
+  {
+    "rewrite_type": "MUTATE",
+    "actor": "urn:moos:kernel:hp-z440.primary",
+    "target_urn": "urn:moos:grammar_fragment:f1-source-type-values",
+    "field": "status",
+    "new_value": "merged"
+  }
+]
