@@ -148,6 +148,17 @@ def region_agents(region_txt):
             ags.add(cells[1].strip("`"))
     return ags
 
+def region_seat_ids(region_txt):
+    """Return a set of (agent, workspace) identity tuples from a fenced region.
+    An agent can legitimately occupy multiple rows (multiple workspaces), so
+    comparing only agent names misses dropped rows for multi-seat agents."""
+    ids = set()
+    for line in region_txt.splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) >= 3 and cells[1].startswith("`") and not cells[0].lower().startswith("persona"):
+            ids.add((cells[1].strip("`"), cells[2].strip("`")))
+    return ids
+
 # ---------- legacy semantic check (pre-fence tables) ----------
 def parse_authored_seats(txt):
     m = re.search(r"## Seats.*?\n(\|.*?)(?:\n\n|\n##)", txt, re.S)
@@ -235,9 +246,9 @@ def main():
     if a.mode == "write":
         if span:
             old_region = txt[span[0]:span[1]]
-            dropped = region_agents(old_region) - {r["agent"] for r in hg_rows}
+            dropped = region_seat_ids(old_region) - {(r["agent"], r["workspace"]) for r in hg_rows}
             if dropped and not a.allow_shrink:
-                print("WRITE REFUSED: fold would drop previously-generated seat(s): %s" % ", ".join(sorted(dropped)))
+                print("WRITE REFUSED: fold would drop previously-generated seat(s): %s" % ", ".join(sorted("%s/%s" % t for t in dropped)))
                 print("(partial fan-in? bring the kernel up, or pass --allow-shrink deliberately)")
                 return 2
             new_txt = txt[:span[0]] + region + txt[span[1]:]
@@ -261,10 +272,10 @@ def main():
             print("DRIFT CHECK: PASS — fenced region is byte-identical to the HG fold (%d rows)." % len(hg_rows))
             return 0
         if primary_err is not None:
-            dropped = region_agents(committed) - {r["agent"] for r in hg_rows}
+            dropped = region_seat_ids(committed) - {(r["agent"], r["workspace"]) for r in hg_rows}
             if dropped:
                 print("DRIFT CHECK: ERROR — partial fan-in: FALLBACK fold (%s) is missing previously-generated seat(s): %s"
-                      % (src, ", ".join(sorted(dropped))))
+                      % (src, ", ".join(sorted("%s/%s" % t for t in dropped))))
                 print("partial fan-in — bring the router up (%s) and re-run; refusing to propose row deletions from a partial source." % a.base_url)
                 return 2
         import difflib
