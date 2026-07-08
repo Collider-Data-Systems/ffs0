@@ -8,7 +8,10 @@ drift check (spec section 4).
 
   --mode check   (default)  fold from HG; if fences exist, byte-compare the fenced region
                             against the regenerated table (exit 1 on drift); else run the
-                            legacy semantic check against the hand-authored table
+                            legacy semantic check against the hand-authored table. If the
+                            fold came from --fallback-url (router down) and drops
+                            previously-generated seats, that is ERROR exit 2 (partial
+                            fan-in — bring the router up), never proposed as row deletions
   --mode render             print the generated seat-table markdown + write evidence sidecar
   --mode write              the explicit boundary act: replace the fenced region in AGENTS.md
                             (first write replaces the hand-authored seat table and installs
@@ -51,10 +54,15 @@ def read_state(base_url):
     return nodes, rels
 
 def fold_from_hg(base_url, fallback_url, topo, disp):
-    """One row per WF19 has-occupant edge (spec section 3). Returns (rows, source_url)."""
+    """One row per WF19 has-occupant edge (spec section 3). Returns (rows, source_url,
+    primary_err) — primary_err is None when the router fan-in served the read, else the
+    exception that forced the fallback (a fallback fold sees only the local engine, so
+    cross-kernel seats are missing — never adjudicate a shrink from it)."""
+    primary_err = None
     try:
         nodes, rels = read_state(base_url); src = base_url
-    except Exception:
+    except Exception as e:
+        primary_err = e
         nodes, rels = read_state(fallback_url); src = fallback_url
     by_port = lambda p: [r for r in rels if r.get("src_port") == p]
     opens_on    = {r["src_urn"]: r["tgt_urn"] for r in by_port("opens-on")}
@@ -96,7 +104,7 @@ def fold_from_hg(base_url, fallback_url, topo, disp):
             "_sort": (host_order.get(host, 99), kernel_port(k_alias), alias(ws)),
         })
     rows.sort(key=lambda r: r["_sort"])
-    return rows, src
+    return rows, src, primary_err
 
 def render_region(rows):
     """The fenced generated block. Deterministic; no timestamps (spec section 4)."""
@@ -139,6 +147,17 @@ def region_agents(region_txt):
         if len(cells) >= 2 and cells[1].startswith("`") and not cells[0].lower().startswith("persona"):
             ags.add(cells[1].strip("`"))
     return ags
+
+def region_seat_ids(region_txt):
+    """Return a set of (agent, workspace) identity tuples from a fenced region.
+    An agent can legitimately occupy multiple rows (multiple workspaces), so
+    comparing only agent names misses dropped rows for multi-seat agents."""
+    ids = set()
+    for line in region_txt.splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) >= 3 and cells[1].startswith("`") and not cells[0].lower().startswith("persona"):
+            ids.add((cells[1].strip("`"), cells[2].strip("`")))
+    return ids
 
 # ---------- legacy semantic check (pre-fence tables) ----------
 def parse_authored_seats(txt):
@@ -196,7 +215,7 @@ def main():
     span = find_region(txt)
 
     try:
-        hg_rows, src = fold_from_hg(a.base_url, a.fallback_url, topo, disp)
+        hg_rows, src, primary_err = fold_from_hg(a.base_url, a.fallback_url, topo, disp)
     except Exception as e:
         if a.mode == "check" and a.offline_ok:
             print("# moos-config-projection (check, OFFLINE) — no engine/router reachable (%s)" % e)
@@ -215,6 +234,10 @@ def main():
               open(os.path.join(a.out, "seat-table.folded.json"), "w", encoding="utf-8"), indent=1)
 
     print("# moos-config-projection (%s) — source %s" % (a.mode, src))
+    if primary_err is not None:
+        print("!! PARTIAL FAN-IN: primary source %s FAILED (%s: %s)" %
+              (a.base_url, type(primary_err).__name__, primary_err))
+        print("!! folded from FALLBACK %s — cross-kernel seats are missing from this fold" % src)
     print("folded %d seat rows from HG has-occupant (evidence -> %s)\n" % (len(hg_rows), os.path.relpath(a.out, REPO)))
 
     if a.mode == "render":
@@ -223,9 +246,9 @@ def main():
     if a.mode == "write":
         if span:
             old_region = txt[span[0]:span[1]]
-            dropped = region_agents(old_region) - {r["agent"] for r in hg_rows}
+            dropped = region_seat_ids(old_region) - {(r["agent"], r["workspace"]) for r in hg_rows}
             if dropped and not a.allow_shrink:
-                print("WRITE REFUSED: fold would drop previously-generated seat(s): %s" % ", ".join(sorted(dropped)))
+                print("WRITE REFUSED: fold would drop previously-generated seat(s): %s" % ", ".join(sorted("%s/%s" % t for t in dropped)))
                 print("(partial fan-in? bring the kernel up, or pass --allow-shrink deliberately)")
                 return 2
             new_txt = txt[:span[0]] + region + txt[span[1]:]
@@ -248,6 +271,13 @@ def main():
         if committed == region:
             print("DRIFT CHECK: PASS — fenced region is byte-identical to the HG fold (%d rows)." % len(hg_rows))
             return 0
+        if primary_err is not None:
+            dropped = region_seat_ids(committed) - {(r["agent"], r["workspace"]) for r in hg_rows}
+            if dropped:
+                print("DRIFT CHECK: ERROR — partial fan-in: FALLBACK fold (%s) is missing previously-generated seat(s): %s"
+                      % (src, ", ".join(sorted("%s/%s" % t for t in dropped))))
+                print("partial fan-in — bring the router up (%s) and re-run; refusing to propose row deletions from a partial source." % a.base_url)
+                return 2
         import difflib
         diff = list(difflib.unified_diff(committed.splitlines(), region.splitlines(),
                                          "AGENTS.md (committed)", "HG fold (regenerated)", lineterm=""))
