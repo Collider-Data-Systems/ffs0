@@ -66,8 +66,8 @@ Common drift: a session URN gets renamed via doctrine but the running-state stil
 ### Pass 4 — chronology monotonicity
 
 Walk all top-level `> Updated:` entries in order:
-- T-day should be monotonic non-decreasing top→bottom (newest first)
-- CEST timestamps within the same T-day should also monotonic non-decreasing top→bottom
+- T-day should be monotonic non-INCREASING top→bottom (the file is newest-first; PR #144 Copilot wording fix)
+- timestamps within the same T-day should likewise be non-increasing top→bottom
 - Flag inversions
 - **Chronology SOT is the COMMIT CLOCK, not the prose self-stamp** (t249 chronology-drift finding, `94f4edc`: self-stamps ran +0:58→+3:32 ahead of commit clocks in one day and crossed into immutable authored `created_at`). When adjudicating an inversion, resolve each entry's true time via `git log --format="%h %ad" --date=format:"%H:%M" -- kb/superset/running-state.md` and match entries to commits; the self-stamp is approximate unless it says "wall-clock verified". For T=249 specifically the check degrades to ordinal-only (grandfathered drift).
 
