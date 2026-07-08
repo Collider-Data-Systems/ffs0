@@ -1,13 +1,27 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "4.0.0",
-  "t_day": 231,
+  "version": "4.0.1",
+  "t_day": 249,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md. T=173 round-12 v3.13.0: four promoted grammar_fragments materialized into ontology — v313-6 (WF02 delegates-to/delegated-by additional port pair for role→role capability delegation), v313-7 (new S2 `group` node type — collective principal, extends principalTypes from {user, agent} to {user, agent, group}), v313-8 (channel.kind enum expansion: +calendar, +task-list, +cloud-storage, +vcs, +project-board), v313-9 (WF01 owns/owned-by additional port pair — group|user source owning kernel|session|purpose|program|channel|agent targets). WF19 has-occupant tgt_types extends to include `group` (session occupancy by a collective principal). See kb/research/session/20260422-t172-wolframs-court-social-topology.md §3 + T=173 batch on Z440 kernel 0 log_seq 285-288 (WF20 promotion ceremony for the 4 fragments).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "dev/reference/research-archive/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "4.0.1",
+      "date": "2026-07-08",
+      "t_day": 249,
+      "round": "t249 identity-relations WF20 round (collected; ffs0#138 package)",
+      "fragments_promoted": [
+        "d4-presents-as",
+        "g2-manifold-spans",
+        "g6a-mutate-scope-prune",
+        "g6b-orphan-property-adoption",
+        "f1-source-type-values"
+      ],
+      "summary": "ADDITIVE + one subtractive scope-prune. D4 lands: WF19 additional pair presents-as/presented-by (agent -> derivation) — persona = Phi(purpose) as derivation instance, presentation never authority (at-most-one per agent). G2 lands: WF18 additional pair spans/spanned-by (manifold -> purpose/program/session/channel/group) — the two-level-colimit cocone legs; manifold stops being relation-less. g6a prunes deprecated session fields (status/turn_count/role/seat_role) from WF19 + WF07 mutate_scope (removal scheduled since v3.10/v3.13). g6b adopts orphaned mutable properties into WF02 mutate_scope (capability.max_rewrites, agent.invocation_protocol, agent.board_id). f1 trues knowledge_item.source_type enum to live state (+photo,video,diary,keep,task,chat,doc; enforcement = Decision B 'enforce', sequenced AFTER this bump — moos-kernel lane). Prose-vs-gate parity note added to port_color_compatibility (kernel#50: declared_pairs_by_wf is NOT loaded; only matrix is). Decisions A (soft-hook-first) + B (enforce) recorded by Sam t249. STILL GATED: hard URN rewrite, P4 hard gate, D8 realizes."
+    },
     {
       "version": "4.0.0",
       "date": "2026-06-20",
@@ -1405,8 +1419,16 @@
               "website",
               "rss",
               "email",
-              "gdrive"
-            ]
+              "gdrive",
+              "photo",
+              "video",
+              "diary",
+              "keep",
+              "task",
+              "chat",
+              "doc"
+            ],
+            "note": "Enum trued to live state t249 (photo/video existed unenforced since t244). Enforcement at ADD = Decision B 'enforce' (Sam t249), lands kernel-side AFTER this bump (moos-kernel lane) — prose-vs-gate parity rule, ffs0#138."
           },
           "language": {
             "mutability": "immutable",
@@ -3136,7 +3158,7 @@
     ]
   },
   "port_color_compatibility": {
-    "description": "Which source→target port color pairs produce valid relations. Any pair not listed is rejected at validation time.",
+    "description": "Port-color compatibility. ENFORCEMENT REALITY (t249, moos-kernel#50): only `matrix` is loaded by operad/loader.go (into PortColorMatrix, the §12.2 color gate); port->color name mapping is currently hardcoded kernel-side and unknown ports SKIP the color gate permissively (fail-closed pending kernel#50). Pair DECLARATION is enforced from rewrite_categories[*].additional_port_pairs, not from this section.",
     "port_colors": [
       "auth",
       "topology",
@@ -3510,7 +3532,8 @@
         "tgt_port": "emitted-by",
         "constraint": "contract_urn required — channel's kind declares the emission contract"
       }
-    ]
+    ],
+    "declared_pairs_by_wf_note": "AUTHORED INTENT, NOT LOADED (t249 parity audit, kernel#50): this list is not consumed by the kernel; the WF19 rows claims-session/session-claimed-by and transfers-to/transferred-from were never declared on WF19 and are retained here as history only. The loaded source of truth for pair declaration is rewrite_categories[*].additional_port_pairs."
   },
   "ci2_projection_registry": {
     "description": "Registry of CI-2 compliant structure-preserving projections. Projections not listed here are lossy — valid for S4 display only, not for authority.",
@@ -3737,7 +3760,10 @@
         "transport_type",
         "model",
         "system_prompt",
-        "temperature"
+        "temperature",
+        "max_rewrites",
+        "invocation_protocol",
+        "board_id"
       ],
       "sync_mode": "strict",
       "additional_port_pairs": [
@@ -3882,11 +3908,7 @@
         }
       ],
       "authority": "principal or delegate",
-      "mutate_scope": [
-        "status",
-        "turn_count",
-        "role"
-      ],
+      "mutate_scope": [],
       "sync_mode": "eventual"
     },
     {
@@ -4175,7 +4197,8 @@
       ],
       "src_types": [
         "program",
-        "purpose"
+        "purpose",
+        "manifold"
       ],
       "tgt_types": [
         "prg_task",
@@ -4199,7 +4222,26 @@
         "deadline_t",
         "completed_t"
       ],
-      "sync_mode": "eventual"
+      "sync_mode": "eventual",
+      "additional_port_pairs": [
+        {
+          "src_port": "spans",
+          "tgt_port": "spanned-by",
+          "src_types": [
+            "manifold"
+          ],
+          "tgt_types": [
+            "purpose",
+            "program",
+            "session",
+            "channel",
+            "group"
+          ],
+          "description": "G2 manifold spanning (t249) — the cocone legs of the two-level colimit (t218-E4). A manifold spans the purposes/programs/sessions/channels/groups sharing its identity domain. Many-to-many; no at-most-one constraint. Ownership stays WF01/owner_urn — the owner is not inside the colimit diagram.",
+          "added_in_version": "4.0.1",
+          "promotes_fragment": "urn:moos:grammar_fragment:g2-manifold-spans"
+        }
+      ]
     },
     {
       "id": "WF19",
@@ -4221,7 +4263,8 @@
         "session",
         "agent_session",
         "user",
-        "agent"
+        "agent",
+        "derivation"
       ],
       "src_port": "opens-on",
       "tgt_port": "occupied-by",
@@ -4292,14 +4335,23 @@
           "description": "§M-purpose session has-purpose anchor. Session has at most one active purpose at any instant; repurposing = MUTATE of the LINK target_urn (atomic; preserves session identity per CI-3). Reifies the session's why as a typed graph edge instead of routing through WF18 program composition. Round-10 doctrine seed; promoted T=185 round-16 ceremony.",
           "added_in_version": "3.16.0",
           "promotes_fragment": "urn:moos:grammar_fragment:d22-1-session-has-purpose"
+        },
+        {
+          "src_port": "presents-as",
+          "tgt_port": "presented-by",
+          "src_types": [
+            "agent"
+          ],
+          "tgt_types": [
+            "derivation"
+          ],
+          "description": "D4 persona presentation (t249). Agent presents-as a persona derivation (persona = Phi(purpose), D3). Presentation only, never authority — does not participate in §M11/§M12 gate resolution. At-most-one per agent; rotation = re-LINK.",
+          "added_in_version": "4.0.1",
+          "promotes_fragment": "urn:moos:grammar_fragment:d4-presents-as"
         }
       ],
       "authority": "kernel",
       "mutate_scope": [
-        "status",
-        "turn_count",
-        "role",
-        "seat_role",
         "local_t",
         "context_urn"
       ],
