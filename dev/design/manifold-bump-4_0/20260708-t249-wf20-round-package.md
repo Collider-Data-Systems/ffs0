@@ -1,7 +1,7 @@
 # The collected WF20 round — package for Sam's review (t249)
 
 > Zappa / Cowork-Z440 · the cargo manifest of everything the t248-t249 identity commission staged.
-> **GATE: this document authorizes nothing.** It assembles; Sam's review + go authorizes. Execution
+> **GATE: this document authorizes nothing.** It assembles; Sam's review + go authorize the execution
 > shape after approval: ONE reviewed PR (ontology.json additive bump + this round's fragment
 > ceremony on `:8000`, per the t231 `v400-*` precedent) followed by the gated HG batches.
 > Sources cited per item — specs live in the lane notes, not restated here.
