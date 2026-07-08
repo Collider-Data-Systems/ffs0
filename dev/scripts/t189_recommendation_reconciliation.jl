@@ -243,11 +243,16 @@ function write_markdown(path::AbstractString, report)
         println(io, "- Calendar event session pins: ", summary["calendar_event_relations_applied"], "/", summary["calendar_event_relations_total"], " applied")
         println(io, "- Calendar source anchors: ", summary["calendar_anchor_relations_applied"], "/", summary["calendar_anchor_relations_total"], " applied")
         println(io, "- Deferred relations: ", summary["deferred_relations"])
+        dbp_nodes = get(report["counts"], "node_calendar-event_deferred_by_policy", 0)
+        dbp_pins = get(report["counts"], "relation_calendar-event_deferred_by_policy", 0)
+        dbp_anchors = get(report["counts"], "relation_calendar-anchor_deferred_by_policy", 0)
+        println(io, "- Deferred-by-policy (T=245-247 never-apply ruling): ", dbp_nodes, " calendar nodes / ", dbp_pins, " session pins / ", dbp_anchors, " source anchors")
         println(io)
         println(io, "## Pending Calendar Event Nodes")
         pending = [row for row in report["nodes"] if row["bucket"] == "calendar-event" && row["status"] == "pending"]
+        pending_policy_count = count(row -> row["bucket"] == "calendar-event" && row["status"] == "deferred-by-policy", report["nodes"])
         if isempty(pending)
-            println(io, "- <none>")
+            pending_policy_count > 0 ? println(io, "- <none pending> (", pending_policy_count, " deferred-by-policy, never-apply ruling)") : println(io, "- <none>")
         else
             for row in pending
                 println(io, "- `", row["urn"], "`")
@@ -257,8 +262,9 @@ function write_markdown(path::AbstractString, report)
 
         println(io, "## Pending Calendar Event Session Pins")
         pending_pins = [row for row in report["relations"] if row["bucket"] == "calendar-event" && row["status"] == "pending"]
+        pending_pins_policy_count = count(row -> row["bucket"] == "calendar-event" && row["status"] == "deferred-by-policy", report["relations"])
         if isempty(pending_pins)
-            println(io, "- <none>")
+            pending_pins_policy_count > 0 ? println(io, "- <none pending> (", pending_pins_policy_count, " deferred-by-policy, never-apply ruling)") : println(io, "- <none>")
         else
             for row in pending_pins
                 println(io, "- `", row["rewrite_category"], "` ", row["src_port"], " -> ", row["tgt_port"], ": `", row["src_urn"], "` -> `", row["tgt_urn"], "`")
@@ -268,8 +274,9 @@ function write_markdown(path::AbstractString, report)
 
         println(io, "## Pending Calendar Source Anchors")
         pending_anchors = [row for row in report["relations"] if row["bucket"] == "calendar-anchor" && row["status"] == "pending"]
+        pending_anchors_policy_count = count(row -> row["bucket"] == "calendar-anchor" && row["status"] == "deferred-by-policy", report["relations"])
         if isempty(pending_anchors)
-            println(io, "- <none>")
+            pending_anchors_policy_count > 0 ? println(io, "- <none pending> (", pending_anchors_policy_count, " deferred-by-policy, never-apply ruling)") : println(io, "- <none>")
         else
             for row in pending_anchors
                 println(io, "- `", row["rewrite_category"], "` ", row["src_port"], " -> ", row["tgt_port"], ": `", row["src_urn"], "` -> `", row["tgt_urn"], "`")

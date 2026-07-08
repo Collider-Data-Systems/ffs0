@@ -693,7 +693,9 @@
         "percent": 22.0
       },
       "source": "live board #4 GraphQL count (HG URN field non-empty), 2026-07-08 23:05 CEST — t250-baseline finding 3; refresh via the same query or Sync-ProjectBoard.ps1 -Audit at round close",
-      "note": "replaces the stale T190 constant (31/57); the legacy deficit is pre-bridge-rule items — coverage discipline holds since T=247"
+      "note": "replaces the stale T190 constant (31/57); the legacy deficit is pre-bridge-rule items — coverage discipline holds since T=247 | known_populated/known_total retained for surface_context_atlas.jl compatibility (PR #144 Copilot catch)",
+      "known_populated": 53,
+      "known_total": 133
     },
     "sync_policy": "Inventory and HG URN repair only. Do not G-sync Project Status into HG until row identity is reliable."
   }
