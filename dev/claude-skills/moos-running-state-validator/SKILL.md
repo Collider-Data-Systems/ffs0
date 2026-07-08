@@ -69,6 +69,14 @@ Walk all top-level `> Updated:` entries in order:
 - T-day should be monotonic non-decreasing top→bottom (newest first)
 - CEST timestamps within the same T-day should also monotonic non-decreasing top→bottom
 - Flag inversions
+- **Chronology SOT is the COMMIT CLOCK, not the prose self-stamp** (t249 chronology-drift finding, `94f4edc`: self-stamps ran +0:58→+3:32 ahead of commit clocks in one day and crossed into immutable authored `created_at`). When adjudicating an inversion, resolve each entry's true time via `git log --format="%h %ad" --date=format:"%H:%M" -- kb/superset/running-state.md` and match entries to commits; the self-stamp is approximate unless it says "wall-clock verified". For T=249 specifically the check degrades to ordinal-only (grandfathered drift).
+
+### Pass 4b — fused / headerless entries (t250-baseline finding 1)
+
+A bad merge or careless edit can destroy a `> Updated:` header, silently fusing one entry's body onto the tail of another (real case: commit `0d0a084` fused the T=248 ~21:15 entry onto the T=249 ~12:45 entry; restored `e69f707`). Detect:
+- Count `> Updated:` headers vs running-state-touching commits whose subject starts `T=<n>` over the same window — a deficit means a fused or dropped entry.
+- Grep entry bodies for a second `**` bold-header pattern mid-paragraph (`. — <topic>: ` followed by prose that reads like an entry opening, or a stray `).**` closing an unopened bold) — the fusion signature.
+- On hit: recover the original header from the commit that introduced the entry (`git log -S "<distinctive phrase>"`), restore it with a dated restoration note, never re-type the body.
 
 ### Pass 5 — orphan-citation check
 

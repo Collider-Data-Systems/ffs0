@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$BaseUrl = "http://localhost:8000",
     [string]$Julia = $env:JULIA_EXE,
     [string]$SessionUrn = "",

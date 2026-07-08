@@ -55,6 +55,7 @@ Putting `type_id` only inside `properties` yields `unknown type_id ""`. Fix: put
 **Gotcha #2 — every immutable property declared in the type spec must be present.** `ValidateADD` iterates `spec.Properties` and errors on any `mutability: "immutable"` that isn't in `env.Properties`.
 - For most types that means at least `owner_urn` and `created_at`.
 - `created_at` is an **ontology-declared immutable property with a value you supply** (e.g. `"2026-04-18T16:00:00Z"`) — it is NOT runtime-injected. The node record has a separate `CreatedAt` timestamp the runtime sets, but the *property* is your responsibility.
+- **Wall-clock discipline (t249 chronology finding, remediation (a)):** before stamping `created_at` (or any authored time), CHECK THE HOST CLOCK — `date -u "+%Y-%m-%dT%H:%M:00Z"` / `Get-Date -AsUTC -Format "yyyy-MM-ddTHH:mm:00Z"` — and use that value. Never estimate, never copy a stamp from earlier in the conversation, and never write local time with a `Z` suffix. Real failure (t249, `94f4edc`): the H1/D4-G2 batch authored `created_at: 19:50:00Z` while the envelopes applied at 16:35Z — local-time-written-as-UTC, now immutable in the fold. Immutable means a slip cannot be MUTATE-corrected; only a re-ADD migration window fixes it.
 - Extra properties not in the spec are allowed and stored.
 
 **Gotcha #3 — `actor`, not `actor_urn`.** JSON key is `"actor"` per the struct tag.

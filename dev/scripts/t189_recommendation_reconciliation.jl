@@ -13,6 +13,11 @@ const DEFAULT_MARKDOWN_OUT = "tmp/projections/session_pipeline/recommendations/t
 
 const GROUPED_SCOPES = Set(["grouped"])
 const CALENDAR_SCOPES = Set(["individual-calendar-event"])
+# T=245-247 Sam ruling: "archive the 41-event T189 cal batch (never apply)". Encoded t249
+# (t250-baseline finding 4): calendar candidates are DEFERRED-BY-POLICY, not pending — the
+# planner keeps regenerating them as historical-lens output, but they will never be applied
+# and must not hold the session-pipeline gate at warn forever.
+const NEVER_APPLY_BUCKETS = Set(["calendar-event", "calendar-anchor"])
 const SAFE_GROUPED_WFS = Set(["WF01", "WF18", "WF19", "WF21"])
 
 function object_value(obj, name::Symbol, default=nothing)
@@ -105,13 +110,16 @@ function classify_relation(candidate)
     return "other"
 end
 
-function count_bucket!(counts, bucket::AbstractString, present::Bool)
+function count_bucket!(counts, bucket::AbstractString, present::Bool, policy_deferred::Bool=false)
     total_key = string(bucket, "_total")
     applied_key = string(bucket, "_applied")
     pending_key = string(bucket, "_pending")
+    policy_key = string(bucket, "_deferred_by_policy")
     counts[total_key] = get(counts, total_key, 0) + 1
     if present
         counts[applied_key] = get(counts, applied_key, 0) + 1
+    elseif policy_deferred
+        counts[policy_key] = get(counts, policy_key, 0) + 1
     else
         counts[pending_key] = get(counts, pending_key, 0) + 1
     end
@@ -128,19 +136,21 @@ function reconcile(plan, nodes, relations; health=Dict(), generated_at::String=f
         urn = string(object_value(candidate, :urn, ""))
         bucket = classify_node(candidate)
         present = urn in node_set
-        count_bucket!(counts, string("node_", bucket), present)
+        policy = bucket in NEVER_APPLY_BUCKETS
+        count_bucket!(counts, string("node_", bucket), present, policy)
         push!(node_rows, Dict(
             "urn" => urn,
             "type_id" => string(object_value(candidate, :type_id, "")),
             "bucket" => bucket,
-            "status" => present ? "applied" : "pending",
+            "status" => present ? "applied" : (policy ? "deferred-by-policy" : "pending"),
         ))
     end
 
     for candidate in object_value(plan, :candidate_relations, Any[])
         bucket = classify_relation(candidate)
         present = relation_key(candidate) in relation_set
-        count_bucket!(counts, string("relation_", bucket), present)
+        policy = bucket in NEVER_APPLY_BUCKETS
+        count_bucket!(counts, string("relation_", bucket), present, policy)
         push!(relation_rows, Dict(
             "rewrite_category" => string(object_value(candidate, :rewrite_category, "")),
             "src_urn" => string(object_value(candidate, :src_urn, "")),
@@ -148,7 +158,7 @@ function reconcile(plan, nodes, relations; health=Dict(), generated_at::String=f
             "tgt_urn" => string(object_value(candidate, :tgt_urn, "")),
             "tgt_port" => string(object_value(candidate, :tgt_port, "")),
             "bucket" => bucket,
-            "status" => present ? "applied" : "pending",
+            "status" => present ? "applied" : (policy ? "deferred-by-policy" : "pending"),
         ))
     end
 
@@ -204,6 +214,7 @@ function reconcile(plan, nodes, relations; health=Dict(), generated_at::String=f
             "calendar_anchor_relations_pending" => calendar_anchor_relations_pending,
             "calendar_anchor_relations_ok" => calendar_anchor_relations_total == 0 || calendar_anchor_relations_pending == 0,
             "deferred_relations" => deferred_relation_total,
+            "never_apply_policy" => "T=245-247 Sam ruling: T189 calendar candidates never-apply; deferred-by-policy since t249 (finding 4)",
             "grouped_nodes_ok" => grouped_nodes_ok,
             "grouped_relations_ok" => grouped_relations_ok,
         ),
