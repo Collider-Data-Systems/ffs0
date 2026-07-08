@@ -511,12 +511,16 @@ function Test-Persona {
         $relationsPath = 'state/relations/src/' + [uri]::EscapeDataString([string]$resolved.Config.session_urn)
         $relations = @(Invoke-MoosGet -BaseUrl $resolved.EmitUrl -Path $relationsPath)
         $occupant = $relations | Where-Object { $_.src_port -eq 'has-occupant' -and $_.tgt_urn -eq $resolved.Config.actor_urn } | Select-Object -First 1
+        $purpose = $relations | Where-Object { $_.src_port -eq 'has-purpose' } | Select-Object -First 1
         $opensOn = $relations | Where-Object { $_.src_port -eq 'opens-on' -and $_.tgt_urn -eq $resolved.OpensOnKernel.urn } | Select-Object -First 1
+        $purposeTarget = if ($purpose) { [string]$purpose.tgt_urn } else { '(none)' }
         $rows += [pscustomObject]@{ Check = 'has-occupant'; Target = $resolved.Config.actor_urn; Status = if ($occupant) { 'ok' } else { 'missing' }; Detail = "checked on $($resolved.EmitUrl)" }
+        $rows += [pscustomObject]@{ Check = 'has-purpose'; Target = $purposeTarget; Status = if ($purpose) { 'ok' } else { 'missing' }; Detail = 'purpose used for persona projection' }
         $rows += [pscustomObject]@{ Check = 'opens-on-link'; Target = $resolved.OpensOnKernel.urn; Status = if ($opensOn) { 'ok' } else { 'missing' }; Detail = 'topology intent stored on receiving kernel' }
     }
     catch {
         $rows += [pscustomObject]@{ Check = 'has-occupant'; Target = $resolved.Config.actor_urn; Status = 'error'; Detail = $_.Exception.Message }
+        $rows += [pscustomObject]@{ Check = 'has-purpose'; Target = $resolved.Config.session_urn; Status = 'error'; Detail = $_.Exception.Message }
         $rows += [pscustomObject]@{ Check = 'opens-on-link'; Target = $resolved.OpensOnKernel.urn; Status = 'error'; Detail = $_.Exception.Message }
     }
 
@@ -526,6 +530,18 @@ function Test-Persona {
     }
     catch {
         $rows += [pscustomobject]@{ Check = 'health'; Target = $resolved.EmitUrl; Status = 'error'; Detail = $_.Exception.Message }
+    }
+
+    try {
+        $opensOnHealth = Invoke-MoosGet -BaseUrl $resolved.OpensOnUrl -Path 'healthz'
+        $opensOnDetail = "ontology=$($opensOnHealth.ontology_version) log_len=$($opensOnHealth.log_len)"
+        if ($resolved.OpensOnKernelName -ne $resolved.EmitKernelName) {
+            $opensOnDetail = "$opensOnDetail; topology-only until twin sync"
+        }
+        $rows += [pscustomobject]@{ Check = 'opens-on-health'; Target = $resolved.OpensOnUrl; Status = $opensOnHealth.status; Detail = $opensOnDetail }
+    }
+    catch {
+        $rows += [pscustomobject]@{ Check = 'opens-on-health'; Target = $resolved.OpensOnUrl; Status = 'error'; Detail = $_.Exception.Message }
     }
 
     $rows
