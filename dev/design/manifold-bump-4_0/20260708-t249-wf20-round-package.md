@@ -38,7 +38,7 @@ coverage before flip; guards sit above existing checks, never brick the spine th
 
 | Set | Content | Gate |
 |---|---|---|
-| **R2 birth workspaces** | Per twin (`:8001/:8002/:8003`): ADD `session:<owner>.home` + WF19 `opens-on` its own kernel + `has-occupant` deferred until a real occupant exists. Sam already ruled YES; timing ruled t249 = **this round**. Exact URN shape + occupancy question → Lydon authority-review before apply. | Sam per-batch go |
+| **R2 birth workspaces** | Per twin (`:8001/:8002/:8003`): ADD `session:<owner>.home` + WF19 `opens-on` its own kernel + `has-occupant` deferred until a real occupant exists. Sam already ruled YES; timing ruled t249 = **this round**. Exact URN shape + occupancy question → Lydon authority-review before applying. | Sam per-batch go |
 | **H1 legacy-URN reconciliation** | Twins' April-seed shapes (direct `owns→kernel`, missing `hosts` spine, legacy rel URNs) reconciled to the T=247 workstation-spine convention — additive LINKs only, no rewriting history. | Sam per-batch go |
 | **D4/G2 instantiation** | After fragments land: ADD the 7 `derivation:persona.*` nodes + `presents-as` LINKs (retires the seat table's config-only Persona column, closes Q2-persona-nodes) · ADD `manifold:my-tiny-data-collider` + `spans` topology (the dossier's open-end #1 closes; the worked example finally exists). | Sam per-batch go |
 
