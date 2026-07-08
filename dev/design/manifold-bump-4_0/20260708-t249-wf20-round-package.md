@@ -24,6 +24,16 @@ so ontology.json is edited **once, reviewed once** — the crux of the biscuit r
 | 6 | `port-color-prose-fix` | kernel#50 rider | ontology.json **prose only**: mark `port_color_compatibility.declared_pairs_by_wf` as authored-intent-NOT-loaded (or delete the phantom WF19 rows `claims-session`/`transfers-to`); correct the false "any pair not listed is rejected" description. Zero grammar change. | None (prose) |
 | 7 | `f1-hardening-shape` | Lydon note (finding F1) | §M11 infra-ADD bypass is actor-agnostic — `user`/`workstation` ADDs pass both gates on any fold; the T=208 guardrail is prose-only. Shape = **Decision A** below. Deliberately NOT bundled into P4. | Depends on Decision A |
 
+### Prose-vs-gate parity (Lydon cross-ref, [moos-kernel#50 comment](https://github.com/Collider-Data-Systems/moos-kernel/issues/50#issuecomment-4915533539))
+
+Fragments 5, 6 and 7 are **one defect class reviewed as one item**: *authored doctrine claims
+fail-closed, enforcement is permissive.* Three instances: the port-color prose ("any pair not
+listed is rejected") vs the silent skip · the T=208 user-ADD prohibition + "exactly one user per
+kernel" vs the actor-agnostic §M11 infra-ADD bypass · the `source_type` enum vs zero enforcement.
+**Round rule:** every fail-closed claim in ontology.json prose must either name its enforcing gate
+or be corrected to advisory. Fix-ordering follows the authority note's E3 principle everywhere —
+coverage before flip; guards sit above existing checks, never brick the spine they protect.
+
 ## 2. HG batch-sets (apply after the bump, per twin, kernel actor, R1 fold-locality)
 
 | Set | Content | Gate |
