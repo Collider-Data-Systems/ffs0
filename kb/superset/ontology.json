@@ -1899,6 +1899,13 @@
             "mutability": "immutable",
             "type": "datetime"
           }
+        },
+        "retirement_plan": {
+          "recorded": "4.0.1 (t249, ffs0#139 — origin research on the PR record)",
+          "census_t249": "exactly 2 relic nodes fleet-wide, both status=open: urn:moos:session:20260403.claude-code (hp-laptop, t_day 154 — the first Claude Code sitting) and urn:moos:session:vscode-codex-hp-z440.t161 (Z440, t_day 161)",
+          "role_note": "role retained in WF07 mutate_scope at 4.0.1 (no silent orphaning — ffs0#139 reviews); it serves only this deprecated type",
+          "g6c_next_round": "grammar_fragment:g6c-agent-session-retirement — (1) close both relics (MUTATE status->closed, kernel actor, rides the H1 cleanup batch), (2) prune agent_session from WF07/WF18/WF19 src/tgt type lists, (3) then drop role from WF07 mutate_scope",
+          "lineage": "sitting-as-node (Wave-0, role property) -> session tuple (v3.9 §M18, T=169 generalization) -> who-drives as WF19 has-occupant relation (v3.12) -> workspace alias (4.0 D2)"
         }
       },
       {
