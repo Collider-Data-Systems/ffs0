@@ -8,7 +8,7 @@
 
 ## Relational spine (why these columns)
 ```
-user/group  —WF02 delegates-to→  agent                  (authority)
+user/group  —WF02 governs→  agent                       (authority; delegates-to is role→role only — t249 governance note §7)
 workspace(session)  —WF19 has-occupant→  agent           (liveness)
 workspace(session)  —WF19 opens-on→  engine(kernel)       (topology intent)
 agent  —presents-as→  persona (= Φ(purpose))             (presentation, NOT authority)

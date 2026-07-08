@@ -166,6 +166,23 @@ For each enum-property on each affected type, scan all nodes for values not in t
 
 Currently FINDINGS expected on hp-laptop: `channel:local.moos-footage.kind="fs"` (legacy pre-v3.13 value); v3.15 has `filesystem`. Remediation: UNLINK + re-ADD (since `kind` is immutable) OR canonicalisation function on queries.
 
+### A.12 per-fold identity (twins) — added T=249 per doctrine D
+
+Extend the audit sweep to ALL folds a workstation hosts (Z440: `:8001`/`:8002`/`:8003` alongside `:8000`), per the G4 cross-fold identity doctrine (`dev/design/manifold-bump-4_0/20260708-t249-governance-authority-note.md` §5):
+
+- **Absence-flags are SUPPRESSED**: a being's node missing from a fold is legal (asymmetric presence — presence is demand-driven). Never report "missing from fold N" as a finding. This is the audit-side form of the readback skill's per-fold cardinal rule (post-ffs0#134).
+- **Wrong-URN-form flags are KEPT**: the same being under a *different URN form* (e.g. `workstation:hp-z440` vs legacy `ws:hp-z440`) violates URN-equality (clause 1) and IS a finding. Known open instance: H1 in the t249 governance note.
+- **Frozen-fold sanity**: on folds with zero sessions, any non-kernel-actor rewrite in the log other than infra-type ADDs is a §M11 violation → hard finding. Infra-type ADDs by non-kernel actors are legal-but-guardrail-relevant (Finding F1) → soft finding, cite T=208.
+
+```bash
+# Per twin: users + user-outbound relations + any non-kernel actors in the log tail
+for p in 8001 8002 8003 ; do
+  curl -sS http://100.82.243.13:$p/state/nodes | jq '[.[] | select(.type_id=="user") | .urn]'
+done
+```
+
+PASS if no wrong-URN-form duplicates and no §M11-violating log entries; absence of any node is never a finding.
+
 ## Sequence — typical run
 
 ```bash

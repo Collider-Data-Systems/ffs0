@@ -53,13 +53,14 @@ Z440 (`desktop-42d00rd`) `100.82.243.13` (Tailscale) / `192.168.1.15` (LAN). hp-
 
 ## Relational spine (4.0 vocabulary; alias-first)
 ```
-user/group  —WF02 delegates-to→  agent          (authority/delegation)
+user/group  —WF02 governs→  agent               (authority/delegation; delegated role/capabilities ride WF02 properties)
+role/group  —WF02 delegates-to→  role           (capability narrowing, v3.13 — role-to-role, never user-to-agent)
 workspace(session)  —WF19 has-occupant→  agent   (liveness/occupancy)
 workspace(session)  —WF19 opens-on→  engine(kernel)   (topology intent)
 agent  —presents-as→  persona (= Φ(purpose))     (D4; presentation, NOT authority)
 surface  —realizes→  channel / workspace          (D8; observed-first, S0 substrate)
 ```
-A user/group **delegates** an agent; an agent **occupies** a workspace; an agent **may present-as** a persona derived from purpose; IDE/harness panes/windows/tabs are **S0 surfaces** that project and evidence the workspace — never authority principals, never durable truth until G-ingested.
+A user/group **governs** an agent (T=249 drift fix — the live WF02 relation is `governs`; `delegates-to` is role→role only, see `dev/design/manifold-bump-4_0/20260708-t249-governance-authority-note.md` §7); an agent **occupies** a workspace; an agent **may present-as** a persona derived from purpose; IDE/harness panes/windows/tabs are **S0 surfaces** that project and evidence the workspace — never authority principals, never durable truth until G-ingested.
 
 ## 4.0 vocabulary (manifold paradigm) — ALIAS-FIRST; ADDITIVE BUMP LANDED (ontology v4.0.0, T=231)
 First mention dual-names: `workspace (session)`, `engine (kernel)`; thereafter the 4.0 term where context is clear.
