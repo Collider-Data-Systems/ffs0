@@ -8,7 +8,7 @@
 ```json
 {
   "type": "knowledge_item",
-  "urn": "urn:moos:knowledge_item:moos_diary_entries_batch_01",
+  "urn": "urn:moos:ki:diary.moos-diary-entries-batch-01",
   "purpose_slug": "mtdc",
   "source": {
     "channel_urn": "urn:moos:channel:hp-z440.primary",
@@ -28,7 +28,7 @@
 ```json
 {
   "type": "knowledge_item",
-  "urn": "urn:moos:knowledge_item:moos_remarks_batch_01",
+  "urn": "urn:moos:ki:diary.moos-remarks-batch-01",
   "purpose_slug": "mtdc",
   "source": {
     "channel_urn": "urn:moos:channel:hp-z440.primary",
@@ -48,7 +48,7 @@
 ```json
 {
   "type": "knowledge_item",
-  "urn": "urn:moos:knowledge_item:moos_family_seeds_media",
+  "urn": "urn:moos:ki:photo.moos-family-seeds-media",
   "purpose_slug": "mtdc",
   "source": {
     "channel_urn": "urn:moos:channel:hp-z440.primary",
