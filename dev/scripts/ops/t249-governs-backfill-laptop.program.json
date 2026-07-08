@@ -1,0 +1,25 @@
+{
+ "_STATUS": "STAGED, NOT APPLIED \u2014 see primary file note. hpprodesk agent deferred (box down).",
+ "envelopes": [
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-laptop.primary",
+   "relation_urn": "urn:moos:rel:sam.governs.claude-cowork.hp-laptop",
+   "src_urn": "urn:moos:user:sam",
+   "src_port": "governs",
+   "tgt_urn": "urn:moos:agent:claude-cowork.hp-laptop",
+   "tgt_port": "governed-by",
+   "rewrite_category": "WF02"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-laptop.primary",
+   "relation_urn": "urn:moos:rel:sam.governs.vscode.hp-laptop.copilot",
+   "src_urn": "urn:moos:user:sam",
+   "src_port": "governs",
+   "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+   "tgt_port": "governed-by",
+   "rewrite_category": "WF02"
+  }
+ ]
+}

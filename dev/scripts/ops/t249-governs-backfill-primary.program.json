@@ -1,0 +1,45 @@
+{
+ "_STATUS": "STAGED, NOT APPLIED \u2014 t250-baseline finding 6 (ungoverned seat agents); Sam ruling pending: deliberate scope or backfill? Apply per-fold, kernel actor, after the word.",
+ "envelopes": [
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:sam.governs.claude-cowork-hp-z440",
+   "src_urn": "urn:moos:user:sam",
+   "src_port": "governs",
+   "tgt_urn": "urn:moos:agent:claude-cowork.hp-z440",
+   "tgt_port": "governed-by",
+   "rewrite_category": "WF02"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:sam.governs.vscode-hp-z440-primary",
+   "src_urn": "urn:moos:user:sam",
+   "src_port": "governs",
+   "tgt_urn": "urn:moos:agent:vscode.hp-z440.primary",
+   "tgt_port": "governed-by",
+   "rewrite_category": "WF02"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:sam.governs.vscode-hp-z440-menno",
+   "src_urn": "urn:moos:user:sam",
+   "src_port": "governs",
+   "tgt_urn": "urn:moos:agent:vscode.hp-z440.menno",
+   "tgt_port": "governed-by",
+   "rewrite_category": "WF02"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:sam.governs.vscode-hp-z440-lola",
+   "src_urn": "urn:moos:user:sam",
+   "src_port": "governs",
+   "tgt_urn": "urn:moos:agent:vscode.hp-z440.lola",
+   "tgt_port": "governed-by",
+   "rewrite_category": "WF02"
+  }
+ ]
+}
