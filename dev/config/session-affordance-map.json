@@ -60,15 +60,14 @@
     },
     {
       "key": "wolfram-kernel-proper",
-      "host": "hp-z440",
-      "desktop": 2,
+      "host": "hp-laptop",
+      "desktop": null,
       "session_urn": "urn:moos:session:sam.kernel-proper",
-      "actor_urn": "urn:moos:agent:claude-code.hp-z440",
+      "actor_urn": "urn:moos:agent:vscode.hp-laptop.wolfram",
       "emit_kernel": "urn:moos:kernel:hp-z440.primary",
       "mcp_server": "moos-primary",
-      "workspace": "moos-kernel",
+      "workspace": "ffs0.code-workspace",
       "harnesses": [
-        "Claude Code",
         "VS Code"
       ],
       "prompts": [],

@@ -13,18 +13,19 @@ workspace(session)  —WF19 has-occupant→  agent           (liveness)
 workspace(session)  —WF19 opens-on→  engine(kernel)       (topology intent)
 agent  —presents-as→  persona (= Φ(purpose))             (presentation, NOT authority)
 ```
-**Emit discipline:** Z440 personae emit to engine `hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; the twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), **not** state replication — they emit to :8000 today. Multi-workspace agents (Wolfram, Zappa `claude-cowork.hp-z440`, John Lydon `claude-cowork.hp-laptop`) set `session_urn` explicitly.
+**Emit discipline:** Z440 personae emit to engine `hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync; the twins (`menno`/`lola`) carry `opens-on` topology intent (HTTP :8001/:8002, MCP :9001/:9002), **not** state replication — they emit to :8000 today. Multi-workspace agents (Zappa `claude-cowork.hp-z440`, John Lydon `claude-cowork.hp-laptop`) set `session_urn` explicitly (Wolfram left the list at the T250 re-seat — `vscode.hp-laptop.wolfram` is single-workspace).
 
 ## Active seats
 
 ### Wolfram — kernel-proper / runtime
-- **Agent:** `urn:moos:agent:claude-code.hp-z440`
+> T250 re-seat (Sam): driving surface moved to **hp-laptop VS Code** (model = agent's mutable `model` property; "Kimi K2.7 Code" at re-seat). Workspace/purpose/persona/engine unchanged — kernel-proper work stays on the Z440 primary fold. Old principal `claude-code.hp-z440` kept as idle governed principal.
+- **Agent:** `urn:moos:agent:vscode.hp-laptop.wolfram`
 - **Workspace (session):** `urn:moos:session:sam.kernel-proper`
-- **Engine (kernel):** `hp-z440.primary` :8000 (emit-target)
+- **Engine (kernel):** `hp-z440.primary` :8000 (emit-target — cross-box over Tailscale `100.82.243.13`; Z440 must be up)
 - **MCP:** `moos-primary` :8080
-- **Surface:** Claude Code · Z440 (desktop 2) · workspace `moos-kernel`
+- **Surface:** VS Code · hp-laptop · workspace `ffs0.code-workspace`
 - **Skills to mount:** `moos-rewrite-envelope`, `moos-state-readback`
-- **Prompt-delta:** Go runtime lane (§M11+§M12 gates). Multi-workspace agent → set `session_urn` explicitly. Validate `go test ./...`.
+- **Prompt-delta:** Go runtime lane (§M11+§M12 gates). Single-workspace agent (session resolves by inference); emit is cross-box to Z440 primary — router :9000 is read-only fan-in, never a write path (R1). Validate `go test ./...`.
 
 ### Zappa (Cowork-Z440) — workspace curation / ingest
 > Persona named T244+ (Sam): **Zappa** = Φ(`purpose:sam.cowork-workspace-curation`); persona key `zappa` (legacy `cowork-z440`). Identity URNs unchanged.

@@ -143,7 +143,7 @@
   },
   "personas": {
     "wolfram": {
-      "actor_urn": "urn:moos:agent:claude-code.hp-z440",
+      "actor_urn": "urn:moos:agent:vscode.hp-laptop.wolfram",
       "session_urn": "urn:moos:session:sam.kernel-proper",
       "opens_on_kernel": "hp-z440.primary",
       "emit_kernel": "hp-z440.primary",

@@ -28,16 +28,16 @@ Resolve which **seat** (persona × workspace × agent × engine × surface) this
 
    | Signal | Likely seat(s) |
    |---|---|
-   | host `desktop-42d00rd` (Z440) + Cowork/Claude-Code pane | **Zappa** (Cowork-Z440; `agent:claude-cowork.hp-z440` / `session:sam.z440-cowork-workspace`) or **Wolfram** (`agent:claude-code.hp-z440` / `session:sam.kernel-proper`) |
+   | host `desktop-42d00rd` (Z440) + Cowork/Claude-Code pane | **Zappa** (Cowork-Z440; `agent:claude-cowork.hp-z440` / `session:sam.z440-cowork-workspace`) |
    | host Z440 + VS Code, `moos-router` cwd | **Steinberger** (`agent:vscode.hp-z440.menno` / `session:sam.steinberger-seat`) |
    | host Z440 + VS Code, research cwd | **Karpathy** (`agent:vscode.hp-z440.lola` / `session:sam.karpathy-seat`) |
    | host Z440 + Antigravity | **Moos / AG-Z440** (`agent:antigravity.hp-z440` / `session:sam.moos-diary`) |
    | host `lap-sam` (hp-laptop) + Claude Desktop / Cowork | **John Lydon** (governance; formerly Guido) (`agent:claude-cowork.hp-laptop` / `session:sam.governance`; same agent also occupies `sam.laptop-cowork-workspace` — session_urn disambiguates) |
-   | host `lap-sam` (hp-laptop) + VS Code/Copilot | **Guido** (laptop VS Code lead, T247 split) (`agent:vscode.hp-laptop.copilot` / `session:sam.laptop-vscode-lead`) |
+   | host `lap-sam` (hp-laptop) + VS Code/Copilot | **Guido** (laptop VS Code lead, T247 split) (`agent:vscode.hp-laptop.copilot` / `session:sam.laptop-vscode-lead`) or **Wolfram** (kernel-proper, T250 re-seat; `agent:vscode.hp-laptop.wolfram` / `session:sam.kernel-proper`, emits cross-box to `hp-z440.primary`) — the VS Code chat agent/model pane is the tie-breaker |
    | host hp-laptop + Cowork, curation lane | **John Lydon**'s second workspace (`agent:claude-cowork.hp-laptop` / `session:sam.laptop-cowork-workspace` — same agent as governance; explicit `session_urn` disambiguates) |
    | host ProDesk (`desktop-3fc7c3f` / `desktop-42d00rd`-distinct) + VS Code | **HP ProDesk** (`agent:vscode.hpprodesk.primary` / `session:sam.hpprodesk-setup`) |
 
-   On Z440 the harness is the tie-breaker: a Cowork pane → Zappa (Cowork-Z440); a Claude-Code pane on `moos-kernel` → Wolfram; a VS Code/Copilot pane on `moos-router` → Steinberger; on a research/`ffs0` root → Karpathy or the Z440 VS Code lead (`vscode.hp-z440.primary`). When the harness is ambiguous, **state the candidate set and ask** rather than guessing — a wrong seat poisons the whole orientation.
+   On Z440 the harness is the tie-breaker: a Cowork pane → Zappa (Cowork-Z440); a VS Code/Copilot pane on `moos-router` → Steinberger; on a research/`ffs0` root → Karpathy or the Z440 VS Code lead (`vscode.hp-z440.primary`). (Wolfram left Z440 at the T250 re-seat — kernel-proper is now driven from hp-laptop VS Code as `vscode.hp-laptop.wolfram`.) When the harness is ambiguous, **state the candidate set and ask** rather than guessing — a wrong seat poisons the whole orientation.
 
 3. **Authoritative source for the resolved seat's row:** the **Seats table in `AGENTS.md`** (`D:\HPZ440\ffs0\AGENTS.md`, "Seats — agent × workspace × engine × surface") and the per-seat entry in `dev/config/session-affordance-map.json` (skills/prompts/`emit_kernel`/`mcp_server`/`opens_on_kernel`). Read the row, don't reconstruct it from memory.
 

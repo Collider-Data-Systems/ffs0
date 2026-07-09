@@ -1,0 +1,94 @@
+{
+ "_STATUS": "APPLIED t250 (2026-07-09 ~10:20 CEST, log 548->554 exact) — Wolfram re-seat per Sam's three rulings (AskUserQuestion, t250 ~10:00 CEST): Option A re-occupy sam.kernel-proper; new principal vscode.hp-laptop.wolfram (model rides `model` property); claude-code.hp-z440 kept as idle governed principal. Gate-tested on throwaway :8899 (t250_wolfram_reseat_gate.py, all green; g6a text-MUTATE probe rejected as predicted). created_at wall-clock verified per the t249 (a)-discipline.",
+ "envelopes": [
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "node_urn": "urn:moos:agent:vscode.hp-laptop.wolfram",
+   "type_id": "agent",
+   "properties": {
+    "name": {
+     "value": "VS Code Wolfram seat (hp-laptop)",
+     "mutability": "immutable"
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable"
+    },
+    "created_at": {
+     "value": "2026-07-09T08:10:00Z",
+     "mutability": "immutable"
+    },
+    "delegate_type": {
+     "value": "ide",
+     "mutability": "immutable"
+    },
+    "model": {
+     "value": "Kimi K2.7 Code",
+     "mutability": "mutable",
+     "authority_scope": "owner"
+    },
+    "invocation_protocol": {
+     "value": "mcp",
+     "mutability": "mutable",
+     "authority_scope": "owner"
+    },
+    "transport_type": {
+     "value": "mcp-sse",
+     "mutability": "mutable",
+     "authority_scope": "owner"
+    },
+    "board_id": {
+     "value": "AGENT-VSCODE-WOLFRAM-HP-LAPTOP",
+     "mutability": "mutable",
+     "authority_scope": "owner"
+    },
+    "status": {
+     "value": "idle",
+     "mutability": "mutable",
+     "authority_scope": "kernel"
+    }
+   }
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t250.sam.governs.vscode-hp-laptop-wolfram",
+   "src_urn": "urn:moos:user:sam",
+   "src_port": "governs",
+   "tgt_urn": "urn:moos:agent:vscode.hp-laptop.wolfram",
+   "tgt_port": "governed-by",
+   "rewrite_category": "WF02"
+  },
+  {
+   "rewrite_type": "UNLINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:session.sam.kernel-proper.has-occupant.agent.claude-code-hp-z440"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t250.sam.kernel-proper.has-occupant.vscode-hp-laptop-wolfram",
+   "src_urn": "urn:moos:session:sam.kernel-proper",
+   "src_port": "has-occupant",
+   "tgt_urn": "urn:moos:agent:vscode.hp-laptop.wolfram",
+   "tgt_port": "is-occupant-of",
+   "rewrite_category": "WF19"
+  },
+  {
+   "rewrite_type": "UNLINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t249.wolfram.presents-as"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:t250.wolfram.presents-as",
+   "src_urn": "urn:moos:agent:vscode.hp-laptop.wolfram",
+   "src_port": "presents-as",
+   "tgt_urn": "urn:moos:derivation:persona.wolfram",
+   "tgt_port": "presented-by",
+   "rewrite_category": "WF19"
+  }
+ ]
+}

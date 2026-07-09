@@ -11,7 +11,7 @@ Four rewrites: **ADD · LINK · MUTATE · UNLINK**. Log is truth, state is deriv
 
 ## Actor discipline (§M11/§M12 — for envelope authoring)
 Every envelope carries `actor`:
-- **Agent actor** (`urn:moos:agent:<short>`) — default; resolves via inferred session when the agent occupies exactly one workspace (`session`). Multi-workspace agents (Wolfram `claude-code.hp-z440`, Zappa `claude-cowork.hp-z440`, John Lydon `claude-cowork.hp-laptop`) set `session_urn` explicitly.
+- **Agent actor** (`urn:moos:agent:<short>`) — default; resolves via inferred session when the agent occupies exactly one workspace (`session`). Multi-workspace agents (Zappa `claude-cowork.hp-z440`, John Lydon `claude-cowork.hp-laptop`) set `session_urn` explicitly (Wolfram is single-workspace since the T250 re-seat to `vscode.hp-laptop.wolfram`).
 - **Kernel actor** (`urn:moos:kernel:<ws>.<name>`) — bypasses §M11 + §M12; required for ontology-governed type ADDs, kernel-authority MUTATEs, WF19 `opens-on` LINKs, sweep emissions.
 - **User actor** (`urn:moos:user:sam`) — fails §M11; only inside `SeedIfAbsent`.
 `env.actor` = who emits (ephemeral); `owner_urn` property = who owns (sticky). Field gotchas + the four envelope shapes → skill **`moos-rewrite-envelope`**.

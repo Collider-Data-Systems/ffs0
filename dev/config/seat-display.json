@@ -2,7 +2,7 @@
   "_comment": "Config side-input for moos-config-projection (spec section 2): DISPLAY-ONLY enrichment HG does not yet carry (persona display names pending Q2 persona-nodes; D7 surface labels pending realizes reification). Keyed by agent actor_urn. Fields here are tagged config-sourced and are excluded from HG-authority drift adjudication.",
   "workstation_order": ["hp-z440", "hp-laptop", "hpprodesk"],
   "seats": {
-    "urn:moos:agent:claude-code.hp-z440":      { "persona": "Wolfram",           "surface": "Claude Code · Z440 (desktop 2) · `moos-kernel`" },
+    "urn:moos:agent:vscode.hp-laptop.wolfram": { "persona": "Wolfram",           "surface": "VS Code · hp-laptop · `ffs0.code-workspace`" },
     "urn:moos:agent:vscode.hp-z440.menno":     { "persona": "Steinberger",       "surface": "VS Code · Z440 (desktop 3) · `moos-router`" },
     "urn:moos:agent:vscode.hp-z440.lola":      { "persona": "Karpathy",          "surface": "VS Code · Z440 (desktop 4) · `ffs0.code-workspace`" },
     "urn:moos:agent:antigravity.hp-z440":      { "persona": "Moos / AG-Z440",    "surface": "Antigravity · Z440 (desktop 5) · `ffs0.code-workspace`" },
