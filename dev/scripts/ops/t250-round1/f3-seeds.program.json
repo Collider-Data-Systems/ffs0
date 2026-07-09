@@ -1,5 +1,5 @@
 {
- "_STATUS": "STAGED, Sam-gated apply to :8000 \u2014 F3 ingress seeds (decided T=239, never ADDed; t250-baseline finding + AG t250 note \u00a73, shapes normalized by Zappa). Gate-tested on throwaway :8899.",
+ "_STATUS": "APPLIED t250 (2026-07-09 ~10:12 CEST, part of merged 5-envelope batch, log 543->548 exact) — STAGED, Sam-gated apply to :8000 — F3 ingress seeds (decided T=239, never ADDed; t250-baseline finding + AG t250 note §3, shapes normalized by Zappa). Gate-tested on throwaway :8899.",
  "envelopes": [
   {
    "rewrite_type": "ADD",
@@ -83,7 +83,7 @@
      "authority_scope": "owner"
     },
     "text": {
-     "value": "F3 substrate anchor for D7 surface observations: harness MCP snapshots (computer-use, claude-in-chrome), registry enumeration. New in t250 Round 1 \u2014 the W11/Chrome/Android channel classes anchor here.",
+     "value": "F3 substrate anchor for D7 surface observations: harness MCP snapshots (computer-use, claude-in-chrome), registry enumeration. New in t250 Round 1 — the W11/Chrome/Android channel classes anchor here.",
      "mutability": "mutable"
     }
    }
