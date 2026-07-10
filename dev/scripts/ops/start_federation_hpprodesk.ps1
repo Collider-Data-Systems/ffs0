@@ -60,7 +60,12 @@ if (Get-Process -Name moos-router -ErrorAction SilentlyContinue) {
     Write-Host "Router already running - skipping (POST /admin/topology/reload to pick up topology changes)." -ForegroundColor Gray
 } else {
     Write-Host "Starting moos router (ProDesk; topology from $TopologyFile)..." -ForegroundColor Cyan
-    $RouterArgs = "--listen :9000 --default $LocalKernel --topology-file `"$TopologyFile`" --local-host hpprodesk"
+    $RouterArgs = @(
+        '--listen', ':9000',
+        '--default', $LocalKernel,
+        '--topology-file', $TopologyFile,
+        '--local-host', 'hpprodesk'
+    )
     Start-Process -FilePath $RouterExe -ArgumentList $RouterArgs -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }

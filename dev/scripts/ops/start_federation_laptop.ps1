@@ -53,11 +53,11 @@ try {
 
 # --- Router (idempotent; topology-file SOT) --------------------------------
 $RouterArgs = @(
-    "--listen :9000"
-    "--default $LocalKernel"
-    "--topology-file `"$TopologyFile`""
-    "--local-host hp-laptop"
-) -join " "
+    '--listen', ':9000',
+    '--default', $LocalKernel,
+    '--topology-file', $TopologyFile,
+    '--local-host', 'hp-laptop'
+)
 
 if (Get-Process -Name moos-router -ErrorAction SilentlyContinue) {
     Write-Host "Router already running — skipping (POST /admin/topology/reload to pick up topology changes)." -ForegroundColor Gray
