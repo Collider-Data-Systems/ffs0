@@ -51,7 +51,7 @@ function Get-NormalizedHostName {
     $hostName = $raw.Trim().ToLowerInvariant()
     switch -Regex ($hostName) {
         '^(hp[-_]?laptop|hplaptop|lap[-_]?sam)$' { return 'hp-laptop' }
-        '^(hp[-_]?z440|hpz440)$' { return 'hp-z440' }
+        '^(hp[-_]?z440|hpz440|desktop[-_]?42d00rd)$' { return 'hp-z440' }
         '^(hp[-_]?prodesk|hpprodesk|desktop[-_]?3fc7c3f)$' { return 'hpprodesk' }
         default { return $hostName }
     }

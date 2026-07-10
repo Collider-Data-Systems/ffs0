@@ -9,9 +9,14 @@
 # router launch hidden (no console); use Watch-Moos.ps1 / Check-MoosOnline.ps1 to
 # observe. Idempotent guards make it safe to run manually while already up.
 #
-# Router shape = FULL 3-WAY PEER (Sam's #64 call): ProDesk peers out to hp-laptop
-# + Z440, matching routers.hpprodesk.peers in dev/config/moos-federation.topology.json.
-# The 5s router timeout fallback makes peering to an offline box non-fatal.
+# Router shape (T=251, ffs0#154): UNIFORM topology-file launch. The routing
+# table (kernel shards, default rule, FULL 3-WAY PEER per Sam's #64 call) comes
+# from dev/config/moos-federation.topology.json (routers.hpprodesk entry),
+# loaded at boot; hot-reload via POST http://localhost:9000/admin/topology/reload.
+# --default is only the bootstrap fallback if the file fails to load. Requires
+# the moos-router build with boot-load support (feat/topology-file-sot or
+# later) — rebuild the binary before relaunching with this script. The 5s
+# router timeout fallback makes peering to an offline box non-fatal.
 #
 # Emit discipline: HG rewrites target THIS box's :8000 only - never cross-emit
 # the ProDesk seat to laptop/Z440.
@@ -22,17 +27,14 @@ $ErrorActionPreference = "Stop"
 $env:MOOS_LOCAL_HOST = 'hpprodesk'
 
 # --- Paths (ProDesk: $env:USERPROFILE = C:\Users\Geurt) -------------------
-$Base        = "$env:USERPROFILE\CDS"
-$KernelExe   = "$Base\moos-kernel\moos-kernel.exe"
-$RouterExe   = "$Base\moos-router\moos-router.exe"
-$Ontology    = "$Base\ffs0\kb\superset\ontology.json"
-$Log         = "$Base\moos-kernel\moos.hpprodesk.jsonl"  # sovereign log - NOT $env:TEMP (would start fresh)
+$Base         = "$env:USERPROFILE\CDS"
+$KernelExe    = "$Base\moos-kernel\moos-kernel.exe"
+$RouterExe    = "$Base\moos-router\moos-router.exe"
+$TopologyFile = "$Base\ffs0\dev\config\moos-federation.topology.json"
+$Ontology     = "$Base\ffs0\kb\superset\ontology.json"
+$Log          = "$Base\moos-kernel\moos.hpprodesk.jsonl"  # sovereign log - NOT $env:TEMP (would start fresh)
 
-# --- Peers (Tailscale IPs are permanent for this tailnet) -----------------
-$PeerLaptop  = "http://100.106.220.58:9000"   # hp-laptop (lap-sam)
-$PeerZ440    = "http://100.82.243.13:9000"     # Z440 (desktop-42d00rd)
 $LocalKernel = "http://localhost:8000"
-$Shard       = "urn:moos:kernel:hpprodesk.primary=$LocalKernel"
 
 # --- Kernel (idempotent: skip if already running) -------------------------
 if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
@@ -53,20 +55,23 @@ try {
     Write-Host "WARNING: kernel healthz failed - may still be starting. Check log: $Log" -ForegroundColor Yellow
 }
 
-# --- Router (full 3-way peer; idempotent) ---------------------------------
+# --- Router (idempotent; topology-file SOT) --------------------------------
 if (Get-Process -Name moos-router -ErrorAction SilentlyContinue) {
-    Write-Host "Router already running - skipping." -ForegroundColor Gray
+    Write-Host "Router already running - skipping (POST /admin/topology/reload to pick up topology changes)." -ForegroundColor Gray
 } else {
-    Write-Host "Starting moos router (ProDesk, peers: hp-laptop + Z440)..." -ForegroundColor Cyan
-    $RouterArgs = "--listen :9000 --shard $Shard --default $LocalKernel --peer $PeerLaptop --peer $PeerZ440"
+    Write-Host "Starting moos router (ProDesk; topology from $TopologyFile)..." -ForegroundColor Cyan
+    $RouterArgs = "--listen :9000 --default $LocalKernel --topology-file `"$TopologyFile`" --local-host hpprodesk"
     Start-Process -FilePath $RouterExe -ArgumentList $RouterArgs -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }
 
 try {
     $r = Invoke-RestMethod "http://localhost:9000/healthz" -TimeoutSec 8
-    $msg = "Router: {0} [fans in {1} kernel(s) now; peers resolve once hp-laptop/Z440 routers restart]" -f $r.status, $r.kernels.Count
+    $msg = "Router: {0} [fans in {1} kernel(s)]" -f $r.status, $r.kernels.Count
     Write-Host $msg -ForegroundColor Green
+    if ($r.kernels.Count -lt 6) {
+        Write-Host "WARNING: fan-in below 6 - topology file may not have loaded (old binary?). Check GET http://localhost:9000/admin/topology" -ForegroundColor Yellow
+    }
 } catch {
     Write-Host "WARNING: router healthz failed - may still be starting." -ForegroundColor Yellow
 }
