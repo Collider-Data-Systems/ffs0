@@ -4,15 +4,17 @@
 # One primary kernel (:8000 + MCP :8080) + one router (:9000).
 #
 # Idempotent: safe to run while already up (guards skip a live kernel/router).
-# To pick up a shard/peer change, stop the router first
-#   Stop-Process -Name moos-router
-# then re-run this script. For a binary swap use redeploy_laptop_kernel.ps1.
+# To pick up a topology change on a live router, no restart needed:
+#   Invoke-RestMethod -Method Post http://localhost:9000/admin/topology/reload
+# For a binary swap use redeploy_laptop_kernel.ps1.
 #
-# Router shape (T=251): full fan-in shard list + 2-way peer (Z440 + ProDesk),
-# matching routers.hp-laptop in dev/config/moos-federation.topology.json. The ProDesk
-# leg (shard + peer) was added T=251 when the 6th box rejoined the mesh — before that
-# the laptop router fanned in 5/6 (ProDesk invisible from this box). Router 5s timeout
-# fallback makes sharding/peering an offline box non-fatal.
+# Router shape (T=251, ffs0#154): UNIFORM topology-file launch. The routing
+# table (kernel shards, ws aliases, default rule, peers) comes from
+# dev/config/moos-federation.topology.json (routers.hp-laptop entry), loaded at
+# boot. --default is only the bootstrap fallback if the file fails to load.
+# Requires the moos-router build with boot-load support (feat/topology-file-sot
+# or later) — rebuild the binary before relaunching with this script. Router 5s
+# timeout fallback makes peering an offline box non-fatal.
 #
 # Emit discipline: HG rewrites target THIS box's :8000 only — never cross-emit the
 # laptop seats to Z440/ProDesk.
@@ -23,10 +25,11 @@ $ErrorActionPreference = "Stop"
 $env:MOOS_LOCAL_HOST = 'hp-laptop'
 
 # --- Paths ($env:USERPROFILE = C:\Users\maass) ----------------------------
-$KernelExe   = "$env:USERPROFILE\HPlaptop\moos-kernel\moos-kernel.exe"
-$RouterExe   = "$env:USERPROFILE\HPlaptop\moos-router\moos-router.exe"
-$Ontology    = "$env:USERPROFILE\HPlaptop\ffs0\kb\superset\ontology.json"
-$Log         = "$env:USERPROFILE\HPlaptop\moos-kernel\moos.jsonl"  # sovereign log — NOT $env:TEMP (would start fresh)
+$KernelExe    = "$env:USERPROFILE\HPlaptop\moos-kernel\moos-kernel.exe"
+$RouterExe    = "$env:USERPROFILE\HPlaptop\moos-router\moos-router.exe"
+$TopologyFile = "$env:USERPROFILE\HPlaptop\ffs0\dev\config\moos-federation.topology.json"
+$Ontology     = "$env:USERPROFILE\HPlaptop\ffs0\kb\superset\ontology.json"
+$Log          = "$env:USERPROFILE\HPlaptop\moos-kernel\moos.jsonl"  # sovereign log — NOT $env:TEMP (would start fresh)
 
 $LocalKernel = "http://localhost:8000"
 
@@ -48,27 +51,18 @@ try {
     Write-Host "WARNING: kernel healthz failed — may still be starting. Check log: $Log" -ForegroundColor Yellow
 }
 
-# --- Router (idempotent; full shard list + 2-way peer) --------------------
-# Tailscale IPs are permanent for this tailnet (dev/config/moos-federation.topology.json).
-# Shard set preserves the pre-T251 list verbatim and appends the ProDesk kernel shard.
+# --- Router (idempotent; topology-file SOT) --------------------------------
 $RouterArgs = @(
-    "--listen :9000"
-    "--shard urn:moos:ws:hp-laptop=$LocalKernel"
-    "--shard urn:moos:ws:hp-z440=http://100.82.243.13:8000"
-    "--shard urn:moos:kernel:hp-z440.primary=http://100.82.243.13:8000"
-    "--shard urn:moos:kernel:hp-z440.menno=http://100.82.243.13:8001"
-    "--shard urn:moos:kernel:hp-z440.lola=http://100.82.243.13:8002"
-    "--shard urn:moos:kernel:hp-z440.moos=http://100.82.243.13:8003"
-    "--shard urn:moos:kernel:hpprodesk.primary=http://100.87.28.95:8000"
-    "--peer http://100.82.243.13:9000"
-    "--peer http://100.87.28.95:9000"
-    "--default $LocalKernel"
-) -join " "
+    '--listen', ':9000',
+    '--default', $LocalKernel,
+    '--topology-file', $TopologyFile,
+    '--local-host', 'hp-laptop'
+)
 
 if (Get-Process -Name moos-router -ErrorAction SilentlyContinue) {
-    Write-Host "Router already running — skipping (stop it first to pick up shard/peer changes)." -ForegroundColor Gray
+    Write-Host "Router already running — skipping (POST /admin/topology/reload to pick up topology changes)." -ForegroundColor Gray
 } else {
-    Write-Host "Starting moos router (laptop; shards: laptop + Z440x4 + ProDesk; peers: Z440 + ProDesk)..." -ForegroundColor Cyan
+    Write-Host "Starting moos router (laptop; topology from $TopologyFile)..." -ForegroundColor Cyan
     Start-Process -FilePath $RouterExe -ArgumentList $RouterArgs -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }
@@ -76,6 +70,9 @@ if (Get-Process -Name moos-router -ErrorAction SilentlyContinue) {
 try {
     $r = Invoke-RestMethod "http://localhost:9000/healthz" -TimeoutSec 8
     Write-Host ("Router: {0} [fans in {1} kernel(s)]" -f $r.status, $r.kernels.Count) -ForegroundColor Green
+    if ($r.kernels.Count -lt 6) {
+        Write-Host "WARNING: fan-in below 6 — topology file may not have loaded (old binary?). Check GET http://localhost:9000/admin/topology" -ForegroundColor Yellow
+    }
 } catch {
     Write-Host "WARNING: router healthz failed — may still be starting." -ForegroundColor Yellow
 }
