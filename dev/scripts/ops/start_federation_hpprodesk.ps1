@@ -1,4 +1,4 @@
-# start_federation_hpprodesk.ps1
+﻿# start_federation_hpprodesk.ps1
 # Bring the HP ProDesk local federation up (manual / reference).
 # ProDesk is its own single-seat box (session:sam.hpprodesk-setup): one primary
 # kernel + one router. No menno/lola/moos twins here (those live on Z440).

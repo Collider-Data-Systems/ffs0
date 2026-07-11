@@ -1,4 +1,4 @@
-# start_federation_laptop.ps1
+﻿# start_federation_laptop.ps1
 # Bring the hp-laptop local federation up (manual / reference).
 # hp-laptop is a single-primary box — no menno/lola/moos twins (those live on Z440).
 # One primary kernel (:8000 + MCP :8080) + one router (:9000).

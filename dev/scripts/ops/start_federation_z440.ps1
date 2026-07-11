@@ -1,4 +1,4 @@
-# start_federation_z440.ps1
+﻿# start_federation_z440.ps1
 # Bring the Z440 local federation up: primary kernel (:8000 + MCP :8080),
 # three twins (menno :8001/:9001, lola :8002/:9002, moos :8003/:9003), and
 # the router (:9000).

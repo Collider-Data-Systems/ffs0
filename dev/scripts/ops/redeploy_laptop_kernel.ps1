@@ -1,4 +1,4 @@
-# redeploy_laptop_kernel.ps1
+﻿# redeploy_laptop_kernel.ps1
 # Rebuild the hp-laptop primary engine (kernel) from the current moos-kernel
 # checkout and hot-swap it under the running process, preserving the sovereign log.
 #
