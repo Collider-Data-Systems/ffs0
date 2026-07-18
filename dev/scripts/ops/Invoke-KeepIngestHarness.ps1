@@ -1,6 +1,11 @@
+# Card writer note (CardCheck/CardPlan/CardWrite/CardCleanup): the Keep
+# workspace-card writer is a Z440-only actuator — its slug->apiName index lives
+# in scratch\keep\cards\ (machine-local, untracked) and Keep API v1 has no note
+# update, so refresh = create-new-then-delete-old keyed by that index. Run the
+# card modes only on Z440; other boxes would rotate blind and duplicate cards.
 [CmdletBinding()]
 param(
-    [ValidateSet('Check', 'Stage', 'ClipboardStage', 'ApiAuthListen', 'ApiCloudToken', 'ApiDelegatedInfo', 'ApiDelegatedToken', 'ApiDelegatedKeylessToken', 'ApiDelegatedFetch', 'ApiDelegatedKeylessFetch', 'ApiFetch', 'Pipeline')]
+    [ValidateSet('Check', 'Stage', 'ClipboardStage', 'ApiAuthListen', 'ApiCloudToken', 'ApiDelegatedInfo', 'ApiDelegatedToken', 'ApiDelegatedKeylessToken', 'ApiDelegatedFetch', 'ApiDelegatedKeylessFetch', 'ApiFetch', 'Pipeline', 'CardCheck', 'CardPlan', 'CardWrite', 'CardCleanup')]
     [string]$Mode = 'Stage',
 
     [string]$SourcePath = 'scratch\keep\t195-t206',
@@ -16,10 +21,15 @@ param(
     [string]$ServiceAccountClientId = '100056768598448764528',
     [string]$CloudLoginHint = 'maassenhochrath@gmail.com',
     [string]$DelegatedSubject = 'sam@my-tiny-data-collider.nl',
-    # Least-privilege default: an ingest is a read. Pass the full scope
-    # (https://www.googleapis.com/auth/keep) explicitly for the projection/write path.
-    # NOTE: keep.readonly must be in the DWD allow-list for this default to mint.
-    [string]$KeepScope = 'https://www.googleapis.com/auth/keep.readonly',
+    # Full scope by default (t259): Keep is a read+write workspace surface — we
+    # project into it as well as ingest from it. Only the full scope is in the
+    # DWD allow-list; keep.readonly 401s at the token exchange.
+    [string]$KeepScope = 'https://www.googleapis.com/auth/keep',
+    [ValidateSet('fleet', 'per-workspace', 'both')]
+    [string]$Cards = 'both',
+    [string]$CardSlug = '',
+    [switch]$DeleteOrphans,
+    [switch]$ConfirmCleanup,
     [switch]$UseCalendarOAuthClient,
     [switch]$OpenBrowser,
     [switch]$SkipLiveState,
@@ -380,6 +390,46 @@ function Invoke-KeepApiAuthListen {
     )
 }
 
+function Get-KeepCardArguments {
+    param([Parameter(Mandatory)][string]$CardMode)
+
+    $cardArgs = @(
+        '--mode', $CardMode,
+        '--cards', $Cards,
+        '--credentials', $CredentialsPath,
+        '--token', $TokenPath
+    )
+    if (-not [string]::IsNullOrWhiteSpace($CardSlug)) {
+        $cardArgs += @('--card-slug', $CardSlug)
+    }
+    if ($DeleteOrphans) {
+        $cardArgs += @('--delete-orphans', 'true')
+    }
+    return $cardArgs
+}
+
+function Invoke-KeepCardCheck {
+    Invoke-JuliaScript -ScriptPath 'dev\scripts\google_keep_card_writer.jl' -Arguments (Get-KeepCardArguments -CardMode 'check')
+}
+
+function Invoke-KeepCardPlan {
+    Invoke-JuliaScript -ScriptPath 'dev\scripts\google_keep_card_writer.jl' -Arguments (Get-KeepCardArguments -CardMode 'plan')
+}
+
+function Invoke-KeepCardWrite {
+    Invoke-KeepDelegatedKeylessToken
+    Invoke-JuliaScript -ScriptPath 'dev\scripts\google_keep_card_writer.jl' -Arguments (Get-KeepCardArguments -CardMode 'write')
+}
+
+function Invoke-KeepCardCleanup {
+    if (-not $ConfirmCleanup) {
+        throw 'CardCleanup deletes generated Keep workspace cards. Rerun with -ConfirmCleanup to proceed.'
+    }
+    Invoke-KeepDelegatedKeylessToken
+    $cardArgs = (Get-KeepCardArguments -CardMode 'cleanup') + @('--confirm', 'true')
+    Invoke-JuliaScript -ScriptPath 'dev\scripts\google_keep_card_writer.jl' -Arguments $cardArgs
+}
+
 function Invoke-SessionPipeline {
     powershell -NoProfile -ExecutionPolicy Bypass -File 'dev\scripts\projections\run-session-pipeline.ps1'
     if ($LASTEXITCODE -ne 0) {
@@ -432,6 +482,18 @@ switch ($Mode) {
     }
     'Pipeline' {
         Invoke-SessionPipeline
+    }
+    'CardCheck' {
+        Invoke-KeepCardCheck
+    }
+    'CardPlan' {
+        Invoke-KeepCardPlan
+    }
+    'CardWrite' {
+        Invoke-KeepCardWrite
+    }
+    'CardCleanup' {
+        Invoke-KeepCardCleanup
     }
 }
 

@@ -313,6 +313,13 @@ function export_notes(notes, out_dir::AbstractString; include_trashed::Bool=fals
     skipped = Any[]
     for note in notes
         name = string(object_value(note, :name, ""))
+        if Stage.is_generated_card_title(string(object_value(note, :title, "")))
+            # Generated mo:os workspace cards (google_keep_card_writer.jl) are
+            # ingest-invisible: single choke point covering all ApiFetch modes
+            # and the keep-anywhere Drive mirror.
+            push!(skipped, Dict("name" => name, "reason" => "moos-generated-card"))
+            continue
+        end
         trashed = object_value(note, :trashed, false)
         if !include_trashed && (trashed == true || string(trashed) == "true")
             push!(skipped, Dict("name" => name, "reason" => "trashed"))

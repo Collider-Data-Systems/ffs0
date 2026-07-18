@@ -21,6 +21,14 @@ const DEFAULT_OWNER_URN = "urn:moos:user:sam"
 const INGEST_PROGRAM_URN = "urn:moos:program:sam.t206.keep-loose-thought-ingest-stage"
 const INGEST_DERIVATION_URN = "urn:moos:derivation:guido.t206-keep-loose-thought-classification"
 
+# Sentinel title prefix for generated mo:os workspace cards (F-direction Keep
+# writer, dev/scripts/google_keep_card_writer.jl). Generated cards are
+# ingest-invisible: plan_stage excludes them so the writer's own output never
+# re-enters the G-direction loop.
+const MOOS_CARD_TITLE_PREFIX = "[moos-ws] "
+
+is_generated_card_title(title) = startswith(strip(string(title)), MOOS_CARD_TITLE_PREFIX)
+
 const NOTE_EXTENSIONS = Set([".json", ".html", ".htm", ".txt", ".md"])
 const SUPPORTED_EXTENSIONS = union(NOTE_EXTENSIONS, Set([".zip"]))
 
@@ -688,8 +696,8 @@ function plan_stage(source::AbstractString; existing_source_urls=Set{String}(), 
         note["duplicate_existing_source_url"] = duplicate
         note["review_status"] = duplicate ? "duplicate_source" : (note["t_day"] === nothing ? "needs_date_review" : "source_structured")
     end
-    selected = [note for note in notes if note_in_range(note, t_start, t_end, include_undated) && !note["duplicate_existing_source_url"]]
-    excluded = [Dict("id" => note["id"], "title" => note["title"], "t_day" => note["t_day"], "reason" => note["duplicate_existing_source_url"] ? "duplicate_source" : "outside_t_window") for note in notes if !(note in selected)]
+    selected = [note for note in notes if !is_generated_card_title(note["title"]) && note_in_range(note, t_start, t_end, include_undated) && !note["duplicate_existing_source_url"]]
+    excluded = [Dict("id" => note["id"], "title" => note["title"], "t_day" => note["t_day"], "reason" => is_generated_card_title(note["title"]) ? "moos_generated_card" : (note["duplicate_existing_source_url"] ? "duplicate_source" : "outside_t_window")) for note in notes if !(note in selected)]
     date_start = string(date_for_t_day(t_start; t0_date=t0_date))
     date_end = string(date_for_t_day(t_end; t0_date=t0_date))
     return Dict(

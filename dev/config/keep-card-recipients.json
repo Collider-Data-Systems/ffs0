@@ -1,0 +1,16 @@
+{
+  "_comment": "Recipient map for the Keep workspace-card writer (F-direction, dev/scripts/google_keep_card_writer.jl). Each recipient = (user x devices) reachable through a delegated Keep subject; card_query answers what that recipient sees. v1: sam x android/browser only - Moos/Lola/Menno engines have no Google Workspace identities yet (deferred; future rows, not code changes). Real tokens stay in secrets/, never here.",
+  "schema_version": 1,
+  "recipients": [
+    {
+      "user_urn": "urn:moos:user:sam",
+      "subject": "sam@my-tiny-data-collider.nl",
+      "devices": ["android:SM-A14-5G", "workstation-browser"],
+      "card_query": {
+        "fleet": true,
+        "per_workspace": "occupied-active",
+        "include_birth": false
+      }
+    }
+  ]
+}

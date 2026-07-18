@@ -1,0 +1,807 @@
+{
+  "review_only": true,
+  "apply_ready": false,
+  "applied": false,
+  "do_not_reapply": false,
+  "target_url": "http://localhost:8000/programs",
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "persona": "zappa",
+  "actor_urn": "urn:moos:agent:claude-cowork.hp-z440",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+  "approval_basis": "t259 continuous-loop staging; Sam gate pending",
+  "generated_at": "2026-07-18T19:55:00Z",
+  "generated_from": "scratch/keep/t195-t206/api/notes/20260718-t259-17-37-manifold-mo-os-so-om-engine-code-re-write-an.json",
+  "preview": "tmp/projections/t259_staging_preview.md",
+  "idempotency": {
+    "rule": "moos-workspace-ingest duplicate-claim: before apply, node_lookup the umbrella URN. Exists with SAME source_ref (api_name + api_update_time) AND SAME text_sha256 -> emit one ADD claim flagging duplicate-ingest; no new knowledge_items, no new LINKs. Exists with DIFFERENT source_ref or text_sha256 -> bail and ask Sam (URN collision, or the note was edited after staging - e.g. the open 'update 21.44' tail got written; restage). Absent -> apply the full batch atomically (all-or-nothing).",
+    "umbrella_urn": "urn:moos:ki:keep.t259-manifold-axes-thread",
+    "source_ref": {
+      "api_name": "notes/1u9UlySHlqlQ2utGA8TM63eH-HM1RxhZ0u4S3yrANnpi_On0OUFJHRzQg_z-n7VU",
+      "api_update_time": "2026-07-18T19:44:36.896059Z"
+    },
+    "text_sha256": "eaa3aa7adae8b42533b9a2d6ff02a68a05e0df8b61d2c68c355a51e66f1bbff5"
+  },
+  "staging_notes": [
+    "Review-only candidates. NOT applied. No kernel was contacted while staging.",
+    "Envelope counts: 7 ADD (4 knowledge_item + 3 derivation) + 4 WF12 LINK + 6 WF21 LINK + 4 WF19 LINK = 21.",
+    "Conjecture marking: derivation.status enum is open|closed|retracted (no 'conjecture' value), so d/e/f carry status=open + extra property epistemic_status=conjecture + a CONJECTURE prefix in content.",
+    "WF21 edges are all knowledge_item -> derivation (one direction, bipartite): acyclic by construction.",
+    "WF19 pins-urn envelopes use the kernel actor per WF19 authority=kernel and the t206 precedent; all other envelopes use the Cowork agent actor with explicit session_urn (multi-workspace agent rule).",
+    "No new channels, no new relation kinds, no persona/surface nodes (D7/D8 observed-only).",
+    "Source note has 6 attachments (task brief said 4); all 6 local evidence paths staged on the 17.37 chunk.",
+    "Trailing bare 'update 21.44' marker has no content in the source; excluded, recorded as open_tail on the umbrella.",
+    "created_at stamps: umbrella + 17.37 chunk = apiCreateTime 15:37:07Z; 19.03 chunk = 17:03Z and 20.30 chunk = 18:30Z (source-authored CEST times converted to UTC); derivations + retrieved_at = host clock 19:55Z (Get-Date -AsUTC, wall-clock discipline)."
+  ],
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:ki:keep.t259-manifold-axes-thread",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "t259; 17.37 manifold mo:os/so:om engine code re-write and MTDC manifold exploration",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://keep.googleapis.com/v1/notes/1u9UlySHlqlQ2utGA8TM63eH-HM1RxhZ0u4S3yrANnpi_On0OUFJHRzQg_z-n7VU",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "keep",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-18T19:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-18T15:37:07Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "t259 Keep note thread (17.37 original + updates 19.03 and 20.30): manifold mo:os/so:om engine re-write framing. Windows virtual desktops as parameterized workspace fibers; the recipient-tuple ruling (what user on what device, running which engine, wants what/why/where-to); the 20.30 correction that surfaces are stateless client/server, not concurrent processes, with two so:om process sorts; Sam hunting axes and symmetries of the MTDC manifold topology. Trailing bare marker 'update 21.44' carries no content yet and is excluded from this staging.",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:google.keep.sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_ref_api_name": {
+          "value": "notes/1u9UlySHlqlQ2utGA8TM63eH-HM1RxhZ0u4S3yrANnpi_On0OUFJHRzQg_z-n7VU",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_ref_api_update_time": {
+          "value": "2026-07-18T19:44:36.896059Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "text_sha256": {
+          "value": "eaa3aa7adae8b42533b9a2d6ff02a68a05e0df8b61d2c68c355a51e66f1bbff5",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_count": {
+          "value": 3,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "open_tail": {
+          "value": "bare 'update 21.44' marker present in source; content not yet written; not staged",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:ki:keep.t259-1737-workspace-arrays",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "t259 17.37 — workspace arrays: Windows desktops as parameterized fibers",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://keep.googleapis.com/v1/notes/1u9UlySHlqlQ2utGA8TM63eH-HM1RxhZ0u4S3yrANnpi_On0OUFJHRzQg_z-n7VU",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "keep",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-18T19:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-18T15:37:07Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "Setup impressions: Z440 on W11 Pro Insiders/dev, hp-laptop on W10, hpprodesk remote-access no pc. Z440 runs 5+ virtual desktops as workspace slices/projections/colimits — up to complete arrays of workspaces defined by parameters, auto-opened in tabs with tab-grouping, giving user-friendly fast-switching visual insight into the HG. Desktop 1 currently holds AG + VS Code + Claude conversations. Idea: 100x this once Windows is controllable and desktops attach to so:om applications — Windows desktops read as parameterized fibers over workspace-space. Evidence: 6 PNG attachments (screenshots) at the listed local paths.",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:google.keep.sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_index": {
+          "value": 0,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_label": {
+          "value": "17.37",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "umbrella_urn": {
+          "value": "urn:moos:ki:keep.t259-manifold-axes-thread",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "attachment_evidence_paths": {
+          "value": [
+            "D:\\HPZ440\\ffs0\\scratch\\keep\\t195-t206\\api\\attachments\\20260718-t259-17-37-manifold-mo-os-so-om-engine-code-re-write-an\\01-1YDRsBd59yE_i5yjqzE0HMhzFyhX3qailS_nRHJwqROci5bcTUu30k1WFHnRIVnw.png",
+            "D:\\HPZ440\\ffs0\\scratch\\keep\\t195-t206\\api\\attachments\\20260718-t259-17-37-manifold-mo-os-so-om-engine-code-re-write-an\\02-1-obX7YtMxMV4lyIaAX517zMdXBshumhZsk5OQhk5-8yNmt-rTOpjG_Q5eRI.png",
+            "D:\\HPZ440\\ffs0\\scratch\\keep\\t195-t206\\api\\attachments\\20260718-t259-17-37-manifold-mo-os-so-om-engine-code-re-write-an\\03-1hqN2nb_TivMAa3Me9RvpJtB_8or9J59g1DgvV0ec3eidnqnFN2iyTSXL4XoXrQ.png",
+            "D:\\HPZ440\\ffs0\\scratch\\keep\\t195-t206\\api\\attachments\\20260718-t259-17-37-manifold-mo-os-so-om-engine-code-re-write-an\\04-1X2n7rOzdRXBq3sE5M7Uos_AnwygVEtrYW4kUYCWZcnKA5V-Fi8PsSsKM1f7Rbhg.png",
+            "D:\\HPZ440\\ffs0\\scratch\\keep\\t195-t206\\api\\attachments\\20260718-t259-17-37-manifold-mo-os-so-om-engine-code-re-write-an\\05-1RvrCel2y4fR4n70uUAQoEzWl9HSpz3yU7LpduJ-ygVRL8twgcITYjfZmllTAAg.png",
+            "D:\\HPZ440\\ffs0\\scratch\\keep\\t195-t206\\api\\attachments\\20260718-t259-17-37-manifold-mo-os-so-om-engine-code-re-write-an\\06-1gPv_0NtQY_jZycMwZ6W6zC2GP0o3XrDCD2tOs80-mX05HJ8Z2OMgfkc-u7Ua66s.png"
+          ],
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:ki:keep.t259-1903-recipient-tuple",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "t259 19.03 — recipient tuple ruling; family users deferred",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://keep.googleapis.com/v1/notes/1u9UlySHlqlQ2utGA8TM63eH-HM1RxhZ0u4S3yrANnpi_On0OUFJHRzQg_z-n7VU",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "keep",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-18T19:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-18T17:03:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "Inventory: workstations z440 / hp-laptop / hpprodesk + Android SM-A14-5R; Google Workspace plan sam@my-tiny-data-collider.com carries API access (Keep) and future features. Family users Moos, Lola, Menno: engines (then: kernels) exist since many T-days for distributed hyperware/manifold computing, but they have NO Google Workspace identities yet, so no API access to own workspaces and no Keep-note projections to them — DEFERRED. Engines can run on house PCs, in cloud (GCP), in sandboxes (Daytona), or on partial CPU/GPU components; locations are topological in the manifold (at least in MTDC). mo:os = wiring of purpose to operation, governed by access-controlled workspaces (user-id x whether the workspace is on an engine owned by that user); so:om = accumulated skills/tools/scripts/datasets/external code — the I/O for the HG, depending on the ontology surface. Card-granularity ruling: 'what user on what device, running which engine, wants what and why and where-to?'",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:google.keep.sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_index": {
+          "value": 1,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_label": {
+          "value": "update 19.03",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "umbrella_urn": {
+          "value": "urn:moos:ki:keep.t259-manifold-axes-thread",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:ki:keep.t259-2030-stateless-surfaces",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "t259 20.30 — surfaces are stateless client/server; two so:om process sorts",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://keep.googleapis.com/v1/notes/1u9UlySHlqlQ2utGA8TM63eH-HM1RxhZ0u4S3yrANnpi_On0OUFJHRzQg_z-n7VU",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "keep",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-18T19:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-18T18:30:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "Correction: chrome tabs, Keep instances (Android or workstation), IDEs, and workspace apps (Calendar, Gmail) are NOT surface operations and NOT concurrent processes — they are stateless client/server surfaces any user can access with or without a running engine. The concurrent processes are so:om, in two sorts: (1) processes running the active purpose-wired function sets (a user with access to the workspace whose purpose defines the program structure producing the variable sets for these functions), and (2) processes running external code (skills/tools in other languages) and indexing external processed data (files). Authentication of user-id, device, and workstation-id gates workspace access. Engines run workspaces; all engines together run the manifold; a single-user engine is a manifold on its own (self-similarity). Ontology is governed by the manifold group — for MTDC that is Sam with placeholder coworkers Lola, Moos, Menno — so there is social topology too.",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:google.keep.sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_index": {
+          "value": 2,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_label": {
+          "value": "update 20.30",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "umbrella_urn": {
+          "value": "urn:moos:ki:keep.t259-manifold-axes-thread",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:derivation:zappa.t259-manifold-axes",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "t259 manifold axes A1-A5 (conjecture)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "llm_completion",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "stochastic_weights": {
+          "value": {
+            "source": "cowork-conversation",
+            "deriving_session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+            "model_urn": "urn:moos:agent:claude-cowork.hp-z440"
+          },
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "confidence": {
+          "value": 0.6,
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "open",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-18T19:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "epistemic_status": {
+          "value": "conjecture",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "derived_in_session_urn": {
+          "value": "urn:moos:session:sam.z440-cowork-workspace",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "CONJECTURE - candidate axes of the MTDC manifold topology, derived in the sam.z440-cowork-workspace conversation from the t259 note thread: A1 identity-poset (user < group < manifold-group; access and sharing ride the poset). A2 placement (which workstation / device / cloud / sandbox / partial CPU-GPU location hosts an engine or surface; locations are topological in the manifold). A3 runtime (engine present vs absent; which concurrent processes run - purpose-wired function sets vs external-code execution and data indexing). A4 semantics (mo:os purpose-wiring / ontology surface vs so:om accumulated skills, tools, scripts, data). A5 time-lineage (T-day epochs; engine build and continuous-update lineage; branch-episodes).",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:derivation:zappa.t259-manifold-symmetries",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "t259 manifold symmetries S1-S5 (conjecture)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "llm_completion",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "stochastic_weights": {
+          "value": {
+            "source": "cowork-conversation",
+            "deriving_session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+            "model_urn": "urn:moos:agent:claude-cowork.hp-z440"
+          },
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "confidence": {
+          "value": 0.55,
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "open",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-18T19:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "epistemic_status": {
+          "value": "conjecture",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "derived_in_session_urn": {
+          "value": "urn:moos:session:sam.z440-cowork-workspace",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "CONJECTURE - candidate symmetries of the MTDC manifold topology, derived in the sam.z440-cowork-workspace conversation from the t259 note thread: S1 surface-gauge (stateless surfaces - chrome tabs, Keep instances, IDEs, Windows desktops - are gauge; workspace semantics invariant under change of surface). S2 placement-invariance (relocating an engine across workstation / cloud / sandbox preserves workspace semantics; per the section M9 correction, twin_link is LOCAL kernel duplication, not cross-machine federation). S3 scale self-similarity (a single engine is a manifold; all engines together run the manifold - D1 manifold as colimit of branch-episodes). S4 F adjoint G (projection out to surfaces left-adjoint to ingest back into the HG). S5 identity-fibration (workspaces fibered over the identity poset; access = pullback along user into group; sharing/push = extension along user into group).",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:derivation:zappa.t259-access-law",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "t259 workspace access law (conjecture)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "llm_completion",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "stochastic_weights": {
+          "value": {
+            "source": "cowork-conversation",
+            "deriving_session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+            "model_urn": "urn:moos:agent:claude-cowork.hp-z440"
+          },
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "confidence": {
+          "value": 0.6,
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "open",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-18T19:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "epistemic_status": {
+          "value": "conjecture",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "derived_in_session_urn": {
+          "value": "urn:moos:session:sam.z440-cowork-workspace",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "CONJECTURE - access law derived in the sam.z440-cowork-workspace conversation from the t259 note thread: access(workspace) = f(user-id, device-id, workstation-id) x owns(user, engine(workspace)). Authentication of user-id, device-id and workstation-id gates workspace access, multiplied by whether the workspace runs on an engine owned by that user. Surfaces are absent as arguments - by S1 surface-gauge they are stateless client/server and reachable by any user with or without a running engine; access control binds at the workspace/engine, never at the surface.",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-channel-google-keep-sam.provides-kb.urn-moos-ki-keep-t259-manifold-axes-thread",
+      "rewrite_category": "WF12",
+      "src_urn": "urn:moos:channel:google.keep.sam",
+      "src_port": "provides-kb",
+      "tgt_urn": "urn:moos:ki:keep.t259-manifold-axes-thread",
+      "tgt_port": "kb-source"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-ki-keep-t259-manifold-axes-th.provides-kb.urn-moos-ki-keep-t259-1737-workspace-arrays",
+      "rewrite_category": "WF12",
+      "src_urn": "urn:moos:ki:keep.t259-manifold-axes-thread",
+      "src_port": "provides-kb",
+      "tgt_urn": "urn:moos:ki:keep.t259-1737-workspace-arrays",
+      "tgt_port": "kb-source"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-ki-keep-t259-manifold-axes-th.provides-kb.urn-moos-ki-keep-t259-1903-recipient-tuple",
+      "rewrite_category": "WF12",
+      "src_urn": "urn:moos:ki:keep.t259-manifold-axes-thread",
+      "src_port": "provides-kb",
+      "tgt_urn": "urn:moos:ki:keep.t259-1903-recipient-tuple",
+      "tgt_port": "kb-source"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-ki-keep-t259-manifold-axes-th.provides-kb.urn-moos-ki-keep-t259-2030-stateless-surfaces",
+      "rewrite_category": "WF12",
+      "src_urn": "urn:moos:ki:keep.t259-manifold-axes-thread",
+      "src_port": "provides-kb",
+      "tgt_urn": "urn:moos:ki:keep.t259-2030-stateless-surfaces",
+      "tgt_port": "kb-source"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-ki-keep-t259-1737-workspace-a.causes.urn-moos-derivation-zappa-t259-manifold-axes",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:keep.t259-1737-workspace-arrays",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t259-manifold-axes",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-ki-keep-t259-1903-recipient-t.causes.urn-moos-derivation-zappa-t259-manifold-axes",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:keep.t259-1903-recipient-tuple",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t259-manifold-axes",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-ki-keep-t259-1903-recipient-t.causes.urn-moos-derivation-zappa-t259-manifold-symmetries",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:keep.t259-1903-recipient-tuple",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t259-manifold-symmetries",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-ki-keep-t259-2030-stateless-s.causes.urn-moos-derivation-zappa-t259-manifold-symmetries",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:keep.t259-2030-stateless-surfaces",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t259-manifold-symmetries",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-ki-keep-t259-1903-recipient-t.causes.urn-moos-derivation-zappa-t259-access-law",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:keep.t259-1903-recipient-tuple",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t259-access-law",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-ki-keep-t259-2030-stateless-s.causes.urn-moos-derivation-zappa-t259-access-law",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:keep.t259-2030-stateless-surfaces",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t259-access-law",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-session-sam-z440-cowork-works.pins-urn.urn-moos-ki-keep-t259-manifold-axes-thread",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:ki:keep.t259-manifold-axes-thread",
+      "tgt_port": "pinned-by-session"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-session-sam-z440-cowork-works.pins-urn.urn-moos-derivation-zappa-t259-manifold-axes",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:derivation:zappa.t259-manifold-axes",
+      "tgt_port": "pinned-by-session"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-session-sam-z440-cowork-works.pins-urn.urn-moos-derivation-zappa-t259-manifold-symmetries",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:derivation:zappa.t259-manifold-symmetries",
+      "tgt_port": "pinned-by-session"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t259-manifold-axes.urn-moos-session-sam-z440-cowork-works.pins-urn.urn-moos-derivation-zappa-t259-access-law",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:derivation:zappa.t259-access-law",
+      "tgt_port": "pinned-by-session"
+    }
+  ]
+}

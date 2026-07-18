@@ -272,6 +272,15 @@ try {
             "--actor-urn" $ActorUrn
     }
 
+    Invoke-Step "Keep workspace card plan (dry, warn-only)" {
+        # F-direction Keep card preview only — the write itself stays OUT of the
+        # pipeline (calendar-writer boundary precedent; use the Keep harness
+        # CardWrite mode as the explicit boundary act).
+        & $Julia "dev\scripts\google_keep_card_writer.jl" "--mode" "plan" "--cards" "both"
+        if ($LASTEXITCODE -ne 0) { Write-Warning "Keep workspace card plan failed (dry, warn-only) — see tmp/projections/session_pipeline/keep_cards/" }
+        $global:LASTEXITCODE = 0   # warn-only: do not fail the dry pipeline (portable, no cmd.exe)
+    }
+
     Write-Host ""
     Write-Host "Dashboard: tmp\projections\session_pipeline\index.html"
 } finally {
