@@ -1,0 +1,565 @@
+{
+  "review_only": true,
+  "apply_ready": false,
+  "applied": false,
+  "do_not_reapply": false,
+  "target_url": "http://localhost:8000/programs",
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "persona": "zappa",
+  "actor_urn": "urn:moos:agent:claude-cowork.hp-z440",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+  "approval_basis": "t260 categorical-branching staging; Sam gate pending",
+  "generated_at": "2026-07-19T05:09:58Z",
+  "generated_from": "Cowork conversation, sam.z440-cowork-workspace, t260 categorical-branching merge (verified against 20260607-t218-branching-strategy.md, 20260708-t249-governance-authority-note.md, ffs0/AGENTS.md Repos & branching, t231 poly foundations, t244 capability vectors)",
+  "preview": "tmp/projections/t260_staging_preview.md",
+  "idempotency": {
+    "rule": "moos-workspace-ingest duplicate-claim: before apply, node_lookup the umbrella URN. Exists with SAME source_ref (conversation session_urn + t260 slug) -> emit one ADD claim flagging duplicate-ingest; no new derivations, no new LINKs. Exists with DIFFERENT content -> bail and ask Sam (URN collision or the model was revised after staging; restage). Absent -> apply the full batch atomically (all-or-nothing). SeedIfAbsent grow-set semantics: idempotence is by URN identity, not by protocol.",
+    "umbrella_urn": "urn:moos:ki:cowork.t260-categorical-branching-model",
+    "source_ref": {
+      "conversation_session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "slug": "t260-categorical-branching"
+    }
+  },
+  "staging_notes": [
+    "Review-only candidates. NOT applied. No kernel was contacted while staging.",
+    "Envelope counts: 5 ADD (1 knowledge_item + 4 derivation) + 9 WF21 LINK + 5 WF19 LINK = 19.",
+    "Source is the Cowork conversation itself (S0 substrate), not an external channel: substrate=s0-conversation, substrate_anchor_urn=the workspace (session) URN. No WF12 provides-kb envelope is staged because no channel node anchors a conversation; reviewer may add one if a cowork channel node exists by apply time.",
+    "Conjecture marking follows t259 exactly: derivation.status enum is open|closed|retracted (no 'conjecture' value), so all 4 derivations carry status=open + extra property epistemic_status=conjecture + a CONJECTURE prefix in content.",
+    "WF21 topology and acyclicity: 4 links knowledge_item -> derivation (umbrella grounds each new derivation; bipartite, acyclic by construction) + 5 links derivation -> derivation (t259 staged candidates -> t260 derivations, strictly older-round -> newer-round, one direction only, no back-links from t260 to t259 staged: acyclic). Dependency: the 3 t259 derivation URNs (zappa.t259-manifold-axes, zappa.t259-manifold-symmetries, zappa.t259-access-law) exist only as staged candidates in t259-manifold-axes-staging.program.json — that program MUST be applied before or atomically with this one, else the 5 cross-round WF21 LINKs dangle.",
+    "Cross-round WF21 rationale: axes -> spine (base B = A1 identity-poset x A2 placement); symmetries -> spine (S5 identity-fibration is the direct ancestor of C1); symmetries -> push (S4 F adjoint G is the adjunction the three push phases factor through); access-law -> push (gated ingest mirrors the access law: gate binds at workspace/engine, never at surface); symmetries -> branch-lease (S1 surface-gauge + S3 self-similarity generalize branching to any surface with restriction).",
+    "WF19 pins-urn envelopes use the kernel actor per WF19 authority=kernel and the t206/t259 precedent; all other envelopes use the Cowork agent actor with explicit session_urn (multi-workspace agent rule).",
+    "No new channels, no new relation kinds, no persona/surface nodes (D7/D8 observed-only).",
+    "Grounded claims ride the umbrella as the grounded_claims property, verbatim as verified; conjectures (C1, C4, lease, global/local reading) live only in the derivation nodes.",
+    "created_at + retrieved_at stamps: host clock 2026-07-19T05:09:58Z (Get-Date -AsUTC in the same call, wall-clock discipline)."
+  ],
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:ki:cowork.t260-categorical-branching-model",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "t260 — categorical branching: fibration spine, push as Lan, lease generalization, global/local",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "cowork-conversation",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-19T05:09:58Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-19T05:09:58Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "t260 goal: merge the t218 branching doctrine, the T249 worktree partition, and the t259 manifold axes/symmetries candidates into one categorical model of branching and push. SPINE (fibration): base B = A1 x A2 — identity poset (user < group < manifold-group) x placement poset (component < device < cloud); total category E = occupied workspaces (purpose x occupant x scope, t218); p: E -> B sends a workspace to its coordinate. CONJECTURE C1: p is a Grothendieck fibration — branch = cartesian lift f*W, a universal restriction to a new coordinate, data-only, emitting no HG rewrite (t218: a branch is a coordinate, not a tree node); worktree = the single filesystem realization of the lift, and T249 one-checkout-per-branch = split cleavage; merge = cocartesian pushforward, gated — existence of a lift never confers apply authority (mirrors M11/M12). PUSH = three phases, two directions: what moves is never a node-set but a log segment — an ordered diagram of rewrites plus closure under required relations and provenance — via (1) SELECT a purpose-keyed slice of one fold's content, (2) MATERIALIZE = F-lower onto a transport surface chosen by capability vector (t244; ordered log content rides reliable streams, presence rides datagrams, t231), (3) GATED INGEST = G, only if the receiving fold's M11/M12 gate admits, landing as NEW log entries in the receiver's sovereign log with the E2 trailer; a delivered slice that fails the gate has moved but changed nothing. CONJECTURE C4: push = Lan_f, pointwise colimit along a base morphism = t218 E4 merge; the E2 trailer is the comma-category data — no trailer, no colimit, no push. BRANCHING GENERALIZATION: any surface with restriction gets branches (MLIR regions per target, twin engine per device, per-principal branch-workspaces per t231 folder layout); branch-episode = lease (coordinate, occupant, purpose, placement) with at most one live occupant; git worktrees enforce the lease via filesystem, every other surface needs WF19 has-occupant; unoccupied branch = dormant S0 substrate (E3); no CRDT machinery needed — sovereign single-writer logs give per-log total order, merges are explicit reviewed events, merge-not-rebase preserves forward-only; GAP: no lease reclaim/expiry exists (same class as F1). GLOBAL VS LOCAL: no global writable memory; global = the URN namespace (URN-equality IS cross-fold identity, no cross-fold reference relation exists) + router :9000 read-only fan-in (the only legitimate cross-fold surface, R1); local = every realization — address, checkout, cache, twin fold — a memory add.",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "s0-conversation",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:session:sam.z440-cowork-workspace",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "grounded_claims": {
+          "value": [
+            "GROUNDED — branch = F(workspace) projected onto the VCS surface; merge = G(branch); promotion to trunk is always an explicit reviewed act (20260607-t218-branching-strategy.md:39-41).",
+            "GROUNDED — a branch is a coordinate, not a tree node; branch name = flattened WF19 tuple <lane>/<purpose-slug>; carries data only, emits no HG rewrite, triggers no deploy (t218:15-26,45-51).",
+            "GROUNDED — one-checkout-per-branch worktree partition = lane partition as filesystem fact; worktree kernels never point --log at anything but the canonical sovereign log (ffs0/AGENTS.md, Repos & branching, T249).",
+            "GROUNDED — occupancy is liveness: a branch with no occupant is dormant S0 substrate (t218 E3:127-129).",
+            "GROUNDED — a merge is a real G-ingest only with the E2 provenance trailer (authored-by agent/session/purpose); E5 adds user/workstation/channel-kind when disambiguating (t218:116-171).",
+            "GROUNDED — G-direction is gated: M11/M12 fail closed; for code repos the build gate is the ANALOG of the apply gate (t218:61-74; 20260708-t249-governance-authority-note.md:14)."
+          ],
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:derivation:zappa.t260-spine-fibration",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "t260 spine — occupied workspaces fibered over identity x placement (conjecture C1)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "llm_completion",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "stochastic_weights": {
+          "value": {
+            "source": "cowork-conversation",
+            "deriving_session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+            "model_urn": "urn:moos:agent:claude-cowork.hp-z440"
+          },
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "confidence": {
+          "value": 0.6,
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "open",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-19T05:09:58Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "epistemic_status": {
+          "value": "conjecture",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "derived_in_session_urn": {
+          "value": "urn:moos:session:sam.z440-cowork-workspace",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "CONJECTURE C1 — fibration spine of branching, derived in the sam.z440-cowork-workspace conversation (t260) from t218 + T249 + the t259 axis candidates. Base B = A1 x A2: the identity poset (user < group < manifold-group) times the placement poset (component < device < cloud). Total category E = occupied workspaces (purpose x occupant x scope, t218). Projection p: E -> B sends a workspace to its coordinate. Conjecture: p is a Grothendieck fibration. A branch is the cartesian lift f*W — the universal restriction of a workspace to a new coordinate; it carries data only, emits no HG rewrite, triggers no deploy (t218: a branch is a coordinate, not a tree node; branch name = flattened WF19 tuple <lane>/<purpose-slug>). A worktree is the single filesystem realization of the lift; T249 one-checkout-per-branch = split cleavage — exactly one chosen lift per (branch, base morphism). A merge is the cocartesian pushforward and is gated: existence of a lift never confers apply authority (mirrors M11/M12; promotion to trunk is always an explicit reviewed act).",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:derivation:zappa.t260-push-log-transport",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "t260 push — log-segment transport in three phases; push = Lan_f (conjecture C4)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "llm_completion",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "stochastic_weights": {
+          "value": {
+            "source": "cowork-conversation",
+            "deriving_session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+            "model_urn": "urn:moos:agent:claude-cowork.hp-z440"
+          },
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "confidence": {
+          "value": 0.55,
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "open",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-19T05:09:58Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "epistemic_status": {
+          "value": "conjecture",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "derived_in_session_urn": {
+          "value": "urn:moos:session:sam.z440-cowork-workspace",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "CONJECTURE C4 — push as gated log-segment transport, derived in the sam.z440-cowork-workspace conversation (t260). What moves is never a node-set; it is a log segment — an ordered diagram of rewrites plus closure under required relations and provenance. Three phases, two directions: (1) SELECT a purpose-keyed slice of one fold's content; (2) MATERIALIZE = F-lower onto a transport surface chosen by capability vector (workstation kind x engine endpoint x rewrite-reach x surface-reach, t244) — ordered log content rides reliable streams, presence rides datagrams (t231); (3) GATED INGEST = G, only if the receiving fold's M11/M12 gate admits, landing as NEW log entries in the receiver's sovereign log with the E2 trailer (authored-by agent/session/purpose; E5 adds user/workstation/channel-kind when disambiguating). A delivered slice that fails the gate has moved but changed nothing. Formal reading: push = Lan_f, the pointwise colimit along a base morphism = the t218 E4 merge; the E2 trailer is the comma-category data — no trailer, no colimit, no push (a checkable well-definedness criterion). Idempotence is by URN identity (SeedIfAbsent grow-set), not by protocol. Engine code is itself an F-projection of operad + fold semantics (t244); pushing it = re-lowering / bootstrapped provisioning through the build gate — the ANALOG of the apply gate, not the same gate — and emits no HG rewrite.",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:derivation:zappa.t260-branch-lease",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "t260 branching generalization — branch-episode as lease (conjecture)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "llm_completion",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "stochastic_weights": {
+          "value": {
+            "source": "cowork-conversation",
+            "deriving_session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+            "model_urn": "urn:moos:agent:claude-cowork.hp-z440"
+          },
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "confidence": {
+          "value": 0.55,
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "open",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-19T05:09:58Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "epistemic_status": {
+          "value": "conjecture",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "derived_in_session_urn": {
+          "value": "urn:moos:session:sam.z440-cowork-workspace",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "CONJECTURE — branching generalization, derived in the sam.z440-cowork-workspace conversation (t260). Any surface with restriction gets branches: MLIR module per target (branches as regions, not modules), twin engine per device, per-principal branch-workspaces (t231 folder layout). A branch-episode is a lease: (coordinate, occupant, purpose, placement) with at most one live occupant. Git worktrees enforce the lease via the filesystem (T249 one-checkout-per-branch); every other surface needs WF19 has-occupant to enforce the same invariant. An unoccupied branch is dormant S0 substrate (t218 E3 — occupancy is liveness). No CRDT machinery is needed: sovereign single-writer logs give per-log total order; merges are explicit reviewed events, never eventual convergence; merge-not-rebase preserves forward-only. GAP: no lease reclaim/expiry mechanism exists — same class as F1.",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:derivation:zappa.t260-global-local",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "t260 global vs local — URN namespace + read-only fan-in are the only globals (conjecture)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "llm_completion",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "stochastic_weights": {
+          "value": {
+            "source": "cowork-conversation",
+            "deriving_session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+            "model_urn": "urn:moos:agent:claude-cowork.hp-z440"
+          },
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "confidence": {
+          "value": 0.65,
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "open",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-19T05:09:58Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "epistemic_status": {
+          "value": "conjecture",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "derived_in_session_urn": {
+          "value": "urn:moos:session:sam.z440-cowork-workspace",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "content": {
+          "value": "CONJECTURE — global vs local, derived in the sam.z440-cowork-workspace conversation (t260). There is no global writable memory. Global = (a) the URN namespace — URN-equality IS cross-fold identity, no cross-fold reference relation exists; (b) router :9000 read-only fan-in, the only legitimate cross-fold surface (R1). Local = every realization: address, checkout, cache, twin fold — each is a memory add, never a second writable truth.",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-ki-cowork-t260-categorical-br.causes.urn-moos-derivation-zappa-t260-spine-fibration",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:cowork.t260-categorical-branching-model",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-spine-fibration",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-ki-cowork-t260-categorical-br.causes.urn-moos-derivation-zappa-t260-push-log-transport",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:cowork.t260-categorical-branching-model",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-push-log-transport",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-ki-cowork-t260-categorical-br.causes.urn-moos-derivation-zappa-t260-branch-lease",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:cowork.t260-categorical-branching-model",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-branch-lease",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-ki-cowork-t260-categorical-br.causes.urn-moos-derivation-zappa-t260-global-local",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:ki:cowork.t260-categorical-branching-model",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-global-local",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-derivation-zappa-t259-manifold-axes.causes.urn-moos-derivation-zappa-t260-spine-fibration",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:derivation:zappa.t259-manifold-axes",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-spine-fibration",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-derivation-zappa-t259-manifold-symm.causes.urn-moos-derivation-zappa-t260-spine-fibration",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:derivation:zappa.t259-manifold-symmetries",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-spine-fibration",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-derivation-zappa-t259-manifold-symm.causes.urn-moos-derivation-zappa-t260-push-log-transport",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:derivation:zappa.t259-manifold-symmetries",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-push-log-transport",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-derivation-zappa-t259-access-law.causes.urn-moos-derivation-zappa-t260-push-log-transport",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:derivation:zappa.t259-access-law",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-push-log-transport",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-derivation-zappa-t259-manifold-symm.causes.urn-moos-derivation-zappa-t260-branch-lease",
+      "rewrite_category": "WF21",
+      "src_urn": "urn:moos:derivation:zappa.t259-manifold-symmetries",
+      "src_port": "causes",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-branch-lease",
+      "tgt_port": "caused-by"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-session-sam-z440-cowork-works.pins-urn.urn-moos-ki-cowork-t260-categorical-branching-model",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:ki:cowork.t260-categorical-branching-model",
+      "tgt_port": "pinned-by-session"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-session-sam-z440-cowork-works.pins-urn.urn-moos-derivation-zappa-t260-spine-fibration",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-spine-fibration",
+      "tgt_port": "pinned-by-session"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-session-sam-z440-cowork-works.pins-urn.urn-moos-derivation-zappa-t260-push-log-transport",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-push-log-transport",
+      "tgt_port": "pinned-by-session"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-session-sam-z440-cowork-works.pins-urn.urn-moos-derivation-zappa-t260-branch-lease",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-branch-lease",
+      "tgt_port": "pinned-by-session"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "relation_urn": "urn:moos:rel:t260-categorical-branching.urn-moos-session-sam-z440-cowork-works.pins-urn.urn-moos-derivation-zappa-t260-global-local",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:derivation:zappa.t260-global-local",
+      "tgt_port": "pinned-by-session"
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "review_only": true,
   "apply_ready": false,
-  "applied": false,
-  "do_not_reapply": false,
+  "applied": true,
+  "do_not_reapply": true,
   "target_url": "http://localhost:8000/programs",
   "target_kernel": "urn:moos:kernel:hp-z440.primary",
   "persona": "zappa",
@@ -803,5 +803,9 @@
       "tgt_urn": "urn:moos:derivation:zappa.t259-access-law",
       "tgt_port": "pinned-by-session"
     }
-  ]
+  ],
+  "applied_at": "T=260 2026-07-19 (see commit clock)",
+  "log_len_before": 562,
+  "log_len_after": 584,
+  "applied_via": "Invoke-RestMethod -InFile after Sam permission-rule + goal authorization; 21/21 results; fold readback green"
 }
