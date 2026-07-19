@@ -599,34 +599,38 @@ function Invoke-PostProgram {
         throw "Preflight failed for persona '$Name'. Re-run with -Force to POST anyway."
     }
 
-    # Byte-faithful payload: the PS5.1 ConvertFrom/ConvertTo-Json round-trip mangles
-    # envelope JSON (ISO strings become DateTime, shapes drift — same 5.1-divergence
-    # class as the T=252 BOM parse-bomb). POST the file's own bytes; when the file is
-    # a wrapper, extract the envelopes subtree with Node (faithful JSON.parse/stringify).
-    $raw = Get-Content -Path $Path -Raw
+    # Never decode the payload (T=252 ③ / T=260 lesson): PS5.1 reads BOM-less
+    # UTF-8 as cp1252 (Get-Content -Raw shatters multibyte chars) and its JSON
+    # round-trip is lossy. So the payload travels file -> wire as bytes only:
+    # wrapped files get the envelopes subtree extracted by Node (faithful
+    # JSON.parse/stringify) into a temp file, and Invoke-RestMethod -InFile
+    # sends the bytes verbatim. No PowerShell string ever holds the payload.
     $json = Read-JsonFile -Path $Path
-    if (($json -isnot [array]) -and $json.PSObject.Properties['envelopes']) {
-        $node = Get-Command node -ErrorAction SilentlyContinue
-        if (-not $node) { throw 'Node.js is required to extract a wrapped envelopes payload faithfully.' }
-        $tmp = [System.IO.Path]::GetTempFileName()
-        try {
-            & $node.Source -e "const fs=require('fs');const j=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));if(!Array.isArray(j.envelopes)){process.exit(2)};fs.writeFileSync(process.argv[2],JSON.stringify(j.envelopes));" $Path $tmp
-            if ($LASTEXITCODE -ne 0) { throw "Envelope extraction failed (exit $LASTEXITCODE) for $Path" }
-            $body = Get-Content -Path $tmp -Raw
-        }
-        finally {
-            Remove-Item -Force $tmp -ErrorAction SilentlyContinue
-        }
-    }
-    else {
-        $body = $raw
-    }
     $envelopes = @(Get-ProgramEnvelopes -Payload $json)
     if ($envelopes.Count -eq 0) { throw 'Program payload must contain at least one envelope.' }
     $url = $resolved.EmitUrl.TrimEnd('/') + '/programs'
 
+    $postFile = $Path
+    $tmp = $null
+    if (($json -isnot [array]) -and $json.PSObject.Properties['envelopes']) {
+        $node = Get-Command node -ErrorAction SilentlyContinue
+        if (-not $node) { throw 'Node.js is required to extract a wrapped envelopes payload faithfully.' }
+        $tmp = [System.IO.Path]::GetTempFileName()
+        & $node.Source -e "const fs=require('fs');const j=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));if(!Array.isArray(j.envelopes)){process.exit(2)};fs.writeFileSync(process.argv[2],JSON.stringify(j.envelopes));" $Path $tmp
+        if ($LASTEXITCODE -ne 0) {
+            Remove-Item -Force $tmp -ErrorAction SilentlyContinue
+            throw "Envelope extraction failed (exit $LASTEXITCODE) for $Path"
+        }
+        $postFile = $tmp
+    }
+
     Write-Host "POST $Path -> $url as persona '$Name' (emit=$($resolved.EmitKernelName), opens-on=$($resolved.OpensOnKernelName))" -ForegroundColor Cyan
-    Invoke-RestMethod -Uri $url -Method Post -Body $body -ContentType 'application/json' | ConvertTo-Json -Depth 20
+    try {
+        Invoke-RestMethod -Uri $url -Method Post -InFile $postFile -ContentType 'application/json; charset=utf-8' | ConvertTo-Json -Depth 20
+    }
+    finally {
+        if ($tmp) { Remove-Item -Force $tmp -ErrorAction SilentlyContinue }
+    }
 }
 
 $topology = Read-JsonFile -Path $TopologyPath
