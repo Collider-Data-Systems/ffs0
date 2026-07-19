@@ -1,0 +1,3 @@
+# Julia install/precompile transcripts — regenerable, machine-specific noise.
+install*.log
+# Manifest.toml IS committed (portable version pin for reproducibility).
