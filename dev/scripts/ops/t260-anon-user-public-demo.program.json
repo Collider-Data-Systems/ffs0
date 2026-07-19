@@ -1,0 +1,29 @@
+{
+  "_comment": "T=260 anon-user HG round (Sam's 'do the recommendation in 3'). Makes A3's anon posture HG-native: reifies the first-class anonymous principal urn:moos:user:anon, and creates a DEDICATED public-demo workspace carrying anon_visible=true (a stored property — extra properties are allowed on ADD, so no operad bump / kernel restart is needed; src/mcp/access.js isPublicWorkspace reads anon_visible===true from the fold). NO real workspace is exposed. Actor = kernel (hp-z440.primary): bypasses M11/M12 for these governance-level ADDs. Applied via Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa.",
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "node_urn": "urn:moos:user:anon",
+      "type_id": "user",
+      "properties": {
+        "name": {"value": "Anonymous user", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "created_at": {"value": "2026-07-19T12:41:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "text": {"value": "First-class anonymous principal for A3 access-parametrized provenance. The default + fail-closed identity: an unidentified reader resolves to this user and sees only anon-visible workspaces. Governs nothing; occupies nothing.", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "node_urn": "urn:moos:session:public-demo",
+      "type_id": "session",
+      "properties": {
+        "owner_urn": {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "started_at": {"value": "2026-07-19T12:41:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "status": {"value": "active", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "text": {"value": "Public-demo workspace — the dedicated anon-visible surface for the A3 access model. urn:moos:user:anon sees this and only this; no real workspace is exposed.", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
+        "anon_visible": {"value": true, "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2}
+      }
+    }
+  ]
+}
