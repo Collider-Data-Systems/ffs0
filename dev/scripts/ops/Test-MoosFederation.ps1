@@ -599,9 +599,30 @@ function Invoke-PostProgram {
         throw "Preflight failed for persona '$Name'. Re-run with -Force to POST anyway."
     }
 
+    # Byte-faithful payload: the PS5.1 ConvertFrom/ConvertTo-Json round-trip mangles
+    # envelope JSON (ISO strings become DateTime, shapes drift — same 5.1-divergence
+    # class as the T=252 BOM parse-bomb). POST the file's own bytes; when the file is
+    # a wrapper, extract the envelopes subtree with Node (faithful JSON.parse/stringify).
+    $raw = Get-Content -Path $Path -Raw
     $json = Read-JsonFile -Path $Path
+    if (($json -isnot [array]) -and $json.PSObject.Properties['envelopes']) {
+        $node = Get-Command node -ErrorAction SilentlyContinue
+        if (-not $node) { throw 'Node.js is required to extract a wrapped envelopes payload faithfully.' }
+        $tmp = [System.IO.Path]::GetTempFileName()
+        try {
+            & $node.Source -e "const fs=require('fs');const j=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));if(!Array.isArray(j.envelopes)){process.exit(2)};fs.writeFileSync(process.argv[2],JSON.stringify(j.envelopes));" $Path $tmp
+            if ($LASTEXITCODE -ne 0) { throw "Envelope extraction failed (exit $LASTEXITCODE) for $Path" }
+            $body = Get-Content -Path $tmp -Raw
+        }
+        finally {
+            Remove-Item -Force $tmp -ErrorAction SilentlyContinue
+        }
+    }
+    else {
+        $body = $raw
+    }
     $envelopes = @(Get-ProgramEnvelopes -Payload $json)
-    $body = ConvertTo-ProgramJsonArray -Envelopes $envelopes -Depth 50
+    if ($envelopes.Count -eq 0) { throw 'Program payload must contain at least one envelope.' }
     $url = $resolved.EmitUrl.TrimEnd('/') + '/programs'
 
     Write-Host "POST $Path -> $url as persona '$Name' (emit=$($resolved.EmitKernelName), opens-on=$($resolved.OpensOnKernelName))" -ForegroundColor Cyan
