@@ -1,13 +1,20 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "4.0.2",
-  "t_day": 250,
+  "version": "4.0.3",
+  "t_day": 260,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md. T=173 round-12 v3.13.0: four promoted grammar_fragments materialized into ontology — v313-6 (WF02 delegates-to/delegated-by additional port pair for role→role capability delegation), v313-7 (new S2 `group` node type — collective principal, extends principalTypes from {user, agent} to {user, agent, group}), v313-8 (channel.kind enum expansion: +calendar, +task-list, +cloud-storage, +vcs, +project-board), v313-9 (WF01 owns/owned-by additional port pair — group|user source owning kernel|session|purpose|program|channel|agent targets). WF19 has-occupant tgt_types extends to include `group` (session occupancy by a collective principal). See kb/research/session/20260422-t172-wolframs-court-social-topology.md §3 + T=173 batch on Z440 kernel 0 log_seq 285-288 (WF20 promotion ceremony for the 4 fragments).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "dev/reference/research-archive/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "4.0.3",
+      "date": "2026-07-19",
+      "t_day": 260,
+      "round": "t260 security-hardening: anon_visible operad declaration",
+      "summary": "ADDITIVE. Declares session.anon_visible (boolean, mutable, authority_scope kernel) as a first-class property and adds it to WF19 mutate_scope. Root cause (t260 review): the A3 public-workspace flag was ADDed to session:public-demo as an UNDECLARED extra property (extra props are allowed on ADD), so it sat in no mutate_scope and no authority_scope — a public workspace could NOT be un-publicked through the grammar (the additive-MUTATE path in fold/evaluate.go rejects a field with no PropertySpec), and property/scope audits could not see it. This bump makes anon_visible governable: MUTATE anon_visible=false via WF19 (kernel actor) now un-publicks a workspace. authority_scope=kernel is DELIBERATE, not owner: owner-scoped fields require actor==owner_urn, and a user-owner never satisfies §M11 liveness, so an owner-scoped flag would be UN-MUTABLE by any live actor (the exact t250 4.0.2 F-b failure) — kernel scope makes it governance-managed and actually un-publickable. SCOPE: this governs the MUTATE path only; who may ADD a session carrying anon_visible=true at creation is a separate §M11/§M12/P4 (occupant-guard) concern, still open. NOT a server-side enforcement boundary — the pilot filters on render (src/mcp/access.js isPublicWorkspace); a real gate belongs in kernel access.go. Deploy: fleet redeploy required to load 4.0.3."
+    },
     {
       "version": "4.0.2",
       "date": "2026-07-09",
@@ -639,6 +646,13 @@
           "started_at": {
             "mutability": "immutable",
             "type": "datetime"
+          },
+          "anon_visible": {
+            "mutability": "mutable",
+            "authority_scope": "kernel",
+            "type": "boolean",
+            "added_in_version": "4.0.3",
+            "note": "A3 public-visibility flag (default = absent/false). true => urn:moos:user:anon and any unidentified reader may see this workspace via the client view-filter (src/mcp/access.js isPublicWorkspace, which checks anon_visible===true off the fold). MUTATE rides WF19; a workspace is un-publicked by MUTATE anon_visible=false. authority_scope=kernel (NOT owner): owner-scoped fields require actor==owner_urn, but a user-owner never satisfies §M11 liveness, so an owner-scoped flag would be UN-MUTABLE (the t250 4.0.2 F-b lesson) — kernel scope makes it governance-managed and actually un-publickable via a kernel-actor envelope. Declared t260 (was an undeclared extra-prop on session:public-demo, ungovernable). CLIENT-PRESENTATION ONLY — NOT a server-side enforcement boundary; a real access gate belongs in kernel access.go (the pilot ships the full fold and filters on render)."
           },
           "turn_count": {
             "mutability": "mutable",
@@ -4371,7 +4385,8 @@
       "authority": "kernel",
       "mutate_scope": [
         "local_t",
-        "context_urn"
+        "context_urn",
+        "anon_visible"
       ],
       "sync_mode": "local-only",
       "note": "WF19 is gated by WF02: capability.scope must include the WF categories the delegate will exercise. local_t and context_urn are kernel-authority fields mutated automatically. v3.9: mutate_scope adds `seat_role` alongside legacy `role` — both supported; removal of the legacy `role` field is scheduled for v3.11. v3.10.0: D19.1 grammar_fragment merged — tgt_types extended with user and agent, plus an additional port pair (`has-occupant` / `is-occupant-of`) to carry occupancy topology. The canonical pair (`opens-on` / `occupied-by`) remains the session-to-kernel seat link; the additional pair is session-to-principal, used by §M15 t-cone for capability resolution. Kernel support (port-color mapping + occupant/admin helpers) lands in the companion moos-kernel PR #13 — this ontology bump is the ffs0-side half. v3.12.0: first WF20 ceremony promotes D19.3 (pins-urn/pinned-by-session → any node, many pins), D19.4 (filtered-by/filters-session → view_filter), and D20.1 (mounts-tool/tool-mounted-in-session → agent) as three new additional_port_pairs — completing the §M18-§M20 session-as-workspace shape. seat_role property deprecated under the corrected single-driver-via-LINK model (see kb/research/session/20260419-t169-session-generalization.md §3). NOTE TO KERNEL CODE: the current operad/loader.go does not consume additional_port_pairs; the five pairs declared here (has-occupant plus the three v3.12 additions) validate only as the primary opens-on/occupied-by pair until the loader gains multi-port-pair awareness. Tracked as a code gap; round-11 session-occupancy sub-program closes it."

@@ -1,0 +1,29 @@
+{
+  "_comment": "STAGED, apply_ready=false. Post-4.0.3 acceptance test for the session.anon_visible operad declaration. Run ONLY AFTER the 4.0.3 bump (kb/superset/ontology.json) is merged AND the fleet has restarted onto 4.0.3. Proves the previously-undeclared flag is now a governed, MUTABLE property: BEFORE 4.0.3 the first MUTATE fails with ErrFieldNotInScope (no PropertySpec for an undeclared field); AFTER 4.0.3 it succeeds via WF19 with a kernel actor. Round-trips false->true so the demo workspace's net state is unchanged (ends anon_visible=true, as it started). Actor = kernel:hp-z440.primary (bypasses M11/M12; anon_visible is authority_scope=kernel). Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
+  "apply_ready": false,
+  "staging_notes": [
+    "Gate: 4.0.3 must be the live ontology_version on /healthz before this will pass (else expected failure = the negative half of the proof).",
+    "envelope[0] un-publicks session:public-demo (anon_visible=false) — proves un-publicking through the grammar now works (the whole point of the bump).",
+    "envelope[1] re-publicks it (anon_visible=true) — restores the demo to its prior state, so applying this is state-neutral.",
+    "If envelope[0] is rejected with ErrFieldNotInScope, the fleet has NOT loaded 4.0.3 yet — restart first.",
+    "Separate open item (NOT covered here): who may ADD a session carrying anon_visible=true at creation — that is a §M11/§M12/P4 occupant-guard concern."
+  ],
+  "envelopes": [
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:session:public-demo",
+      "field": "anon_visible",
+      "new_value": false,
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:session:public-demo",
+      "field": "anon_visible",
+      "new_value": true,
+      "rewrite_category": "WF19"
+    }
+  ]
+}
