@@ -44,6 +44,72 @@ const DEFAULT_ACTOR_URN = "urn:moos:agent:vscode.hp-laptop.copilot"
 const DEFAULT_KEEP_CHANNEL_URN = "urn:moos:channel:google.keep.sam"
 const DEFAULT_KEEP_KI_URN = "urn:moos:ki:gdrive.t187-keep-session-occasion-lingo"
 
+# --- ACTIVE_LENSES: single output-gating control point (T260, Sam) ------------
+# Lenses omitted from OUTPUT for now (T260, Sam) — the projection CODE + .ps1
+# stages remain; this only gates rendering. The stale lens set (T187/T189/T200
+# roots, retired claude-code.hp-laptop actor) is retired pending the portal
+# convergence. Keep = the genuinely-live core; OUT = the four frozen graph lenses
+# (session-occasion, temporal-calendar, t189-recommendations, calendar-scope) plus
+# the T189/T200 recommendation HG panel and the Calendar time-fabric panel.
+# Runtime override (comma-separated, no recompile): MOOS_ACTIVE_LENSES=... — this
+# is the first lens-set parameterization step.
+const GRAPH_LENS_KEYS = ["session-occasion", "temporal-calendar", "t189-recommendations", "calendar-scope"]
+const DEFAULT_ACTIVE_LENSES = ["runtime", "g-ingest", "f-session", "surface-atlas", "gate-summary"]
+
+function resolve_active_lenses()
+    raw = strip(get(ENV, "MOOS_ACTIVE_LENSES", ""))
+    isempty(raw) && return Set{String}(DEFAULT_ACTIVE_LENSES)
+    return Set{String}(String(strip(item)) for item in split(raw, ",") if !isempty(strip(item)))
+end
+
+const ACTIVE_LENSES = resolve_active_lenses()
+
+lens_active(key::AbstractString) = string(key) in ACTIVE_LENSES
+any_graph_lens_active() = any(lens_active, GRAPH_LENS_KEYS)
+
+# Gate name -> lens key. Core gates carry a core key (present in the default set);
+# the four graph lenses + their recommendation/calendar panels carry a graph key.
+# "__graph_lens__" marks gates that span the graph lenses (rendered only when at
+# least one graph lens is active). Unknown names fall back to "gate-summary".
+const GATE_LENS_KEYS = Dict(
+    "runtime health" => "runtime",
+    "G input channel" => "g-ingest",
+    "G input knowledge item" => "g-ingest",
+    "G input evidence topology" => "g-ingest",
+    "F session handoff header" => "f-session",
+    "session actor/occupant reconciliation" => "f-session",
+    "session occasion topology" => "f-session",
+    "session purpose color" => "f-session",
+    "F affordance pack" => "f-session",
+    "surface context atlas" => "surface-atlas",
+    "one-shot apply script cleanup" => "gate-summary",
+    "F graph artifact analysis" => "session-occasion",
+    "visual lens root coverage" => "session-occasion",
+    "lens flexibility controls" => "session-occasion",
+    "Temporal Calendar lens" => "temporal-calendar",
+    "Calendar time-fabric artifacts" => "temporal-calendar",
+    "T189 recommendation lens" => "t189-recommendations",
+    "T189/T200 recommendation artifacts" => "t189-recommendations",
+    "T189 recommendation reconciliation" => "t189-recommendations",
+    "deferred apply boundaries" => "t189-recommendations",
+    "Calendar scope lens" => "calendar-scope",
+    "static visual output" => "__graph_lens__",
+    "agent neighborhood visibility" => "__graph_lens__",
+    "interactive visual aid" => "__graph_lens__",
+)
+
+function gate_active(name::AbstractString)
+    key = get(GATE_LENS_KEYS, string(name), "gate-summary")
+    key == "__graph_lens__" && return any_graph_lens_active()
+    return lens_active(key)
+end
+
+# Push a gate only if its lens is active in the current output set (T260).
+function push_gate!(gates, g)
+    gate_active(string(g["name"])) && push!(gates, g)
+    return gates
+end
+
 const PIPELINE_STAGE_SPECS = [
     Dict(
         "id" => "g-ingest",
@@ -341,8 +407,10 @@ function pipeline_stages(gates)
     end
     stages = Any[]
     for spec in PIPELINE_STAGE_SPECS
-        names = [string(name) for name in spec["gate_names"]]
+        names = [string(name) for name in spec["gate_names"] if gate_active(string(name))]
         selected = [by_name[name] for name in names if haskey(by_name, name)]
+        # T260: a stage whose lenses are all omitted from output is dropped, not shown as an empty warn.
+        isempty(selected) && continue
         push!(stages, Dict(
             "id" => spec["id"],
             "name" => spec["name"],
@@ -586,7 +654,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     gates = Any[]
 
     health_status = string(object_value(health, :status, ""))
-    push!(gates, gate(
+    push_gate!(gates, gate(
         health_status == "ok" ? "pass" : "fail",
         "runtime health",
         health_status == "ok" ? "Kernel health endpoint is ok." : "Kernel health endpoint is not ok.",
@@ -600,14 +668,14 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
 
     keep_channel = get(index, keep_channel_urn, nothing)
     keep_ki = get(index, keep_ki_urn, nothing)
-    push!(gates, gate(
+    push_gate!(gates, gate(
         keep_channel === nothing ? "fail" : "pass",
         "G input channel",
         keep_channel === nothing ? "Keep channel is missing from folded HG state." : "Keep channel exists as the G-ingest boundary.",
         evidence=Dict("urn" => keep_channel_urn, "type_id" => keep_channel === nothing ? "<missing>" : string(object_value(keep_channel, :type_id, ""))),
         next_action=keep_channel === nothing ? "Ingest or repair channel:google.keep.sam before reusing this lane." : "",
     ))
-    push!(gates, gate(
+    push_gate!(gates, gate(
         keep_ki === nothing ? "fail" : "pass",
         "G input knowledge item",
         keep_ki === nothing ? "Keep knowledge_item is missing from folded HG state." : "Keep knowledge_item exists as ingested evidence.",
@@ -615,7 +683,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
         next_action=keep_ki === nothing ? "Re-run the Keep note ingest path before deriving from it." : "",
     ))
     keep_wf12 = relations_touching(relations, keep_ki_urn; category="WF12")
-    push!(gates, gate(
+    push_gate!(gates, gate(
         isempty(keep_wf12) ? "fail" : "pass",
         "G input evidence topology",
         isempty(keep_wf12) ? "Keep knowledge_item has no WF12 evidence relations in the folded state." : "Keep knowledge_item participates in WF12 evidence topology.",
@@ -625,7 +693,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
 
     header = object_value(object_value(session_pack, :handoff, Dict()), :session_header, Dict())
     session_header_ok = string(object_value(header, :session_urn, "")) == session_urn && string(object_value(header, :actor, "")) == actor_urn
-    push!(gates, gate(
+    push_gate!(gates, gate(
         session_header_ok ? "pass" : "fail",
         "F session handoff header",
         session_header_ok ? "Session context pack carries the expected actor and session_urn." : "Session context pack does not carry the expected actor/session header.",
@@ -638,7 +706,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     identity_gate_status = isempty(identity_status) ? "warn" : identity_status
     identity_actor = string(object_value(identity, :actor_urn, object_value(header, :actor, "")))
     identity_occupants = object_value(identity, :hg_occupant_urns, Any[])
-    push!(gates, gate(
+    push_gate!(gates, gate(
         identity_gate_status,
         "session actor/occupant reconciliation",
         identity_gate_status == "pass" ? "Session context pack reconciles actor_urn with the folded HG occupant and current IDE harness candidate." : "Session context pack does not fully reconcile actor_urn, folded HG occupant, and current IDE harness candidate.",
@@ -656,14 +724,14 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     occupant_count = length(context_array(session_pack, :occupants))
     purpose_count = length(context_array(session_pack, :purposes))
     scope_count = length(context_array(session_pack, :scope_roots))
-    push!(gates, gate(
+    push_gate!(gates, gate(
         opens_on_count > 0 && occupant_count > 0 && scope_count > 0 ? "pass" : "fail",
         "session occasion topology",
         "Session pack exposes kernel place, occupant, and scope roots.",
         evidence=Dict("opens_on" => opens_on_count, "occupants" => occupant_count, "scope_roots" => scope_count),
         next_action=opens_on_count > 0 && occupant_count > 0 && scope_count > 0 ? "" : "Repair WF19 opens-on/has-occupant/pins-urn topology before using this as a live session header.",
     ))
-    push!(gates, gate(
+    push_gate!(gates, gate(
         purpose_count > 0 ? "pass" : "warn",
         "session purpose color",
         purpose_count > 0 ? "Session has a durable has-purpose relation." : "Session has no durable has-purpose relation; the projection is using its focus string as temporary occasion color.",
@@ -674,7 +742,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     skill_count = array_len(session_pack, [:affordance_pack, :recommended_skills])
     extension_count = array_len(session_pack, [:affordance_pack, :recommended_extensions])
     mcp_count = array_len(session_pack, [:affordance_pack, :mcp_servers])
-    push!(gates, gate(
+    push_gate!(gates, gate(
         skill_count >= 5 && extension_count >= 1 && mcp_count >= 1 ? "pass" : "warn",
         "F affordance pack",
         "Session projection recommends concrete skills, VS Code extensions, and MCP servers.",
@@ -686,7 +754,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     node_count = Int(object_value(graph_pack, :node_count, 0))
     relation_count = Int(object_value(graph_pack, :relation_count, 0))
     root_coverage = object_value(object_value(graph_pack, :analysis, Dict()), :root_coverage, Any[])
-    push!(gates, gate(
+    push_gate!(gates, gate(
         graph_kind_ok && node_count > 0 && relation_count > 0 && length(root_coverage) > 0 ? "pass" : "fail",
         "F graph artifact analysis",
         "Graph artifact projection produced a reviewable engineering frame with root coverage.",
@@ -700,7 +768,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     temporal_analysis = object_value(temporal_graph_pack, :analysis, Dict())
     temporal_root_coverage = object_value(temporal_analysis, :root_coverage, Any[])
     temporal_disconnected = [entry for entry in temporal_root_coverage if !Bool(object_value(entry, :connected, false))]
-    push!(gates, gate(
+    push_gate!(gates, gate(
         temporal_graph_kind_ok && temporal_node_count >= 4 && temporal_relation_count >= 2 ? (isempty(temporal_disconnected) ? "pass" : "warn") : "warn",
         "Temporal Calendar lens",
         temporal_graph_kind_ok && temporal_node_count > 0 ? "The Calendar Time-Fabric has its own graph artifact lens aligned with the temporal-calendar visual." : "The Calendar Time-Fabric does not yet have a dedicated graph artifact lens.",
@@ -713,7 +781,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     t189_relation_count = Int(object_value(t189_graph_pack, :relation_count, 0))
     t189_root_coverage = object_value(object_value(t189_graph_pack, :analysis, Dict()), :root_coverage, Any[])
     t189_disconnected = [entry for entry in t189_root_coverage if !Bool(object_value(entry, :connected, false))]
-    push!(gates, gate(
+    push_gate!(gates, gate(
         t189_graph_kind_ok && t189_node_count >= 8 && t189_relation_count >= 8 && isempty(t189_disconnected) ? "pass" : "warn",
         "T189 recommendation lens",
         t189_graph_kind_ok && t189_node_count > 0 ? "The grouped recommendation apply has a dedicated graph artifact lens." : "The grouped recommendation apply is not visible through a dedicated graph artifact lens yet.",
@@ -729,7 +797,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     calendar_scope_components = Int(object_value(calendar_scope_analysis, :component_count, 0))
     calendar_scope_largest = Int(object_value(calendar_scope_analysis, :largest_component_size, 0))
     calendar_scope_disconnected = [entry for entry in calendar_scope_root_coverage if !Bool(object_value(entry, :connected, false))]
-    push!(gates, gate(
+    push_gate!(gates, gate(
         calendar_scope_kind_ok && calendar_scope_node_count >= 10 && calendar_scope_relation_count >= 8 ? (isempty(calendar_scope_disconnected) ? "pass" : "warn") : "warn",
         "Calendar scope lens",
         calendar_scope_kind_ok && calendar_scope_node_count > 0 ? "The Calendar F/G surface has a dedicated scope graph with session, purpose, channel, programs, writer result, and G-ingest anchors visible." : "The Calendar F/G surface does not yet have a dedicated scope graph artifact.",
@@ -738,7 +806,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     ))
 
     disconnected = [entry for entry in root_coverage if !Bool(object_value(entry, :connected, false))]
-    push!(gates, gate(
+    push_gate!(gates, gate(
         isempty(disconnected) ? "pass" : "warn",
         "visual lens root coverage",
         isempty(disconnected) ? "All explicit roots are relation-connected in the selected graph lens." : "Some explicit roots are visible only because the lens forces them into view; the selected relations do not connect them yet.",
@@ -754,7 +822,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     t189_svg_exists = isfile(t189_svg_path)
     calendar_scope_dot_exists = isfile(calendar_scope_dot_path)
     calendar_scope_svg_exists = isfile(calendar_scope_svg_path)
-    push!(gates, gate(
+    push_gate!(gates, gate(
         dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists && t189_dot_exists && t189_svg_exists && calendar_scope_dot_exists && calendar_scope_svg_exists ? "pass" : "warn",
         "static visual output",
         dot_exists && svg_exists && temporal_dot_exists && temporal_svg_exists && t189_dot_exists && t189_svg_exists && calendar_scope_dot_exists && calendar_scope_svg_exists ? "Session-occasion, temporal/calendar, T189 recommendation, and Calendar-scope DOT/SVG visual artifacts exist." : "One or more static visual artifacts are missing.",
@@ -766,7 +834,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     calendar_report_exists = isfile(calendar_report_path)
     calendar_write_result_exists = isfile(calendar_write_result_path)
     planned_calendar_events = calendar_event_count(calendar_plan_path)
-    push!(gates, gate(
+    push_gate!(gates, gate(
         calendar_plan_exists && calendar_report_exists && planned_calendar_events > 0 ? "pass" : "warn",
         "Calendar time-fabric artifacts",
         calendar_plan_exists && calendar_report_exists && planned_calendar_events > 0 ? "Calendar time-fabric projection plan and Markdown report exist." : "Calendar time-fabric projection artifacts are missing or empty.",
@@ -778,7 +846,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     recommendation_report_exists = isfile(recommendation_report_path)
     recommendation_nodes = recommendation_node_count(recommendation_plan_path)
     selected_recommendations = selected_recommendation_count(recommendation_plan_path)
-    push!(gates, gate(
+    push_gate!(gates, gate(
         recommendation_plan_exists && recommendation_report_exists && recommendation_nodes > 0 && selected_recommendations == 5 ? "pass" : "warn",
         "T189/T200 recommendation artifacts",
         recommendation_plan_exists && recommendation_report_exists && recommendation_nodes > 0 && selected_recommendations == 5 ? "T189/T200 recommendation HG plan and Markdown report exist." : "Recommendation HG projection artifacts are missing, empty, or incomplete.",
@@ -809,7 +877,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     calendar_relations_ok = calendar_event_relations_total == 0 || calendar_event_relations_pending == 0
     calendar_anchor_relations_ok = calendar_anchor_relations_total == 0 || calendar_anchor_relations_pending == 0
     reconciliation_ok = reconciliation_exists && reconciliation_report_exists && grouped_nodes_ok && grouped_relations_ok && calendar_nodes_ok && calendar_relations_ok && calendar_anchor_relations_ok && grouped_nodes_total > 0 && grouped_relations_total > 0
-    push!(gates, gate(
+    push_gate!(gates, gate(
         reconciliation_ok ? "pass" : "warn",
         "T189 recommendation reconciliation",
         reconciliation_ok ? "The dry recommendation plan is reconciled against folded HG state: grouped rows plus Calendar event nodes/session pins are applied when present." : "The recommendation plan has not been reconciled against folded HG state yet, or apply-ready rows are still pending.",
@@ -847,7 +915,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     else
         "Calendar/WF07 anchor boundaries are not visible in the reconciliation artifact."
     end
-    push!(gates, gate(
+    push_gate!(gates, gate(
         anchor_boundary_visible ? "pass" : "warn",
         "deferred apply boundaries",
         deferred_detail,
@@ -870,7 +938,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
 
     filters = object_value(graph_pack, :filters, Dict())
     has_lens_controls = length(object_value(graph_pack, :root_urns, Any[])) > 0 && haskey(filters, :wfs) && haskey(filters, :ports) && haskey(filters, :types)
-    push!(gates, gate(
+    push_gate!(gates, gate(
         has_lens_controls ? "pass" : "warn",
         "lens flexibility controls",
         has_lens_controls ? "The graph projection records roots plus WF, port, type, and match filters." : "The graph projection does not expose enough lens controls for flexible scope inspection.",
@@ -879,15 +947,17 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     ))
 
     lens_packs = [
-        ("Session Occasion", graph_pack),
-        ("Calendar Time-Fabric", temporal_graph_pack),
-        ("T189 Recommendations", t189_graph_pack),
-        ("Calendar Scope", calendar_scope_graph_pack),
+        (label, pack) for (key, label, pack) in [
+            ("session-occasion", "Session Occasion", graph_pack),
+            ("temporal-calendar", "Calendar Time-Fabric", temporal_graph_pack),
+            ("t189-recommendations", "T189 Recommendations", t189_graph_pack),
+            ("calendar-scope", "Calendar Scope", calendar_scope_graph_pack),
+        ] if lens_active(key)
     ]
     actor_lens_visibility = Dict(label => graph_pack_contains_node(pack, actor_urn) for (label, pack) in lens_packs)
     visible_agent_counts = Dict(label => Int(object_value(object_value(object_value(pack, :analysis, Dict()), :type_counts, Dict()), :agent, 0)) for (label, pack) in lens_packs)
     agent_visibility_ok = all(values(actor_lens_visibility))
-    push!(gates, gate(
+    push_gate!(gates, gate(
         agent_visibility_ok ? "pass" : "warn",
         "agent neighborhood visibility",
         agent_visibility_ok ? "The current actor/occupant agent is visible across all four graph artifacts and therefore reaches the SVG and inspector surfaces." : "One or more graph artifacts hide the current actor/occupant agent.",
@@ -896,7 +966,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     ))
 
     one_shot_apply_script_exists = isfile(one_shot_apply_script_path)
-    push!(gates, gate(
+    push_gate!(gates, gate(
         one_shot_apply_script_exists ? "warn" : "pass",
         "one-shot apply script cleanup",
         one_shot_apply_script_exists ? "The ignored one-shot grouped apply script still exists under tmp; it is not a projection artifact." : "No ignored one-shot grouped apply script remains under the generated projection tree.",
@@ -908,9 +978,15 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     temporal_inspector = graph_inspector_payload(temporal_graph_pack; id="temporal-calendar", label="Calendar Time-Fabric")
     t189_inspector = graph_inspector_payload(t189_graph_pack; id="t189-recommendations", label="T189 Recommendations")
     calendar_scope_inspector = graph_inspector_payload(calendar_scope_graph_pack; id="calendar-scope", label="Calendar Scope")
-    inspectors = Any[inspector, temporal_inspector, t189_inspector, calendar_scope_inspector]
+    # T260: only active graph lenses reach the interactive inspector output.
+    inspectors = Any[insp for (key, insp) in [
+        ("session-occasion", inspector),
+        ("temporal-calendar", temporal_inspector),
+        ("t189-recommendations", t189_inspector),
+        ("calendar-scope", calendar_scope_inspector),
+    ] if lens_active(key)]
     inspector_ready = all(lens -> lens["node_count"] > 0 && lens["relation_count"] > 0, inspectors)
-    push!(gates, gate(
+    push_gate!(gates, gate(
         inspector_ready ? "pass" : "warn",
         "interactive visual aid",
         inspector_ready ? "The dashboard embeds Cytoscape.js typed element sets for four lenses: session occasion, Calendar Time-Fabric, T189 recommendations, and Calendar scope." : "The dashboard does not yet have enough graph element data for all interactive browser/IDE graph lenses.",
@@ -923,7 +999,7 @@ function plan_mvp_gate(nodes, relations; health=Dict(), session_pack=Dict(), gra
     atlas = safe_read_json(atlas_path)
     atlas_surfaces = length(object_value(atlas, :surfaces, Any[]))
     atlas_pending = length(object_value(atlas, :pending_moves, Any[]))
-    push!(gates, gate(
+    push_gate!(gates, gate(
         atlas_exists && atlas_report_exists && atlas_surfaces >= 6 && atlas_pending >= 5 ? "pass" : "warn",
         "surface context atlas",
         atlas_exists && atlas_report_exists ? "The dashboard has a generated atlas explaining JSON, JSONL, Git, Calendar, dashboard, visual, type/relation/program, and pending-move surfaces." : "The surface context atlas is missing from the generated projection artifacts.",
@@ -1039,10 +1115,12 @@ function write_html(path::AbstractString, plan)
     calendar_scope_svg_path = string(object_value(artifacts, :calendar_scope_svg, ""))
     calendar_scope_svg_href = artifact_link(path, calendar_scope_svg_path)
     svg_lenses = [
-        Dict("label" => "Session Occasion", "svg_path" => svg_path, "svg_href" => svg_href, "dot_href" => artifact_link(path, string(object_value(artifacts, :dot, ""))), "missing" => "Session-occasion SVG is not present yet."),
-        Dict("label" => "Calendar Time-Fabric", "svg_path" => temporal_svg_path, "svg_href" => temporal_svg_href, "dot_href" => artifact_link(path, string(object_value(artifacts, :temporal_calendar_dot, ""))), "missing" => "Temporal/calendar SVG is not present yet."),
-        Dict("label" => "T189 Recommendations", "svg_path" => t189_svg_path, "svg_href" => t189_svg_href, "dot_href" => artifact_link(path, string(object_value(artifacts, :t189_recommendation_dot, ""))), "missing" => "T189 recommendation SVG is not present yet."),
-        Dict("label" => "Calendar Scope", "svg_path" => calendar_scope_svg_path, "svg_href" => calendar_scope_svg_href, "dot_href" => artifact_link(path, string(object_value(artifacts, :calendar_scope_dot, ""))), "missing" => "Calendar-scope SVG is not present yet."),
+        lens for (key, lens) in [
+            ("session-occasion", Dict("label" => "Session Occasion", "svg_path" => svg_path, "svg_href" => svg_href, "dot_href" => artifact_link(path, string(object_value(artifacts, :dot, ""))), "missing" => "Session-occasion SVG is not present yet.")),
+            ("temporal-calendar", Dict("label" => "Calendar Time-Fabric", "svg_path" => temporal_svg_path, "svg_href" => temporal_svg_href, "dot_href" => artifact_link(path, string(object_value(artifacts, :temporal_calendar_dot, ""))), "missing" => "Temporal/calendar SVG is not present yet.")),
+            ("t189-recommendations", Dict("label" => "T189 Recommendations", "svg_path" => t189_svg_path, "svg_href" => t189_svg_href, "dot_href" => artifact_link(path, string(object_value(artifacts, :t189_recommendation_dot, ""))), "missing" => "T189 recommendation SVG is not present yet.")),
+            ("calendar-scope", Dict("label" => "Calendar Scope", "svg_path" => calendar_scope_svg_path, "svg_href" => calendar_scope_svg_href, "dot_href" => artifact_link(path, string(object_value(artifacts, :calendar_scope_dot, ""))), "missing" => "Calendar-scope SVG is not present yet.")),
+        ] if lens_active(key)
     ]
     inspectors = collect(object_value(plan, :interactive_inspectors, Any[object_value(plan, :interactive_inspector, Dict("elements" => Any[], "node_count" => 0, "relation_count" => 0))]))
     inspector = isempty(inspectors) ? Dict("elements" => Any[], "node_count" => 0, "relation_count" => 0) : inspectors[1]
@@ -1099,15 +1177,22 @@ function write_html(path::AbstractString, plan)
         println(io, "</div></div>")
         println(io, "<div class=\"panel\"><h2>Review Surfaces</h2><div class=\"artifactList\">")
         println(io, "<div class=\"artifact\"><strong>Atlas</strong><p class=\"muted\">Table of contents for the projection surfaces and next moves.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas_report, "")))), "\">Open report</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas, "")))), "\">JSON</a></div>")
-        println(io, "<div class=\"artifact\"><strong>Graph Artifacts</strong><p class=\"muted\">Engineering JSON/Markdown for the four interactive lenses.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :graph_pack, "")))), "\">Session</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :temporal_graph_pack, "")))), "\">Time-Fabric</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :t189_graph_pack, "")))), "\">T189</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_scope_graph_pack, "")))), "\">Calendar Scope</a></div>")
+        if any_graph_lens_active()
+            println(io, "<div class=\"artifact\"><strong>Graph Artifacts</strong><p class=\"muted\">Engineering JSON/Markdown for the four interactive lenses.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :graph_pack, "")))), "\">Session</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :temporal_graph_pack, "")))), "\">Time-Fabric</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :t189_graph_pack, "")))), "\">T189</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_scope_graph_pack, "")))), "\">Calendar Scope</a></div>")
+        end
         if isfile(DEFAULT_T206_KEEP_MVP_REPORT_PATH) || isfile(DEFAULT_T206_KEEP_MVP_GRAPH_PATH)
             println(io, "<div class=\"artifact\"><strong>T206 Keep MVP</strong><p class=\"muted\">Applied Keep API/S0 staging carrier, OAuth blocker, WF07 boundary, and focused graph/visual/Calendar artifacts.</p><a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_REPORT_PATH)), "\">Report</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_JSON_PATH)), "\">JSON</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_GRAPH_PATH)), "\">Graph</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_SVG_PATH)), "\">SVG</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_DOT_PATH)), "\">DOT</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_CALENDAR_PLAN_PATH)), "\">Calendar plan</a> · <a href=\"", html_escape(artifact_link(path, DEFAULT_T206_KEEP_MVP_CALENDAR_WRITE_RESULT_PATH)), "\">Calendar result</a></div>")
         end
-        println(io, "<div class=\"artifact\"><strong>Calendar</strong><p class=\"muted\">Dry time-fabric plan plus explicit Google writer result.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_report, "")))), "\">Report</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_plan, "")))), "\">Plan</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_write_result, "")))), "\">Write result</a></div>")
-        println(io, "<div class=\"artifact\"><strong>Recommendations</strong><p class=\"muted\">Candidate HG plan and folded-state reconciliation.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_report, "")))), "\">Plan report</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_reconciliation_report, "")))), "\">Reconciliation</a></div>")
+        if lens_active("temporal-calendar")
+            println(io, "<div class=\"artifact\"><strong>Calendar</strong><p class=\"muted\">Dry time-fabric plan plus explicit Google writer result.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_report, "")))), "\">Report</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_plan, "")))), "\">Plan</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_write_result, "")))), "\">Write result</a></div>")
+        end
+        if lens_active("t189-recommendations")
+            println(io, "<div class=\"artifact\"><strong>Recommendations</strong><p class=\"muted\">Candidate HG plan and folded-state reconciliation.</p><a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_report, "")))), "\">Plan report</a> · <a href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_reconciliation_report, "")))), "\">Reconciliation</a></div>")
+        end
         println(io, "<div class=\"artifact\"><strong>MVP Gate</strong><p class=\"muted\">Current pass/warn/fail contract for the local control surface.</p><a href=\"mvp/session_pipeline_gate.md\">Gate report</a> · <a href=\"mvp/session_pipeline_gate.json\">JSON</a></div>")
         println(io, "</div></div>")
         println(io, "</section>")
+        if !isempty(svg_lenses)
         println(io, "<div id=\"svgBackdrop\" class=\"inspectorBackdrop\"></div>")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Visual Lenses</h2>")
         println(io, "<div class=\"visualHelp\"><div><strong>SVG zoom pane</strong><p class=\"muted\">Static Graphviz proof frame. Use Fit for topology, Zoom for label work, and Wide view for a review pass.</p></div><div><strong>Interactive HG inspector</strong><p class=\"muted\">Typed graph-artifact JSON below. Use it when you need selectable node and relation metadata.</p></div></div>")
@@ -1124,6 +1209,8 @@ function write_html(path::AbstractString, plan)
         end
         println(io, "</div>")
         println(io, "</section>")
+        end
+        if !isempty(inspectors)
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>F/G Relation Insights</h2>")
         println(io, "<p class=\"muted\">Per-lens visual metadata derived from node types and WF categories. This keeps projection, ingest, authority, surface, and lineage meaning visible in the graphview without changing HG truth.</p>")
         println(io, "<div class=\"insightGrid\">")
@@ -1141,14 +1228,20 @@ function write_html(path::AbstractString, plan)
             println(io, "</article>")
         end
         println(io, "</div></section>")
+        end
+        if lens_active("temporal-calendar")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Calendar Time-Fabric</h2>")
         println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_plan, "")))), "\">Open Calendar Plan</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_report, "")))), "\">Open Calendar Report</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :calendar_time_fabric_write_result, "")))), "\">Open Write Result</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :temporal_graph_pack, "")))), "\">Open Graph Artifact</a></div>")
         println(io, "<p class=\"muted\">Temporal plan, temporal visual lens, and temporal graph artifact are now separate review surfaces: plan for Calendar payload semantics, SVG/DOT for deterministic visual review, and the HG inspector for node/relation inspection.</p>")
         println(io, "</section>")
+        end
+        if lens_active("t189-recommendations")
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>HG Recommendations</h2>")
         println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_plan, "")))), "\">Open Recommendation Plan</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_hg_report, "")))), "\">Open Recommendation Report</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_reconciliation, "")))), "\">Open Reconciliation</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :recommendation_reconciliation_report, "")))), "\">Open Reconciliation Report</a></div>")
         println(io, "<p class=\"muted\">Dry candidate nodes and relations for the five T189 recommendations plus the T200+ convergence arc, reconciled against folded HG state. This panel is a projection surface; it does not apply rewrites.</p>")
         println(io, "</section>")
+        end
+        if !isempty(inspectors)
         println(io, "<div id=\"inspectorBackdrop\" class=\"inspectorBackdrop\"></div>")
         println(io, "<section id=\"inspectorPanel\" class=\"panel inspectorPanel\" style=\"margin-top:16px\"><h2>Interactive HG Inspector</h2>")
         println(io, "<div class=\"lensTabs\" id=\"lensTabs\">")
@@ -1162,6 +1255,7 @@ function write_html(path::AbstractString, plan)
         println(io, "<div class=\"inspectorGrid\"><div id=\"cy\" class=\"cyBox\"></div><div class=\"inspectPane\"><div class=\"inspectTitle\" id=\"inspectTitle\">No selection</div><div class=\"inspectMeta\" id=\"inspectMeta\">", html_escape(inspector["node_count"]), " nodes / ", html_escape(inspector["relation_count"]), " relations</div></div></div>")
         println(io, "<div class=\"legend\"><span><i class=\"chip\" style=\"background:#4c78a8\"></i>claim</span><span><i class=\"chip\" style=\"background:#7b61a8\"></i>derivation</span><span><i class=\"chip\" style=\"background:#9c755f\"></i>program</span><span><i class=\"chip\" style=\"background:#b279a2\"></i>purpose</span><span><i class=\"chip\" style=\"background:#72b7b2\"></i>view_filter</span><span><i class=\"chip\" style=\"background:#54a24b\"></i>knowledge_item</span><span><i class=\"chip\" style=\"background:#4267a5\"></i>agent</span></div>")
         println(io, "</section>")
+        end
         println(io, "<section class=\"panel\" style=\"margin-top:16px\"><h2>Surface Context Atlas</h2>")
         println(io, "<div class=\"visualActions\"><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas, "")))), "\">Open Atlas JSON</a><a class=\"linkButton\" href=\"", html_escape(artifact_link(path, string(object_value(artifacts, :surface_context_atlas_report, "")))), "\">Open Atlas Report</a></div>")
         println(io, "<p class=\"muted\">Explanatory map for JSON API, JSONL log, Git repositories, Google Calendar, dashboard, visuals, node types, relation families, IRL/external programs, existing HG anchors, and next-round moves. Use this as the human/agent table of contents before changing projections.</p>")
@@ -1197,10 +1291,12 @@ function write_html(path::AbstractString, plan)
         println(io, "</main>")
         println(io, "<script>document.querySelectorAll('[data-filter]').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('[data-filter]').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');var f=btn.getAttribute('data-filter');document.querySelectorAll('.gate').forEach(function(g){g.style.display=(f==='all'||g.getAttribute('data-status')===f)?'block':'none'});});});</script>")
         println(io, raw"""<script>(function(){var BASE_W=1080,BASE_H=680;var backdrop=document.getElementById('svgBackdrop');var activeWide=null;function setScale(panel,scale){var box=panel.querySelector('.visualBox');var canvas=panel.querySelector('.visualCanvas');var object=panel.querySelector('object');if(!box||!canvas||!object)return;scale=Math.max(.3,Math.min(3,scale));box.dataset.svgScale=String(scale);canvas.style.width=Math.ceil(BASE_W*scale)+'px';canvas.style.height=Math.ceil(BASE_H*scale)+'px';object.style.transform='scale('+scale+')'}function fit(panel){var box=panel.querySelector('.visualBox');if(!box)return;setScale(panel,Math.max(.3,Math.min(1.4,(box.clientWidth-24)/BASE_W)));box.scrollTo({left:0,top:0,behavior:'smooth'})}function objectDoc(panel){try{var object=panel.querySelector('object');return object&&object.contentDocument}catch(_){return null}}function clearMatches(panel){var doc=objectDoc(panel);if(!doc)return;doc.querySelectorAll('[data-moos-svg-match]').forEach(function(el){el.removeAttribute('data-moos-svg-match');el.style.outline='';el.style.stroke='';el.style.strokeWidth='';el.style.filter=''})}function centerOn(panel,el){var box=panel.querySelector('.visualBox');var scale=Number(box&&box.dataset.svgScale||1);if(!box||!el||!el.getBBox)return;try{var bb=el.getBBox();box.scrollTo({left:Math.max(0,(bb.x+bb.width/2)*scale-box.clientWidth/2),top:Math.max(0,(bb.y+bb.height/2)*scale-box.clientHeight/2),behavior:'smooth'})}catch(_){}}function find(panel){clearMatches(panel);var q=(panel.querySelector('[data-svg-search]')?.value||'').toLowerCase().trim();if(!q)return null;var doc=objectDoc(panel);if(!doc)return null;var matches=[];doc.querySelectorAll('text,title').forEach(function(el){var text=(el.textContent||'').toLowerCase();if(text.indexOf(q)>=0){var target=el.tagName.toLowerCase()==='title'?el.parentElement:el;matches.push(target);target.setAttribute('data-moos-svg-match','1');target.style.outline='3px solid #202522';target.style.stroke='#202522';target.style.strokeWidth='2px'}});panel.dataset.svgMatchIndex='0';if(matches[0])centerOn(panel,matches[0]);return matches[0]||null}function centerCurrent(panel){var doc=objectDoc(panel);var match=doc&&doc.querySelector('[data-moos-svg-match]');if(match){centerOn(panel,match);return}var object=panel.querySelector('object');var box=panel.querySelector('.visualBox');if(object&&box){box.scrollTo({left:Math.max(0,object.clientWidth/2-box.clientWidth/2),top:Math.max(0,object.clientHeight/2-box.clientHeight/2),behavior:'smooth'})}}function setWide(panel,on){if(on){if(activeWide&&activeWide!==panel){setWide(activeWide,false)}activeWide=panel;panel.classList.add('wide');if(backdrop)backdrop.classList.add('open');setTimeout(function(){fit(panel)},80)}else{panel.classList.remove('wide');if(activeWide===panel)activeWide=null;if(backdrop)backdrop.classList.remove('open');setTimeout(function(){fit(panel)},80)}}document.querySelectorAll('[data-svg-panel]').forEach(function(panel){setScale(panel,1);var search=panel.querySelector('[data-svg-search]');if(search){search.addEventListener('keydown',function(evt){if(evt.key==='Enter')find(panel)})}panel.querySelectorAll('[data-svg-action]').forEach(function(button){button.addEventListener('click',function(){var action=button.getAttribute('data-svg-action');var scale=Number(panel.querySelector('.visualBox')?.dataset.svgScale||1);if(action==='svg-find')find(panel);if(action==='fit')fit(panel);if(action==='center')centerCurrent(panel);if(action==='zoom-in')setScale(panel,scale*1.25);if(action==='zoom-out')setScale(panel,scale*.8);if(action==='reset'){clearMatches(panel);setScale(panel,1)}if(action==='wide')setWide(panel,true);if(action==='close')setWide(panel,false)})})});if(backdrop){backdrop.addEventListener('click',function(){if(activeWide)setWide(activeWide,false)})}document.addEventListener('keydown',function(evt){if(evt.key==='Escape'&&activeWide){setWide(activeWide,false)}});})();</script>""")
+        if !isempty(inspectors)
         println(io, "<script src=\"https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js\"></script>")
         println(io, "<script id=\"inspectorData\" type=\"application/json\">", inspector_json, "</script>")
         println(io, "<script id=\"inspectorsData\" type=\"application/json\">", inspectors_json, "</script>")
         println(io, raw"""<script>(function(){var raw=document.getElementById('inspectorsData');var title=document.getElementById('inspectTitle');var meta=document.getElementById('inspectMeta');var buttons=document.querySelectorAll('[data-lens]');var search=document.getElementById('cySearch');var fit=document.getElementById('cyFit');var zoomIn=document.getElementById('cyZoomIn');var zoomOut=document.getElementById('cyZoomOut');var reset=document.getElementById('cyReset');var cose=document.getElementById('cyCose');var grid=document.getElementById('cyGrid');var circle=document.getElementById('cyCircle');var breadth=document.getElementById('cyBreadth');var concentric=document.getElementById('cyConcentric');var agentsBtn=document.getElementById('cyAgents');var neighborhoodBtn=document.getElementById('cyNeighborhood');var exportBtn=document.getElementById('cyExport');var typeFilters=document.getElementById('cyTypeFilters');var relationFilters=document.getElementById('cyRelationFilters');var wide=document.getElementById('cyWide');var close=document.getElementById('cyClose');var panel=document.getElementById('inspectorPanel');var backdrop=document.getElementById('inspectorBackdrop');var lenses=raw?JSON.parse(raw.textContent):[];var cy=null,currentLens=null,activeTypes=new Set(),activeRelations=new Set(),lastSelected=null;function esc(v){return String(v==null?'':v).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}function unique(values){return Array.from(new Set(values.filter(Boolean))).sort()}function showLensMeta(data){var agentCount=(data.agent_urns||[]).length;title.textContent=data.label||'Lens';meta.innerHTML=esc(data.node_count||0)+' nodes / '+esc(data.relation_count||0)+' relations<br><strong>agents</strong> '+esc(agentCount)+'<br><strong>types</strong> '+esc(Object.keys(data.type_counts||{}).join(', '))}function show(d){var kind=d.type_id||d.rewrite_category||'relation';var ports=d.src_port?'<br><strong>ports</strong> '+esc(d.src_port)+' / '+esc(d.tgt_port):'';var degree=d.degree!=null?'<br><strong>degree</strong> '+esc(d.degree):'';title.textContent=d.title||d.label||d.urn||'Selection';meta.innerHTML='<strong>'+esc(kind)+'</strong><br>'+esc(d.urn||d.id||'')+'<br>'+esc(d.status||'')+degree+ports}function runLayout(name){if(!cy)return;var opts={name:name,animate:false,fit:true,padding:32};if(name==='breadthfirst'){opts.directed=true;opts.spacingFactor=1.2}if(name==='concentric'){opts.concentric=function(n){return n.degree()+1};opts.levelWidth=function(){return 2}}if(name==='cose'){opts.nodeRepulsion=9000;opts.idealEdgeLength=110}cy.layout(opts).run()}function resizeFit(){if(!cy)return;cy.resize();cy.fit(null,32)}function zoomBy(factor){if(!cy)return;var box=cy.container().getBoundingClientRect();cy.zoom({level:cy.zoom()*factor,renderedPosition:{x:box.width/2,y:box.height/2}})}function setWide(on){if(!panel)return;panel.classList.toggle('wide',on);if(backdrop)backdrop.classList.toggle('open',on);setTimeout(resizeFit,80)}function applyFilters(){if(!cy)return;cy.elements().removeClass('filtered');cy.nodes().forEach(function(n){if(activeTypes.size&& !activeTypes.has(n.data('type_id'))){n.addClass('filtered')}});cy.edges().forEach(function(e){if((activeRelations.size&& !activeRelations.has(e.data('rewrite_category'))) || e.source().hasClass('filtered') || e.target().hasClass('filtered')){e.addClass('filtered')}});applySearch(false)}function renderFilters(data){function render(container,values,activeSet,prefix){if(!container)return;container.innerHTML='';values.forEach(function(value){activeSet.add(value);var b=document.createElement('button');b.type='button';b.className='filterButton active';b.textContent=prefix+' '+value;b.addEventListener('click',function(){if(activeSet.has(value)){activeSet.delete(value);b.classList.remove('active')}else{activeSet.add(value);b.classList.add('active')}applyFilters()});container.appendChild(b)})}activeTypes=new Set();activeRelations=new Set();var nodeTypes=unique((data.elements||[]).filter(function(e){return e.data&&e.data.type_id}).map(function(e){return e.data.type_id}));var relTypes=unique((data.elements||[]).filter(function(e){return e.data&&e.data.rewrite_category}).map(function(e){return e.data.rewrite_category}));render(typeFilters,nodeTypes,activeTypes,'T');render(relationFilters,relTypes,activeRelations,'WF')}function applySearch(fitMatches){if(!cy)return;var q=(search.value||'').toLowerCase().trim();cy.elements().removeClass('matched dimmed');if(!q){return}cy.elements().not('.filtered').forEach(function(ele){var d=ele.data();var hay=[d.urn,d.label,d.title,d.type_id,d.rewrite_category,d.src_port,d.tgt_port].join(' ').toLowerCase();if(hay.indexOf(q)>=0){ele.addClass('matched')}else{ele.addClass('dimmed')}});var matched=cy.elements('.matched').not('.filtered');if(fitMatches!==false&&matched.length){cy.fit(matched,48)}}function focusCollection(collection){if(!cy||!collection||!collection.length)return;cy.elements().removeClass('matched dimmed');var expanded=collection.union(collection.neighborhood()).not('.filtered');expanded.addClass('matched');cy.elements().not(expanded).not('.filtered').addClass('dimmed');cy.fit(expanded,48)}function focusAgents(){if(!cy)return;focusCollection(cy.nodes('[type_id = "agent"]').not('.filtered'))}function focusNeighborhood(){if(!cy)return;var selected=cy.$(':selected').not('.filtered');if(selected.length){focusCollection(selected);return}var agents=cy.nodes('[type_id = "agent"]').not('.filtered');if(agents.length){focusCollection(agents)}}function exportLens(){if(!currentLens)return;var blob=new Blob([JSON.stringify(currentLens,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(currentLens.label||'moos-lens').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.json';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},0)}function activate(index){buttons.forEach(function(btn){btn.classList.toggle('active',Number(btn.getAttribute('data-lens'))===index)});if(search){search.value=''}var data=lenses[index]||{label:'Lens',elements:[],node_count:0,relation_count:0,type_counts:{},relation_counts:{},agent_urns:[]};currentLens=data;showLensMeta(data);renderFilters(data);if(!window.cytoscape){title.textContent='Cytoscape.js unavailable';return}if(cy){cy.destroy()}cy=cytoscape({container:document.getElementById('cy'),elements:data.elements||[],layout:{name:'cose',animate:false,fit:true,padding:32,nodeRepulsion:9000,idealEdgeLength:110},minZoom:.18,maxZoom:3.5,style:[{selector:'node',style:{'label':'data(label)','font-size':10,'text-wrap':'wrap','text-max-width':120,'background-color':'#6f7f73','color':'#24362e','text-valign':'bottom','text-halign':'center','width':'mapData(degree,0,8,28,54)','height':'mapData(degree,0,8,28,54)','border-width':1,'border-color':'#ffffff'}},{selector:'node[type_id = "agent"]',style:{'background-color':'#4267a5'}},{selector:'node[type_id = "claim"]',style:{'background-color':'#4c78a8'}},{selector:'node[type_id = "derivation"]',style:{'background-color':'#7b61a8'}},{selector:'node[type_id = "knowledge_item"]',style:{'background-color':'#54a24b'}},{selector:'node[type_id = "program"]',style:{'background-color':'#9c755f'}},{selector:'node[type_id = "purpose"]',style:{'background-color':'#b279a2'}},{selector:'node[type_id = "view_filter"]',style:{'background-color':'#72b7b2'}},{selector:'node[type_id = "group"]',style:{'background-color':'#eeca3b'}},{selector:'node[type_id = "calendar_event"]',style:{'background-color':'#e15759'}},{selector:'node[type_id = "channel"]',style:{'background-color':'#59a14f'}},{selector:'edge',style:{'label':'data(label)','font-size':9,'curve-style':'bezier','target-arrow-shape':'triangle','line-color':'#9da8a0','target-arrow-color':'#9da8a0','width':1.4,'color':'#526057','text-background-color':'#fff','text-background-opacity':0.8}},{selector:'edge[rewrite_category = "WF01"]',style:{'line-color':'#5d6f2f','target-arrow-color':'#5d6f2f'}},{selector:'edge[rewrite_category = "WF02"]',style:{'line-color':'#6d5aa7','target-arrow-color':'#6d5aa7'}},{selector:'edge[rewrite_category = "WF18"]',style:{'line-color':'#2f6f9f','target-arrow-color':'#2f6f9f'}},{selector:'edge[rewrite_category = "WF19"]',style:{'line-color':'#287a72','target-arrow-color':'#287a72'}},{selector:'edge[rewrite_category = "WF21"]',style:{'line-color':'#7a4aa0','target-arrow-color':'#7a4aa0','line-style':'dashed'}},{selector:'.filtered',style:{'display':'none'}},{selector:'.dimmed',style:{'opacity':0.16}},{selector:'.matched',style:{'border-width':4,'border-color':'#202522','line-color':'#202522','target-arrow-color':'#202522','opacity':1}},{selector:':selected',style:{'border-width':4,'border-color':'#202522','line-color':'#202522','target-arrow-color':'#202522'}}]});cy.on('tap','node, edge',function(evt){lastSelected=evt.target;show(evt.target.data())});cy.on('tap',function(evt){if(evt.target===cy){lastSelected=null;showLensMeta(data)}});cy.ready(function(){applyFilters();resizeFit()});}buttons.forEach(function(btn){btn.addEventListener('click',function(){activate(Number(btn.getAttribute('data-lens'))||0)})});if(search){search.addEventListener('input',function(){applySearch(true)})}if(fit){fit.addEventListener('click',resizeFit)}if(zoomIn){zoomIn.addEventListener('click',function(){zoomBy(1.25)})}if(zoomOut){zoomOut.addEventListener('click',function(){zoomBy(.8)})}if(reset){reset.addEventListener('click',function(){if(cy){if(search)search.value='';cy.elements().removeClass('matched dimmed filtered');cy.zoom(1);cy.center();resizeFit();applyFilters()}})}if(cose){cose.addEventListener('click',function(){runLayout('cose')})}if(grid){grid.addEventListener('click',function(){runLayout('grid')})}if(circle){circle.addEventListener('click',function(){runLayout('circle')})}if(breadth){breadth.addEventListener('click',function(){runLayout('breadthfirst')})}if(concentric){concentric.addEventListener('click',function(){runLayout('concentric')})}if(agentsBtn){agentsBtn.addEventListener('click',focusAgents)}if(neighborhoodBtn){neighborhoodBtn.addEventListener('click',focusNeighborhood)}if(exportBtn){exportBtn.addEventListener('click',exportLens)}if(wide){wide.addEventListener('click',function(){setWide(true)})}if(close){close.addEventListener('click',function(){setWide(false)})}if(backdrop){backdrop.addEventListener('click',function(){setWide(false)})}document.addEventListener('keydown',function(evt){if(evt.key==='Escape'){setWide(false)}});activate(0);})();</script>""")
+        end
         println(io, "</body></html>")
     end
 end
@@ -1292,7 +1388,9 @@ function main(argv=ARGS)
     relations = isempty(options["relations-file"]) ? fetch_json(options["base-url"], "/state/relations") : read_json(options["relations-file"])
     health = isempty(options["health-file"]) ? fetch_json(options["base-url"], "/healthz") : read_json(options["health-file"])
     session_pack = read_json(options["session-pack"])
-    graph_pack = read_json(options["graph-pack"])
+    # T260: session-occasion is output-gated by ACTIVE_LENSES; guard its pack read so the
+    # generator does not error when the (still-produced) pack is unused in the trimmed output.
+    graph_pack = lens_active("session-occasion") ? read_json(options["graph-pack"]) : safe_read_json(options["graph-pack"])
     temporal_graph_pack = safe_read_json(options["temporal-graph-pack"])
     t189_graph_pack = safe_read_json(options["t189-graph-pack"])
     calendar_scope_graph_pack = safe_read_json(options["calendar-scope-graph-pack"])
