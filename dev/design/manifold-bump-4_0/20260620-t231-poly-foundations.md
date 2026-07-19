@@ -106,6 +106,13 @@ Creating this folder introduced a **polynomial**:
   `manifold = colimit`). The folder is therefore a *little so:om of the repo itself*: a polynomial
   whose run hydrates the shared graph. GitHub is the substrate it's projected onto.
 
+> **ERRATA (T=260):** the phrasing "**the merge** is the colimit" misattributes t218 E4.
+> E4 says the **workspace/manifold** is the colimit of its branch-episodes; the **merge** is
+> `G(branch)` (ingest of a branch back into the receiving fold), NOT itself a colimit. Read
+> "manifold = colimit; merge = G(branch)". Corrected in the t260 categorical-branching staging;
+> this line is retained for lineage. (Readback wins over this doc — verify against
+> `running-state.md` t260 and the staged branching program.)
+
 ## 8. Lineage — your HAL/Erban system already prefigured this (Drive)
 From Drive (`Deflijst voor mindmap`, `1-BLACK ArTISTIC- L2R`), the 2025 **HAL/Erban/dG** design is
 the same architecture pre-Poly:
