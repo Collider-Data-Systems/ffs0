@@ -332,7 +332,7 @@
       "node": "identity point in graph (not: object, element, vertex)",
       "relation": "typed connection between nodes (not: binding, edge, wire, association)",
       "rewrite": "graph transformation operation (not: morphism for the op, update, mutation)",
-      "rewrite_category": "family of allowed rewrites WF01-WF15 (not: named relation, UML association)",
+      "rewrite_category": "family of allowed rewrites WF01-WF21 (not: named relation, UML association)",
       "port": "interface point on a node type (not: slot, endpoint)",
       "operad": "valid composition rules / type registry (not: schema, grammar)",
       "property": "typed key-value on a node (not: field, payload, attribute)",
@@ -348,7 +348,7 @@
       "binding (for graph)",
       "edge",
       "morphism (for the wire)",
-      "kind",
+      "kind (as a synonym for node-type or operad type; the DECLARED property-axes `channel.kind` / `workstation.kind` / `manifold.kind` are the sanctioned uses since v4.0.0)",
       "object",
       "schema (for operad)",
       "transition (for interaction nodes)",
@@ -418,7 +418,7 @@
             "type": "datetime"
           }
         },
-        "note": "Spanning relations to instances/workspaces/channels are NOT yet declared (no WF) -- follow-on fragment, per the migration guard. A Stage-1 derived view over group/purpose/session/channel data remains a valid read until those land."
+        "note": "Spanning relations from a manifold are carried by WF18 `spans`/`spanned-by` (manifold -> purpose/program/session(workspace)/channel/group; g2-manifold-spans, LANDED v4.0.1 T=249) — the two-level-colimit cocone legs; the manifold is no longer relation-less. A Stage-1 derived view over group/purpose/session/channel data remains a valid read alongside the explicit WF18 spans."
       },
       {
         "id": "kernel",
