@@ -2,7 +2,7 @@
 
 > Part of the mo:os `ffs0` workspace. Project SOT: `../../../AGENTS.md`. Live state: `../../../kb/superset/running-state.md`.
 
-Static reference archive of YouTube transcripts in normalized JSON, captured for research hydration. Read-only artifacts — there is no live ingest tooling in this folder anymore (the old `ingest-youtube-url.ps1` / `save-youtube-transcript.ps1` scripts under `ffs0-factory-super\.agent\dev\` were retired). Treat this as a frozen corpus to G-ingest from, not a pipeline to run.
+Reference archive of YouTube transcripts in normalized JSON, captured for research hydration. Live ingest tooling: `dev/scripts/youtube/` (T=260 rebuild of the retired `.agent\dev\` trio, removed at `d649b60`) — `ingest-youtube-url.ps1` (single URL), `ingest-youtube-list.ps1` (batch + ledger), `save-youtube-transcript.ps1` (entry writer), sharing `youtube-common.ps1`. Entries land here; both ingest scripts refuse duplicates by video id unless `-Force`.
 
 ## Contents
 
