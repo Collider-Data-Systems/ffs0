@@ -1,7 +1,11 @@
 ---
 name: moos-compiler-lowering
-description: "Use when: designing or implementing the mo:os compiler/rewrite-lowering lane — moos IR, Rust/C++ engine rewrite planning, MLIR dialects, LLVM IR/JIT, target capability vectors, memory-address projections, persistent graph state, operad validators as compiler passes, or lowering F/G projections to runtime/code surfaces. Trigger phrases: moos IR, MLIR dialect, LLVM IR, ORC JIT, Rust rewrite, C++ rewrite, compiler target, lowering pass, persistent graph, copy-on-write GraphState, target triple, memory address, backend target."
+description: mo:os compiler/lowering lane: moos IR, MLIR dialects, LLVM/JIT, Rust/C++ engine rewrite planning, lowering F/G projections to runtime surfaces. Use for compiler-target or IR design work.
 ---
+
+## When to use (routing detail)
+
+"Use when: designing or implementing the mo:os compiler/rewrite-lowering lane — moos IR, Rust/C++ engine rewrite planning, MLIR dialects, LLVM IR/JIT, target capability vectors, memory-address projections, persistent graph state, operad validators as compiler passes, or lowering F/G projections to runtime/code surfaces. Trigger phrases: moos IR, MLIR dialect, LLVM IR, ORC JIT, Rust rewrite, C++ rewrite, compiler target, lowering pass, persistent graph, copy-on-write GraphState, target triple, memory address, backend target."
 
 # moos-compiler-lowering
 

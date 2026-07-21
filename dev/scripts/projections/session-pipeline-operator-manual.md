@@ -276,7 +276,7 @@ Use these most often with the projection filesystem:
 - `moos-rewrite-envelope`: authoring or debugging ADD/LINK/MUTATE/UNLINK envelopes.
 - `moos-github-project-bridge`: GitHub Project #4 as an F/G control surface keyed by `HG URN`.
 - `moos-categorical-research`: functor, adjunction, lens, HDC/VSA, or mathematical semantics questions.
-- `moos-running-state-validator`: checking running-state prose against live kernel state.
+- `moos-cross-persona-audit`: checking running-state prose against live kernel state.
 - `moos-round-close`: cleanup, running-state update, commit/push, and handoff once a round is genuinely done.
 
 The manual pattern is: read state, choose the right skill, run the dry projection first, inspect the generated files, then decide whether an explicit writer or HG apply is justified.

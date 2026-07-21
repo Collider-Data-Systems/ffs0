@@ -1,7 +1,11 @@
 ---
 name: moos-session-context-projection
-description: "Session-focused F-direction projection from HG into IDE, agent, or harness context packs. Use when making the current VS Code conversation stay aligned with the current session kernel, projecting session context to VS Code/Copilot/Claude Desktop/Cursor/agent harnesses, generating Julia session context plans, deciding which skills/prompts/tools/extensions/MCP servers should be mounted from a session purpose, or analyzing and visualizing newly added HG nodes. Trigger phrases: session context pack, purpose-colored occasion, affordance pack, VS Code projection, harness handoff, current session kernel, session-focused skills, VS Code extensions, MCP servers, visualize new graph nodes."
+description: F-direction projection of session context into IDE/agent/harness packs (skills, prompts, MCP mounts, VS Code config, pipeline dashboard). Use when aligning a conversation or IDE with the current workspace purpose, or running the session pipeline.
 ---
+
+## When to use (routing detail)
+
+"Session-focused F-direction projection from HG into IDE, agent, or harness context packs. Use when making the current VS Code conversation stay aligned with the current session kernel, projecting session context to VS Code/Copilot/Claude Desktop/Cursor/agent harnesses, generating Julia session context plans, deciding which skills/prompts/tools/extensions/MCP servers should be mounted from a session purpose, or analyzing and visualizing newly added HG nodes. Trigger phrases: session context pack, purpose-colored occasion, affordance pack, VS Code projection, harness handoff, current session kernel, session-focused skills, VS Code extensions, MCP servers, visualize new graph nodes."
 
 # moos-session-context-projection
 
@@ -115,4 +119,4 @@ Calendar writer actions are explicit actuator steps. The writer is an upsert key
 - `moos-tooling-dx` for IDE attach, MCP, and harness plumbing.
 - `moos-rewrite-envelope` when a projected action becomes an actual rewrite batch.
 - `moos-categorical-research` for the indexed/fibered reading of session-purpose affordances.
-- `moos-running-state-validator` when the projection changes durable state documentation.
+- `moos-cross-persona-audit` when the projection changes durable state documentation.

@@ -34,13 +34,13 @@ Persona is presentation (D3), never authority.
 ## Start here
 1. Invoke the **`moos-seat-hydration`** skill for this seat **before anything else** —
    it readbacks occupancy, engine `/healthz`, and scope pins for `sam.governance`.
-2. Mount your **lane-core** skills: **`moos-cross-persona-audit`** (round-close
+2. Mount your **lane-core** skill: **`moos-cross-persona-audit`** (round-close
    N-invariant audit across both engines via the federation router — emit-target
-   adherence, port↔URN consistency, single-occupant invariant, enum drift) and
-   **`moos-running-state-validator`** (running-state.md vs live HG/`/healthz`
-   consistency). The full governance mount (8 skills) is listed in
+   adherence, port↔URN consistency, single-occupant invariant, enum drift — plus
+   running-state.md vs live HG/`/healthz` consistency as its absorbed T=262 mode).
+   The full governance mount (7 skills) is listed in
    `dev/config/session-affordance-map.json` (`john-lydon-governance`) — that map is
-   the mount SOT; this card names only the lane-core pair.
+   the mount SOT; this card names only the lane core.
 
 ## Emit discipline
 This is an **hp-laptop primary** seat — it emits to its own engine `hp-laptop.primary`

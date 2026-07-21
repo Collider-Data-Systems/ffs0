@@ -1,7 +1,11 @@
 ---
 name: moos-state-readback
-description: Use this skill at the start of any mo:os working session, before claiming state is "crisp", and before any git pull/rebuild/restart. Performs the 15-second readback: per-repo `git -C <path> fetch` on ffs0 + moos-kernel + moos-router, diffs against their respective default branches, reads running-state.md header, checks kernel process + ports, pings `/healthz` (reads `ontology_version` directly — no grep-for-features heuristic), lists open handoff-issue comments. Answers "am I up to date — per repo?", "is the kernel up and on what runtime ontology version?", "has any peer agent pushed anything I should pull?". Trigger whenever a new conversation opens in one of the mo:os workspaces (`ffs0`, `moos-kernel`, `moos-router`, `moos-viz`), or any time you are about to make a claim about "is hp-laptop crisp", or before any bash command that changes repo state (pull / rebuild / commit).
+description: The 15-second readback: per-repo git fetch+diff, running-state header, kernel process/ports, /healthz ontology version, open handoff comments. Use at session start and before any pull/rebuild/restart or crispness claim.
 ---
+
+## When to use (routing detail)
+
+Use this skill at the start of any mo:os working session, before claiming state is "crisp", and before any git pull/rebuild/restart. Performs the 15-second readback: per-repo `git -C <path> fetch` on ffs0 + moos-kernel + moos-router, diffs against their respective default branches, reads running-state.md header, checks kernel process + ports, pings `/healthz` (reads `ontology_version` directly — no grep-for-features heuristic), lists open handoff-issue comments. Answers "am I up to date — per repo?", "is the kernel up and on what runtime ontology version?", "has any peer agent pushed anything I should pull?". Trigger whenever a new conversation opens in one of the mo:os workspaces (`ffs0`, `moos-kernel`, `moos-router`, `moos-viz`), or any time you are about to make a claim about "is hp-laptop crisp", or before any bash command that changes repo state (pull / rebuild / commit).
 
 # mo:os state readback
 

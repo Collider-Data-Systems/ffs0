@@ -1,7 +1,11 @@
 ---
 name: moos-rewrite-envelope
-description: Use when composing envelopes for the mo:os kernel (`mcp__moos-kernel__apply_program` / `apply_rewrite`, or `POST /programs` / `POST /rewrites`). Covers the four rewrite types (ADD, LINK, MUTATE, UNLINK) — field names, placement gotchas (top-level `type_id` vs nested), additive vs standard MUTATE paths, PropertySpec rules, one-field-per-MUTATE, `created_at` as immutable property not runtime-injected. Trigger whenever writing a rewrite envelope, debugging operad validation errors like "unknown type_id", "required immutable property missing", "field not declared in type spec", or "field not in mutate_scope".
+description: Compose ADD/LINK/MUTATE/UNLINK envelopes for apply_program/apply_rewrite (field names, placement gotchas, PropertySpec rules). Use whenever authoring a rewrite envelope or debugging operad validation errors.
 ---
+
+## When to use (routing detail)
+
+Use when composing envelopes for the mo:os kernel (`mcp__moos-kernel__apply_program` / `apply_rewrite`, or `POST /programs` / `POST /rewrites`). Covers the four rewrite types (ADD, LINK, MUTATE, UNLINK) — field names, placement gotchas (top-level `type_id` vs nested), additive vs standard MUTATE paths, PropertySpec rules, one-field-per-MUTATE, `created_at` as immutable property not runtime-injected. Trigger whenever writing a rewrite envelope, debugging operad validation errors like "unknown type_id", "required immutable property missing", "field not declared in type spec", or "field not in mutate_scope".
 
 # mo:os rewrite envelope authoring
 

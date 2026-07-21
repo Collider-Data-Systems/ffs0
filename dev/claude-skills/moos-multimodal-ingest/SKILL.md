@@ -1,7 +1,11 @@
 ---
 name: moos-multimodal-ingest
-description: Multimodal artifact ingestion for the Moos diary lane (`session:sam.moos-diary` on `kernel:hp-z440.primary` driven by `agent:antigravity.hp-z440`, mirrored on hp-laptop by `agent:antigravity.hp-laptop` on `session:sam.laptop-moos-diary`). Use when chunking photos, videos, audio recordings, screen captures, or other non-textual artifacts into `knowledge_item` nodes. Complements `moos-workspace-ingest` (Workspace text-only) by handling the binary/perceptual register. Trigger on: a new diary photo or video to ingest, a Google Labs Flow output, an audio recording, a multi-frame screen capture, or any artifact whose semantic content is not directly text. Daily 08:00 multimodal-sweep wake-up if scheduled.
+description: Chunk photos, video, audio, and screen captures into knowledge_item nodes (Moos diary lane, G-direction). Use for any artifact whose semantic content is not directly text.
 ---
+
+## When to use (routing detail)
+
+Multimodal artifact ingestion for the Moos diary lane (`session:sam.moos-diary` on `kernel:hp-z440.primary` driven by `agent:antigravity.hp-z440`, mirrored on hp-laptop by `agent:antigravity.hp-laptop` on `session:sam.laptop-moos-diary`). Use when chunking photos, videos, audio recordings, screen captures, or other non-textual artifacts into `knowledge_item` nodes. Complements `moos-workspace-ingest` (Workspace text-only) by handling the binary/perceptual register. Trigger on: a new diary photo or video to ingest, a Google Labs Flow output, an audio recording, a multi-frame screen capture, or any artifact whose semantic content is not directly text. Daily 08:00 multimodal-sweep wake-up if scheduled.
 
 # moos-multimodal-ingest
 

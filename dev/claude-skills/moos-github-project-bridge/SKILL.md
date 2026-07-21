@@ -1,7 +1,11 @@
 ---
 name: moos-github-project-bridge
-description: Two-way sync between the HG and the Collider-Data-Systems "mo:os" GitHub Projects v2 board (#4). Use when creating/updating/closing HG nodes (program, session, agent, purpose, grammar_fragment, knowledge_item) and you want the board reflected, OR when a board item status changes and the referenced HG node needs a MUTATE. Covers the F ⊣ G adjunction between HG and GitHub Projects with round-trip fidelity as the invariant.
+description: Two-way sync between HG nodes and the Collider-Data-Systems GitHub Projects board #4 (F/G adjunction, round-trip fidelity). Use when HG changes should reflect on the board or board changes need HG MUTATEs.
 ---
+
+## When to use (routing detail)
+
+Two-way sync between the HG and the Collider-Data-Systems "mo:os" GitHub Projects v2 board (#4). Use when creating/updating/closing HG nodes (program, session, agent, purpose, grammar_fragment, knowledge_item) and you want the board reflected, OR when a board item status changes and the referenced HG node needs a MUTATE. Covers the F ⊣ G adjunction between HG and GitHub Projects with round-trip fidelity as the invariant.
 
 # moos-github-project-bridge
 
@@ -111,7 +115,7 @@ Every board-linked issue/PR SHOULD have in its body:
 HG URN: urn:moos:<type>:<slug>
 ```
 
-on its own line, near the top. The G direction greps for this when figuring out which HG node a status change refers to. If the URN is missing, the G direction can't round-trip and the item falls into "orphan" — flag via `moos-cowork-readback` at round-open.
+on its own line, near the top. The G direction greps for this when figuring out which HG node a status change refers to. If the URN is missing, the G direction can't round-trip and the item falls into "orphan" — flag via `moos-seat-hydration` at round-open.
 
 ## G direction: board status change → HG MUTATE
 
@@ -192,7 +196,7 @@ Never user:sam. Always verify the driving session has has-occupant in HG state b
 
 | Failure | Recovery |
 |---|---|
-| Orphan item (no HG URN in body/field) | Log; surface in `moos-cowork-readback` at round-open; human triage |
+| Orphan item (no HG URN in body/field) | Log; surface in `moos-seat-hydration` at round-open; human triage |
 | HG node missing when G tries to MUTATE | Log; the node may have been UNLINKed from an umbrella or archived; don't force-create |
 | GitHub API rate limit | Back off; bridge is idempotent (re-running emits no-op on already-synced items) |
 | Field ID map stale (GitHub added fields) | Re-fetch field IDs on `unknown field` error; cache refresh |

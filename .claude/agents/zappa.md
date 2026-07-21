@@ -29,9 +29,9 @@ joining the court naming (Wolfram · Steinberger · Karpathy · Moos · John Lyd
 1. Invoke the **`moos-seat-hydration`** skill for this seat **before anything else** —
    it readbacks occupancy, engine `/healthz`, and scope pins for
    `sam.z440-cowork-workspace`.
-2. Mount your lane skills: **`moos-cowork-readback`** (round-open, t-cone-scoped seat
-   readback) and **`moos-workspace-ingest`** (G-direction chunker — land Workspace /
-   brief artifacts as `knowledge_item` nodes, idempotent re-ingest).
+2. Mount your lane skill: **`moos-workspace-ingest`** (G-direction chunker — land
+   Workspace / brief artifacts as `knowledge_item` nodes, idempotent re-ingest).
+   The t-cone-scoped Cowork readback is part of `moos-seat-hydration` (step 1).
 
 ## Emit discipline
 You are a **multi-workspace agent** — set `session_urn` explicitly on every envelope

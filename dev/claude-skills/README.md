@@ -17,15 +17,15 @@ Copies every `dev/claude-skills/<skill>/` into `$env:USERPROFILE\.claude\skills\
 
 To confirm: open a new Claude Code conversation — the opening system-reminder lists available skills; the `moos-*` entries should appear. To bypass discovery entirely, point Claude at a path directly, e.g. `Run the instructions at ~/.claude/skills/moos-state-readback/SKILL.md`.
 
-## Current skills (15)
+## Current skills (12)
 
-Grouped by role; each `SKILL.md` carries its own trigger `description` (the authoritative when-to-use) — not restated here. Index also in `AGENTS.md`.
+Grouped by role; each `SKILL.md` carries its own trigger `description` (the authoritative when-to-use) — not restated here. Index in `dev/reference/agents-reference.md`.
 
 | Group | Skills |
 |---|---|
-| Authoring / ops | `moos-rewrite-envelope` · `moos-state-readback` · `moos-seat-hydration` · `moos-round-close` · `moos-running-state-validator` · `moos-cross-persona-audit` · `moos-workstation-operator` |
+| Authoring / ops | `moos-rewrite-envelope` · `moos-state-readback` · `moos-seat-hydration` · `moos-round-close` · `moos-cross-persona-audit` |
 | Projection (F) / ingest (G) | `moos-session-context-projection` · `moos-workspace-ingest` (text) · `moos-multimodal-ingest` (binary) · `moos-github-project-bridge` |
-| Seat lanes | `moos-categorical-research` (Karpathy) · `moos-compiler-lowering` (Karpathy/Steinberger) · `moos-tooling-dx` (Steinberger) · `moos-cowork-readback` (Cowork) |
+| Seat lanes | `moos-categorical-research` (Karpathy) · `moos-compiler-lowering` (Karpathy/Steinberger) · `moos-tooling-dx` (Steinberger) · `moos-seat-hydration` (Cowork) |
 
 ## Adding a skill
 

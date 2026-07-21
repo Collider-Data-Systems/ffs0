@@ -1,7 +1,11 @@
 ---
 name: moos-workspace-ingest
-description: Chunker for the Cowork-as-occupant ingest direction (G in the F⊣G adjunction). Use when a Cowork session needs to land a Workspace artifact (Gmail thread, Calendar event, Drive doc, Tasks item) or a Cowork-authored artifact (markdown/HTML brief) as `knowledge_item` nodes in the HG. Picks chunk grain per source type, emits a single atomic `apply_program` batch with umbrella + chunks + provides-kb/kb-source LINKs (WF12). Idempotent — re-ingest of a previously-chunked source emits a `claim` flagging the duplicate rather than re-ADDing. Trigger on: "ingest this Drive doc", "chunk this email thread into HG", "land this brief as knowledge_items", or any Workspace URN passed to a Cowork session for HG persistence.
+description: Chunk Workspace artifacts (Gmail/Calendar/Drive/Tasks) and Cowork-authored briefs into knowledge_item nodes with WF12 provides-kb links, idempotently (G-direction). Use to land any text artifact in the HG.
 ---
+
+## When to use (routing detail)
+
+Chunker for the Cowork-as-occupant ingest direction (G in the F⊣G adjunction). Use when a Cowork session needs to land a Workspace artifact (Gmail thread, Calendar event, Drive doc, Tasks item) or a Cowork-authored artifact (markdown/HTML brief) as `knowledge_item` nodes in the HG. Picks chunk grain per source type, emits a single atomic `apply_program` batch with umbrella + chunks + provides-kb/kb-source LINKs (WF12). Idempotent — re-ingest of a previously-chunked source emits a `claim` flagging the duplicate rather than re-ADDing. Trigger on: "ingest this Drive doc", "chunk this email thread into HG", "land this brief as knowledge_items", or any Workspace URN passed to a Cowork session for HG persistence.
 
 # moos-workspace-ingest
 

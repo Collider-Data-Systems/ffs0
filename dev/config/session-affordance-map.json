@@ -99,7 +99,7 @@
       "skills": [
         "moos-tooling-dx",
         "moos-session-context-projection",
-        "moos-running-state-validator"
+        "moos-cross-persona-audit"
       ],
       "validation": [
         "Test-MoosFederation.ps1 -Mode VerifyPersona -Persona steinberger",
@@ -168,7 +168,7 @@
       ],
       "prompts": [],
       "skills": [
-        "moos-cowork-readback",
+        "moos-seat-hydration",
         "moos-workspace-ingest",
         "moos-multimodal-ingest",
         "moos-session-context-projection",
@@ -222,7 +222,6 @@
         "moos-session-context-projection",
         "moos-tooling-dx",
         "moos-round-close",
-        "moos-running-state-validator",
         "moos-cross-persona-audit",
         "moos-rewrite-envelope"
       ],
@@ -339,7 +338,7 @@
         "moos-session-context-projection",
         "moos-workspace-ingest",
         "moos-rewrite-envelope",
-        "moos-running-state-validator"
+        "moos-cross-persona-audit"
       ],
       "validation": [
         "dev/scripts/t194_t200_big_sprint_topology.jl",

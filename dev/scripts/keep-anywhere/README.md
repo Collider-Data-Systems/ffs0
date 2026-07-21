@@ -1,5 +1,5 @@
 ---
-agent: "moos-workstation-operator"
+agent: "moos-seat-hydration"
 description: "Use when: making all Google Keep notes readable on every device — Android and any workstation, including Claude Desktop — via a Keep→Drive mirror read through the Drive MCP. Primary account is the collider Workspace (official Keep API, signed in on all workstations); personal gmail is an optional fallback."
 ---
 
