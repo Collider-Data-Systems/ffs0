@@ -66,6 +66,6 @@ powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepI
 
 - Orientation, seat map, rewrite vocabulary, branching, safety: `../../AGENTS.md`. Do not duplicate it here.
 - Live round-to-round state: `../../kb/superset/running-state.md` (read first).
-- Workstation bring-up/refresh: skill `moos-workstation-operator` (Claude) or `AGENTS.md` + running-state (any harness).
-- Relevant skills: `moos-state-readback`, `moos-session-context-projection`, `moos-workspace-ingest`, `moos-tooling-dx`, `moos-rewrite-envelope`, `moos-running-state-validator`.
+- Workstation bring-up/refresh: skill `moos-seat-hydration` (Claude) or `AGENTS.md` + running-state (any harness).
+- Relevant skills: `moos-state-readback`, `moos-session-context-projection`, `moos-workspace-ingest`, `moos-tooling-dx`, `moos-rewrite-envelope`, `moos-cross-persona-audit`.
 - Python status: keep `generate_type_map.py` (router) and `validation/*.py` + their tests (importable baseline/hydration checks). Do not add new one-shot emitters — prefer dry Julia planners + explicit writer boundaries.

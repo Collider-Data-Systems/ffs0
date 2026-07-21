@@ -6,7 +6,9 @@ Owner: `urn:moos:user:sam` — pulled on every workstation.
 > **Pointer to `AGENTS.md`** (the project SOT — read it natively; the T=244 Phase-3 canary
 > proved this read→act path end-to-end, ffs0#58). All shared doctrine lives THERE, once:
 > the rule (ADD·LINK·MUTATE·UNLINK), SOT hierarchy, generated seat table, S0→HG pipeline,
-> 4.0 vocab, branching, actor discipline (§M11/§M12 — see also `CLAUDE.md`), safety.
+> actor discipline (§M11/§M12), branching summary, safety. Deep doctrine (4.0 vocab D1–D8,
+> full branching/attribution, design-doc discipline, skills index) lives in
+> `dev/reference/agents-reference.md` (T=262 split).
 > **Read `kb/superset/running-state.md` first for live round-to-round state.**
 > This file = AG-surface deltas ONLY (the `moos-diary` / multimodal-curation lane).
 

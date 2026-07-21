@@ -1,7 +1,11 @@
 ---
 name: moos-round-close
-description: Use this skill at the end of a mo:os round — after the HG rewrites have landed via MCP and any research/doctrine notes are written — to perform the cleanup+commit+push+issue-comment dance cleanly. Handles running-state update, single atomic commit on ffs0 (and moos-kernel if touched), push, and optionally a handoff issue comment notifying peer agents. Catches the "did I forget to update running-state / post the handoff" issue. Trigger whenever a round's work is done and you're about to declare it shipped.
+description: End-of-round cleanup: running-state update, single atomic commit+push on ffs0 (and moos-kernel if touched), optional handoff issue comment. Use when a round is done and about to be declared shipped.
 ---
+
+## When to use (routing detail)
+
+Use this skill at the end of a mo:os round — after the HG rewrites have landed via MCP and any research/doctrine notes are written — to perform the cleanup+commit+push+issue-comment dance cleanly. Handles running-state update, single atomic commit on ffs0 (and moos-kernel if touched), push, and optionally a handoff issue comment notifying peer agents. Catches the "did I forget to update running-state / post the handoff" issue. Trigger whenever a round's work is done and you're about to declare it shipped.
 
 # mo:os round close
 

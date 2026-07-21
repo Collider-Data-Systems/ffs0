@@ -1,7 +1,11 @@
 ---
 name: moos-categorical-research
-description: Categorical reasoning + HDC/VSA bridge work for Karpathy's seat (`session:sam.karpathy-seat`; emit-target `kernel:hp-z440.primary` :8000/:8080 today; opens-on `kernel:hp-z440.lola` :8002/:9002 as future §M9 topology metadata). Use when emitting categorical/sheaf-theoretic claims, reasoning about presheaves on the strata filtration, working out the F⊣G adjunction details for a specific surface, designing hyperdimensional encoders/decoders, or proposing new categorical structure for the ontology. Trigger phrases: "as a categorical object", "presheaf on", "the adjoint of", "the operadic interface", "VSA encoding of", "sheaf gluing for", "Yoneda", "natural transformation", "fibration", "limit/colimit". Companion to `moos-rewrite-envelope` (envelope authoring) and `moos-domain-expert` (deeper math).
+description: Categorical/sheaf-theoretic reasoning and HDC/VSA encoder design for the Karpathy lane. Use when emitting categorical claims about the HG, working presheaves/adjunctions/operadic structure, or proposing new categorical ontology structure.
 ---
+
+## When to use (routing detail)
+
+Categorical reasoning + HDC/VSA bridge work for Karpathy's seat (`session:sam.karpathy-seat`; emit-target `kernel:hp-z440.primary` :8000/:8080 today; opens-on `kernel:hp-z440.lola` :8002/:9002 as future §M9 topology metadata). Use when emitting categorical/sheaf-theoretic claims, reasoning about presheaves on the strata filtration, working out the F⊣G adjunction details for a specific surface, designing hyperdimensional encoders/decoders, or proposing new categorical structure for the ontology. Trigger phrases: "as a categorical object", "presheaf on", "the adjoint of", "the operadic interface", "VSA encoding of", "sheaf gluing for", "Yoneda", "natural transformation", "fibration", "limit/colimit". Companion to `moos-rewrite-envelope` (envelope authoring) and `moos-domain-expert` (deeper math).
 
 # moos-categorical-research
 
@@ -18,7 +22,7 @@ Karpathy's working surface for the HDC/VSA categorical bridge. Translates betwee
 ## What this skill is NOT
 
 - Not for general kernel envelope authoring — use `moos-rewrite-envelope` for that
-- Not for round-open readbacks — use `moos-state-readback` / `moos-cowork-readback`
+- Not for round-open readbacks — use `moos-state-readback` / `moos-seat-hydration`
 - Not for committing code or running ceremonies — Karpathy emits envelopes; Wolfram/John Lydon handle code merges
 
 ## The three-register translation

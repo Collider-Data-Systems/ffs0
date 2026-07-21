@@ -1,7 +1,11 @@
 ---
 name: moos-tooling-dx
-description: Tooling + developer-experience work for Steinberger's seat (`session:sam.steinberger-seat`; emit-target `kernel:hp-z440.primary` :8000/:8080 today; opens-on `kernel:hp-z440.menno` :8001/:9001 as future §M9 topology metadata). Use when reasoning about IDE attach (VSCode + Antigravity + Claude Desktop + Cursor), MCP wiring (SSE vs stdio, port assignments, transport correctness), shell-script reification (PowerShell sync scripts, federation startup), keybinding ergonomics, agent-harness shape (CLI as tool protocol per §M20), session context projection, or DX failure modes (bad envelope shapes, validator errors, sandbox boundaries). Trigger phrases: ".vscode/mcp.json", "MCP transport", "stdio sidecar", "PowerShell here-string", "keybinding chord", "skill routing", "harness pattern", "session context pack", "tool ergonomics", "DX gap". Companion to `moos-session-context-projection` (session packs), `moos-rewrite-envelope` (envelope shape), and `moos-running-state-validator` (state-doc consistency).
+description: Tooling/DX lane (Steinberger): IDE attach, MCP wiring and transports, PowerShell ops scripts, keybindings, harness shape. Use for .vscode/mcp.json, MCP transport, shell-reification, or DX-gap work.
 ---
+
+## When to use (routing detail)
+
+Tooling + developer-experience work for Steinberger's seat (`session:sam.steinberger-seat`; emit-target `kernel:hp-z440.primary` :8000/:8080 today; opens-on `kernel:hp-z440.menno` :8001/:9001 as future §M9 topology metadata). Use when reasoning about IDE attach (VSCode + Antigravity + Claude Desktop + Cursor), MCP wiring (SSE vs stdio, port assignments, transport correctness), shell-script reification (PowerShell sync scripts, federation startup), keybinding ergonomics, agent-harness shape (CLI as tool protocol per §M20), session context projection, or DX failure modes (bad envelope shapes, validator errors, sandbox boundaries). Trigger phrases: ".vscode/mcp.json", "MCP transport", "stdio sidecar", "PowerShell here-string", "keybinding chord", "skill routing", "harness pattern", "session context pack", "tool ergonomics", "DX gap". Companion to `moos-session-context-projection` (session packs), `moos-rewrite-envelope` (envelope shape), and `moos-cross-persona-audit` (state-doc consistency).
 
 # moos-tooling-dx
 
@@ -132,7 +136,7 @@ A shell command becomes a script when (a) it's run more than 3 times, (b) it has
 - `moos-rewrite-envelope` — envelope shapes, gates
 - `moos-session-context-projection` — dry session context packs for IDE / agent / harness handoff
 - `moos-state-readback` — round-open
-- `moos-running-state-validator` — state-doc consistency (John Lydon's lane; co-validation)
+- `moos-cross-persona-audit` — state-doc consistency (John Lydon's lane; co-validation)
 - `derivation:t172.wolframs-court` (on log) — Steinberger seat origin doctrine
 - `derivation:t175.program-authoring-fabric` (on log) — leaves as the fluid-execution boundary; relevant for tool_call / external_op design
 - `D:\HPZ440\start_federation.ps1` — Z440 startup script

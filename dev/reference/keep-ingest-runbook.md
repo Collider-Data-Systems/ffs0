@@ -1,5 +1,5 @@
 ---
-agent: "moos-workstation-operator"
+agent: "moos-seat-hydration"
 description: "Use when: ingesting Google Keep notes from API, Takeout, browser clipboard, or manual exports into the mo:os T190-T208 review-only staging lane from any agent harness."
 ---
 
@@ -72,7 +72,7 @@ Load or honor these skills when the harness supports skills:
 - `moos-session-context-projection` for harness handoff and dashboard projection.
 - `moos-tooling-dx` for cross-harness runner and prompt wiring.
 - `moos-rewrite-envelope` before any reviewed apply program.
-- `moos-running-state-validator` after durable state-doc or round-close changes.
+- `moos-cross-persona-audit` after durable state-doc or round-close changes.
 
 ## Commands
 
