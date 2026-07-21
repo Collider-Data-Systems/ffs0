@@ -33,12 +33,17 @@ $repoSkills = Get-ChildItem -Path $source -Directory | Select-Object -ExpandProp
 $wanted = $repoSkills
 if ($Seat -ne '') {
     $map = Get-Content $mapPath -Raw -Encoding UTF8 | ConvertFrom-Json
-    $row = $map.sessions | Where-Object { $_.key -eq $Seat }
-    if ($null -eq $row) {
+    $rows = @($map.sessions | Where-Object { $_.key -eq $Seat })
+    if ($rows.Count -eq 0) {
         Write-Host "Seat '$Seat' not found in session-affordance-map.json. Known keys:" -ForegroundColor Red
         $map.sessions | ForEach-Object { Write-Host "  $($_.key)" }
         exit 1
     }
+    if ($rows.Count -gt 1) {
+        Write-Host "Seat '$Seat' matches $($rows.Count) rows in session-affordance-map.json - keys must be unique. Aborting." -ForegroundColor Red
+        exit 1
+    }
+    $row = $rows[0]
     $wanted = @($row.skills) + 'moos-seat-hydration' | Select-Object -Unique
     $missing = $wanted | Where-Object { $_ -notin $repoSkills }
     foreach ($m in $missing) { Write-Host "WARN: seat lists '$m' but repo has no such skill dir" -ForegroundColor Yellow }
@@ -56,6 +61,12 @@ foreach ($name in $wanted) {
         Write-Host "Installing: $name"
     }
     Copy-Item -Recurse -Path (Join-Path $source $name) -Destination $dest
+}
+
+# Fail closed: never prune on an empty selection (a bug above must not wipe the target)
+if (@($wanted).Count -eq 0) {
+    Write-Host "Selected skill set is empty - refusing to prune. Aborting." -ForegroundColor Red
+    exit 1
 }
 
 # Prune moos-* dirs not in the selected set (covers retired skills and de-mounted seat skills)
