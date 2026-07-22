@@ -7,7 +7,9 @@
 				"--base-url",
 				"http://localhost:8000",
 				"--actor",
-				"urn:moos:agent:vscode.hp-z440.primary"
+				"urn:moos:agent:vscode.hp-z440.primary",
+				"--auth-token-file",
+				"${workspaceFolder:ffs0-private-workspace}/secrets/moos-auth-token"
 			]
 		},
 		"moos-mcp-karpathy": {
@@ -17,32 +19,52 @@
 				"--base-url",
 				"http://localhost:8000",
 				"--actor",
-				"urn:moos:agent:vscode.hp-z440.lola"
+				"urn:moos:agent:vscode.hp-z440.lola",
+				"--auth-token-file",
+				"${workspaceFolder:ffs0-private-workspace}/secrets/moos-auth-token"
 			]
 		},
 		"moos-hp-laptop-primary": {
 			"type": "sse",
-			"url": "http://localhost:8080/sse"
+			"url": "http://localhost:8080/sse",
+			"headers": {
+				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+			}
 		},
 		"moos-hpprodesk-primary": {
 			"type": "sse",
-			"url": "http://localhost:8080/sse"
+			"url": "http://localhost:8080/sse",
+			"headers": {
+				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+			}
 		},
 		"moos-primary": {
 			"type": "sse",
-			"url": "http://localhost:8080/sse"
+			"url": "http://localhost:8080/sse",
+			"headers": {
+				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+			}
 		},
 		"moos-menno": {
 			"type": "sse",
-			"url": "http://localhost:9001/sse"
+			"url": "http://localhost:9001/sse",
+			"headers": {
+				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+			}
 		},
 		"moos-lola": {
 			"type": "sse",
-			"url": "http://localhost:9002/sse"
+			"url": "http://localhost:9002/sse",
+			"headers": {
+				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+			}
 		},
 		"moos-moos": {
 			"type": "sse",
-			"url": "http://localhost:9003/sse"
+			"url": "http://localhost:9003/sse",
+			"headers": {
+				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+			}
 		},
 		"moos-kernel-cloud": {
 			"type": "sse",

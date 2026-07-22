@@ -30,6 +30,17 @@ $TopologyFile = 'D:\HPZ440\ffs0\dev\config\moos-federation.topology.json'
 $Ontology     = 'D:\HPZ440\ffs0\kb\superset\ontology.json'
 $LocalKernel  = 'http://localhost:8000'
 
+# Bearer auth (moos-kernel #60): pass the token file only when it exists —
+# the kernel exits fatal on a missing/empty file, and unset means open+WARNING,
+# so a lost secrets file degrades to the pre-#60 posture instead of a dead boot.
+$AuthTokenFile = 'D:\HPZ440\ffs0\secrets\moos-auth-token'
+$AuthArgs = @()
+if (Test-Path $AuthTokenFile) {
+    $AuthArgs = @('--auth-token-file', $AuthTokenFile)
+} else {
+    Write-Host "WARNING: $AuthTokenFile missing - kernels start UNAUTHENTICATED (write routes open)." -ForegroundColor Yellow
+}
+
 # --- Full restart: clear the federation ports -------------------------------
 $ports = @(8000, 8080, 8001, 9001, 8002, 9002, 8003, 9003, 9000)
 $owners = Get-NetTCPConnection -State Listen -LocalPort $ports -ErrorAction SilentlyContinue |
@@ -44,15 +55,15 @@ Start-Sleep -Seconds 1
 
 # --- 1. Primary kernel — :8000 / MCP :8080 -----------------------------------
 Write-Host "Starting primary kernel (:8000)..."
-Start-Process -FilePath $KernelExe -ArgumentList '--ontology',$Ontology,'--log','D:\HPZ440\moos-kernel\moos.jsonl','--listen',':8000','--mcp-addr',':8080','--seed','--seed-user','sam','--seed-ws','hp-z440' -WorkingDirectory 'D:\HPZ440\moos-kernel' -WindowStyle Minimized
+Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\moos-kernel\moos.jsonl','--listen',':8000','--mcp-addr',':8080','--seed','--seed-user','sam','--seed-ws','hp-z440') + $AuthArgs) -WorkingDirectory 'D:\HPZ440\moos-kernel' -WindowStyle Minimized
 
 Start-Sleep -Seconds 3
 
 # --- 2. Twin kernels ----------------------------------------------------------
 Write-Host "Starting twin kernels (:8001-8003)..."
-Start-Process -FilePath $KernelExe -ArgumentList '--ontology',$Ontology,'--log','D:\HPZ440\kernels\menno\moos.jsonl','--listen',':8001','--mcp-addr',':9001' -WindowStyle Minimized
-Start-Process -FilePath $KernelExe -ArgumentList '--ontology',$Ontology,'--log','D:\HPZ440\kernels\lola\moos.jsonl','--listen',':8002','--mcp-addr',':9002' -WindowStyle Minimized
-Start-Process -FilePath $KernelExe -ArgumentList '--ontology',$Ontology,'--log','D:\HPZ440\kernels\moos\moos.jsonl','--listen',':8003','--mcp-addr',':9003' -WindowStyle Minimized
+Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\kernels\menno\moos.jsonl','--listen',':8001','--mcp-addr',':9001') + $AuthArgs) -WindowStyle Minimized
+Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\kernels\lola\moos.jsonl','--listen',':8002','--mcp-addr',':9002') + $AuthArgs) -WindowStyle Minimized
+Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\kernels\moos\moos.jsonl','--listen',':8003','--mcp-addr',':9003') + $AuthArgs) -WindowStyle Minimized
 
 Start-Sleep -Seconds 3
 

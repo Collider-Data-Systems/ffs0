@@ -624,9 +624,18 @@ function Invoke-PostProgram {
         $postFile = $tmp
     }
 
+    # Bearer auth (moos-kernel #60): write routes 401 without it once the kernel
+    # runs with --auth-token-file. Token lives in gitignored secrets/ per box;
+    # absent file = no header (pre-#60 kernels stay reachable).
+    $authHeaders = @{}
+    $authTokenPath = Join-Path $PSScriptRoot '..\..\..\secrets\moos-auth-token'
+    if (Test-Path $authTokenPath) {
+        $authHeaders['Authorization'] = 'Bearer ' + ([IO.File]::ReadAllText($authTokenPath).Trim())
+    }
+
     Write-Host "POST $Path -> $url as persona '$Name' (emit=$($resolved.EmitKernelName), opens-on=$($resolved.OpensOnKernelName))" -ForegroundColor Cyan
     try {
-        Invoke-RestMethod -Uri $url -Method Post -InFile $postFile -ContentType 'application/json; charset=utf-8' | ConvertTo-Json -Depth 20
+        Invoke-RestMethod -Uri $url -Method Post -InFile $postFile -ContentType 'application/json; charset=utf-8' -Headers $authHeaders | ConvertTo-Json -Depth 20
     }
     finally {
         if ($tmp) { Remove-Item -Force $tmp -ErrorAction SilentlyContinue }
