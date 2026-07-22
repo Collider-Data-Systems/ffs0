@@ -36,13 +36,29 @@ $Log          = "$Base\moos-kernel\moos.hpprodesk.jsonl"  # sovereign log - NOT 
 
 $LocalKernel = "http://localhost:8000"
 
+# Bearer auth (moos-kernel #60): pass the token file only when it is a real,
+# non-empty leaf file - the kernel exits FATAL on a missing/empty/dir path
+# (Copilot catch on #167), and unset means open+WARNING, so anything less than
+# a usable token degrades to the pre-#60 posture instead of a dead boot.
+$AuthTokenFile = "$Base\ffs0\secrets\moos-auth-token"
+$AuthArgs = ""
+$AuthTokenUsable = $false
+if (Test-Path $AuthTokenFile -PathType Leaf) {
+    try { $AuthTokenUsable = ([IO.File]::ReadAllText($AuthTokenFile).Trim().Length -gt 0) } catch {}
+}
+if ($AuthTokenUsable) {
+    $AuthArgs = " --auth-token-file `"$AuthTokenFile`""
+} else {
+    Write-Host "WARNING: $AuthTokenFile missing or empty - kernel starts UNAUTHENTICATED (write routes open)." -ForegroundColor Yellow
+}
+
 # --- Kernel (idempotent: skip if already running) -------------------------
 if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     Write-Host "Primary kernel already running - skipping." -ForegroundColor Gray
 } else {
     Write-Host "Starting moos primary kernel (ProDesk)..." -ForegroundColor Cyan
     Start-Process -FilePath $KernelExe `
-        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hpprodesk" `
+        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hpprodesk$AuthArgs" `
         -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }

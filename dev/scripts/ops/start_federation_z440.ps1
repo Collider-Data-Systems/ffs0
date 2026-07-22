@@ -30,15 +30,20 @@ $TopologyFile = 'D:\HPZ440\ffs0\dev\config\moos-federation.topology.json'
 $Ontology     = 'D:\HPZ440\ffs0\kb\superset\ontology.json'
 $LocalKernel  = 'http://localhost:8000'
 
-# Bearer auth (moos-kernel #60): pass the token file only when it exists —
-# the kernel exits fatal on a missing/empty file, and unset means open+WARNING,
-# so a lost secrets file degrades to the pre-#60 posture instead of a dead boot.
+# Bearer auth (moos-kernel #60): pass the token file only when it is a real,
+# non-empty leaf file - the kernel exits FATAL on a missing/empty/dir path
+# (Copilot catch on #167), and unset means open+WARNING, so anything less than
+# a usable token degrades to the pre-#60 posture instead of a dead boot.
 $AuthTokenFile = 'D:\HPZ440\ffs0\secrets\moos-auth-token'
 $AuthArgs = @()
-if (Test-Path $AuthTokenFile) {
+$AuthTokenUsable = $false
+if (Test-Path $AuthTokenFile -PathType Leaf) {
+    try { $AuthTokenUsable = ([IO.File]::ReadAllText($AuthTokenFile).Trim().Length -gt 0) } catch {}
+}
+if ($AuthTokenUsable) {
     $AuthArgs = @('--auth-token-file', $AuthTokenFile)
 } else {
-    Write-Host "WARNING: $AuthTokenFile missing - kernels start UNAUTHENTICATED (write routes open)." -ForegroundColor Yellow
+    Write-Host "WARNING: $AuthTokenFile missing or empty - kernels start UNAUTHENTICATED (write routes open)." -ForegroundColor Yellow
 }
 
 # --- Full restart: clear the federation ports -------------------------------
