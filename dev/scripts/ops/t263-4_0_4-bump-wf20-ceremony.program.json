@@ -1,0 +1,71 @@
+{
+  "_comment": "STAGED, apply_ready=false. WF20 ceremony for the 4.0.4 member-of bump: ADD grammar_fragment v404-1 (proposed) then MUTATE -> promoted -> merged, mirroring t249-4_0_1-bump-wf20-ceremony. Run ONLY AFTER kb/superset/ontology.json 4.0.4 is merged AND the Z440 federation has restarted onto 4.0.4 (/healthz ontology_version check). Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
+  "review_only": true,
+  "apply_ready": false,
+  "applied": false,
+  "do_not_reapply": false,
+  "target_url": "http://localhost:8000/programs",
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "persona": "zappa",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+  "staging_notes": [
+    "Gate: /healthz must show ontology_version 4.0.4 before applying.",
+    "Kernel actor throughout (grammar_fragment ceremony precedent: t249 Z440 log_seq 517/522/527 pattern).",
+    "Companion doctrine: dev/design/manifold-bump-4_0/20260722-t263-user-topology-glue.md."
+  ],
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "node_urn": "urn:moos:grammar_fragment:v404-1-wf02-member-of",
+      "type_id": "grammar_fragment",
+      "properties": {
+        "name": {
+          "value": "v404-1 wf02 member-of pair",
+          "mutability": "immutable"
+        },
+        "fragment_kind": {
+          "value": "port",
+          "mutability": "immutable"
+        },
+        "specification": {
+          "value": {
+            "change": "WF02 additional_port_pair member-of/has-member, src {user, agent, group} -> tgt {group}, many-to-many; group->group inclusion realizes the A1 identity-poset (user < group < manifold-group); first use of port_color_compatibility.port_color_map (member-of/has-member -> auth, fail-closed color gate)",
+            "added_in_version": "4.0.4",
+            "source": "20260722-t263-user-topology-glue.md §3",
+            "semantics": "membership = identity topology, distinct from governs (authority) and has-occupant (liveness); member inherits the group's grant-closure; access BFS member->group direction only (monotone widening); acyclicity is doctrine, not validator"
+          },
+          "mutability": "mutable"
+        },
+        "evidence_urns": {
+          "value": [
+            "urn:moos:session:sam.z440-cowork-workspace"
+          ],
+          "mutability": "mutable"
+        },
+        "status": {
+          "value": "proposed",
+          "mutability": "mutable"
+        },
+        "created_at": {
+          "value": "2026-07-22T20:56:00Z",
+          "mutability": "immutable"
+        }
+      }
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:v404-1-wf02-member-of",
+      "field": "status",
+      "new_value": "promoted"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:v404-1-wf02-member-of",
+      "field": "status",
+      "new_value": "merged"
+    }
+  ]
+}

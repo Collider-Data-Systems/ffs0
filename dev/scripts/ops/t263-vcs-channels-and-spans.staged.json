@@ -1,0 +1,345 @@
+{
+  "_comment": "STAGED, apply_ready=false. Reifies the four Collider-Data-Systems repos as vcs channels (git is a channel, never the home — T263 §5), hands them to user:sam via WF01 owns, and cures the manifold's spans-sparseness with 8 WF18 spans cocone legs. No 4.0.4 dependency (all pairs pre-exist: v313-8 vcs kind, v313-9 owns, g2 spans) but reviewed and applied as one unit with t263-membership-topology. Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
+  "review_only": true,
+  "apply_ready": false,
+  "applied": false,
+  "do_not_reapply": false,
+  "target_url": "http://localhost:8000/programs",
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "persona": "zappa",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+  "staging_notes": [
+    "channel.kind is IMMUTABLE — review every ADD's kind/source_uri/substrate values BEFORE flipping apply_ready; a wrong value is an UNLINK+re-ADD ceremony.",
+    "ADD actor = agent Zappa with explicit session_urn (keep-channel precedent, log_seq 463). Fallback if an ADD rejects on the kernel-scope substrate properties: flip the four ADD actors to urn:moos:kernel:hp-z440.primary and retry.",
+    "spans targets after this batch: 9 total (keep-sam existing + these 8) — manifold stops being spans-sparse.",
+    "collider-pilot channel text records the T263 merge-gate: public repo + ruleset main-merge-gate (PR-only main + required check copilot-review-present).",
+    "Companion doctrine: dev/design/manifold-bump-4_0/20260722-t263-user-topology-glue.md §5."
+  ],
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:channel:github.ffs0",
+      "type_id": "channel",
+      "properties": {
+        "kind": {
+          "value": "vcs",
+          "mutability": "immutable"
+        },
+        "source_uri": {
+          "value": "https://github.com/Collider-Data-Systems/ffs0",
+          "mutability": "immutable"
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable"
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel"
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.collider-data-systems",
+          "mutability": "immutable",
+          "authority_scope": "kernel"
+        },
+        "created_at": {
+          "value": "2026-07-22T20:56:00Z",
+          "mutability": "immutable"
+        },
+        "display_name": {
+          "value": "ffs0 (private control workspace + KB)",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        },
+        "status": {
+          "value": "active",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        },
+        "parent_channel_urn": {
+          "value": "urn:moos:channel:github.collider-data-systems",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:channel:github.moos-kernel",
+      "type_id": "channel",
+      "properties": {
+        "kind": {
+          "value": "vcs",
+          "mutability": "immutable"
+        },
+        "source_uri": {
+          "value": "https://github.com/Collider-Data-Systems/moos-kernel",
+          "mutability": "immutable"
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable"
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel"
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.collider-data-systems",
+          "mutability": "immutable",
+          "authority_scope": "kernel"
+        },
+        "created_at": {
+          "value": "2026-07-22T20:56:00Z",
+          "mutability": "immutable"
+        },
+        "display_name": {
+          "value": "moos-kernel (public Go engine runtime)",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        },
+        "status": {
+          "value": "active",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        },
+        "parent_channel_urn": {
+          "value": "urn:moos:channel:github.collider-data-systems",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:channel:github.moos-router",
+      "type_id": "channel",
+      "properties": {
+        "kind": {
+          "value": "vcs",
+          "mutability": "immutable"
+        },
+        "source_uri": {
+          "value": "https://github.com/Collider-Data-Systems/moos-router",
+          "mutability": "immutable"
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable"
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel"
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.collider-data-systems",
+          "mutability": "immutable",
+          "authority_scope": "kernel"
+        },
+        "created_at": {
+          "value": "2026-07-22T20:56:00Z",
+          "mutability": "immutable"
+        },
+        "display_name": {
+          "value": "moos-router (WF16 federation gateway)",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        },
+        "status": {
+          "value": "active",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        },
+        "parent_channel_urn": {
+          "value": "urn:moos:channel:github.collider-data-systems",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-cowork.hp-z440",
+      "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "node_urn": "urn:moos:channel:github.collider-pilot",
+      "type_id": "channel",
+      "properties": {
+        "kind": {
+          "value": "vcs",
+          "mutability": "immutable"
+        },
+        "source_uri": {
+          "value": "https://github.com/Collider-Data-Systems/collider-pilot",
+          "mutability": "immutable"
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable"
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel"
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.collider-data-systems",
+          "mutability": "immutable",
+          "authority_scope": "kernel"
+        },
+        "created_at": {
+          "value": "2026-07-22T20:56:00Z",
+          "mutability": "immutable"
+        },
+        "display_name": {
+          "value": "collider-pilot (browser harness surface)",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        },
+        "status": {
+          "value": "active",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        },
+        "parent_channel_urn": {
+          "value": "urn:moos:channel:github.collider-data-systems",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        },
+        "text": {
+          "value": "PUBLIC since T263 with ruleset main-merge-gate: main accepts PRs only; merges (incl. --auto) block on required check copilot-review-present (waits <=10 min for the Copilot review).",
+          "mutability": "mutable",
+          "authority_scope": "owner"
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.sam.owns.github-ffs0",
+      "src_urn": "urn:moos:user:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:channel:github.ffs0",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.sam.owns.github-moos-kernel",
+      "src_urn": "urn:moos:user:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:channel:github.moos-kernel",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.sam.owns.github-moos-router",
+      "src_urn": "urn:moos:user:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:channel:github.moos-router",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.sam.owns.github-collider-pilot",
+      "src_urn": "urn:moos:user:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:channel:github.collider-pilot",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.mtdc.spans.group-moos",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.mtdc.spans.github-ffs0",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:channel:github.ffs0",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.mtdc.spans.github-moos-kernel",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:channel:github.moos-kernel",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.mtdc.spans.github-moos-router",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:channel:github.moos-router",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.mtdc.spans.github-collider-pilot",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:channel:github.collider-pilot",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.mtdc.spans.purpose-mvp",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:purpose:sam.mvp-sovereign-knowledge-os",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.mtdc.spans.public-demo",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:session:public-demo",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.mtdc.spans.z440-cowork",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:session:sam.z440-cowork-workspace",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    }
+  ]
+}
