@@ -1,13 +1,23 @@
 {
   "$schema": "https://moos.local/ontology.schema.json",
-  "version": "4.0.3",
-  "t_day": 260,
+  "version": "4.0.4",
+  "t_day": 263,
   "description": "mo:os ontology — aligned with foundation-t158.md. Grammar, not encyclopedia. 52 node types (+external_op), 20 rewrite categories (WF01-WF20). T=164 adds channel (media streams), purpose (directional intent), WF19 (session governance on kernels). T=166 adds channel.parent_channel_urn (folder nesting), tool_call.agent_urn (agent-as-tool wiring). T=167 adds system_instruction (S4, M7), transport_binding (S2, M10), session.local_t/context_urn (M1, M7). T=168 v3.9 baseline audit: renames, deprecations, 6 new types, WF20 grammar_promotion for S4→S1 adjoint bridge. T=168 round-8 v3.9+external_op: external_op S2 type for IRL-gate nodes. T=168 round-9 v3.10.0: D19.1 grammar_fragment merged — WF19 tgt_types extended with user and agent for §M19 session-occupancy. T=169 v3.11.0: t_hook gains firing_state lifecycle property (pending→proposed→approved|rejected→applied→closed). T=169 round-10 v3.12.0: first-ever WF20 ceremony promotes D19.2 (session.view_prefs), D19.3 (session pins-urn port), D19.4 (session filtered-by port → view_filter), D20.1 (session mounts-tool port → agent), D20.2 (agent.invocation_protocol enum). Plus baseline session type fixes: urn_pattern/description generalized to kernel-bound workspace semantics; seat_role deprecated under the single-driver-via-has-occupant-LINK model. See kb/research/session/20260419-t169-session-generalization.md. T=173 round-12 v3.13.0: four promoted grammar_fragments materialized into ontology — v313-6 (WF02 delegates-to/delegated-by additional port pair for role→role capability delegation), v313-7 (new S2 `group` node type — collective principal, extends principalTypes from {user, agent} to {user, agent, group}), v313-8 (channel.kind enum expansion: +calendar, +task-list, +cloud-storage, +vcs, +project-board), v313-9 (WF01 owns/owned-by additional port pair — group|user source owning kernel|session|purpose|program|channel|agent targets). WF19 has-occupant tgt_types extends to include `group` (session occupancy by a collective principal). See kb/research/session/20260422-t172-wolframs-court-social-topology.md §3 + T=173 batch on Z440 kernel 0 log_seq 285-288 (WF20 promotion ceremony for the 4 fragments).",
   "canonical_reference": "kb/research/20260408-foundation-t158.md",
   "t164_delta_reference": "dev/reference/research-archive/20260414-t164-session-channel-purpose.md",
   "t168_audit_reference": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
   "s1_superset_doctrine_reference": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
   "changelog": [
+    {
+      "version": "4.0.4",
+      "date": "2026-07-22",
+      "t_day": 263,
+      "round": "t263 user-topology glue (member-of)",
+      "fragments_promoted": [
+        "v404-1-wf02-member-of"
+      ],
+      "summary": "ADDITIVE. WF02 gains additional_port_pair member-of/has-member (src {user, agent, group} -> tgt {group}, many-to-many): principal->group membership — wires the in-port the group type has declared since v3.13 with no rewrite_category; group->group inclusion realizes the A1 identity-poset (user < group < manifold-group, T263 note). FIRST USE of port_color_compatibility.port_color_map (member-of/has-member -> auth): required because the kernel color gate is FAIL-CLOSED for declared-but-uncolored ports (moos-kernel#50 landed; the stale permissive-skip sentence in port_color_compatibility.description is trued up in this bump). Access-closure consequence: permitted_workspaces closure (pilot src/mcp/access.js, future kernel access.go) extends from governs ∪ delegates-to to governs ∪ delegates-to ∪ member-of, member->group direction only (monotone widening); anon path structurally unchanged. Doctrine ratifications ride the companion note dev/design/manifold-bump-4_0/20260722-t263-user-topology-glue.md: engine-qualified stamp sentence (engine_urn, log_seq, ontology, law-version); revocation window ACCEPTED explicitly (window = sequencing + approval latency, no staleness bound pre-MTDC; fail-closed pre-admission tombstone queued 4.0.x); branch stays F(workspace) projection — no branch nodes, vcs channels reify the channel only. Deploy: Z440 federation restart required to load 4.0.4."
+    },
     {
       "version": "4.0.3",
       "date": "2026-07-19",
@@ -379,7 +389,8 @@
         "ports": {
           "out": [
             "owns",
-            "governs"
+            "governs",
+            "member-of"
           ],
           "self": [
             "identity"
@@ -521,7 +532,8 @@
         "ports": {
           "out": [
             "connects-to",
-            "participates"
+            "participates",
+            "member-of"
           ],
           "in": [
             "governed-by"
@@ -2574,11 +2586,13 @@
         "ports": {
           "out": [
             "owns",
-            "delegates-to"
+            "delegates-to",
+            "member-of"
           ],
           "in": [
             "member-of",
-            "governed-by"
+            "governed-by",
+            "has-member"
           ],
           "self": null
         },
@@ -3186,7 +3200,11 @@
     ]
   },
   "port_color_compatibility": {
-    "description": "Port-color compatibility. ENFORCEMENT REALITY (t249, moos-kernel#50): only `matrix` is loaded by operad/loader.go (into PortColorMatrix, the §12.2 color gate); port->color name mapping is currently hardcoded kernel-side and unknown ports SKIP the color gate permissively (fail-closed pending kernel#50). Pair DECLARATION is enforced from rewrite_categories[*].additional_port_pairs, not from this section.",
+    "description": "Port-color compatibility. ENFORCEMENT REALITY (trued up t263): operad/loader.go loads `matrix` into PortColorMatrix (the §12.2 color gate) AND merges `port_color_map` below over DefaultPortColors into Registry.PortColors; resolvePortColors is FAIL-CLOSED — a declared port absent from the merged map rejects the LINK (kernel#50 landed; the earlier permissive-skip note was stale). Every new port introduced by an ontology bump MUST ship a port_color_map entry. Pair DECLARATION is enforced from rewrite_categories[*].additional_port_pairs, not from this section.",
+    "port_color_map": {
+      "member-of": "auth",
+      "has-member": "auth"
+    },
     "port_colors": [
       "auth",
       "topology",
@@ -3808,6 +3826,21 @@
           "added_in_version": "3.13.0",
           "promotes_fragment": "urn:moos:grammar_fragment:v313-6-wf02-delegates-to",
           "description": "Role→role capability delegation. A superadmin role can narrow-delegate scoped sub-capability to other roles (e.g. role:superadmin --delegates-to--> role:karpathy-scope, role:steinberger-scope, role:moos-scope). operad.CheckAdminCapability can extend to traverse delegates-to up to a bounded depth so scoped roles inherit narrowed admin capability without requiring full superadmin assignment. v3.13 addition from grammar_fragment v313-6."
+        },
+        {
+          "src_port": "member-of",
+          "tgt_port": "has-member",
+          "src_types": [
+            "user",
+            "agent",
+            "group"
+          ],
+          "tgt_types": [
+            "group"
+          ],
+          "added_in_version": "4.0.4",
+          "promotes_fragment": "urn:moos:grammar_fragment:v404-1-wf02-member-of",
+          "description": "Principal→group membership. Many-to-many; group→group inclusion is legal (poset realization, T263 A1: user < group < manifold-group); acyclicity is doctrine, not validator. Membership grants the member the group's grant-closure — the access BFS follows member-of in the member→group direction only (monotone widening; sharing/push = extension along user into group). Wires the in-port the group type has declared since v3.13 with no rewrite_category. Distinct from governs (authority) and has-occupant (liveness): membership is identity topology."
         }
       ]
     },

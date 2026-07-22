@@ -1,0 +1,120 @@
+{
+  "_comment": "STAGED, apply_ready=false. The user-topology glue: 10 WF02 member-of LINKs realizing the full chain Sam ruled t263 — user:sam -> group:sam -> group:moos, plus the 8 fold-present seat agents -> group:moos. HARD GATE: /healthz must show ontology_version 4.0.4 first — on 4.0.3 every LINK rejects (member-of pair undeclared). Kernel actor (t249 governs-backfill precedent). Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
+  "review_only": true,
+  "apply_ready": false,
+  "applied": false,
+  "do_not_reapply": false,
+  "target_url": "http://localhost:8000/programs",
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "persona": "zappa",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+  "staging_notes": [
+    "Gate: ontology_version 4.0.4 live on /healthz — else expected failure is the pair-undeclared rejection.",
+    "Excluded, deliberate: claude-code.hp-z440 + claude-code.hp-laptop (retired idle principals); vscode-codex.hp-z440 (fold-present but not an active topology seat — Sam may add, gate #4); vscode.hp-laptop.copilot + vscode.hpprodesk.primary (NOT nodes in the Z440 fold — LINK would ErrNodeNotFound; ride the laptop/ProDesk replication round per G4 asymmetric-presence doctrine).",
+    "Z440 primary fold only (R1 sovereignty — no authority crosses a fold boundary).",
+    "Revocation of any membership = UNLINK on the relation_urn; window per the accepted t263 doctrine sentence.",
+    "Companion doctrine: dev/design/manifold-bump-4_0/20260722-t263-user-topology-glue.md §4."
+  ],
+  "envelopes": [
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.user-sam.member-of.group-sam",
+      "src_urn": "urn:moos:user:sam",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:sam",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.group-sam.member-of.group-moos",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.wolfram.member-of.group-moos",
+      "src_urn": "urn:moos:agent:vscode.hp-laptop.wolfram",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.cowork-z440.member-of.group-moos",
+      "src_urn": "urn:moos:agent:claude-cowork.hp-z440",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.ag-z440.member-of.group-moos",
+      "src_urn": "urn:moos:agent:antigravity.hp-z440",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.vscode-z440-primary.member-of.group-moos",
+      "src_urn": "urn:moos:agent:vscode.hp-z440.primary",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.menno-seat.member-of.group-moos",
+      "src_urn": "urn:moos:agent:vscode.hp-z440.menno",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.lola-seat.member-of.group-moos",
+      "src_urn": "urn:moos:agent:vscode.hp-z440.lola",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.cowork-laptop.member-of.group-moos",
+      "src_urn": "urn:moos:agent:claude-cowork.hp-laptop",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t263.ag-laptop.member-of.group-moos",
+      "src_urn": "urn:moos:agent:antigravity.hp-laptop",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    }
+  ]
+}
