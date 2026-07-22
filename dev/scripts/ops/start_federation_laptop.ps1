@@ -33,13 +33,24 @@ $Log          = "$env:USERPROFILE\HPlaptop\moos-kernel\moos.jsonl"  # sovereign 
 
 $LocalKernel = "http://localhost:8000"
 
+# Bearer auth (moos-kernel #60): pass the token file only when it exists —
+# the kernel exits fatal on a missing/empty file, and unset means open+WARNING,
+# so a box without the (never-committed) secrets file keeps the pre-#60 posture.
+$AuthTokenFile = "$env:USERPROFILE\HPlaptop\ffs0\secrets\moos-auth-token"
+$AuthArgs = ""
+if (Test-Path $AuthTokenFile) {
+    $AuthArgs = " --auth-token-file `"$AuthTokenFile`""
+} else {
+    Write-Host "WARNING: $AuthTokenFile missing - kernel starts UNAUTHENTICATED (write routes open)." -ForegroundColor Yellow
+}
+
 # --- Primary kernel (idempotent) ------------------------------------------
 if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     Write-Host "Primary kernel already running — skipping." -ForegroundColor Gray
 } else {
     Write-Host "Starting moos primary kernel (laptop)..." -ForegroundColor Cyan
     Start-Process -FilePath $KernelExe `
-        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hp-laptop" `
+        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hp-laptop$AuthArgs" `
         -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }
