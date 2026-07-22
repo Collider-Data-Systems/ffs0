@@ -16,8 +16,9 @@ import (
 // All reads return raw JSON so callers can pass it straight through to an MCP
 // text result without lossy re-marshalling.
 type Client struct {
-	BaseURL string
-	HTTP    *http.Client
+	BaseURL   string
+	AuthToken string // bearer for write routes (moos-kernel #60); empty = none sent
+	HTTP      *http.Client
 }
 
 // New returns a Client for baseURL (e.g. http://localhost:8000). A trailing
@@ -101,5 +102,8 @@ func (c *Client) ApplyProgram(ctx context.Context, envelopes []Envelope) (json.R
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
+	if c.AuthToken != "" {
+		req.Header.Set("Authorization", "Bearer "+c.AuthToken)
+	}
 	return c.do(req)
 }

@@ -1,6 +1,9 @@
 {
   "_comment": "STAGED, apply_ready=false. Post-4.0.3 acceptance test for the session.anon_visible operad declaration. Run ONLY AFTER the 4.0.3 bump (kb/superset/ontology.json) is merged AND the fleet has restarted onto 4.0.3. Proves the previously-undeclared flag is now a governed, MUTABLE property: BEFORE 4.0.3 the first MUTATE fails with ErrFieldNotInScope (no PropertySpec for an undeclared field); AFTER 4.0.3 it succeeds via WF19 with a kernel actor. Round-trips false->true so the demo workspace's net state is unchanged (ends anon_visible=true, as it started). Actor = kernel:hp-z440.primary (bypasses M11/M12; anon_visible is authority_scope=kernel). Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
   "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "applied_note": "T=263 (2026-07-22): applied via Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa against live :8000 on 4.0.3 — 2/2 MUTATEs, log 609->611, end-state anon_visible=true (state-neutral). Also first live exercise of the #60 bearer path in the harness. Residue: the node-instance property metadata still says authority_scope=owner from the pre-4.0.3 extra-prop ADD; the operad spec (kernel) is what gates.",
   "staging_notes": [
     "Gate: 4.0.3 must be the live ontology_version on /healthz before this will pass (else expected failure = the negative half of the proof).",
     "envelope[0] un-publicks session:public-demo (anon_visible=false) — proves un-publicking through the grammar now works (the whole point of the bump).",
