@@ -33,15 +33,20 @@ $Log          = "$env:USERPROFILE\HPlaptop\moos-kernel\moos.jsonl"  # sovereign 
 
 $LocalKernel = "http://localhost:8000"
 
-# Bearer auth (moos-kernel #60): pass the token file only when it exists —
-# the kernel exits fatal on a missing/empty file, and unset means open+WARNING,
-# so a box without the (never-committed) secrets file keeps the pre-#60 posture.
+# Bearer auth (moos-kernel #60): pass the token file only when it is a real,
+# non-empty leaf file - the kernel exits FATAL on a missing/empty/dir path
+# (Copilot catch on #167), and unset means open+WARNING, so anything less than
+# a usable token degrades to the pre-#60 posture instead of a dead boot.
 $AuthTokenFile = "$env:USERPROFILE\HPlaptop\ffs0\secrets\moos-auth-token"
 $AuthArgs = ""
-if (Test-Path $AuthTokenFile) {
+$AuthTokenUsable = $false
+if (Test-Path $AuthTokenFile -PathType Leaf) {
+    try { $AuthTokenUsable = ([IO.File]::ReadAllText($AuthTokenFile).Trim().Length -gt 0) } catch {}
+}
+if ($AuthTokenUsable) {
     $AuthArgs = " --auth-token-file `"$AuthTokenFile`""
 } else {
-    Write-Host "WARNING: $AuthTokenFile missing - kernel starts UNAUTHENTICATED (write routes open)." -ForegroundColor Yellow
+    Write-Host "WARNING: $AuthTokenFile missing or empty - kernel starts UNAUTHENTICATED (write routes open)." -ForegroundColor Yellow
 }
 
 # --- Primary kernel (idempotent) ------------------------------------------
