@@ -47,19 +47,26 @@ if ($AuthTokenUsable) {
 }
 
 # Gemini LLM proxy (moos-kernel #58 egress + #63 scope-split): enabled on the
-# PRIMARY kernel only. The scope-split bearer rides the same non-empty-leaf
-# guard as the write token; without it /llm/* is gated by the write token
-# alone (and with neither token the proxy would be open - warned above).
+# PRIMARY kernel only, and ONLY when at least one bearer is usable — with
+# neither token the proxy would be an OPEN egress surface (quota/cost abuse
+# from anything LAN/Tailscale-reachable; Copilot catch on #171), so in that
+# posture it stays unregistered. The scope-split bearer rides the same
+# non-empty-leaf guard as the write token.
 $LLMTokenFile = 'D:\HPZ440\ffs0\secrets\moos-llm-token'
-$LLMArgs = @('--enable-llm-proxy')
+$LLMArgs = @()
 $LLMTokenUsable = $false
 if (Test-Path $LLMTokenFile -PathType Leaf) {
     try { $LLMTokenUsable = ([IO.File]::ReadAllText($LLMTokenFile).Trim().Length -gt 0) } catch {}
 }
-if ($LLMTokenUsable) {
-    $LLMArgs += @('--llm-token-file', $LLMTokenFile)
+if ($LLMTokenUsable -or $AuthTokenUsable) {
+    $LLMArgs = @('--enable-llm-proxy')
+    if ($LLMTokenUsable) {
+        $LLMArgs += @('--llm-token-file', $LLMTokenFile)
+    } else {
+        Write-Host "WARNING: $LLMTokenFile missing or empty - /llm/* gated by the write token only." -ForegroundColor Yellow
+    }
 } else {
-    Write-Host "WARNING: $LLMTokenFile missing or empty - /llm/* gated by the write token only." -ForegroundColor Yellow
+    Write-Host "WARNING: no usable bearer token at all - Gemini LLM proxy NOT enabled (an open /llm/* egress surface is refused)." -ForegroundColor Yellow
 }
 
 # --- Full restart: clear the federation ports -------------------------------
