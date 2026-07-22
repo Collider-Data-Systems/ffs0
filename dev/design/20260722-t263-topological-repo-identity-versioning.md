@@ -6,7 +6,7 @@
 3. The engine is a *staged, twice-gated* projection product of the workspaces — a cycle, not a paradox (§4.6).
 4. Git is a channel (`channel.kind: vcs`), not a home. The durable home stays the blessed log; the repo shape arrives as a lens over it (§5-B), not a migration.
 
-> **Status: DRAFT v2.1 for Sam's review. Prose-only — no ontology change, no HG rewrite, no migration authorized. Not committed.**
+> **Status: v2.1, committed with ffs0#172 (T263 evening) for Sam's review. Prose-only — this note itself authorizes no ontology change, no HG rewrite, no migration; the companion 4.0.4 bump + staged batch ride the same PR as a separate ruling (see `manifold-bump-4_0/20260722-t263-user-topology-glue.md`).**
 > Zappa / Cowork-Z440. v1 = storage framing; v2 = Sam's access reframe + screen readback + a 10-agent research round; v2.1 = fixes from a 4-lens adversarial verify (two blockers among them). Sources: running-state T=263 · `access.js`/`live-smoke.mjs` · t259/t260 staging programs · t216/t218/t231/t239/t248 docs · t263 ceiling report · moos-kernel + moos.jsonl readback · cited literature (§3–§4). Per-agent digests in session scratchpad.
 
 ## 0. The question, reframed
@@ -35,7 +35,7 @@ engine** (`moos.jsonl`, single-writer lock, replay at boot; Z440 611 · laptop 1
 display hash). Git holds code, doctrine, config, and generated F-images of HG state, per T218:
 `branch = F(workspace)`, `merge = G(branch)`, refs derived, E2/E5 provenance trailers.
 
-**The access law** ([access.js](collider-pilot/src/mcp/access.js), pure, shared verbatim
+**The access law** ([access.js](https://github.com/Collider-Data-Systems/collider-pilot/blob/main/src/mcp/access.js), pure, shared verbatim
 between panel and Node, self-declared Go-port anti-drift anchor):
 `permitted = governs-closure(WF02, incl. delegates-to) ∪ reverse WF19 has-occupant ∪
 owned-sessions (owner_urn) ∪ public (visibility/anon_visible)`, then a workstation intersection
