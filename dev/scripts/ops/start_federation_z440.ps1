@@ -46,6 +46,29 @@ if ($AuthTokenUsable) {
     Write-Host "WARNING: $AuthTokenFile missing or empty - kernels start UNAUTHENTICATED (write routes open)." -ForegroundColor Yellow
 }
 
+# Gemini LLM proxy (moos-kernel #58 egress + #63 scope-split): enabled on the
+# PRIMARY kernel only, and ONLY when at least one bearer is usable — with
+# neither token the proxy would be an OPEN egress surface (quota/cost abuse
+# from anything LAN/Tailscale-reachable; Copilot catch on #171), so in that
+# posture it stays unregistered. The scope-split bearer rides the same
+# non-empty-leaf guard as the write token.
+$LLMTokenFile = 'D:\HPZ440\ffs0\secrets\moos-llm-token'
+$LLMArgs = @()
+$LLMTokenUsable = $false
+if (Test-Path $LLMTokenFile -PathType Leaf) {
+    try { $LLMTokenUsable = ([IO.File]::ReadAllText($LLMTokenFile).Trim().Length -gt 0) } catch {}
+}
+if ($LLMTokenUsable -or $AuthTokenUsable) {
+    $LLMArgs = @('--enable-llm-proxy')
+    if ($LLMTokenUsable) {
+        $LLMArgs += @('--llm-token-file', $LLMTokenFile)
+    } else {
+        Write-Host "WARNING: $LLMTokenFile missing or empty - /llm/* gated by the write token only." -ForegroundColor Yellow
+    }
+} else {
+    Write-Host "WARNING: no usable bearer token at all - Gemini LLM proxy NOT enabled (an open /llm/* egress surface is refused)." -ForegroundColor Yellow
+}
+
 # --- Full restart: clear the federation ports -------------------------------
 $ports = @(8000, 8080, 8001, 9001, 8002, 9002, 8003, 9003, 9000)
 $owners = Get-NetTCPConnection -State Listen -LocalPort $ports -ErrorAction SilentlyContinue |
@@ -60,7 +83,7 @@ Start-Sleep -Seconds 1
 
 # --- 1. Primary kernel — :8000 / MCP :8080 -----------------------------------
 Write-Host "Starting primary kernel (:8000)..."
-Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\moos-kernel\moos.jsonl','--listen',':8000','--mcp-addr',':8080','--seed','--seed-user','sam','--seed-ws','hp-z440') + $AuthArgs) -WorkingDirectory 'D:\HPZ440\moos-kernel' -WindowStyle Minimized
+Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\moos-kernel\moos.jsonl','--listen',':8000','--mcp-addr',':8080','--seed','--seed-user','sam','--seed-ws','hp-z440') + $AuthArgs + $LLMArgs) -WorkingDirectory 'D:\HPZ440\moos-kernel' -WindowStyle Minimized
 
 Start-Sleep -Seconds 3
 
