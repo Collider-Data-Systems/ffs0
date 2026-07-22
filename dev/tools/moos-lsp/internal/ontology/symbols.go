@@ -4,7 +4,7 @@
 package ontology
 
 // OntologyVersion is the version of the ontology these tables were generated from.
-const OntologyVersion = "4.0.0"
+const OntologyVersion = "4.0.3"
 
 // NodeType describes one node type from the operad.
 type NodeType struct {
@@ -107,8 +107,8 @@ var WFs = map[string]WF{
 	"WF15": {ID: "WF15", Name: "Semantic (open)", Description: "Open semantic relation. Allowed only with explicit port names AND a contract_schema reference.", AllowedRewrites: []string{"LINK", "UNLINK", "MUTATE"}, SrcTypes: []string{"*"}, TgtTypes: []string{"*"}, PortPairs: []PortPair{{SrcPort: "{semantic}", TgtPort: "{semantic}", SrcTypes: []string{"*"}, TgtTypes: []string{"*"}}}},
 	"WF16": {ID: "WF16", Name: "Federation", Description: "Routing and connectivity for distributed kernel instances. Router reads shard_rules to route rewrites. Kernels expose endpoints. Shard_rules map URN prefixes to kernel instances.", AllowedRewrites: []string{"LINK", "UNLINK", "MUTATE"}, SrcTypes: []string{"router", "kernel", "shard_rule"}, TgtTypes: []string{"kernel", "endpoint", "shard_rule", "router"}, PortPairs: []PortPair{{SrcPort: "routes-to", TgtPort: "routed-from", SrcTypes: []string{"router", "kernel", "shard_rule"}, TgtTypes: []string{"kernel", "endpoint", "shard_rule", "router"}}}},
 	"WF17": {ID: "WF17", Name: "Reactive", Description: "Watch/React/Guard pipeline. Watchers observe the rewrite log, trigger reactors when patterns match. Guards gate reactors with state predicates. The firestarter on the carpet.", AllowedRewrites: []string{"LINK", "UNLINK", "MUTATE"}, SrcTypes: []string{"watcher", "reactor", "guard", "t_hook", "gate"}, TgtTypes: []string{"reactor", "watcher", "guard", "t_hook"}, PortPairs: []PortPair{{SrcPort: "triggers", TgtPort: "triggered-by", SrcTypes: []string{"watcher", "reactor", "guard", "t_hook", "gate"}, TgtTypes: []string{"reactor", "watcher", "guard", "t_hook"}}}},
-	"WF18": {ID: "WF18", Name: "Program composition", Description: "Wires program nodes to their constituent tasks, outputs, sessions, purposes, and sub-programs. Temporal dependency DAG. Known-node dependencies use LINK directly; property-pattern dependencies use WF17 watchers that fire when ANY node matching a filter achieves required properties.", AllowedRewrites: []string{"LINK", "UNLINK", "MUTATE"}, SrcTypes: []string{"program", "purpose"}, TgtTypes: []string{"prg_task", "knowledge_item", "agent_session", "program", "git_issue", "repository", "session", "purpose", "channel"}, PortPairs: []PortPair{{SrcPort: "composes", TgtPort: "composed-by", SrcTypes: []string{"program", "purpose"}, TgtTypes: []string{"prg_task", "knowledge_item", "agent_session", "program", "git_issue", "repository", "session", "purpose", "channel"}}}},
-	"WF19": {ID: "WF19", Name: "Session governance", Description: "Opens, maintains, transfers, and closes session occupancy of kernels by agent delegates. Session is a monoid over kernel occupancy: empty session is identity, sequential claims compose. WF19 gates occupancy against WF02 capability scope (a delegate cannot open a session on a kernel whose owner's capability does not grant required WF categories). Complements WF07, which tracks participation; WF19 tracks kernel OCCUPANCY. Sovereign by kernel — sessions are local-only. Added T=164.", AllowedRewrites: []string{"ADD", "LINK", "UNLINK", "MUTATE"}, SrcTypes: []string{"session", "agent", "agent_session"}, TgtTypes: []string{"kernel", "session", "agent_session", "user", "agent"}, PortPairs: []PortPair{{SrcPort: "opens-on", TgtPort: "occupied-by", SrcTypes: []string{"session", "agent", "agent_session"}, TgtTypes: []string{"kernel", "session", "agent_session", "user", "agent"}}, {SrcPort: "has-occupant", TgtPort: "is-occupant-of", SrcTypes: []string{"session"}, TgtTypes: []string{"user", "agent", "group"}}, {SrcPort: "pins-urn", TgtPort: "pinned-by-session", SrcTypes: []string{"session"}, TgtTypes: []string{"*"}}, {SrcPort: "filtered-by", TgtPort: "filters-session", SrcTypes: []string{"session"}, TgtTypes: []string{"view_filter"}}, {SrcPort: "mounts-tool", TgtPort: "tool-mounted-in-session", SrcTypes: []string{"session"}, TgtTypes: []string{"agent"}}, {SrcPort: "has-purpose", TgtPort: "purpose-of-session", SrcTypes: []string{"session"}, TgtTypes: []string{"purpose"}}}},
+	"WF18": {ID: "WF18", Name: "Program composition", Description: "Wires program nodes to their constituent tasks, outputs, sessions, purposes, and sub-programs. Temporal dependency DAG. Known-node dependencies use LINK directly; property-pattern dependencies use WF17 watchers that fire when ANY node matching a filter achieves required properties.", AllowedRewrites: []string{"LINK", "UNLINK", "MUTATE"}, SrcTypes: []string{"program", "purpose", "manifold"}, TgtTypes: []string{"prg_task", "knowledge_item", "agent_session", "program", "git_issue", "repository", "session", "purpose", "channel"}, PortPairs: []PortPair{{SrcPort: "composes", TgtPort: "composed-by", SrcTypes: []string{"program", "purpose", "manifold"}, TgtTypes: []string{"prg_task", "knowledge_item", "agent_session", "program", "git_issue", "repository", "session", "purpose", "channel"}}, {SrcPort: "spans", TgtPort: "spanned-by", SrcTypes: []string{"manifold"}, TgtTypes: []string{"purpose", "program", "session", "channel", "group"}}}},
+	"WF19": {ID: "WF19", Name: "Session governance", Description: "Opens, maintains, transfers, and closes session occupancy of kernels by agent delegates. Session is a monoid over kernel occupancy: empty session is identity, sequential claims compose. WF19 gates occupancy against WF02 capability scope (a delegate cannot open a session on a kernel whose owner's capability does not grant required WF categories). Complements WF07, which tracks participation; WF19 tracks kernel OCCUPANCY. Sovereign by kernel — sessions are local-only. Added T=164.", AllowedRewrites: []string{"ADD", "LINK", "UNLINK", "MUTATE"}, SrcTypes: []string{"session", "agent", "agent_session"}, TgtTypes: []string{"kernel", "session", "agent_session", "user", "agent", "derivation"}, PortPairs: []PortPair{{SrcPort: "opens-on", TgtPort: "occupied-by", SrcTypes: []string{"session", "agent", "agent_session"}, TgtTypes: []string{"kernel", "session", "agent_session", "user", "agent", "derivation"}}, {SrcPort: "has-occupant", TgtPort: "is-occupant-of", SrcTypes: []string{"session"}, TgtTypes: []string{"user", "agent", "group"}}, {SrcPort: "pins-urn", TgtPort: "pinned-by-session", SrcTypes: []string{"session"}, TgtTypes: []string{"*"}}, {SrcPort: "filtered-by", TgtPort: "filters-session", SrcTypes: []string{"session"}, TgtTypes: []string{"view_filter"}}, {SrcPort: "mounts-tool", TgtPort: "tool-mounted-in-session", SrcTypes: []string{"session"}, TgtTypes: []string{"agent"}}, {SrcPort: "has-purpose", TgtPort: "purpose-of-session", SrcTypes: []string{"session"}, TgtTypes: []string{"purpose"}}, {SrcPort: "presents-as", TgtPort: "presented-by", SrcTypes: []string{"agent"}, TgtTypes: []string{"derivation"}}}},
 	"WF20": {ID: "WF20", Name: "Grammar promotion", Description: "Carries the S4→S1 adjoint `Promote` functor. Admin-authored rewrites that ADD grammar_fragment nodes citing S4 (system_instruction) or S2 (governance_proposal) evidence, then MUTATE their status (proposed → rejected | promoted | merged). When a fragment reaches status=merged, the next ontology baseline version bumps and the fragment's specification is folded into the canonical ontology. Added v3.9 per audit §F and s1_superset_doctrine_reference.", AllowedRewrites: []string{"ADD", "LINK", "UNLINK", "MUTATE"}, SrcTypes: []string{"system_instruction", "governance_proposal"}, TgtTypes: []string{"grammar_fragment"}, PortPairs: []PortPair{{SrcPort: "promotes", TgtPort: "promoted-from", SrcTypes: []string{"system_instruction", "governance_proposal"}, TgtTypes: []string{"grammar_fragment"}}}},
 	"WF21": {ID: "WF21", Name: "causes", Description: "", AllowedRewrites: []string{"LINK", "UNLINK"}, SrcTypes: []string{"derivation", "claim", "knowledge_item", "program", "task", "knowledge_artifact"}, TgtTypes: []string{"derivation", "claim", "knowledge_item", "program", "task", "knowledge_artifact", "channel", "clock"}, PortPairs: []PortPair{{SrcPort: "causes", TgtPort: "caused-by", SrcTypes: []string{"derivation", "claim", "knowledge_item", "program", "task", "knowledge_artifact"}, TgtTypes: []string{"derivation", "claim", "knowledge_item", "program", "task", "knowledge_artifact", "channel", "clock"}}}},
 }
@@ -145,7 +145,7 @@ var UseVocab = map[string]string{
 	"property":         "typed key-value on a node (not: field, payload, attribute)",
 	"relation":         "typed connection between nodes (not: binding, edge, wire, association)",
 	"rewrite":          "graph transformation operation (not: morphism for the op, update, mutation)",
-	"rewrite_category": "family of allowed rewrites WF01-WF15 (not: named relation, UML association)",
+	"rewrite_category": "family of allowed rewrites WF01-WF21 (not: named relation, UML association)",
 	"workspace":        "v4.0 alias of `session` (D2) — same node; canonical type-id/URN stay `session` until the gated 4.0.x rewrite",
 }
 
@@ -155,7 +155,7 @@ var ForbiddenVocab = map[string]string{
 	"_refs":      "_ref/_refs (as property suffix)",
 	"binding":    "binding (for graph)",
 	"edge":       "edge",
-	"kind":       "kind",
+	"kind":       "kind (as a synonym for node-type or operad type; the DECLARED property-axes `channel.kind` / `workstation.kind` / `manifold.kind` are the sanctioned uses since v4.0.0)",
 	"morphism":   "morphism (for the wire)",
 	"object":     "object",
 	"payload":    "payload",
@@ -198,10 +198,12 @@ var SrcPortToWF = map[string]string{
 	"participates": "WF07",
 	"persisted-in": "WF10",
 	"pins-urn":     "WF19",
+	"presents-as":  "WF19",
 	"promotes":     "WF20",
 	"promotes-to":  "WF13",
 	"provides-kb":  "WF12",
 	"routes-to":    "WF16",
+	"spans":        "WF18",
 	"synced-via":   "WF11",
 	"triggers":     "WF17",
 	"{semantic}":   "WF15",
@@ -279,6 +281,8 @@ var KnownPorts = map[string]bool{
 	"persists":                true,
 	"pinned-by-session":       true,
 	"pins-urn":                true,
+	"presented-by":            true,
+	"presents-as":             true,
 	"produced-by":             true,
 	"produces":                true,
 	"projected-to":            true,
@@ -295,6 +299,8 @@ var KnownPorts = map[string]bool{
 	"runs-workflow":           true,
 	"scheduled-after":         true,
 	"scheduled-before":        true,
+	"spanned-by":              true,
+	"spans":                   true,
 	"steers":                  true,
 	"summarizes":              true,
 	"sync-target":             true,
