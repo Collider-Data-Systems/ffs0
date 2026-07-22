@@ -1,9 +1,10 @@
 {
   "_comment": "STAGED, apply_ready=false. The user-topology glue: 10 WF02 member-of LINKs realizing the full chain Sam ruled t263 — user:sam -> group:sam -> group:moos, plus the 8 fold-present seat agents -> group:moos. HARD GATE: /healthz must show ontology_version 4.0.4 first — on 4.0.3 every LINK rejects (member-of pair undeclared). Kernel actor (t249 governs-backfill precedent). Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
   "review_only": true,
-  "apply_ready": false,
-  "applied": false,
-  "do_not_reapply": false,
+  "apply_ready": true,
+  "applied": true,
+  "do_not_reapply": true,
+  "applied_note": "T=264 (2026-07-23): applied via Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa against live :8000 on 4.0.4 — 10/10 LINKs, log_seq 615-624. /state/relations confirms 10 member-of relations; A1 poset (user:sam < group:sam < group:moos) graph-witnessed.",
   "target_url": "http://localhost:8000/programs",
   "target_kernel": "urn:moos:kernel:hp-z440.primary",
   "persona": "zappa",

@@ -1,9 +1,10 @@
 {
   "_comment": "STAGED, apply_ready=false. Reifies the four Collider-Data-Systems repos as vcs channels (git is a channel, never the home — T263 §5), hands them to user:sam via WF01 owns, and cures the manifold's spans-sparseness with 8 WF18 spans cocone legs. No 4.0.4 dependency (all pairs pre-exist: v313-8 vcs kind, v313-9 owns, g2 spans) but reviewed and applied as one unit with t263-membership-topology. Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
   "review_only": true,
-  "apply_ready": false,
-  "applied": false,
-  "do_not_reapply": false,
+  "apply_ready": true,
+  "applied": true,
+  "do_not_reapply": true,
+  "applied_note": "T=264 (2026-07-23): applied via Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa against live :8000 on 4.0.4 — 16/16 envelopes, log_seq 625-640. 4 vcs channels ADDed (github.ffs0/moos-kernel/moos-router/collider-pilot), 4 WF01 owns to user:sam, 8 WF18 spans; manifold spans total now 9.",
   "target_url": "http://localhost:8000/programs",
   "target_kernel": "urn:moos:kernel:hp-z440.primary",
   "persona": "zappa",

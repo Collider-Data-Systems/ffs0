@@ -1,9 +1,10 @@
 {
   "_comment": "STAGED, apply_ready=false. WF20 ceremony for the 4.0.4 member-of bump: ADD grammar_fragment v404-1 (proposed) then MUTATE -> promoted -> merged, mirroring t249-4_0_1-bump-wf20-ceremony. Run ONLY AFTER kb/superset/ontology.json 4.0.4 is merged AND the Z440 federation has restarted onto 4.0.4 (/healthz ontology_version check). Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
   "review_only": true,
-  "apply_ready": false,
-  "applied": false,
-  "do_not_reapply": false,
+  "apply_ready": true,
+  "applied": true,
+  "do_not_reapply": true,
+  "applied_note": "T=264 (2026-07-23): applied via Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa against live :8000 on 4.0.4 — 3/3 envelopes, log_seq 612-614. Fragment v404-1-wf02-member-of ADDed and walked proposed -> promoted -> merged.",
   "target_url": "http://localhost:8000/programs",
   "target_kernel": "urn:moos:kernel:hp-z440.primary",
   "persona": "zappa",
