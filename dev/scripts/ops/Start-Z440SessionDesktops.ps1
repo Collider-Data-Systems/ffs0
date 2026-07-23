@@ -318,15 +318,24 @@ function Get-MoosSurfaceLaunchSpec {
             '--new-window'
         )
 
+        $surfaceKey = ([string]$DesktopSpec.surface_key).ToLowerInvariant() -replace '[^a-z0-9-]+', '-'
+
         $cacheTitle = ''
         if ($Surface.include_cache -eq $true) {
-            $surfaceKey = ([string]$DesktopSpec.surface_key).ToLowerInvariant() -replace '[^a-z0-9-]+', '-'
             $arguments += ConvertTo-MoosFileUri (Join-Path $script:CacheOutput ($surfaceKey + '.html'))
             $cacheTitle = 'mo:os surface cache - ' + [regex]::Escape($surfaceKey)
         }
 
         foreach ($url in @($Surface.urls)) {
-            $arguments += Expand-MoosPathToken ([string]$url)
+            $expanded = Expand-MoosPathToken ([string]$url)
+            # Surface handshake (collider-pilot #24): the panel reads ?surface= from its own
+            # location and tells the worker which room this window is, so the worker names the
+            # tab group without the "tabs" permission. Anchored match, so a url that already
+            # carries a query is left alone.
+            if ($surfaceKey -and $expanded -match '/sidepanel\.html$') {
+                $expanded += '?surface=' + $surfaceKey
+            }
+            $arguments += $expanded
         }
 
         return [pscustomobject]@{
