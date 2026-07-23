@@ -95,19 +95,29 @@ def collapse_fanin(rels):
     return out, collapsed
 
 def duplicate_occupancy(rels):
-    """§M19: a workspace has at most one occupant. AFTER the fan-in collapse, two
-    has-occupant relations with DISTINCT URNs on the same (workspace, agent) pair are two
-    relations asserting one occupancy — a real violation of the fold, not a read artifact.
+    """§M19: a workspace has at most one occupant. AFTER the fan-in collapse, MORE THAN ONE
+    surviving has-occupant relation out of a workspace is a violation of the fold, not a
+    read artifact.
+
+    Grouped by workspace alone — deliberately NOT by (workspace, agent). Keying on the pair
+    only catches one occupancy asserted twice and is blind to the canonical violation, a
+    workspace held by two DIFFERENT agents: that yields two pair-keys of length one each and
+    reads clean. Grouping by src_urn is strictly wider and keeps both cases (caught by
+    @Zappa reviewing ffs0#175 — the pair key contradicted this function's own first line).
+    Matches the invariant as stated in the Cowork readback procedure: one has-occupant out
+    of the workspace, "if >1 → §M19 violation", whatever the target.
 
     Surfacing this is the point of keeping it out of collapse_fanin(): a projection script
     must not smooth over a graph-level violation, and the kernel — not this script — is
-    where the invariant belongs. Returns [(workspace_urn, agent_urn, [relation_urns]), ...]."""
-    by_pair = {}
+    where the invariant belongs.
+
+    Returns [(workspace_urn, [(agent_urn, relation_urn), ...]), ...]."""
+    by_ws = {}
     for r in rels:
         if r.get("src_port") != "has-occupant":
             continue
-        by_pair.setdefault((r.get("src_urn"), r.get("tgt_urn")), []).append(r.get("urn") or "<no-urn>")
-    return sorted((ws, ag, sorted(urns)) for (ws, ag), urns in by_pair.items() if len(urns) > 1)
+        by_ws.setdefault(r.get("src_urn"), []).append((r.get("tgt_urn"), r.get("urn") or "<no-urn>"))
+    return sorted((ws, sorted(occ)) for ws, occ in by_ws.items() if len(occ) > 1)
 
 def self_test():
     """Offline gate for the fan-in collapse and the §M19 detector (T=264, ffs0#174). No
@@ -136,7 +146,7 @@ def self_test():
     check("§M19 not collapsed", collapsed, 0)
     check("§M19 both kept", len(kept), 2)
     check("§M19 detected", duplicate_occupancy(kept),
-          [(ws, ag, ["urn:moos:rel:r1", "urn:moos:rel:r2"])])
+          [(ws, [(ag, "urn:moos:rel:r1"), (ag, "urn:moos:rel:r2")])])
 
     # 3. distinct seats are never conflated, and a clean fold reports clean
     clean = [rel("urn:moos:rel:r1", ws, ag), rel("urn:moos:rel:r2", "urn:moos:session:w2", "urn:moos:agent:b")]
@@ -161,12 +171,23 @@ def self_test():
     kept, _ = collapse_fanin(ordered + ordered)
     check("order stable", [r["urn"] for r in kept], ["urn:moos:rel:r1", "urn:moos:rel:r2", "urn:moos:rel:r3"])
 
+    # 7. the CANONICAL §M19 — one workspace, two DIFFERENT occupants. This is the case a
+    #    (workspace, agent) key cannot see: two pair-keys of length one each, reported
+    #    clean. It fails against a pair-keyed detector, which is why it is here.
+    two_agents = [rel("urn:moos:rel:r1", ws, ag), rel("urn:moos:rel:r2", ws, "urn:moos:agent:b")]
+    kept, collapsed = collapse_fanin(two_agents)
+    check("two occupants not collapsed", collapsed, 0)
+    check("two occupants detected", len(duplicate_occupancy(kept)), 1)
+    check("two occupants named", duplicate_occupancy(kept),
+          [(ws, [("urn:moos:agent:a", "urn:moos:rel:r1"), ("urn:moos:agent:b", "urn:moos:rel:r2")])])
+
     if fails:
         print("SELF-TEST: FAIL (%d)" % len(fails))
         for f in fails: print("  !", f)
         return 1
-    print("SELF-TEST: PASS — 6 cases (fan-in collapse, §M19 survival + detection, "
-          "clean fold, non-occupancy ports, urn-less fallback, order stability)")
+    print("SELF-TEST: PASS — 7 cases (fan-in collapse, §M19 same-pair survival + detection, "
+          "clean fold, non-occupancy ports, urn-less fallback, order stability, "
+          "canonical §M19 two-occupant detection)")
     return 0
 
 def fold_from_hg(base_url, fallback_url, topo, disp):
@@ -370,13 +391,16 @@ def main():
               "(same relation URN — one relation, not two)." % fold_notes["fanin_collapsed"])
     dup_occ = fold_notes["duplicate_occupancy"]
     if dup_occ:
-        print("!! §M19 DUPLICATE OCCUPANCY — %d workspace/agent pair(s) carry more than one "
-              "has-occupant relation. These are NOT collapsed: distinct relation URNs mean "
-              "distinct relations, and the fold — not this projection — is where that is wrong." % len(dup_occ))
-        for ws, ag, urns in dup_occ:
-            print("   %s -> %s" % (alias(ws), alias(ag)))
-            for u in urns:
-                print("     %s" % u)
+        print("!! §M19 DUPLICATE OCCUPANCY — %d workspace(s) carry more than one has-occupant "
+              "relation. These are NOT collapsed: distinct relation URNs mean distinct "
+              "relations, and the fold — not this projection — is where that is wrong." % len(dup_occ))
+        for ws_urn, occ in dup_occ:
+            agents = sorted(set(ag_urn for ag_urn, _ in occ))       # NB: never bind `a` here — it is the argparse namespace
+            print("   %s — %d occupant relation(s)%s" % (
+                alias(ws_urn), len(occ),
+                (", %d DISTINCT agents" % len(agents)) if len(agents) > 1 else " (same agent, asserted twice)"))
+            for ag_urn, rel_urn in occ:
+                print("     %-46s %s" % (alias(ag_urn), rel_urn))
         print("   resolution is an UNLINK of the redundant relation on the owning engine, "
               "NOT --mode write (regenerating renders the duplicate faithfully).")
         if a.mode == "check":
