@@ -18,6 +18,20 @@ drift check (spec section 4).
                             the fences). Refuses to drop previously-generated seats unless
                             --allow-shrink (protects against a partial fan-in eating rows).
 
+  --self-test               offline gate for the fan-in collapse + §M19 detector; no engine
+
+Exit codes: 0 ok · 1 drift · 2 partial fan-in · 3 §M19 duplicate occupancy. 3 is distinct
+from 1 on purpose — drift is resolved by regenerating, a §M19 violation is not (regenerating
+renders the duplicate faithfully; the fix is an UNLINK on the owning engine).
+
+Fan-in duplicates (T=264, ffs0#174): the router concatenates /state/relations across
+kernels, so one relation can arrive over more than one path. Those are collapsed on the
+relation URN before rows are built — one relation seen twice is not two seats. Two
+has-occupant relations with DISTINCT URNs on one (workspace, agent) pair are the opposite
+case and are never collapsed: that is a §M19 violation, and smoothing it here would erase
+the only evidence of it. The duplicate ProDesk row audited at T=264 came from the missing
+collapse; the audit found the fold itself clean.
+
 Authority spine = HG /state/* (spec section 2), read via the federation router fan-in
 (default http://localhost:9000) so cross-kernel seats fold in one read (spec Q1), falling
 back to the local engine :8000. Persona display names + D7 surface labels + emit/MCP come
@@ -33,6 +47,9 @@ FENCE_BEGIN = "<!-- BEGIN GENERATED: moos-config-projection seat-table v1 (sourc
 FENCE_END   = "<!-- END GENERATED: moos-config-projection seat-table -->"
 FENCE_BEGIN_STABLE = "<!-- BEGIN GENERATED: moos-config-projection seat-table"   # version-independent locator
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+
+EXIT_M19 = 3   # §M19 duplicate occupancy — distinct from drift (1) and partial fan-in (2),
+               # because "regenerate with --mode write" is the wrong resolution for it
 
 def get_json(url, timeout=20):
     with urllib.request.urlopen(url, timeout=timeout) as r:
@@ -53,17 +70,140 @@ def read_state(base_url):
     rels  = as_list(get_json(b + "/state/relations"), "relations", "relation")
     return nodes, rels
 
+def collapse_fanin(rels):
+    """The router fan-in concatenates /state/relations across kernels, so ONE relation can
+    arrive over more than one path and be counted twice. Collapse on the relation URN —
+    that is one relation seen twice, not two relations, and rendering it twice produced the
+    duplicate seat row audited at T=264 (ffs0#174).
+
+    Deliberately NOT keyed on (src, tgt): two relations with distinct URNs asserting the
+    same occupancy is a §M19 violation, and collapsing it here would erase the only signal
+    of it. That case is detected separately by duplicate_occupancy() and never collapsed.
+
+    Older folds may carry relations without a URN; those fall back to the full identity
+    tuple, which makes the same "one relation" claim structurally.
+
+    Returns (unique_rels, collapsed_count) — order-stable (first arrival wins)."""
+    seen, out, collapsed = set(), [], 0
+    for r in rels:
+        key = r.get("urn") or (r.get("rewrite_category"), r.get("src_urn"), r.get("src_port"), r.get("tgt_urn"), r.get("tgt_port"))
+        if key in seen:
+            collapsed += 1
+            continue
+        seen.add(key)
+        out.append(r)
+    return out, collapsed
+
+def duplicate_occupancy(rels):
+    """§M19: a workspace has at most one occupant. AFTER the fan-in collapse, MORE THAN ONE
+    surviving has-occupant relation out of a workspace is a violation of the fold, not a
+    read artifact.
+
+    Grouped by workspace alone — deliberately NOT by (workspace, agent). Keying on the pair
+    only catches one occupancy asserted twice and is blind to the canonical violation, a
+    workspace held by two DIFFERENT agents: that yields two pair-keys of length one each and
+    reads clean. Grouping by src_urn is strictly wider and keeps both cases (caught by
+    @Zappa reviewing ffs0#175 — the pair key contradicted this function's own first line).
+    Matches the invariant as stated in the Cowork readback procedure: one has-occupant out
+    of the workspace, "if >1 → §M19 violation", whatever the target.
+
+    Surfacing this is the point of keeping it out of collapse_fanin(): a projection script
+    must not smooth over a graph-level violation, and the kernel — not this script — is
+    where the invariant belongs.
+
+    Returns [(workspace_urn, [(agent_urn, relation_urn), ...]), ...]."""
+    by_ws = {}
+    for r in rels:
+        if r.get("src_port") != "has-occupant":
+            continue
+        by_ws.setdefault(r.get("src_urn"), []).append((r.get("tgt_urn"), r.get("urn") or "<no-urn>"))
+    return sorted((ws, sorted(occ)) for ws, occ in by_ws.items() if len(occ) > 1)
+
+def self_test():
+    """Offline gate for the fan-in collapse and the §M19 detector (T=264, ffs0#174). No
+    engine required, stdlib only — runnable on a cloud runner alongside the fence check.
+    The distinction it guards is the whole point of the change: same relation URN twice =
+    read artifact (collapse); same (src, tgt) with different URNs = §M19 (never collapse)."""
+    ho = "has-occupant"
+    def rel(urn, src, tgt, port=ho):
+        return {"urn": urn, "src_urn": src, "src_port": port, "tgt_port": "is-occupant-of", "tgt_urn": tgt}
+    ws, ag = "urn:moos:session:w", "urn:moos:agent:a"
+    fails = []
+    def check(name, got, want):
+        if got != want:
+            fails.append("%s: got %r want %r" % (name, got, want))
+
+    # 1. the ffs0#174 case — one relation reached over two fan-in paths collapses to one row
+    dup_path = [rel("urn:moos:rel:r1", ws, ag), rel("urn:moos:rel:r1", ws, ag)]
+    kept, collapsed = collapse_fanin(dup_path)
+    check("fan-in collapse count", collapsed, 1)
+    check("fan-in collapse kept", len(kept), 1)
+    check("fan-in collapse is not §M19", duplicate_occupancy(kept), [])
+
+    # 2. the case that must SURVIVE — two distinct relations asserting one occupancy
+    m19 = [rel("urn:moos:rel:r1", ws, ag), rel("urn:moos:rel:r2", ws, ag)]
+    kept, collapsed = collapse_fanin(m19)
+    check("§M19 not collapsed", collapsed, 0)
+    check("§M19 both kept", len(kept), 2)
+    check("§M19 detected", duplicate_occupancy(kept),
+          [(ws, [(ag, "urn:moos:rel:r1"), (ag, "urn:moos:rel:r2")])])
+
+    # 3. distinct seats are never conflated, and a clean fold reports clean
+    clean = [rel("urn:moos:rel:r1", ws, ag), rel("urn:moos:rel:r2", "urn:moos:session:w2", "urn:moos:agent:b")]
+    kept, collapsed = collapse_fanin(clean)
+    check("clean fold collapse", collapsed, 0)
+    check("clean fold kept", len(kept), 2)
+    check("clean fold no §M19", duplicate_occupancy(kept), [])
+
+    # 4. non-occupancy ports collapse too, but never register as §M19
+    pins = [rel("urn:moos:rel:p1", ws, "urn:moos:group:sam", "pins-urn")] * 2
+    kept, collapsed = collapse_fanin(pins)
+    check("non-occupancy collapse", (collapsed, len(kept)), (1, 1))
+    check("non-occupancy not §M19", duplicate_occupancy(kept), [])
+
+    # 5. URN-less relations (older folds) fall back to the identity tuple
+    legacy = [{"src_urn": ws, "src_port": ho, "tgt_port": "is-occupant-of", "tgt_urn": ag}] * 2
+    kept, collapsed = collapse_fanin(legacy)
+    check("urn-less collapse", (collapsed, len(kept)), (1, 1))
+
+    # 6. order stability — first arrival wins, so the render stays deterministic
+    ordered = [rel("urn:moos:rel:r%d" % i, "urn:moos:session:w%d" % i, ag) for i in (1, 2, 3)]
+    kept, _ = collapse_fanin(ordered + ordered)
+    check("order stable", [r["urn"] for r in kept], ["urn:moos:rel:r1", "urn:moos:rel:r2", "urn:moos:rel:r3"])
+
+    # 7. the CANONICAL §M19 — one workspace, two DIFFERENT occupants. This is the case a
+    #    (workspace, agent) key cannot see: two pair-keys of length one each, reported
+    #    clean. It fails against a pair-keyed detector, which is why it is here.
+    two_agents = [rel("urn:moos:rel:r1", ws, ag), rel("urn:moos:rel:r2", ws, "urn:moos:agent:b")]
+    kept, collapsed = collapse_fanin(two_agents)
+    check("two occupants not collapsed", collapsed, 0)
+    check("two occupants detected", len(duplicate_occupancy(kept)), 1)
+    check("two occupants named", duplicate_occupancy(kept),
+          [(ws, [("urn:moos:agent:a", "urn:moos:rel:r1"), ("urn:moos:agent:b", "urn:moos:rel:r2")])])
+
+    if fails:
+        print("SELF-TEST: FAIL (%d)" % len(fails))
+        for f in fails: print("  !", f)
+        return 1
+    print("SELF-TEST: PASS — 7 cases (fan-in collapse, §M19 same-pair survival + detection, "
+          "clean fold, non-occupancy ports, urn-less fallback, order stability, "
+          "canonical §M19 two-occupant detection)")
+    return 0
+
 def fold_from_hg(base_url, fallback_url, topo, disp):
     """One row per WF19 has-occupant edge (spec section 3). Returns (rows, source_url,
-    primary_err) — primary_err is None when the router fan-in served the read, else the
-    exception that forced the fallback (a fallback fold sees only the local engine, so
-    cross-kernel seats are missing — never adjudicate a shrink from it)."""
+    primary_err, fold_notes) — primary_err is None when the router fan-in served the read,
+    else the exception that forced the fallback (a fallback fold sees only the local engine,
+    so cross-kernel seats are missing — never adjudicate a shrink from it). fold_notes
+    carries the fan-in collapse count and any §M19 duplicate-occupancy findings."""
     primary_err = None
     try:
         nodes, rels = read_state(base_url); src = base_url
     except Exception as e:
         primary_err = e
         nodes, rels = read_state(fallback_url); src = fallback_url
+    rels, collapsed = collapse_fanin(rels)
+    fold_notes = {"fanin_collapsed": collapsed, "duplicate_occupancy": duplicate_occupancy(rels)}
     by_port = lambda p: [r for r in rels if r.get("src_port") == p]
     opens_on    = {r["src_urn"]: r["tgt_urn"] for r in by_port("opens-on")}
     has_purpose = {r["src_urn"]: r["tgt_urn"] for r in by_port("has-purpose")}
@@ -104,7 +244,7 @@ def fold_from_hg(base_url, fallback_url, topo, disp):
             "_sort": (host_order.get(host, 99), kernel_port(k_alias), alias(ws)),
         })
     rows.sort(key=lambda r: r["_sort"])
-    return rows, src, primary_err
+    return rows, src, primary_err, fold_notes
 
 def render_region(rows):
     """The fenced generated block. Deterministic; no timestamps (spec section 4)."""
@@ -207,7 +347,12 @@ def main():
     ap.add_argument("--offline-ok", action="store_true",
                     help="check mode: if no engine/router is reachable, verify fence integrity only (CI)")
     ap.add_argument("--out", default=os.path.join(REPO, "tmp", "projections", "session_pipeline", "config"))
+    ap.add_argument("--self-test", action="store_true",
+                    help="run the offline fan-in/§M19 gate and exit (no engine required)")
     a = ap.parse_args()
+
+    if a.self_test:
+        return self_test()
 
     topo = json.load(open(a.topology, encoding="utf-8"))
     disp = json.load(open(a.display, encoding="utf-8")) if os.path.exists(a.display) else {}
@@ -215,7 +360,7 @@ def main():
     span = find_region(txt)
 
     try:
-        hg_rows, src, primary_err = fold_from_hg(a.base_url, a.fallback_url, topo, disp)
+        hg_rows, src, primary_err, fold_notes = fold_from_hg(a.base_url, a.fallback_url, topo, disp)
     except Exception as e:
         if a.mode == "check" and a.offline_ok:
             print("# moos-config-projection (check, OFFLINE) — no engine/router reachable (%s)" % e)
@@ -239,6 +384,28 @@ def main():
               (a.base_url, type(primary_err).__name__, primary_err))
         print("!! folded from FALLBACK %s — cross-kernel seats are missing from this fold" % src)
     print("folded %d seat rows from HG has-occupant (evidence -> %s)\n" % (len(hg_rows), os.path.relpath(a.out, REPO)))
+
+    json.dump(fold_notes, open(os.path.join(a.out, "seat-table.fold-notes.json"), "w", encoding="utf-8"), indent=1)
+    if fold_notes["fanin_collapsed"]:
+        print("fan-in: collapsed %d duplicate relation(s) reached over more than one path "
+              "(same relation URN — one relation, not two)." % fold_notes["fanin_collapsed"])
+    dup_occ = fold_notes["duplicate_occupancy"]
+    if dup_occ:
+        print("!! §M19 DUPLICATE OCCUPANCY — %d workspace(s) carry more than one has-occupant "
+              "relation. These are NOT collapsed: distinct relation URNs mean distinct "
+              "relations, and the fold — not this projection — is where that is wrong." % len(dup_occ))
+        for ws_urn, occ in dup_occ:
+            agents = sorted(set(ag_urn for ag_urn, _ in occ))       # NB: never bind `a` here — it is the argparse namespace
+            print("   %s — %d occupant relation(s)%s" % (
+                alias(ws_urn), len(occ),
+                (", %d DISTINCT agents" % len(agents)) if len(agents) > 1 else " (same agent, asserted twice)"))
+            for ag_urn, rel_urn in occ:
+                print("     %-46s %s" % (alias(ag_urn), rel_urn))
+        print("   resolution is an UNLINK of the redundant relation on the owning engine, "
+              "NOT --mode write (regenerating renders the duplicate faithfully).")
+        if a.mode == "check":
+            print("\nDRIFT CHECK: NOT RUN — §M19 violation takes precedence over table drift.")
+            return EXIT_M19
 
     if a.mode == "render":
         print(region); return 0
