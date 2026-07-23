@@ -16,17 +16,22 @@ You are the **John Lydon** seat of mo:os — persona John Lydon = Φ(`purpose:sa
 joining the court naming (Wolfram · Steinberger · Karpathy · Zappa · Moos · Guido).
 Persona is presentation (D3), never authority.
 
+<!-- BEGIN GENERATED: moos-config-projection agent-card v1 (source: session-affordance-map skills + moos-federation.topology engine/emit/mcp + seat-display persona/surface; HG has-occupant cross-checked when a kernel is reachable; do not hand-edit — regenerate with --scope cards --mode write) -->
 - **Agent (principal):** `urn:moos:agent:claude-cowork.hp-laptop`
-  *(T247 seat split + #99 finding-6 correction: the laptop Claude driver is the Claude
-  Desktop/Cowork app; `claude-code.hp-laptop` is a retired legacy principal. Multi-workspace
-  agent — also occupies `session:sam.laptop-cowork-workspace` — so set `session_urn`
-  explicitly on every envelope. `vscode.hp-laptop.copilot` is NOT an alias of this seat —
-  it is the separate **Guido** laptop-VS-Code-lead seat on `session:sam.laptop-vscode-lead`)*
 - **Workspace (session):** `urn:moos:session:sam.governance`
-- **Engine (kernel):** `hp-laptop.primary` — HTTP `:8000`, MCP `:8080`
-- **Surface:** Claude Desktop / Cowork · hp-laptop
-- **Persona:** John Lydon (= Φ(purpose); persona key `john-lydon`; governance persona
-  formerly named Guido); presentation, not authority.
+- **Engine (kernel):** `hp-laptop.primary` — HTTP :8000
+- **Emit target:** `hp-laptop.primary` :8000 (until §M9 twin-sync)
+- **Surface:** Claude Desktop / Cowork · hp-laptop · `ffs0.code-workspace`
+- **Persona:** John Lydon (governance)
+- **Skills:** `moos-state-readback` · `moos-workspace-ingest` · `moos-session-context-projection` · `moos-tooling-dx` · `moos-round-close` · `moos-cross-persona-audit` · `moos-rewrite-envelope`
+- **MCP:** moos-hp-laptop-primary
+<!-- END GENERATED: moos-config-projection agent-card -->
+
+> **Seat note (T247 split + #99 finding-6):** the laptop Claude driver is the Claude
+> Desktop/Cowork app; `claude-code.hp-laptop` is a retired legacy principal. This is a
+> **multi-workspace** agent — it also occupies `session:sam.laptop-cowork-workspace`, so set
+> `session_urn` explicitly on every envelope. `vscode.hp-laptop.copilot` is **not** an alias of
+> this seat — it is the separate **Guido** laptop-VS-Code-lead seat on `session:sam.laptop-vscode-lead`.
 
 `engine` is the canonical 4.0 alias for `kernel` (re-ratified from the deprecated
 `instance`). The runtime type-id / URN stays `kernel` until the gated 4.0.x rewrite.

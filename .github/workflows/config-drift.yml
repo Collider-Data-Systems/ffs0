@@ -1,15 +1,29 @@
 # moos-config-projection drift gate (#58 Phase-4, spec section 4).
 # Cloud runners cannot reach a live engine/router, so this job enforces what IS
-# checkable offline: the fenced generated region exists and is intact. The full
-# HG byte-compare runs where an engine lives: blocking in moos-round-close, warn
-# in run-session-pipeline.ps1 (both wired by the same script with no flags).
+# checkable offline. The seat table check is fence-integrity only (its source is the
+# fold, unreachable in CI; the full HG byte-compare runs where an engine lives: blocking
+# in moos-round-close, warn in run-session-pipeline.ps1). The agent-card check (ffs0#165)
+# is a FULL byte-compare offline, because a card's fenced block is projected from config
+# files that are all in-repo (affordance skills + topology engine/emit + seat-display).
 name: config-drift
 on:
   pull_request:
-    paths: ["AGENTS.md", "dev/scripts/projections/config_projection.py", "dev/config/seat-display.json"]
+    paths:
+      - "AGENTS.md"
+      - "dev/scripts/projections/config_projection.py"
+      - "dev/config/seat-display.json"
+      - "dev/config/session-affordance-map.json"
+      - "dev/config/moos-federation.topology.json"
+      - ".claude/agents/*.md"
   push:
     branches: [main]
-    paths: ["AGENTS.md", "dev/scripts/projections/config_projection.py", "dev/config/seat-display.json"]
+    paths:
+      - "AGENTS.md"
+      - "dev/scripts/projections/config_projection.py"
+      - "dev/config/seat-display.json"
+      - "dev/config/session-affordance-map.json"
+      - "dev/config/moos-federation.topology.json"
+      - ".claude/agents/*.md"
 jobs:
   fence-integrity:
     runs-on: ubuntu-latest
@@ -19,5 +33,7 @@ jobs:
         with: { python-version: "3.12" }
       - name: self-test (fan-in collapse + §M19 detector — no engine needed)
         run: python dev/scripts/projections/config_projection.py --self-test
-      - name: drift check (offline -> fence integrity)
+      - name: seat-table drift check (offline -> fence integrity)
         run: python dev/scripts/projections/config_projection.py --mode check --offline-ok
+      - name: agent-card drift check (offline -> full byte-compare from config)
+        run: python dev/scripts/projections/config_projection.py --scope cards --mode check

@@ -181,13 +181,27 @@ def self_test():
     check("two occupants named", duplicate_occupancy(kept),
           [(ws, [("urn:moos:agent:a", "urn:moos:rel:r1"), ("urn:moos:agent:b", "urn:moos:rel:r2")])])
 
+    # 8. agent-card identity matcher (ffs0#165) — the block must extend to the terminating
+    #    blank line so an INDENTED continuation line stays inside it. Matching `^-` only
+    #    stopped at john-lydon's `  *(T247 ...)*` note and left the tail as a duplicate.
+    card_txt = ("# Seat: X\n\nintro prose.\n\n"
+                "- **Agent (principal):** `a`\n"
+                "  *(indented continuation note that does not start with a dash)*\n"
+                "- **Workspace (session):** `w`\n\n"
+                "trailing prose stays.\n")
+    reg = find_card_authored_identity(card_txt)
+    captured = card_txt[reg[0]:reg[1]] if reg else ""
+    check("card matcher captures indented continuation", "indented continuation note" in captured, True)
+    check("card matcher stops at the blank line", "trailing prose" in captured, False)
+    check("card matcher spans both bullets", captured.count("- **"), 2)
+
     if fails:
         print("SELF-TEST: FAIL (%d)" % len(fails))
         for f in fails: print("  !", f)
         return 1
-    print("SELF-TEST: PASS — 7 cases (fan-in collapse, §M19 same-pair survival + detection, "
+    print("SELF-TEST: PASS — 8 cases (fan-in collapse, §M19 same-pair survival + detection, "
           "clean fold, non-occupancy ports, urn-less fallback, order stability, "
-          "canonical §M19 two-occupant detection)")
+          "canonical §M19 two-occupant detection, agent-card identity matcher)")
     return 0
 
 def fold_from_hg(base_url, fallback_url, topo, disp):
@@ -331,6 +345,195 @@ def semantic_drift(hg_rows, authored):
             drift.append("engine mismatch for `%s`: authored=`%s` HG opens-on=%s" % (a, au["instance"], sorted(engines)))
     return drift, info
 
+# ---------- agent-card projection (ffs0#165, harness-diet leg 6) ----------
+# The seven .claude/agents/*.md cards hand-duplicate seat facts (identity URNs, engine,
+# emit, skills, surface) that already live in config + the fold — a third hand-maintained
+# copy of seat truth (the first two: AGENTS.md seat table, seat-context.md). This fences
+# the DRIFTING identity block in each card and regenerates it from source; the persona
+# voice (Start here / GATE / the rule) stays hand-authored OUTSIDE the fence.
+#
+# Source of the fenced facts is CONFIG (affordance skills + topology engine/emit/mcp +
+# seat-display persona/surface), not the fold — so the card check runs OFFLINE (all inputs
+# are in-repo) and does not break when a peer kernel (e.g. hp-laptop) is down. When a kernel
+# IS reachable the fold is used only as a cross-check: warn if a carded seat has no
+# has-occupant relation. HG stays authority; this is an F-projection of it plus config.
+CARD_FENCE_BEGIN = "<!-- BEGIN GENERATED: moos-config-projection agent-card v1 (source: session-affordance-map skills + moos-federation.topology engine/emit/mcp + seat-display persona/surface; HG has-occupant cross-checked when a kernel is reachable; do not hand-edit — regenerate with --scope cards --mode write) -->"
+CARD_FENCE_END   = "<!-- END GENERATED: moos-config-projection agent-card -->"
+CARD_FENCE_BEGIN_STABLE = "<!-- BEGIN GENERATED: moos-config-projection agent-card"
+
+def skills_for(affordance, actor_urn, session_urn):
+    """Skills for the (actor, session) seat from the affordance map. Match on the pair —
+    an actor can occupy multiple sessions with different skill mounts (John Lydon)."""
+    for s in affordance.get("sessions", []):
+        if s.get("actor_urn") == actor_urn and s.get("session_urn") == session_urn:
+            return list(s.get("skills", []))
+    return None   # None = no affordance entry (distinct from an empty skills list)
+
+def card_facts(card, topo, disp, affordance):
+    """Facts for one card, purely from config. `card` = {file, actor_urn, session_urn,
+    persona_key?}. persona_key disambiguates the topology lookup: one actor can back two
+    persona blocks (claude-cowork.hp-laptop is both `john-lydon` and `cowork-laptop`), and an
+    actor-only key would silently take whichever is last in file order — the wrong seat's
+    engine/emit/mcp. With persona_key set we read the exact block; without it we fall back to
+    the FIRST actor match (deterministic, but register persona_key when an actor is shared)."""
+    actor, session = card["actor_urn"], card["session_urn"]
+    personas = topo.get("personas", {})
+    pk = card.get("persona_key")
+    if pk:
+        pa = dict(personas.get(pk, {}), key=pk)
+    else:
+        pa = next((dict(b, key=name) for name, b in personas.items()
+                   if b.get("actor_urn") == actor), {})
+    kernels = topo.get("kernels", {})
+    sd = disp.get("seats", {}).get(actor, {})
+
+    def kport(kalias):
+        k = kernels.get(kalias, {})
+        m = re.search(r":(\d+)$", k.get("http_local", "") or k.get("http_lan", "") or k.get("http_tailscale", ""))
+        return (":" + m.group(1)) if m else ""
+
+    engine = pa.get("opens_on_kernel", "")           # topology intent (D6)
+    emit   = pa.get("emit_kernel", "")               # actual receiving kernel (§M9 split)
+    mcp = pa.get("mcp_server", "")
+    if pa.get("topology_mcp_server"):
+        mcp += " *(opens-on `%s`)*" % pa["topology_mcp_server"]
+    return {
+        "file":      card["file"],
+        "agent":     actor,
+        "workspace": session,
+        "persona":   sd.get("persona") or pa.get("key", ""),
+        "surface":   sd.get("surface", "—"),
+        "engine":    engine,
+        "engine_port": kport(engine),
+        "emit":      emit,
+        "emit_port": kport(emit),
+        "mcp":       mcp or "—",
+        "skills":    skills_for(affordance, actor, session),
+    }
+
+def render_card_block(f):
+    """The fenced identity block. Deterministic; no timestamps (matches the seat-table rule)."""
+    eng = ("`%s` — HTTP %s" % (f["engine"], f["engine_port"])) if f["engine"] else "—"
+    if f["emit"] and f["emit"] != f["engine"]:
+        emit_line = "- **Emit target:** `%s` %s — this seat opens-on `%s` but emits here until §M9 twin-sync" % (
+            f["emit"], f["emit_port"], f["engine"])
+    else:
+        emit_line = "- **Emit target:** `%s` %s (until §M9 twin-sync)" % (f["emit"] or f["engine"], f["emit_port"] or f["engine_port"])
+    if f["skills"] is None:
+        skills_line = "- **Skills:** _(no affordance-map entry for this seat)_"
+    elif not f["skills"]:
+        skills_line = "- **Skills:** _(none mounted)_"
+    else:
+        skills_line = "- **Skills:** " + " · ".join("`%s`" % s for s in f["skills"])
+    lines = [
+        CARD_FENCE_BEGIN,
+        "- **Agent (principal):** `%s`" % f["agent"],
+        "- **Workspace (session):** `%s`" % f["workspace"],
+        "- **Engine (kernel):** %s" % eng,
+        emit_line,
+        "- **Surface:** %s" % f["surface"],
+        "- **Persona:** %s" % (f["persona"] or "—"),
+        skills_line,
+        "- **MCP:** %s" % f["mcp"],
+        CARD_FENCE_END,
+    ]
+    return "\n".join(lines)
+
+def find_card_region(txt):
+    b = txt.find(CARD_FENCE_BEGIN_STABLE)
+    if b < 0: return None
+    e = txt.find(CARD_FENCE_END, b)
+    if e < 0: return None
+    return (b, e + len(CARD_FENCE_END))
+
+def find_card_authored_identity(txt):
+    """First-adoption target: the hand-authored identity list after the first `# Seat:`
+    header — from the first `- **` bullet to the blank line that terminates the block.
+    Extending to the blank line (rather than matching only `^-` lines) keeps INDENTED
+    continuation lines inside the block, e.g. john-lydon's `  *(T247 seat split ...)*`
+    note; matching `^-` only would stop at that line and leave the rest as a duplicate.
+    Header + surrounding prose stay untouched."""
+    h = re.search(r"^# Seat:[^\n]*$", txt, re.M)
+    if not h: return None
+    seg = txt[h.end():]
+    m = re.search(r"^- \*\*", seg, re.M)                 # first identity bullet
+    if not m: return None
+    start = m.start()
+    bm = re.search(r"\n[ \t]*\n", seg[start:])           # first blank line ends the block
+    end = start + (bm.start() + 1 if bm else len(seg[start:]))   # include last content newline
+    return (h.end() + start, h.end() + end)
+
+def run_cards(a, topo, disp):
+    """check / render / write the fenced identity block across the configured cards."""
+    affordance = json.load(open(a.affordance, encoding="utf-8")) if os.path.exists(a.affordance) else {"sessions": []}
+    cards = disp.get("cards", [])
+    if not cards:
+        print("CARDS: no `cards` list in seat-display.json — nothing to project."); return 0
+
+    # Optional HG cross-check: warn if a carded seat has no has-occupant relation.
+    seated = None
+    try:
+        rows, src, _perr = fold_from_hg(a.base_url, a.fallback_url, topo, disp)[:3]
+        seated = {(r["agent"], r["workspace"]) for r in rows}
+        print("CARDS: HG cross-check via %s (%d seated rows)" % (src, len(rows)))
+    except Exception as e:
+        print("CARDS: HG unreachable (%s) — config-only projection, cross-check skipped" % type(e).__name__)
+
+    cards_dir = os.path.join(REPO, ".claude", "agents")
+    drift, wrote, missing_seat = [], [], []
+    for c in cards:
+        facts = card_facts(c, topo, disp, affordance)
+        if seated is not None and (alias(facts["agent"]), alias(facts["workspace"])) not in seated:
+            missing_seat.append("%s (%s / %s)" % (c["file"], alias(facts["agent"]), alias(facts["workspace"])))
+        block = render_card_block(facts)
+        path = os.path.join(cards_dir, c["file"])
+        if not os.path.exists(path):
+            print("  ! CARD MISSING: %s" % c["file"]); drift.append(c["file"] + " (file absent)"); continue
+        txt = open(path, encoding="utf-8").read()
+        region = find_card_region(txt)
+
+        if a.mode == "render":
+            print("\n# %s\n%s" % (c["file"], block)); continue
+        if a.mode == "write":
+            if region:
+                new = txt[:region[0]] + block + txt[region[1]:]
+            else:
+                ident = find_card_authored_identity(txt)
+                if not ident:
+                    print("  ! %s: no fenced region and no identity bullet block after '# Seat:' — skipped" % c["file"])
+                    drift.append(c["file"] + " (no insertion point)"); continue
+                new = txt[:ident[0]] + block + "\n" + txt[ident[1]:]
+            if new != txt:
+                open(path, "w", encoding="utf-8", newline="").write(new); wrote.append(c["file"])
+        else:  # check
+            if not region:
+                drift.append(c["file"] + " (no fenced region — run --scope cards --mode write)")
+            elif txt[region[0]:region[1]] != block:
+                drift.append(c["file"] + " (fenced block diverges from source)")
+
+    # Coverage: .claude/agents/ is seat-card-only, so every *.md there must be a configured
+    # card. An unregistered file would carry an unfenced, hand-authored identity block that
+    # the gate never checks — the exact single-source hole this projection exists to close.
+    if os.path.isdir(cards_dir):
+        configured = {c["file"] for c in cards}
+        unregistered = sorted(f for f in os.listdir(cards_dir) if f.endswith(".md") and f not in configured)
+        for u in unregistered:
+            drift.append(u + " (on disk but not in seat-display cards[] — register it or remove it)")
+
+    for m in missing_seat:
+        print("  ~ WARN carded seat has no has-occupant in the fold: %s" % m)
+    if a.mode == "write":
+        print("CARDS: wrote %d card(s): %s" % (len(wrote), ", ".join(wrote) or "none (already current)"))
+        return 0
+    if a.mode == "render":
+        return 0
+    if drift:
+        for d in drift: print("  ! CARD DRIFT", d)
+        print("\nCARD CHECK: FAIL (%d) — resolution is --scope cards --mode write (never hand-edit the fenced block)." % len(drift))
+        return 1
+    print("CARD CHECK: PASS — every card's fenced identity block is byte-identical to source (%d cards)." % len(cards))
+    return 0
+
 def main():
     try: sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     except Exception: pass
@@ -342,6 +545,10 @@ def main():
     ap.add_argument("--topology", default=os.path.join(REPO, "dev", "config", "moos-federation.topology.json"))
     ap.add_argument("--display", default=os.path.join(REPO, "dev", "config", "seat-display.json"))
     ap.add_argument("--mode", choices=["check", "render", "write"], default="check")
+    ap.add_argument("--scope", choices=["seats", "cards"], default="seats",
+                    help="seats = AGENTS.md seat table (default, unchanged); cards = .claude/agents/*.md identity blocks (ffs0#165). CI runs both as separate steps.")
+    ap.add_argument("--affordance", default=os.path.join(REPO, "dev", "config", "session-affordance-map.json"),
+                    help="skills source for --scope cards")
     ap.add_argument("--allow-shrink", action="store_true",
                     help="permit --mode write to drop seats present in the previous generated region")
     ap.add_argument("--offline-ok", action="store_true",
@@ -356,6 +563,10 @@ def main():
 
     topo = json.load(open(a.topology, encoding="utf-8"))
     disp = json.load(open(a.display, encoding="utf-8")) if os.path.exists(a.display) else {}
+
+    if a.scope == "cards":
+        return run_cards(a, topo, disp)
+
     txt = open(a.agents, encoding="utf-8").read()
     span = find_region(txt)
 
