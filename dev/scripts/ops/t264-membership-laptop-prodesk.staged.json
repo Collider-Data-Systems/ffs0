@@ -1,0 +1,92 @@
+{
+  "_comment": "STAGED, apply_ready=false — the G4 asymmetric-presence completion of ffs0#174 item 3. Adds the two seat agents the t263 membership batch DELIBERATELY EXCLUDED because they had no node on the Z440 fold (see t263-membership-topology.staged.json staging_notes: 'vscode.hp-laptop.copilot + vscode.hpprodesk.primary — NOT nodes in the Z440 fold — LINK would ErrNodeNotFound; ride the laptop/ProDesk replication round'). This IS that round. Membership is a FLEET register that lives on the Z440 fold (ffs0#174 ruling: 3 of the 8 t263 members are laptop-resident, so the register is not per-fold) — so these nodes + links belong on hp-z440.primary, NOT on the ProDesk/laptop folds. Because both agents 404 on the Z440 fold today, each is ADD-then-LINK, not a bare LINK. OPERATOR SAFETY: Test-MoosFederation.ps1 -Mode PostProgram reads ONLY the .envelopes array and does NOT honor apply_ready/applied/review_only — do NOT run it on this file until you have flipped apply_ready and checked the readback gate by hand.",
+  "review_only": true,
+  "apply_ready": false,
+  "applied": false,
+  "target_url": "http://localhost:8000/programs",
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "persona": "zappa",
+  "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+  "authored_by": "agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / t264-card-projection",
+  "staging_notes": [
+    "HARD GATE: /healthz must show ontology_version 4.0.4 first — member-of (WF02) is undeclared below 4.0.4 and every LINK would reject. Z440 primary is 4.0.4 as of T=264.",
+    "SHAPE: each agent is ADD (node) -> LINK WF02 member-of (group:moos). The ADD is REQUIRED: both agents return HTTP 404 on /state/nodes today, so a bare member-of LINK ErrNodeNotFound's. This is exactly why t263 excluded them.",
+    "MEMBERSHIP ONLY, no WF01 owns — verified against the live fold: group:sam owns 0 agents (its 9 owns targets are 3 kernels, 3 sessions, 2 purposes, 1 program), and none of the 8 t263 sibling agents carry an inbound owned-by. The register's actual pattern is member-of without owns; adding an owns LINK here would make these two the ONLY WF01-owned agents in the fold — a misleading 2-node ownership island. So this batch matches the sibling pattern exactly: node + member-of. (An earlier draft included owns 'for completeness' on a false premise; struck after live check.)",
+    "ACTOR: kernel:hp-z440.primary throughout, matching the t263 membership batch this extends (kernel actor bypasses M11/M12; required for ontology-governed ADDs and WF02 authority LINKs).",
+    "SCOPE: Z440 primary fold ONLY (R1 sovereignty). Does NOT touch the ProDesk or laptop folds. ProDesk must NOT ADD group:moos locally (ffs0#174 ruling).",
+    "PROPERTY SCOPES match the 4.0.4 agent operad, which declares transport_type / invocation_protocol / model / board_id / status as authority_scope:'kernel' (these mutable props are kernel-authority, §M12). Note this is DESCRIPTIVE: ValidateADD ignores the supplied authority_scope and ValidateMUTATE reads the operad registry, not the stored property — so the stored value never gates. Set to 'kernel' anyway so the persisted metadata agrees with the operad rather than the legacy 'owner' the older sibling nodes happen to store.",
+    "created_at values are placeholders (t264 wall date). The OPERATOR applying this should stamp the real apply-time UTC or leave the kernel to default — Test-MoosFederation does not stamp; it POSTs bytes verbatim.",
+    "Revocation of any membership = UNLINK on the relation_urn; window per the accepted t263 doctrine sentence.",
+    "APPLY: flip apply_ready -> true, then Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa against live :8000 on 4.0.4. Expected: 4/4 (2 ADD, 2 WF02); /state/relations then shows 12 member-of (10 + 2)."
+  ],
+  "readback_gate": {
+    "require_ontology_version": "4.0.4",
+    "require_absent_before_apply": [
+      "urn:moos:agent:vscode.hpprodesk.primary",
+      "urn:moos:agent:vscode.hp-laptop.copilot"
+    ],
+    "expect_after": {
+      "member_of_total": 12,
+      "new_relations": [
+        "urn:moos:rel:t264.guido.member-of.group-moos",
+        "urn:moos:rel:t264.hpprodesk.member-of.group-moos"
+      ]
+    }
+  },
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "node_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+      "type_id": "agent",
+      "properties": {
+        "name": {"value": "VS Code (ProDesk)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "delegate_type": {"value": "ide", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "owner_urn": {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "created_at": {"value": "2026-07-24T00:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "transport_type": {"value": "mcp-stdio", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "invocation_protocol": {"value": "mcp", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "model": {"value": "GitHub Copilot", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "board_id": {"value": "AGENT-VSCODE-HPPRODESK-PRIMARY", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "status": {"value": "idle", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "node_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "type_id": "agent",
+      "properties": {
+        "name": {"value": "VS Code Copilot (hp-laptop)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "delegate_type": {"value": "ide", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "owner_urn": {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "created_at": {"value": "2026-07-24T00:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
+        "transport_type": {"value": "mcp-sse", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "invocation_protocol": {"value": "mcp", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "model": {"value": "GitHub Copilot", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "board_id": {"value": "AGENT-VSCODE-COPILOT-HP-LAPTOP", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
+        "status": {"value": "idle", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t264.hpprodesk.member-of.group-moos",
+      "src_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:t264.guido.member-of.group-moos",
+      "src_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:moos",
+      "tgt_port": "has-member",
+      "rewrite_category": "WF02"
+    }
+  ]
+}
