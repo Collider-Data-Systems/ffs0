@@ -86,7 +86,7 @@ def collapse_fanin(rels):
     Returns (unique_rels, collapsed_count) — order-stable (first arrival wins)."""
     seen, out, collapsed = set(), [], 0
     for r in rels:
-        key = r.get("urn") or (r.get("src_urn"), r.get("src_port"), r.get("tgt_port"), r.get("tgt_urn"))
+        key = r.get("urn") or (r.get("rewrite_category"), r.get("src_urn"), r.get("src_port"), r.get("tgt_urn"), r.get("tgt_port"))
         if key in seen:
             collapsed += 1
             continue
