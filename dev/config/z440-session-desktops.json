@@ -1,112 +1,589 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "host": "hp-z440",
-  "purpose": "Map Windows 11 virtual desktops to durable mo:os sessions so Z440 can reopen into the same work surface it was closed from.",
-  "windows_11_note": "Desktop assignment requires an optional virtual desktop helper. Without it, Start-Z440SessionDesktops.ps1 launches only desktop 1 apps and leaves desktop 2+ as a readable session map.",
+  "status": "local-projection-plan",
+  "purpose": "Materialize the Z440 Windows desktop x monitor x window x browser-tab arrangement as a rebuildable cache over durable HG anchors.",
+  "identity_rule": "desktop_id is the stable local key; index and name are observed labels. Window coordinates and browser tabs are cache state, never HG identity.",
+  "cache": {
+    "output_directory": "${ffs0}\\tmp\\projections\\z440_surface_cache",
+    "entry_page": "index.html"
+  },
+  "browser": {
+    "exe": "%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe",
+    "process_name": "chrome",
+    "profile_directory": "Profile 4",
+    "profile_label": "my-tiny-data-collider.nl",
+    "pilot_extension_id": "djomagfoabhefhmfmihfpoikkclphpei",
+    "pilot_sidepanel_url": "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html"
+  },
+  "monitors": [
+    {
+      "slot": 1,
+      "label": "left",
+      "observed_device": "\\\\.\\DISPLAY1"
+    },
+    {
+      "slot": 2,
+      "label": "center-left",
+      "observed_device": "\\\\.\\DISPLAY3"
+    },
+    {
+      "slot": 3,
+      "label": "center-right",
+      "observed_device": "\\\\.\\DISPLAY2"
+    },
+    {
+      "slot": 4,
+      "label": "right",
+      "observed_device": "\\\\.\\DISPLAY4"
+    }
+  ],
   "desktops": [
     {
       "index": 1,
-      "name": "z440-vscode-projection-lead",
-      "session_urn": "urn:moos:session:sam.z440-vscode-projection-lead",
+      "desktop_id": "d98a3199-1a60-45ca-b569-e98b24a7ebef",
+      "name": "my-tiny-data-collider.hp-z440.primary :8000",
+      "surface_key": "z440-primary",
+      "surface_kind": "engine-workspace",
+      "anchor_urn": "urn:moos:session:sam.z440-vscode-projection-lead",
       "actor_urn": "urn:moos:agent:vscode.hp-z440.primary",
-      "kernel": "urn:moos:kernel:hp-z440.primary",
-      "intent": "Four-monitor VS Code lead cockpit: finish projection pipeline, inspect dashboard/graphs, keep ffs0 reviewable.",
+      "engine": {
+        "urn": "urn:moos:kernel:hp-z440.primary",
+        "health_url": "http://localhost:8000/healthz"
+      },
+      "intent": "Primary Z440 control room: Pilot frame, projection dashboard, VS Code, Antigravity, and an operator terminal.",
       "startup": true,
-      "apps": [
+      "windows": [
         {
-          "label": "VS Code ffs0 workspace",
+          "id": "browser",
+          "label": "Primary HG frame and control surfaces",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "http://localhost:8000/healthz",
+            "file:///D:/HPZ440/ffs0/tmp/projections/session_pipeline/index.html",
+            "https://github.com/orgs/Collider-Data-Systems/projects/4"
+          ]
+        },
+        {
+          "id": "vscode",
+          "label": "Z440 VS Code control workspace",
+          "kind": "process",
+          "monitor_slot": 2,
           "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
-          "args": ["${ffs0}\\ffs0.code-workspace"],
-          "working_directory": "${ffs0}"
+          "args": [
+            "--new-window",
+            "${hpz440}\\z440.local.code-workspace"
+          ],
+          "working_directory": "${hpz440}",
+          "match": {
+            "process": "Code"
+          }
         },
         {
-          "label": "Chrome session pipeline dashboard",
-          "exe": "%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe",
-          "args": ["file:///${ffs0_forward}/tmp/projections/session_pipeline/index.html"]
+          "id": "antigravity",
+          "label": "Antigravity ffs0 harness",
+          "kind": "process",
+          "monitor_slot": 3,
+          "exe": "%LOCALAPPDATA%\\Programs\\Antigravity\\Antigravity.exe",
+          "args": [
+            "${ffs0}\\ffs0.code-workspace"
+          ],
+          "working_directory": "${ffs0}",
+          "match": {
+            "process": "Antigravity"
+          }
         },
         {
-          "label": "Explorer projection artifacts",
-          "exe": "explorer.exe",
-          "args": ["${ffs0}\\tmp\\projections\\session_pipeline"]
-        },
-        {
-          "label": "Windows Terminal ffs0",
+          "id": "terminal",
+          "label": "ffs0 operator terminal",
+          "kind": "process",
+          "monitor_slot": 4,
           "exe": "wt.exe",
-          "args": ["-d", "${ffs0}"]
+          "args": [
+            "-w",
+            "new",
+            "-d",
+            "${ffs0}"
+          ],
+          "working_directory": "${ffs0}",
+          "match": {
+            "process": "WindowsTerminal"
+          }
         }
       ]
     },
     {
       "index": 2,
-      "name": "kernel-proper",
-      "session_urn": "urn:moos:session:sam.kernel-proper",
-      "actor_urn": "urn:moos:agent:claude-code.hp-z440",
-      "kernel": "urn:moos:kernel:hp-z440.primary",
-      "intent": "Kernel/runtime implementation lane for moos-kernel and live federation terminals.",
-      "startup": false,
-      "apps": [
+      "desktop_id": "5f0d05a6-5850-4939-b89f-eaf10289c5ac",
+      "name": "my-tiny-data-collider.hp-z440.menno :8001",
+      "surface_key": "z440-menno",
+      "surface_kind": "engine-workspace",
+      "anchor_urn": "urn:moos:session:sam.steinberger-seat",
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.menno",
+      "engine": {
+        "urn": "urn:moos:kernel:hp-z440.menno",
+        "health_url": "http://localhost:8001/healthz",
+        "emit_urn": "urn:moos:kernel:hp-z440.primary"
+      },
+      "intent": "Steinberger tooling and DX room. Menno is opens-on topology; writes still target Z440 primary before twin sync.",
+      "startup": true,
+      "windows": [
         {
-          "label": "Windows Terminal moos-kernel",
-          "exe": "wt.exe",
-          "args": ["-d", "${hpz440}\\moos-kernel"]
+          "id": "browser",
+          "label": "Menno topology and router surfaces",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "http://localhost:8001/healthz",
+            "http://localhost:9000/admin/topology",
+            "https://github.com/Collider-Data-Systems/moos-router"
+          ]
         },
         {
-          "label": "VS Code moos-kernel",
+          "id": "vscode",
+          "label": "moos-router workspace",
+          "kind": "process",
+          "monitor_slot": 2,
           "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
-          "args": ["${hpz440}\\moos-kernel"]
+          "args": [
+            "--new-window",
+            "${hpz440}\\moos-router"
+          ],
+          "working_directory": "${hpz440}\\moos-router",
+          "match": {
+            "process": "Code"
+          }
+        },
+        {
+          "id": "terminal",
+          "label": "moos-router terminal",
+          "kind": "process",
+          "monitor_slot": 3,
+          "exe": "wt.exe",
+          "args": [
+            "-w",
+            "new",
+            "-d",
+            "${hpz440}\\moos-router"
+          ],
+          "working_directory": "${hpz440}\\moos-router",
+          "match": {
+            "process": "WindowsTerminal"
+          }
         }
       ]
     },
     {
       "index": 3,
-      "name": "steinberger-tooling-dx",
-      "session_urn": "urn:moos:session:sam.steinberger-seat",
-      "actor_urn": "urn:moos:agent:vscode.hp-z440.menno",
-      "kernel": "urn:moos:kernel:hp-z440.menno",
-      "intent": "Tooling, DX, MCP, router, and Windows startup ergonomics lane. Emits to primary until twin sync exists.",
-      "startup": false,
-      "apps": [
+      "desktop_id": "2a6243dd-7415-43bb-ac81-9217fb803be8",
+      "name": "my-tiny-data-collider.hp-z440.lola :8002",
+      "surface_key": "z440-lola",
+      "surface_kind": "engine-workspace",
+      "anchor_urn": "urn:moos:session:sam.karpathy-seat",
+      "actor_urn": "urn:moos:agent:vscode.hp-z440.lola",
+      "engine": {
+        "urn": "urn:moos:kernel:hp-z440.lola",
+        "health_url": "http://localhost:8002/healthz",
+        "emit_urn": "urn:moos:kernel:hp-z440.primary"
+      },
+      "intent": "Karpathy categorical, HDC, VSA, compiler-lowering, and lens research room.",
+      "startup": true,
+      "windows": [
         {
-          "label": "VS Code router feature worktree",
-          "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
-          "args": ["${hpz440}\\moos-router-feat-type-map-routing"]
+          "id": "browser",
+          "label": "Lola research references and live frame",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "http://localhost:8002/healthz",
+            "https://mlir.llvm.org/",
+            "https://js.cytoscape.org/"
+          ]
         },
         {
-          "label": "Windows Terminal router feature worktree",
+          "id": "vscode",
+          "label": "ffs0 research workspace",
+          "kind": "process",
+          "monitor_slot": 2,
+          "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
+          "args": [
+            "--new-window",
+            "${ffs0}\\ffs0.code-workspace"
+          ],
+          "working_directory": "${ffs0}",
+          "match": {
+            "process": "Code"
+          }
+        },
+        {
+          "id": "terminal",
+          "label": "compiler and research terminal",
+          "kind": "process",
+          "monitor_slot": 3,
           "exe": "wt.exe",
-          "args": ["-d", "${hpz440}\\moos-router-feat-type-map-routing"]
+          "args": [
+            "-w",
+            "new",
+            "-d",
+            "${ffs0}"
+          ],
+          "working_directory": "${ffs0}",
+          "match": {
+            "process": "WindowsTerminal"
+          }
         }
       ]
     },
     {
       "index": 4,
-      "name": "karpathy-lola-research",
-      "session_urn": "urn:moos:session:sam.karpathy-seat",
-      "actor_urn": "urn:moos:agent:vscode.hp-z440.lola",
-      "kernel": "urn:moos:kernel:hp-z440.lola",
-      "intent": "Categorical, HDC/VSA, graph semantics, and lens reasoning lane. Emits to primary until twin sync exists.",
-      "startup": false,
-      "apps": [
+      "desktop_id": "76097046-bb21-483b-9f8c-755f49ea4fe0",
+      "name": "my-tiny-data-collider.hp-z440.moos :8003",
+      "surface_key": "z440-moos",
+      "surface_kind": "engine-workspace",
+      "anchor_urn": "urn:moos:session:sam.moos-diary",
+      "actor_urn": "urn:moos:agent:antigravity.hp-z440",
+      "engine": {
+        "urn": "urn:moos:kernel:hp-z440.moos",
+        "health_url": "http://localhost:8003/healthz",
+        "emit_urn": "urn:moos:kernel:hp-z440.primary"
+      },
+      "intent": "Moos diary and multimodal room for visual observations, media, narration, and ingest review.",
+      "startup": true,
+      "windows": [
         {
-          "label": "VS Code ffs0 research workspace",
-          "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
-          "args": ["${ffs0}\\ffs0.code-workspace"]
+          "id": "browser",
+          "label": "Moos media channels and live frame",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "http://localhost:8003/healthz",
+            "https://keep.google.com/",
+            "https://studio.youtube.com/"
+          ]
+        },
+        {
+          "id": "antigravity",
+          "label": "Antigravity diary harness",
+          "kind": "process",
+          "monitor_slot": 2,
+          "exe": "%LOCALAPPDATA%\\Programs\\Antigravity\\Antigravity.exe",
+          "args": [
+            "${ffs0}\\ffs0.code-workspace"
+          ],
+          "working_directory": "${ffs0}",
+          "match": {
+            "process": "Antigravity"
+          }
+        },
+        {
+          "id": "diary",
+          "label": "Moos diary artifacts",
+          "kind": "process",
+          "monitor_slot": 3,
+          "exe": "explorer.exe",
+          "args": [
+            "${ffs0}\\kb\\moos-diary"
+          ],
+          "working_directory": "${ffs0}\\kb\\moos-diary",
+          "match": {
+            "process": "explorer",
+            "title_regex": "moos-diary"
+          }
         }
       ]
     },
     {
       "index": 5,
-      "name": "moos-diary",
-      "session_urn": "urn:moos:session:sam.moos-diary",
-      "actor_urn": "urn:moos:agent:antigravity.hp-z440",
-      "kernel": "urn:moos:kernel:hp-z440.primary",
-      "intent": "Diary, multimodal, and observation lane for visual/media context.",
-      "startup": false,
-      "apps": [
+      "desktop_id": "9fed8837-e883-4ec9-842d-fa41c947c152",
+      "name": "my-tiny-data-collider.hp-laptop.primary :8000",
+      "surface_key": "hp-laptop-primary",
+      "surface_kind": "remote-engine-workspace",
+      "anchor_urn": "urn:moos:session:sam.governance",
+      "actor_urn": "urn:moos:agent:claude-cowork.hp-laptop",
+      "engine": {
+        "urn": "urn:moos:kernel:hp-laptop.primary",
+        "health_url": "http://100.106.220.58:8000/healthz"
+      },
+      "intent": "Remote laptop governance and mobile-workstation readback room from the Z440 surface.",
+      "startup": true,
+      "windows": [
         {
-          "label": "Antigravity ffs0 workspace",
-          "exe": "%LOCALAPPDATA%\\Programs\\antigravity\\Antigravity.exe",
-          "args": ["${ffs0}\\ffs0.code-workspace"]
+          "id": "browser",
+          "label": "hp-laptop remote read surfaces",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "http://100.106.220.58:8000/healthz",
+            "http://100.106.220.58:9000/healthz",
+            "https://github.com/Collider-Data-Systems/ffs0"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "desktop_id": "14910149-faa9-436f-b2fc-73d4e7197017",
+      "name": "my-tiny-data-collider.hpprodesk.primary :8000",
+      "surface_key": "hpprodesk-primary",
+      "surface_kind": "remote-engine-workspace",
+      "anchor_urn": "urn:moos:session:sam.hpprodesk-setup",
+      "actor_urn": "urn:moos:agent:vscode.hpprodesk.primary",
+      "engine": {
+        "urn": "urn:moos:kernel:hpprodesk.primary",
+        "health_url": "http://100.87.28.95:8000/healthz"
+      },
+      "intent": "Remote HP ProDesk setup and buddy-site readback room; remains useful while that workstation is powered down.",
+      "startup": true,
+      "windows": [
+        {
+          "id": "browser",
+          "label": "HP ProDesk remote read surfaces",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "http://100.87.28.95:8000/healthz",
+            "http://100.87.28.95:9000/healthz",
+            "https://github.com/Collider-Data-Systems/ffs0"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "desktop_id": "5b715855-55ad-4084-a100-80cef6ee41f7",
+      "name": "my-tiny-data-collider_v2.WORKSPACE[PARAMETERS]",
+      "surface_key": "mtdc-v2",
+      "surface_kind": "manifold-workspace",
+      "anchor_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "actor_urn": null,
+      "engine": null,
+      "intent": "Application-manifold room for the public site, GitHub organization, project board, and Pilot frame.",
+      "startup": true,
+      "windows": [
+        {
+          "id": "browser",
+          "label": "my-tiny-data-collider application surfaces",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "https://my-tiny-data-collider.nl/",
+            "https://github.com/Collider-Data-Systems",
+            "https://github.com/orgs/Collider-Data-Systems/projects/4"
+          ]
+        },
+        {
+          "id": "vscode",
+          "label": "Collider organization workspace",
+          "kind": "process",
+          "monitor_slot": 2,
+          "exe": "%LOCALAPPDATA%\\Programs\\Microsoft VS Code\\Code.exe",
+          "args": [
+            "--new-window",
+            "${hpz440}\\collider-org-github"
+          ],
+          "working_directory": "${hpz440}\\collider-org-github",
+          "match": {
+            "process": "Code"
+          }
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "desktop_id": "ae00b770-0514-4aa1-b249-6cdfa2d2fdd3",
+      "name": "Microsoft_manifold.WORKSPACE[PARAMETERS]",
+      "surface_key": "microsoft-manifold",
+      "surface_kind": "reference-workspace",
+      "anchor_urn": null,
+      "actor_urn": null,
+      "engine": null,
+      "intent": "Reference room for Microsoft cloud, graph, identity, and architecture comparisons; no mo:os authority implied.",
+      "startup": true,
+      "windows": [
+        {
+          "id": "browser",
+          "label": "Microsoft architecture references",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "https://learn.microsoft.com/en-us/azure/architecture/",
+            "https://learn.microsoft.com/en-us/graph/overview"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "desktop_id": "9d7c87aa-90a1-497f-b329-5824d75205b6",
+      "name": "Macrohard_manifold.WORKSPACE[PARAMETERS]",
+      "surface_key": "macrohard-manifold",
+      "surface_kind": "reference-workspace",
+      "anchor_urn": null,
+      "actor_urn": null,
+      "engine": null,
+      "intent": "Speculative large-scale compute and deployment comparison room; intentionally reference-only.",
+      "startup": true,
+      "windows": [
+        {
+          "id": "browser",
+          "label": "Large-scale compute references",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "file:///D:/HPZ440/ffs0/tmp/projections/session_pipeline/index.html",
+            "https://x.ai/"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "desktop_id": "09259c0a-993e-4d10-85ca-9a5f024c8ac2",
+      "name": "Wageningen_Agricultural_Univ.WORKSPACE[PARAMETERS]",
+      "surface_key": "wageningen-agriculture",
+      "surface_kind": "reference-workspace",
+      "anchor_urn": null,
+      "actor_urn": null,
+      "engine": null,
+      "intent": "Agricultural knowledge, data, and research comparison room.",
+      "startup": true,
+      "windows": [
+        {
+          "id": "browser",
+          "label": "Agricultural research references",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "https://www.wur.nl/en.htm"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "desktop_id": "f8ea83cd-71a2-4ca5-a987-0273608fd188",
+      "name": "Palentir_manifold.WORKSPACE[JUSTJOKING]",
+      "surface_key": "palentir-reference",
+      "surface_kind": "reference-workspace",
+      "anchor_urn": null,
+      "actor_urn": null,
+      "engine": null,
+      "intent": "Commercial data-platform comparison room; the desktop spelling and joke marker are preserved as observed labels.",
+      "startup": true,
+      "windows": [
+        {
+          "id": "browser",
+          "label": "Data-platform references",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "https://www.palantir.com/platforms/foundry/"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "desktop_id": "614f45f4-3b77-4ad2-9c81-4d58c163b5a5",
+      "name": "Business_licensed_manifold.WORKSPACE[PARAMETERS]",
+      "surface_key": "business-licensed",
+      "surface_kind": "administration-workspace",
+      "anchor_urn": "urn:moos:group:my-tiny-data-collider",
+      "actor_urn": null,
+      "engine": null,
+      "intent": "Authenticated administration room for domain, Workspace, Cloudflare, and organization controls.",
+      "startup": true,
+      "windows": [
+        {
+          "id": "browser",
+          "label": "Licensed administration surfaces",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "https://dash.cloudflare.com/",
+            "https://admin.google.com/",
+            "https://github.com/organizations/Collider-Data-Systems/settings/profile"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "desktop_id": "500b3f90-3077-40c5-b095-66337554c02f",
+      "name": "publ_user_collective_manifold.WORKSPACE[PARAMETE",
+      "surface_key": "public-collective",
+      "surface_kind": "public-access-workspace",
+      "anchor_urn": "urn:moos:session:public-demo",
+      "actor_urn": "urn:moos:user:anon",
+      "engine": null,
+      "intent": "Public and anonymous projection room. Presentation posture does not grant graph authority.",
+      "startup": true,
+      "windows": [
+        {
+          "id": "browser",
+          "label": "Public projection surfaces",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "https://github.com/Collider-Data-Systems",
+            "https://my-tiny-data-collider.nl/",
+            "https://api.my-tiny-data-collider.nl/healthz"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "desktop_id": "a41087fb-fa74-4af8-98bd-502f32040b98",
+      "name": "priv_user_collective_manifold.WORKSPACE[PARAMETE",
+      "surface_key": "private-collective",
+      "surface_kind": "private-access-workspace",
+      "anchor_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "actor_urn": "urn:moos:user:sam",
+      "engine": null,
+      "intent": "Private owner and member projection room for authenticated workspaces and review surfaces.",
+      "startup": true,
+      "windows": [
+        {
+          "id": "browser",
+          "label": "Private workspace surfaces",
+          "kind": "browser",
+          "monitor_slot": 1,
+          "include_cache": true,
+          "urls": [
+            "chrome-extension://djomagfoabhefhmfmihfpoikkclphpei/sidepanel.html",
+            "https://github.com/orgs/Collider-Data-Systems/projects/4",
+            "https://keep.google.com/",
+            "https://calendar.google.com/",
+            "file:///D:/HPZ440/ffs0/tmp/projections/session_pipeline/index.html"
+          ]
         }
       ]
     }

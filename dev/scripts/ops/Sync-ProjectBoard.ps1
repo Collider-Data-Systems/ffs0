@@ -74,7 +74,7 @@ function Get-BoardItems {
         $page = (Invoke-GhJson @('api', 'graphql', '-f', "query=$q") | ConvertFrom-Json).data.node.items
         foreach ($n in $page.nodes) {
             $c = $n.content
-            if ($null -eq $c -or -not ($c.PSObject.Properties.Name -contains 'number')) { continue } # draft
+            if ($null -eq $c -or $c.PSObject.Properties.Match('number').Count -eq 0) { continue } # draft
             $items += [pscustomobject]@{
                 ItemId = $n.id
                 Repo   = $c.repository.name
