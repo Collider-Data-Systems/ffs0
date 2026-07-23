@@ -17,5 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
+      - name: self-test (fan-in collapse + §M19 detector — no engine needed)
+        run: python dev/scripts/projections/config_projection.py --self-test
       - name: drift check (offline -> fence integrity)
         run: python dev/scripts/projections/config_projection.py --mode check --offline-ok
