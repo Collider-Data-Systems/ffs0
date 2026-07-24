@@ -19,6 +19,7 @@ categorical space, etc.) stay in `dev/design/` root.
 | `20260605-t216-mtdc-channel-inventory-dry-plan.md` | `my-tiny-data-collider` worked-example manifold (domains + surfaces) |
 | `20260620-t231-moos-soom.md` | mo:os ⊣ so:om — engine/surface adjunction; device F/G degrees; wiring |
 | `20260620-t231-poly-foundations.md` | **Poly** as the unifier: comonoids = the data layer, lenses/coalgebras = the surfaces; trees = free monads; HAL/Erban lineage |
+| `20260725-t265-lp-placement-functor.md` | **L_p** — the placement map (rooms → semantic nodes) and the space `(P, S, r)` it lives in; measured: monotone 4/14, projection ~11% specified; D8 reify ruling = objects first, relation deferred |
 | `poly-navigation-map.md` | one-screen guided tour: mo:os → so:om → mtdc → Poly → functorial semantics → Set |
 | `hyperprompt-moos-soom.md` | paste-ready seed booting Claude on hpz/hplap/hppro already wired into the mo:os ⊣ so:om frame |
 
