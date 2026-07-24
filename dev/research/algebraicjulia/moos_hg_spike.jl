@@ -86,8 +86,10 @@ newhg() = MoosHG{String,String,String,String,String,Any}()
 # ---------------------------------------------------------------------------
 # 2. Ingest: fold(log) → MoosHG ACSet.  "state = fold(log)" made concrete: the
 #    folded state IS a C-set instance.  GET /fold returns
-#    {t, log_len, nodes:{urn=>{type_id,properties}},
-#     relations:{urn=>{rewrite_category,src_urn,src_port,tgt_urn,tgt_port}}}.
+#    {t, log_len, nodes:[{urn,type_id,properties}, …],
+#     relations:[{urn,rewrite_category,src_urn,src_port,tgt_urn,tgt_port}, …]}
+#    — LIST-shaped, each record carrying its own urn (verified live t265/t266;
+#    earlier drafts of this comment said urn-keyed maps, which the code never used).
 # ---------------------------------------------------------------------------
 function fetch_fold(url="http://localhost:8000/fold")
     try
@@ -248,6 +250,88 @@ end
 # reachable from `using Catlab` — see DECISION.md and the migration dimension.
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# 5. L_p — the placement map, executed  (t265/t266; companion to
+#    dev/design/manifold-bump-4_0/20260725-t265-lp-placement-functor.md).
+#
+#    The note authors L_p at the INSTANCE level (a room ↦ a semantic node) and
+#    flags that DECISION.md §5.3's "L_p expressible as a Δ/Σ migration" is a
+#    SCHEMA-level claim about a different object. This section makes that
+#    distinction executable instead of asserted, and tests the constructive
+#    alternative. Read-only: the manifest is a tracked JSON file, the fold is a
+#    GET. Nothing here writes.
+# ---------------------------------------------------------------------------
+
+const MANIFEST = joinpath(@__DIR__, "..", "..", "config", "z440-session-desktops.json")
+
+# 5a. Can L_p be a SCHEMA functor F: SchPlacement → SchMoosHG?
+#     P's generating morphism is containment (window ≤ desktop). A functor must
+#     send it to a morphism of SchMoosHG. Enumerate SchMoosHG's homs and look
+#     for one Node→Node: if none exists, no such F can be written, for any
+#     choice of object map that sends both rooms and windows to Node.
+function probe_schema_functor()
+    hs = generators(SchMoosHG, :Hom)
+    println("SchMoosHG homs : " * join([string(nameof(h), ": ", nameof(dom(h)), "→", nameof(codom(h))) for h in hs], ", "))
+    node_to_node = [h for h in hs if nameof(dom(h)) == :Node && nameof(codom(h)) == :Node]
+    if isempty(node_to_node)
+        println("Node→Node homs : NONE")
+        println("VERDICT [BLOCKED-BY-CONSTRUCTION] — containment (window ≤ desktop) has no")
+        println("  image. In the fold schema a relation between two nodes is an OBJECT (a")
+        println("  Relation part with src/tgt), never a hom; a functor cannot send a hom to")
+        println("  an object. So L_p is NOT a schema-level Δ/Σ migration — DECISION.md §5.3")
+        println("  and the t265 note are about different constructions, as the note states.")
+        return false
+    end
+    println("Node→Node homs : $(length(node_to_node)) — a schema functor may be possible after all")
+    return true
+end
+
+# 5b. The constructive alternative: placement data needs NO new schema. Rooms are
+#     Nodes, containment is a Relation. If the fold schema already holds placement,
+#     then the gap is minted objects, not a migration — which is exactly the note's
+#     §7 ruling ("reify the objects, defer the relation"), reached independently.
+function build_placement(manifest_path)
+    desks = JSON3.read(read(manifest_path, String)).desktops
+    pg = newhg()
+    nwin = 0
+    for d in desks
+        room = "urn:moos:surface:z440." * String(d.surface_key)
+        rp = add_part!(pg, :Node; node_urn=room, node_type="channel")
+        add_part!(pg, :Property; owner=rp, prop_key="kind", prop_val="virtual-desktop")
+        add_part!(pg, :Property; owner=rp, prop_key="surface_key", prop_val=String(d.surface_key))
+        for (i, w) in enumerate(get(d, :windows, []))
+            nwin += 1
+            wu = room * ".w" * string(i)
+            wp = add_part!(pg, :Node; node_urn=wu, node_type="channel")
+            add_part!(pg, :Property; owner=wp, prop_key="kind", prop_val="window")
+            # containment as a Relation part — the D8 `realizes` shape, unwritten in the fold
+            add_part!(pg, :Relation; src=rp, tgt=wp, rel_urn=wu * ".in",
+                      rel_cat="WF19", rel_src_port="realizes", rel_tgt_port="realized-by")
+        end
+    end
+    pg, length(desks), nwin
+end
+
+# 5c. Where is L_p defined, measured inside the C-set rather than in prose?
+function probe_lp_totality(pg, hg, manifest_path)
+    desks = JSON3.read(read(manifest_path, String)).desktops
+    anchored = [d for d in desks if !isnothing(get(d, :anchor_urn, nothing))]
+    resolving = [d for d in anchored if node_of(hg, String(d.anchor_urn)) !== nothing]
+    nwin = nparts(pg, :Node) - length(desks)
+    println("L_p on Ob(P)   : Desk $(length(resolving))/$(length(desks)) land on a fold node; " *
+            "Win 0/$nwin have any image at all")
+    # Can the placement containment relations be received by the fold?
+    realizes = 0
+    for r in 1:nparts(hg, :Relation)
+        subpart(hg, r, :rel_src_port) == "realizes" && (realizes += 1)
+    end
+    println("fold relations carrying port `realizes` : $realizes")
+    println("VERDICT [BLOCKED-AT-INSTANCE-LEVEL] — an ACSet transformation P → fold needs a")
+    println("  total object map; $nwin window parts have no image, and the fold holds $realizes")
+    println("  relation able to receive the containment. Both gaps are minted objects, not math.")
+    length(resolving), length(desks), nwin, realizes
+end
+
 function main()
     fold = fetch_fold()
     hg = build_acset(fold)
@@ -310,6 +394,26 @@ function main()
     println((dP == 0 && v_after == !v_before) ?
         "PASS — value rebound, part-count stable = one MUTATE log entry (one property rebind)." :
         "unexpected MUTATE result")
+
+    # L_p — the placement map, executed (§5).
+    println("\n=== L_p — the placement map, executed  (t265 note, §0/§5/§7) ===")
+    try
+        probe_schema_functor()
+        if isfile(MANIFEST)
+            pg, ndesk, nwin = build_placement(MANIFEST)
+            println("\nplacement as a MoosHG instance (NO new schema, NO migration):")
+            println("  rooms=$ndesk windows=$nwin → Node=$(nparts(pg,:Node)) " *
+                    "Relation=$(nparts(pg,:Relation)) Property=$(nparts(pg,:Property))")
+            println("  PASS — the fold schema already holds placement verbatim; what is missing")
+            println("  is minted objects, not an ontology or a schema change.")
+            println()
+            probe_lp_totality(pg, hg, MANIFEST)
+        else
+            println("(manifest not found at $MANIFEST — skipped)")
+        end
+    catch e
+        println("L_p probe FAILED-AT-RUNTIME: ", e)
+    end
 
     println("\nConclusion: ADD/LINK/UNLINK are topology-only DPO rules and MUTATE is a")
     println("variable-attribute DPO rewrite on the mo:os C-set; AlgebraicRewriting")

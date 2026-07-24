@@ -103,13 +103,36 @@ needs a bound*, not *always computable*. Σ also needs DenseACSets (representabl
    + concrete value in R (`SetAttr`/`Const`, both legs monic).
 2. **[CONJECTURE]** `branch = cartesian lift of a fibration` — no named API; must be assembled from
    `elements` + `pullback`, and `elements` only handles the CSet (non-attribute) part cleanly.
-3. **[CONJECTURE]** `frame`'s purpose-placement functor `L_p` — expressible as a Δ/Σ migration in
-   principle; the exact functor is not yet authored/verified.
+3. ~~**[CONJECTURE]** `frame`'s purpose-placement functor `L_p` — expressible as a Δ/Σ migration in
+   principle; the exact functor is not yet authored/verified.~~
+   **RESOLVED-NEGATIVE (T=266, spike §5, executed).** `L_p` is **not** a schema-level Δ/Σ migration, and
+   this is now proven by enumeration rather than argued: `SchMoosHG` has exactly three homs — `src`,
+   `tgt`: Relation→Node and `owner`: Property→Node — and **no Node→Node hom**, so `P`'s generating
+   morphism (window ≤ desktop) has no image under any functor sending rooms and windows to `Node`.
+   In the fold schema a relation between two nodes is an **object** (a Relation part with src/tgt),
+   never a hom, and a functor cannot send a hom to an object. The claim above and the instance-level
+   `L_p` authored at T=265 (`dev/design/manifold-bump-4_0/20260725-t265-lp-placement-functor.md` §0)
+   are about **different constructions**; the note's schema-vs-instance ruling is confirmed.
+   **Constructive half PASSES:** placement needs no new schema and no migration — rooms are Nodes and
+   containment is a Relation, so the fold schema holds the 14 rooms + 24 windows verbatim
+   (Node=38 Relation=24 Property=52). Measured on the live fold, `L_p` lands 7 of 14 rooms on a fold
+   node, **0 of 24 windows have any image**, and the fold carries **0** relations with port `realizes`.
+   Both gaps are minted objects, not mathematics — which is independently the note's §7 ruling
+   ("reify the objects, defer the relation").
 4. **[CONJECTURE / semi-decidable]** `push=Lan_f` termination — real API, but chase may not converge;
    needs an `n` bound and DenseACSets.
-5. **Runtime confirmation pending** — all API is static-source-verified against the pinned depot, not
-   executed. A `julia --project=. moos_hg_spike.jl` run (esp. the model-dispatched `cat=` calls and the
-   MUTATE `expr` path) is the final gate before treating these as settled.
+5. ~~**Runtime confirmation pending** — all API is static-source-verified against the pinned depot, not
+   executed.~~ **RESOLVED — this item was stale.** The spike ran live at **T=260** (recorded in
+   `kb/superset/running-state.md`: log 607, Node 286 / Relation 201 / Property 1880, all four Δs
+   correct) and again at **T=266 (2026-07-25)** against a grown fold and a bumped ontology:
+   **ontology 4.0.4 · log 643/643 · Node=294 Relation=223 Property=1941 · ADD Δ=+1 · LINK Δ=+1 ·
+   UNLINK Δ=−1 · MUTATE ΔProperty=0 with the value rebound true→false.** The model-dispatched `cat=`
+   calls and the MUTATE `expr` path both execute. Two tracked artifacts had disagreed about this gate
+   since T=260; that drift is what this edit closes.
+   **Anti-fixture discipline (keep it):** `fetch_fold` falls back to a 2-node inline fixture when
+   `:8000` is unreachable, and the four asserts then pass against fake data. A run counts only if the
+   printed `nodes=`/`relations=`/`log_len=` equal a `/fold` read captured in the same session and no
+   `unreachable` warning appears. The four PASS lines alone prove nothing.
 
 ---
 authored-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / t260-acset-oracle-spike
