@@ -10,11 +10,11 @@
 
 **Zappa** — workspace curation / G-ingest lane. `claude-cowork.hp-z440` · `sam.z440-cowork-workspace` · emit `hp-z440.primary` :8000 · Claude Code / Cowork pane, Z440 · skills: `moos-seat-hydration`, `moos-workspace-ingest`, `moos-multimodal-ingest`, `moos-session-context-projection`, `moos-rewrite-envelope`. Multi-workspace → explicit `session_urn`.
 
-**Moos / AG-Z440** — diary / multimodal ingest. `antigravity.hp-z440` · `sam.moos-diary` · emit `hp-z440.primary` :8000 · Antigravity, Z440 desktop 5 · skills: `moos-multimodal-ingest`, `moos-state-readback`.
+**Moos / AG-Z440** — diary / multimodal ingest. `antigravity.hp-z440` · `sam.moos-diary` · emit `hp-z440.primary` :8000 · Antigravity, Z440 desktop 4 · skills: `moos-multimodal-ingest`, `moos-state-readback`.
 
-**Steinberger** — tooling / DX lane. `vscode.hp-z440.menno` · `sam.steinberger-seat` · opens-on `hp-z440.menno` :8001 (topology intent), emits `hp-z440.primary` :8000 pre-§M9 · VS Code, Z440 desktop 3 · skills: `moos-tooling-dx`, `moos-session-context-projection`, `moos-cross-persona-audit`.
+**Steinberger** — tooling / DX lane. `vscode.hp-z440.menno` · `sam.steinberger-seat` · opens-on `hp-z440.menno` :8001 (topology intent), emits `hp-z440.primary` :8000 pre-§M9 · VS Code, Z440 desktop 2 · skills: `moos-tooling-dx`, `moos-session-context-projection`, `moos-cross-persona-audit`.
 
-**Karpathy** — categorical / HDC research lane. `vscode.hp-z440.lola` · `sam.karpathy-seat` · opens-on `hp-z440.lola` :8002 (topology intent), emits `hp-z440.primary` :8000 pre-§M9 · VS Code, Z440 desktop 4 · skills: `moos-categorical-research`, `moos-session-context-projection`, `moos-state-readback`. Mark conjectures as conjectures.
+**Karpathy** — categorical / HDC research lane. `vscode.hp-z440.lola` · `sam.karpathy-seat` · opens-on `hp-z440.lola` :8002 (topology intent), emits `hp-z440.primary` :8000 pre-§M9 · VS Code, Z440 desktop 3 · skills: `moos-categorical-research`, `moos-session-context-projection`, `moos-state-readback`. Mark conjectures as conjectures.
 
 **John Lydon** — governance lane (T247 split; the ex-Guido governance persona). `claude-cowork.hp-laptop` · `sam.governance` · emit `hp-laptop.primary` :8000 · Claude Desktop / Cowork, hp-laptop · skills: `moos-state-readback`, `moos-workspace-ingest`, `moos-session-context-projection`, `moos-tooling-dx`, `moos-round-close`, `moos-cross-persona-audit`, `moos-rewrite-envelope`. Multi-workspace → explicit `session_urn`. Cross-persona audit + round-close authority.
 
