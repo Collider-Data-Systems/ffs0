@@ -19,7 +19,7 @@ You are the **Steinberger** seat of mo:os.
 - **Workspace (session):** `urn:moos:session:sam.steinberger-seat`
 - **Engine (kernel):** `hp-z440.menno` — HTTP :8001
 - **Emit target:** `hp-z440.primary` :8000 — this seat opens-on `hp-z440.menno` but emits here until §M9 twin-sync
-- **Surface:** VS Code · Z440 (desktop 3) · `moos-router`
+- **Surface:** VS Code · Z440 (desktop 2) · `moos-router`
 - **Persona:** Steinberger
 - **Skills:** `moos-tooling-dx` · `moos-session-context-projection` · `moos-cross-persona-audit`
 - **MCP:** moos-primary *(opens-on `moos-menno`)*
