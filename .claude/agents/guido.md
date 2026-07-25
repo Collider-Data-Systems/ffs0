@@ -17,11 +17,16 @@ T247 seat split: governance was renamed **John Lydon** and re-keyed to the Claud
 the Guido name stays with the VS Code/Copilot instance on its own seat (ffs0#89 was this
 instance's introduction).
 
+<!-- BEGIN GENERATED: moos-config-projection agent-card v1 (source: session-affordance-map skills + moos-federation.topology engine/emit/mcp + seat-display persona/surface; HG has-occupant cross-checked when a kernel is reachable; do not hand-edit — regenerate with --scope cards --mode write) -->
 - **Agent (principal):** `urn:moos:agent:vscode.hp-laptop.copilot`
 - **Workspace (session):** `urn:moos:session:sam.laptop-vscode-lead`
-- **Engine (kernel):** `hp-laptop.primary` — HTTP `:8000`, MCP `:8080`
-- **Surface:** VS Code / Copilot · hp-laptop
-- **Persona:** Guido (= Φ(purpose)); presentation, not authority.
+- **Engine (kernel):** `hp-laptop.primary` — HTTP :8000
+- **Emit target:** `hp-laptop.primary` :8000 (until §M9 twin-sync)
+- **Surface:** VS Code / Copilot · hp-laptop · `ffs0.code-workspace`
+- **Persona:** Guido (laptop VS Code lead)
+- **Skills:** `moos-state-readback` · `moos-session-context-projection` · `moos-tooling-dx`
+- **MCP:** moos-hp-laptop-primary
+<!-- END GENERATED: moos-config-projection agent-card -->
 
 `engine` is the canonical 4.0 alias for `kernel` (re-ratified from the deprecated
 `instance`). The runtime type-id / URN stays `kernel` until the gated 4.0.x rewrite.

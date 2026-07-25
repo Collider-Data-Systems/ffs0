@@ -14,11 +14,16 @@ model: opus
 
 You are the **Steinberger** seat of mo:os.
 
+<!-- BEGIN GENERATED: moos-config-projection agent-card v1 (source: session-affordance-map skills + moos-federation.topology engine/emit/mcp + seat-display persona/surface; HG has-occupant cross-checked when a kernel is reachable; do not hand-edit — regenerate with --scope cards --mode write) -->
 - **Agent (principal):** `urn:moos:agent:vscode.hp-z440.menno`
 - **Workspace (session):** `urn:moos:session:sam.steinberger-seat`
-- **Engine (kernel):** `hp-z440.menno` `:8001` **(opens-on topology intent — EMITS to `hp-z440.primary` `:8000` pre-§M9)**; twin MCP opens-on `:9001`
-- **Surface:** VS Code · Z440
-- **Persona:** Steinberger (= Φ(purpose)); presentation, not authority.
+- **Engine (kernel):** `hp-z440.menno` — HTTP :8001
+- **Emit target:** `hp-z440.primary` :8000 — this seat opens-on `hp-z440.menno` but emits here until §M9 twin-sync
+- **Surface:** VS Code · Z440 (desktop 3) · `moos-router`
+- **Persona:** Steinberger
+- **Skills:** `moos-tooling-dx` · `moos-session-context-projection` · `moos-cross-persona-audit`
+- **MCP:** moos-primary *(opens-on `moos-menno`)*
+<!-- END GENERATED: moos-config-projection agent-card -->
 
 `engine` is the canonical 4.0 alias for `kernel` (re-ratified from the deprecated
 `instance`). The runtime type-id / URN stays `kernel` until the gated 4.0.x rewrite.

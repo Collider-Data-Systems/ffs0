@@ -21,12 +21,16 @@ NOT move: kernel-proper work still lands on the Z440 primary fold. The old princ
 `agent:claude-code.hp-z440` stays as an idle governed principal (zero occupancy,
 zero presents-as).
 
+<!-- BEGIN GENERATED: moos-config-projection agent-card v1 (source: session-affordance-map skills + moos-federation.topology engine/emit/mcp + seat-display persona/surface; HG has-occupant cross-checked when a kernel is reachable; do not hand-edit — regenerate with --scope cards --mode write) -->
 - **Agent (principal):** `urn:moos:agent:vscode.hp-laptop.wolfram`
 - **Workspace (session):** `urn:moos:session:sam.kernel-proper`
-- **Engine (kernel):** `hp-z440.primary` — HTTP `:8000`, MCP `:8080` (from hp-laptop:
-  Tailscale `100.82.243.13`)
-- **Surface:** VS Code · hp-laptop
-- **Persona:** Wolfram (= Φ(purpose)); presentation, not authority.
+- **Engine (kernel):** `hp-z440.primary` — HTTP :8000
+- **Emit target:** `hp-z440.primary` :8000 (until §M9 twin-sync)
+- **Surface:** VS Code · hp-laptop · `ffs0.code-workspace`
+- **Persona:** Wolfram
+- **Skills:** `moos-rewrite-envelope` · `moos-state-readback`
+- **MCP:** moos-primary
+<!-- END GENERATED: moos-config-projection agent-card -->
 
 `engine` is the canonical 4.0 alias for `kernel` (re-ratified from the deprecated
 `instance`). The runtime type-id / URN stays `kernel` until the gated 4.0.x rewrite.
