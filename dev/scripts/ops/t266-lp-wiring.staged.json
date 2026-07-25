@@ -1,0 +1,1032 @@
+{
+ "_comment": "STAGED. t266 L_p wiring batch \u2014 the SS10 list of dev/design/manifold-bump-4_0/20260725-t265-lp-placement-functor.md, items 1+2+4+5+6 (item 3 is config-side, item 7 is the post-batch D8 re-measure). Sam's explicit 'go' in the t265/t266 strategy convo authorizes apply. One atomic apply_program. Predictions to verify after apply: B 0.700->0.800; g5 composes purpose->channel 0->4; surface_key round-trip 0/14->14/14; engine coherence 3/4->4/4; A moves only after the manifest anchors rooms 8-11 (config PR, separate).",
+ "apply_ready": false,
+ "staging_notes": [
+  "channel.kind is IMMUTABLE - kind/source_uri/substrate reviewed against the vcs-channel precedent (github.ffs0: substrate external-channel + substrate_anchor_urn parent).",
+  "virtual-desktop channels: source_uri = windows-desktop://hp-z440/<desktop GUID> (the manifest's declared stable key); custom scheme has precedent (keep channel uses dwd-keyless://).",
+  "web channels are anchored (substrate_anchor_urn) to their room's virtual-desktop channel - ADD order puts desktops first.",
+  "opens-on envelope uses the KERNEL actor per doctrine (WF19 opens-on = kernel-authority). The envelope is session:sam.moos-diary -> kernel:hp-z440.moos; only the relation-URN NAMING mirrors the existing urn:moos:rel:session.sam.karpathy-seat.opens-on.kernel.hp-z440-lola pattern.",
+  "Idempotence pre-checked at authoring time: all 19 ADD urns absent from the fold, all 4 purposes + group:moos present (log 643)."
+ ],
+ "envelopes": [
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:group:my-tiny-data-collider",
+   "type_id": "group",
+   "properties": {
+    "name": {
+     "value": "my-tiny-data-collider",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "description": {
+     "value": "The manifold-group of the A1 identity poset (user < group < manifold-group) named by the 4.0.4 bump ceremony and referenced by surface room 12 (business-licensed). Minted t266 per the t265 L_p note SS10 item 1.",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "relation_urn": "urn:moos:rel:group.moos.member-of.group.my-tiny-data-collider",
+   "src_urn": "urn:moos:group:moos",
+   "src_port": "member-of",
+   "tgt_urn": "urn:moos:group:my-tiny-data-collider",
+   "tgt_port": "has-member",
+   "rewrite_category": "WF02"
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.z440-primary",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/d98a3199-1a60-45ca-b569-e98b24a7ebef",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 1: my-tiny-data-collider.hp-z440.primary :8000",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.z440-menno",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/5f0d05a6-5850-4939-b89f-eaf10289c5ac",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 2: my-tiny-data-collider.hp-z440.menno :8001",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.z440-lola",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/2a6243dd-7415-43bb-ac81-9217fb803be8",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 3: my-tiny-data-collider.hp-z440.lola :8002",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.z440-moos",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/76097046-bb21-483b-9f8c-755f49ea4fe0",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 4: my-tiny-data-collider.hp-z440.moos :8003",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.hp-laptop-primary",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/9fed8837-e883-4ec9-842d-fa41c947c152",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 5: my-tiny-data-collider.hp-laptop.primary :8000",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.hpprodesk-primary",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/14910149-faa9-436f-b2fc-73d4e7197017",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 6: my-tiny-data-collider.hpprodesk.primary :8000",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.mtdc-v2",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/5b715855-55ad-4084-a100-80cef6ee41f7",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 7: my-tiny-data-collider_v2.WORKSPACE[PARAMETERS]",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.microsoft-manifold",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/ae00b770-0514-4aa1-b249-6cdfa2d2fdd3",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 8: Microsoft_manifold.WORKSPACE[PARAMETERS]",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.macrohard-manifold",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/9d7c87aa-90a1-497f-b329-5824d75205b6",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 9: Macrohard_manifold.WORKSPACE[PARAMETERS]",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.wageningen-agriculture",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/09259c0a-993e-4d10-85ca-9a5f024c8ac2",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 10: Wageningen_Agricultural_Univ.WORKSPACE[PARAMETERS]",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.palentir-reference",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/f8ea83cd-71a2-4ca5-a987-0273608fd188",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 11: Palentir_manifold.WORKSPACE[JUSTJOKING]",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.business-licensed",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/614f45f4-3b77-4ad2-9c81-4d58c163b5a5",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 12: Business_licensed_manifold.WORKSPACE[PARAMETERS]",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.public-collective",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/500b3f90-3077-40c5-b095-66337554c02f",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 13: publ_user_collective_manifold.WORKSPACE[PARAMETE",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:virtual-desktop.private-collective",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "virtual-desktop",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "windows-desktop://hp-z440/a41087fb-fa74-4af8-98bd-502f32040b98",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:workstation:hp-z440",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Z440 desktop 14: priv_user_collective_manifold.WORKSPACE[PARAMETE",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:web.microsoft-learn",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "web",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "https://learn.microsoft.com/en-us/azure/architecture/",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:channel:virtual-desktop.microsoft-manifold",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Microsoft cloud/graph architecture references",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:web.x-ai",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "web",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "https://x.ai/",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:channel:virtual-desktop.macrohard-manifold",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Macrohard / x.ai reference room",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:web.wur",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "web",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "https://www.wur.nl/en.htm",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:channel:virtual-desktop.wageningen-agriculture",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Wageningen agriculture references",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "ADD",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "node_urn": "urn:moos:channel:web.palantir-foundry",
+   "type_id": "channel",
+   "properties": {
+    "kind": {
+     "value": "web",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "source_uri": {
+     "value": "https://www.palantir.com/platforms/foundry/",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "owner_urn": {
+     "value": "urn:moos:user:sam",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "created_at": {
+     "value": "2026-07-25T01:01:32Z",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate": {
+     "value": "external-channel",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "substrate_anchor_urn": {
+     "value": "urn:moos:channel:virtual-desktop.palentir-reference",
+     "mutability": "immutable",
+     "authority_scope": "",
+     "stratum_origin": 2
+    },
+    "display_name": {
+     "value": "Palantir Foundry platform reference",
+     "mutability": "mutable",
+     "authority_scope": "owner",
+     "stratum_origin": 2
+    }
+   }
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "relation_urn": "urn:moos:rel:purpose.sam.z440-vscode-projection-lead-operations.composes.channel.virtual-desktop-z440-primary",
+   "src_urn": "urn:moos:purpose:sam.z440-vscode-projection-lead-operations",
+   "src_port": "composes",
+   "tgt_urn": "urn:moos:channel:virtual-desktop.z440-primary",
+   "tgt_port": "composed-by",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "relation_urn": "urn:moos:rel:purpose.sam.tooling-ergonomics-and-dx.composes.channel.virtual-desktop-z440-menno",
+   "src_urn": "urn:moos:purpose:sam.tooling-ergonomics-and-dx",
+   "src_port": "composes",
+   "tgt_urn": "urn:moos:channel:virtual-desktop.z440-menno",
+   "tgt_port": "composed-by",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "relation_urn": "urn:moos:rel:purpose.sam.compiler-lowering.composes.channel.virtual-desktop-z440-lola",
+   "src_urn": "urn:moos:purpose:sam.compiler-lowering",
+   "src_port": "composes",
+   "tgt_urn": "urn:moos:channel:virtual-desktop.z440-lola",
+   "tgt_port": "composed-by",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:agent:claude-cowork.hp-z440",
+   "session_urn": "urn:moos:session:sam.z440-cowork-workspace",
+   "relation_urn": "urn:moos:rel:purpose.sam.multimodal-curation-and-diary.composes.channel.virtual-desktop-z440-moos",
+   "src_urn": "urn:moos:purpose:sam.multimodal-curation-and-diary",
+   "src_port": "composes",
+   "tgt_urn": "urn:moos:channel:virtual-desktop.z440-moos",
+   "tgt_port": "composed-by",
+   "rewrite_category": "WF18"
+  },
+  {
+   "rewrite_type": "LINK",
+   "actor": "urn:moos:kernel:hp-z440.primary",
+   "relation_urn": "urn:moos:rel:session.sam.moos-diary.opens-on.kernel.hp-z440-moos",
+   "src_urn": "urn:moos:session:sam.moos-diary",
+   "src_port": "opens-on",
+   "tgt_urn": "urn:moos:kernel:hp-z440.moos",
+   "tgt_port": "occupied-by",
+   "rewrite_category": "WF19"
+  }
+ ],
+ "applied": true,
+ "do_not_reapply": true,
+ "applied_note": "T=266 (2026-07-25, applied ~01:05Z): 25/25 envelopes atomic via Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa on live :8000/4.0.4 - log_seq 644..668, plus 669 = the SM13 local_t liveness bump (kernel actor, automatic). The SS10 items 1/2/4/5/6 of the t265 L_p note; re-measure in the note addendum."
+}

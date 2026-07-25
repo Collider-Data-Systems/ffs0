@@ -83,7 +83,7 @@
     {
       "key": "steinberger-tooling-dx",
       "host": "hp-z440",
-      "desktop": 3,
+      "desktop": 2,
       "session_urn": "urn:moos:session:sam.steinberger-seat",
       "actor_urn": "urn:moos:agent:vscode.hp-z440.menno",
       "emit_kernel": "urn:moos:kernel:hp-z440.primary",
@@ -109,7 +109,7 @@
     {
       "key": "karpathy-research",
       "host": "hp-z440",
-      "desktop": 4,
+      "desktop": 3,
       "session_urn": "urn:moos:session:sam.karpathy-seat",
       "actor_urn": "urn:moos:agent:vscode.hp-z440.lola",
       "emit_kernel": "urn:moos:kernel:hp-z440.primary",
@@ -135,7 +135,7 @@
     {
       "key": "moos-diary-z440",
       "host": "hp-z440",
-      "desktop": 5,
+      "desktop": 4,
       "session_urn": "urn:moos:session:sam.moos-diary",
       "actor_urn": "urn:moos:agent:antigravity.hp-z440",
       "emit_kernel": "urn:moos:kernel:hp-z440.primary",
@@ -690,8 +690,8 @@
         "total": 100,
         "percent": 22.0
       },
-      "source": "live board #4 GraphQL count (HG URN field non-empty), 2026-07-08 23:05 CEST — t250-baseline finding 3; refresh via the same query or Sync-ProjectBoard.ps1 -Audit at round close",
-      "note": "replaces the stale T190 constant (31/57); the legacy deficit is pre-bridge-rule items — coverage discipline holds since T=247 | known_populated/known_total retained for surface_context_atlas.jl compatibility (PR #144 Copilot catch)",
+      "source": "live board #4 GraphQL count (HG URN field non-empty), 2026-07-08 23:05 CEST \u2014 t250-baseline finding 3; refresh via the same query or Sync-ProjectBoard.ps1 -Audit at round close",
+      "note": "replaces the stale T190 constant (31/57); the legacy deficit is pre-bridge-rule items \u2014 coverage discipline holds since T=247 | known_populated/known_total retained for surface_context_atlas.jl compatibility (PR #144 Copilot catch)",
       "known_populated": 53,
       "known_total": 133
     },
