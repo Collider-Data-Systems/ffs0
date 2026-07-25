@@ -5,7 +5,7 @@
   "channel.kind is IMMUTABLE - kind/source_uri/substrate reviewed against the vcs-channel precedent (github.ffs0: substrate external-channel + substrate_anchor_urn parent).",
   "virtual-desktop channels: source_uri = windows-desktop://hp-z440/<desktop GUID> (the manifest's declared stable key); custom scheme has precedent (keep channel uses dwd-keyless://).",
   "web channels are anchored (substrate_anchor_urn) to their room's virtual-desktop channel - ADD order puts desktops first.",
-  "opens-on envelope uses the KERNEL actor per doctrine (WF19 opens-on = kernel-authority); rel urn mirrors urn:moos:rel:session.sam.karpathy-seat.opens-on.kernel.hp-z440-lola.",
+  "opens-on envelope uses the KERNEL actor per doctrine (WF19 opens-on = kernel-authority). The envelope is session:sam.moos-diary -> kernel:hp-z440.moos; only the relation-URN NAMING mirrors the existing urn:moos:rel:session.sam.karpathy-seat.opens-on.kernel.hp-z440-lola pattern.",
   "Idempotence pre-checked at authoring time: all 19 ADD urns absent from the fold, all 4 purposes + group:moos present (log 643)."
  ],
  "envelopes": [
