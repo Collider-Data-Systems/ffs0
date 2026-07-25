@@ -17,7 +17,7 @@
     "PROPERTY SCOPES match the 4.0.4 agent operad, which declares transport_type / invocation_protocol / model / board_id / status as authority_scope:'kernel' (these mutable props are kernel-authority, §M12). Note this is DESCRIPTIVE: ValidateADD ignores the supplied authority_scope and ValidateMUTATE reads the operad registry, not the stored property — so the stored value never gates. Set to 'kernel' anyway so the persisted metadata agrees with the operad rather than the legacy 'owner' the older sibling nodes happen to store.",
     "created_at values are placeholders (t264 wall date). The OPERATOR applying this should stamp the real apply-time UTC or leave the kernel to default — Test-MoosFederation does not stamp; it POSTs bytes verbatim.",
     "Revocation of any membership = UNLINK on the relation_urn; window per the accepted t263 doctrine sentence.",
-    "APPLY: flip apply_ready -> true, then Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa against live :8000 on 4.0.4. Expected: 4/4 (2 ADD, 2 WF02); /state/relations then shows 12 member-of (10 + 2)."
+    "APPLY: flip apply_ready -> true, then Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa against live :8000 on 4.0.4. Expected: 4/4 (2 ADD, 2 WF02); /state/relations then shows 13 member-of. (Baseline moved 10 -> 11 at T=266 when the t266-lp-wiring batch LINKed group:moos member-of group:my-tiny-data-collider, log 644-668; expect_after updated accordingly — coordination bus ffs0#178.)"
   ],
   "readback_gate": {
     "require_ontology_version": "4.0.4",
@@ -26,7 +26,7 @@
       "urn:moos:agent:vscode.hp-laptop.copilot"
     ],
     "expect_after": {
-      "member_of_total": 12,
+      "member_of_total": 13,
       "new_relations": [
         "urn:moos:rel:t264.guido.member-of.group-moos",
         "urn:moos:rel:t264.hpprodesk.member-of.group-moos"
