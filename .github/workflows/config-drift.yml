@@ -36,4 +36,4 @@ jobs:
       - name: seat-table drift check (offline -> fence integrity)
         run: python dev/scripts/projections/config_projection.py --mode check --offline-ok
       - name: agent-card drift check (offline -> full byte-compare from config)
-        run: python dev/scripts/projections/config_projection.py --scope cards --mode check
+        run: python dev/scripts/projections/config_projection.py --scope cards --mode check --offline-ok

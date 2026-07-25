@@ -471,13 +471,18 @@ def run_cards(a, topo, disp):
         print("CARDS: no `cards` list in seat-display.json — nothing to project."); return 0
 
     # Optional HG cross-check: warn if a carded seat has no has-occupant relation.
+    # --offline-ok skips the attempt entirely (Copilot on #176): without it, an offline
+    # runner pays up to 2 x 20s of connect timeouts just to learn what the flag states.
     seated = None
-    try:
-        rows, src, _perr = fold_from_hg(a.base_url, a.fallback_url, topo, disp)[:3]
-        seated = {(r["agent"], r["workspace"]) for r in rows}
-        print("CARDS: HG cross-check via %s (%d seated rows)" % (src, len(rows)))
-    except Exception as e:
-        print("CARDS: HG unreachable (%s) — config-only projection, cross-check skipped" % type(e).__name__)
+    if a.offline_ok:
+        print("CARDS: --offline-ok — config-only projection, HG cross-check skipped")
+    else:
+        try:
+            rows, src, _perr = fold_from_hg(a.base_url, a.fallback_url, topo, disp)[:3]
+            seated = {(r["agent"], r["workspace"]) for r in rows}
+            print("CARDS: HG cross-check via %s (%d seated rows)" % (src, len(rows)))
+        except Exception as e:
+            print("CARDS: HG unreachable (%s) — config-only projection, cross-check skipped" % type(e).__name__)
 
     cards_dir = os.path.join(REPO, ".claude", "agents")
     drift, wrote, missing_seat = [], [], []
