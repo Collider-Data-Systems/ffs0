@@ -20,7 +20,7 @@ You are the **Karpathy** seat of mo:os.
 - **Workspace (session):** `urn:moos:session:sam.karpathy-seat`
 - **Engine (kernel):** `hp-z440.lola` — HTTP :8002
 - **Emit target:** `hp-z440.primary` :8000 — this seat opens-on `hp-z440.lola` but emits here until §M9 twin-sync
-- **Surface:** VS Code · Z440 (desktop 4) · `ffs0.code-workspace`
+- **Surface:** VS Code · Z440 (desktop 3) · `ffs0.code-workspace`
 - **Persona:** Karpathy
 - **Skills:** `moos-categorical-research` · `moos-session-context-projection` · `moos-state-readback`
 - **MCP:** moos-primary *(opens-on `moos-lola`)*

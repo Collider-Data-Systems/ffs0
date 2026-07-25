@@ -2,8 +2,6 @@
 
 > Authored projection, not operational truth — if a row disagrees with live `/healthz` + HG readback, the readback wins (re-read, don't force the row). Sources: `AGENTS.md` generated seat table + `dev/config/session-affordance-map.json`; spine + emit-discipline doctrine live in `AGENTS.md`. 4.0 aliases: `engine` = `kernel`, `workspace` = `session`; URNs stay canonical (`urn:moos:kernel:*`, `urn:moos:session:*`).
 >
-> **Temporary drift note (t266):** desktop numbers below are corrected (2/3/4 after the T=250 re-home); the generated seat table in `AGENTS.md` still reads 3/4/5 until it is regenerated — deliberately deferred behind ffs0#176, whose lane owns `seat-display.json` + `config_projection.py`. Until that regeneration lands, THIS file carries the correct numbers.
->
 > Emit discipline: Z440 personae emit to `hp-z440.primary` :8000 / MCP :8080 until §M9 twin-sync (twins carry `opens-on` topology intent only, not state). Multi-workspace agents (Zappa, John Lydon) set `session_urn` explicitly on every envelope.
 
 ## Active seats (agent · workspace · engine/emit · surface · skills)
