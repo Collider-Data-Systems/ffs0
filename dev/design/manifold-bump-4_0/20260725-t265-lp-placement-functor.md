@@ -354,4 +354,35 @@ Explicitly **not** on this list: reifying D8 now, defining the federated union, 
 All figures above come from one read-only harness against `:8000` plus the tracked manifest — no number in this note was typed by hand. Provenance to quote when citing them: **ontology 4.0.4 · t_day 265 · log 643**. Re-measuring on a grown log will move the numbers; the ratios are the claim, not the absolute counts.
 
 ---
+
+## §11 Addendum (T=266) — the §10 list executed, re-measured
+
+Sam's "go" (t266) executed items 1, 2, 4, 5, 6 as one atomic batch (`dev/scripts/ops/t266-lp-wiring.staged.json`, log_seq **644–668**, +669 = the §M13 `local_t` bump) plus the config half in the same PR as this addendum. Item 3's projection half (seat-display / `config_projection.py` gate extension / regeneration) is deferred behind ffs0#176, announced on #174. Re-measured against the post-batch fold (**313 nodes · 229 relations · log 669/669**):
+
+| number | before (t265, log 643) | predicted | measured (t266, log 669) |
+|---|---|---|---|
+| A anchor coverage | 10/14 = 0.714 | 1.000 | **14/14 = 1.000** |
+| B anchor denotation | 0.700 | 0.800 | **12/14 = 0.857** |
+| C room recoverability | 0.800 | — | **12/14 = 0.857** |
+| composite A×B×C | 0.400 | — | **0.735** |
+| g5 `composes` purpose→channel | 0 | 4 | **4** |
+| surface_key round-trip | 0/14 | 14/14 | **14/14** |
+| channels with a D7 surface kind | 0 | 14 | **14** |
+| `group:my-tiny-data-collider` | absent | present | **present** (+ `member-of` under it) |
+| order DAG | 31 v / 30 e / 2 max | — | **35 v / 35 e / 2 max** |
+
+B and the composite beat prediction because anchoring rooms 8–11 changed the denominator: the two remaining non-denoting anchors (`session:sam.governance`, `session:sam.hpprodesk-setup`) are the legitimately-remote ones — exactly the residue the §3 residence function `ρ` exists to carry.
+
+**The chain finding.** The D7 chain is now walkable at depth 5 — workstation ⊒ kernel ⊒ session ⊒ purpose ⊒ virtual-desktop-channel — instantiated ×4 (the engine rooms). Before the batch the longest walkable chain was 3 links and the purpose→channel level had zero instances anywhere.
+
+**What did NOT move, by design:**
+- **Monotonicity stays 4/14.** Minting fixed *naming* (round-trip) and *coverage*, not the structural failure: `P`'s top is still a machine and `S` still has 2 maximal elements. §5's claim that no amount of minting rescues the single-functor reading is now confirmed by execution.
+- **Engine coherence is now ambiguous rather than wrong** — new defect, recorded: `sam.moos-diary` carries **two** `opens-on` edges (`hp-z440.primary`, pre-existing; `hp-z440.moos`, added per the menno/lola precedent). The twin seats carry exactly one each. Whether the old `primary` edge should be UNLINKed is a seat-topology decision — **Sam's call**, not taken here.
+- One pattern flag: the web reference channels carry their room connection in `substrate_anchor_urn` — a property, same class as `parent_channel_urn` (§4 g6). If that connection should be topology, it joins the g6 ruling rather than getting its own.
+
+**§10 item 7 — the D8 verdict, answered empirically.** The gate ("reify only if the pipeline must *write* it") is **still not met**: the launcher and cache scripts still make zero POSTs. What changed is that the gate's *precondition* now exists — all 14 room objects are in the fold — so the zero-bump alternative from §7 is live today: `session pins-urn virtual-desktop-channel` expresses "this workspace shows in this room" with no ontology change. **D8 stays deferred.** It earns reification the day a pipeline starts *observing* room changes into the fold (launcher POSTing on room open/close); until then `realizes` would be a hand-authored relation wearing an observed-first name.
+
+Provenance: applied and measured at ontology 4.0.4 · t_day 266 · log 669/669 · 0 missing.
+
+---
 authored-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / t265-lp-placement-functor
