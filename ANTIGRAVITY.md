@@ -10,7 +10,8 @@ Owner: `urn:moos:user:sam` — pulled on every workstation.
 > full branching/attribution, design-doc discipline, skills index) lives in
 > `dev/reference/agents-reference.md` (T=262 split).
 > **Read `kb/superset/running-state.md` first for live round-to-round state.**
-> This file = AG-surface deltas ONLY (the `moos-diary` / multimodal-curation lane).
+> Workspace rules: `.agents/rules/` (`sot-hierarchy.md`, `four-rewrites.md`, `seat-context.md`).
+> Skills sync: `dev/scripts/sync-antigravity-config.ps1` (syncs `dev/claude-skills/` -> `.agents/skills/` & `~/.gemini/antigravity/skills/`).
 
 ## Lane — what AG owns on Z440
 

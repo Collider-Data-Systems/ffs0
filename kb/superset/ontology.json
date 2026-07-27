@@ -3202,7 +3202,11 @@
     "description": "Port-color compatibility. ENFORCEMENT REALITY (trued up t263): operad/loader.go loads `matrix` into PortColorMatrix (the §12.2 color gate) AND merges `port_color_map` below over DefaultPortColors into Registry.PortColors; for ports that reach the §12.2 color gate (ports of declared pairs, minus the explicit WF exemption list) resolvePortColors is FAIL-CLOSED — such a port absent from the merged map rejects the LINK (kernel#50 landed; the earlier permissive-skip note was stale); a port outside any declared pair is rejected earlier by the pair-declaration gate and never reaches color resolution. Every new port introduced by an ontology bump MUST ship a port_color_map entry. Pair DECLARATION is enforced from rewrite_categories[*].additional_port_pairs, not from this section.",
     "port_color_map": {
       "member-of": "auth",
-      "has-member": "auth"
+      "has-member": "auth",
+      "parent_of": "auth",
+      "child_of": "auth",
+      "spouse_of": "auth",
+      "sibling_of": "auth"
     },
     "port_colors": [
       "auth",
@@ -3775,6 +3779,42 @@
           "added_in_version": "3.13.0",
           "promotes_fragment": "urn:moos:grammar_fragment:v313-9-owns-port-pair",
           "description": "Generalized ownership port-pair. Lifts the ownership relation from property (owner_urn, scattered across every node type) to typed topology. Coexists with the primary owns/child pair (legacy user→workstation) and also with owner_urn properties (sticky provenance) — operads can derive owner_urn from inbound owned-by edges when needed, deprecating the property gradually. Enables group→downstream traversal (what does group:sam own?)."
+        },
+        {
+          "src_port": "parent_of",
+          "tgt_port": "child_of",
+          "src_types": [
+            "user"
+          ],
+          "tgt_types": [
+            "user"
+          ],
+          "added_in_version": "4.0.4",
+          "description": "Kinship: parent of user. Directed kinship relation linking parent user to child user."
+        },
+        {
+          "src_port": "spouse_of",
+          "tgt_port": "spouse_of",
+          "src_types": [
+            "user"
+          ],
+          "tgt_types": [
+            "user"
+          ],
+          "added_in_version": "4.0.4",
+          "description": "Kinship: spouse of user. Symmetric kinship relation linking spouse users."
+        },
+        {
+          "src_port": "sibling_of",
+          "tgt_port": "sibling_of",
+          "src_types": [
+            "user"
+          ],
+          "tgt_types": [
+            "user"
+          ],
+          "added_in_version": "4.0.4",
+          "description": "Kinship: sibling of user. Symmetric kinship relation linking sibling users."
         }
       ]
     },
