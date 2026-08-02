@@ -1,25 +1,34 @@
 {
- "_STATUS": "STAGED, NOT APPLIED \u2014 see primary file note. hpprodesk agent deferred (box down).",
- "envelopes": [
-  {
-   "rewrite_type": "LINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:sam.governs.claude-cowork.hp-laptop",
-   "src_urn": "urn:moos:user:sam",
-   "src_port": "governs",
-   "tgt_urn": "urn:moos:agent:claude-cowork.hp-laptop",
-   "tgt_port": "governed-by",
-   "rewrite_category": "WF02"
+  "_STATUS": "APPROVED t274 (Sam, rev-4 ruling D10) — user:sam -WF02 governs-> the two hp-laptop seat agents. TARGETS THE LAPTOP FOLD: scratch validation needs a laptop-log-seeded kernel (B5), not a Z440 seed. hpprodesk agent stays deferred (box down, B4).",
+  "apply_ready": true,
+  "applied": false,
+  "do_not_reapply": false,
+  "target_kernel": "urn:moos:kernel:hp-laptop.primary",
+  "target_url": "http://100.106.220.58:8000/programs",
+  "persona": "john-lydon",
+  "readback_gate": {
+    "require_ontology_version": "4.0.4"
   },
-  {
-   "rewrite_type": "LINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:sam.governs.vscode.hp-laptop.copilot",
-   "src_urn": "urn:moos:user:sam",
-   "src_port": "governs",
-   "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
-   "tgt_port": "governed-by",
-   "rewrite_category": "WF02"
-  }
- ]
+  "envelopes": [
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:sam.governs.claude-cowork.hp-laptop",
+      "src_urn": "urn:moos:user:sam",
+      "src_port": "governs",
+      "tgt_urn": "urn:moos:agent:claude-cowork.hp-laptop",
+      "tgt_port": "governed-by",
+      "rewrite_category": "WF02"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:sam.governs.vscode.hp-laptop.copilot",
+      "src_urn": "urn:moos:user:sam",
+      "src_port": "governs",
+      "tgt_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "tgt_port": "governed-by",
+      "rewrite_category": "WF02"
+    }
+  ]
 }

@@ -1,6 +1,15 @@
 {
-  "_comment": "STAGED, apply_ready=false, Sam-gated. G-ingest of the recovered t260/t261/t262 strategy-convo content (the two 'lost' remote-environment sessions), from Sam's PDF exports at dev/design/t263_notes_on_strategy1.pdf (32pp, 't260;1615 Zappa strategy') + t263_notes_on_strategy2.pdf (11pp, 't262;0825 hppro strategy' continuation). Umbrella + 6 chunk knowledge_items + 7 WF12 provides-kb LINKs, one atomic batch per moos-workspace-ingest. Summaries are distillations; the PDFs are the verbatim S0 source. Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
-  "apply_ready": false,
+  "_comment": "APPLY-READY (flipped t274, Sam rev-4 ruling D9; see t274_flip_provenance). G-ingest of the recovered t260/t261/t262 strategy-convo content (the two 'lost' remote-environment sessions), from Sam's PDF exports at dev/design/t263_notes_on_strategy1.pdf (32pp, 't260;1615 Zappa strategy') + t263_notes_on_strategy2.pdf (11pp, 't262;0825 hppro strategy' continuation). Umbrella + 6 chunk knowledge_items + 7 WF12 provides-kb LINKs, one atomic batch per moos-workspace-ingest. Summaries are distillations; the PDFs are the verbatim S0 source. Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
+  "apply_ready": true,
+  "applied": false,
+  "do_not_reapply": false,
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "target_url": "http://localhost:8000/programs",
+  "persona": "zappa",
+  "readback_gate": {
+    "require_ontology_version": "4.0.4"
+  },
+  "t274_flip_provenance": "apply_ready flipped t274 per Sam rev-4 ruling D9 (#178 comment 5159899124); scratch-validated on seeded :8899 before sovereign POST (step 0c). t274 0c finding: 4.0.4 requires knowledge_item.substrate (post-§M13); all 7 ADDs patched substrate=external-channel (G-ingested distillations, matching the 26 live external-channel kis) — caught by the seeded scratch kernel, not the sovereign fold. Second 0c catch: substrate_anchor_urn also required for external-channel; anchored to urn:moos:channel:github.ffs0 (the verbatim S0 sources are the two committed strategy PDFs in dev/design/).",
   "staging_notes": [
     "Scope-pin: the session.scope_pins MUTATE is deliberately NOT staged here — author it at apply time against the then-current scope_pins array (one-field MUTATE carries the whole array; a stale hardcode would clobber pins added between staging and apply).",
     "Chunk 4 (t261 colimit fork) is recorded WITH its supersession status — the t262 frame-architecture chunk supersedes the colimit-merge decision. Recording both preserves the decision trail; the summary marks the status explicitly.",
@@ -16,16 +25,78 @@
       "node_urn": "urn:moos:ki:s0.t263-strategy-recovery",
       "type_id": "knowledge_item",
       "properties": {
-        "title": {"value": "t263 strategy recovery — the lost t260/t261/t262 MTDC strategy thread (PDF exports)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_url": {"value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_type": {"value": "conversation-export", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "language": {"value": "en", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "created_at": {"value": "2026-07-22T12:47:00+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "retrieved_at": {"value": "2026-07-22T15:27:11+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "status": {"value": "summarized", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
-        "ingest_actor": {"value": "urn:moos:agent:claude-cowork.hp-z440", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_count": {"value": 6, "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "summary": {"value": "Two remote-environment Claude sessions ('t260;1615 Zappa strategy', 't262;0825 hppro strategy') whose cloud environments expired were recovered via Sam's PDF exports (strategy1.pdf 32pp, strategy2.pdf 11pp, both in dev/design/). Content: the T260 adversarial review + hardening plan (since fully deployed — see running-state T260-T263), and the T261-T262 MTDC design thread: the study-and-craft reframe, the substrate conditions, definition-first + law-bench method, the colimit-merge decision AND its T262 supersession by the frame/sequencer architecture, ending with four open Sam-gated design decisions. Chunks 1-4 are the T261 arc; chunks 5-6 the T262 arc.", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+        "title": {
+          "value": "t263 strategy recovery — the lost t260/t261/t262 MTDC strategy thread (PDF exports)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "conversation-export",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-22T12:47:00+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-22T15:27:11+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_count": {
+          "value": 6,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "Two remote-environment Claude sessions ('t260;1615 Zappa strategy', 't262;0825 hppro strategy') whose cloud environments expired were recovered via Sam's PDF exports (strategy1.pdf 32pp, strategy2.pdf 11pp, both in dev/design/). Content: the T260 adversarial review + hardening plan (since fully deployed — see running-state T260-T263), and the T261-T262 MTDC design thread: the study-and-craft reframe, the substrate conditions, definition-first + law-bench method, the colimit-merge decision AND its T262 supersession by the frame/sequencer architecture, ending with four open Sam-gated design decisions. Chunks 1-4 are the T261 arc; chunks 5-6 the T262 arc.",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.ffs0",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        }
       }
     },
     {
@@ -35,18 +106,90 @@
       "node_urn": "urn:moos:ki:s0.t261-mtdc-reframe",
       "type_id": "knowledge_item",
       "properties": {
-        "title": {"value": "T261 reframe — study-and-craft; Go = disposable oracle; notes are mental map, not spec", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_url": {"value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_type": {"value": "conversation-export", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "language": {"value": "en", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "created_at": {"value": "2026-07-20T13:01:00+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "retrieved_at": {"value": "2026-07-22T15:27:11+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "status": {"value": "summarized", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
-        "ingest_actor": {"value": "urn:moos:agent:claude-cowork.hp-z440", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_index": {"value": 1, "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_label": {"value": "t261 reframe + frame conditions", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "umbrella_urn": {"value": "urn:moos:ki:s0.t263-strategy-recovery", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "summary": {"value": "Sam's T261 pivot (strategy1.pdf pp16-18): the kernel rewrite is his real interest — study-and-craft, no deadline, 'for fun and science, no managers'; companion role = deep/critical/anti-optimistic. Rulings: (1) dev/design docs + personal notes are Sam's MENTAL MAP, not AI working files — do not judge them as engineering artifacts; (2) the Go kernel is a disposable REFERENCE ORACLE — keep it running, validate the rewrite differentially against it; (3) neither the notes nor the Go code is a buildable spec — producing the spec is the first real deliverable; (4) simulated usergroup is the lab (must be HOSTILE — partition/delay/reorder/drop; a clean sim is a demo). Compressed project definition (p24): 'a self-describing, category-theoretic typed-dataflow substrate whose global state is a sheaf over a heterogeneous compile-topology' — with two disciplines deciding whether it becomes real: every categorical claim must RUN, and distribution must be tested against chaos. CT is a lens applied afterward, not a method that builds the thing; 'a categorical claim doesn't count until it runs.' AGI framing dropped: the defensible novelty is a substrate where typing is incremental, local, and itself rewritable (mutable grammar; WF20 promotes types as rewrites) — a mini-MLOps / data-transfer standard, not AGI.", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+        "title": {
+          "value": "T261 reframe — study-and-craft; Go = disposable oracle; notes are mental map, not spec",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "conversation-export",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-20T13:01:00+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-22T15:27:11+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_index": {
+          "value": 1,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_label": {
+          "value": "t261 reframe + frame conditions",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "umbrella_urn": {
+          "value": "urn:moos:ki:s0.t263-strategy-recovery",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "Sam's T261 pivot (strategy1.pdf pp16-18): the kernel rewrite is his real interest — study-and-craft, no deadline, 'for fun and science, no managers'; companion role = deep/critical/anti-optimistic. Rulings: (1) dev/design docs + personal notes are Sam's MENTAL MAP, not AI working files — do not judge them as engineering artifacts; (2) the Go kernel is a disposable REFERENCE ORACLE — keep it running, validate the rewrite differentially against it; (3) neither the notes nor the Go code is a buildable spec — producing the spec is the first real deliverable; (4) simulated usergroup is the lab (must be HOSTILE — partition/delay/reorder/drop; a clean sim is a demo). Compressed project definition (p24): 'a self-describing, category-theoretic typed-dataflow substrate whose global state is a sheaf over a heterogeneous compile-topology' — with two disciplines deciding whether it becomes real: every categorical claim must RUN, and distribution must be tested against chaos. CT is a lens applied afterward, not a method that builds the thing; 'a categorical claim doesn't count until it runs.' AGI framing dropped: the defensible novelty is a substrate where typing is incremental, local, and itself rewritable (mutable grammar; WF20 promotes types as rewrites) — a mini-MLOps / data-transfer standard, not AGI.",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.ffs0",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        }
       }
     },
     {
@@ -56,18 +199,90 @@
       "node_urn": "urn:moos:ki:s0.t261-substrate-conditions",
       "type_id": "knowledge_item",
       "properties": {
-        "title": {"value": "T261 substrate conditions — workspace=DSL iff purpose gates grammar; graph=program iff fold evaluates; Doom/Quake = the two merge options", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_url": {"value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_type": {"value": "conversation-export", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "language": {"value": "en", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "created_at": {"value": "2026-07-20T15:00:00+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "retrieved_at": {"value": "2026-07-22T15:27:11+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "status": {"value": "summarized", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
-        "ingest_actor": {"value": "urn:moos:agent:claude-cowork.hp-z440", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_index": {"value": 2, "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_label": {"value": "t261 substrate conditions + Doom analogy", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "umbrella_urn": {"value": "urn:moos:ki:s0.t263-strategy-recovery", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "summary": {"value": "strategy1.pdf pp22-24. Two conditional identities: (1) 'workspaces already define DSLs' is verified EXACTLY — workspace scoped by purpose = sub-operad = MLIR dialect — but ONLY when purpose actually GATES the grammar (operations outside the dialect rejected, not merely undeclared); today the scoping is described, not enforced, so workspaces are dialects on paper. A dialect you can violate isn't a dialect. (2) 'MTDC is a graph like an AST' holds only as 'a knowledge graph that is ALSO a program' — true precisely to the degree the fold EVALUATES (computes new facts, drives channel-leaf effects) rather than reconstructs; otherwise it is an inert KB in an AST costume. Doom analogy is exact, not metaphor: Doom = deterministic simulation + input datagrams + reconciliation; MTDC = deterministic fold + rewrite datagrams + merge; CI-4 determinism is what makes lockstep possible. Doom-lockstep (same totally-ordered log -> identical state -> NO merge) vs Quake client-server (divergent logs -> sheaf/gluing problem) ARE the two merge options. Three things make MTDC harder than Doom: unbounded growing state (snapshot/GC of an append-only log — real unsolved systems problem); MUTABLE GRAMMAR (WF20 type-promotion means two engines can fold logs written in different dialects — merging grammar, not just state: 'distributed evolving language', the genuinely novel research frontier); expensive slow agents (datagrams are sparse high-value LLM outputs — high value-density, low frequency; the bottleneck is agent cost + merge, never the wire — why the WebTransport revert was right). Symmetry = the merge seen geometrically: order/repetition invariance = commutativity/associativity/idempotence = the lattice-join laws.", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+        "title": {
+          "value": "T261 substrate conditions — workspace=DSL iff purpose gates grammar; graph=program iff fold evaluates; Doom/Quake = the two merge options",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "conversation-export",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-20T15:00:00+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-22T15:27:11+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_index": {
+          "value": 2,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_label": {
+          "value": "t261 substrate conditions + Doom analogy",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "umbrella_urn": {
+          "value": "urn:moos:ki:s0.t263-strategy-recovery",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "strategy1.pdf pp22-24. Two conditional identities: (1) 'workspaces already define DSLs' is verified EXACTLY — workspace scoped by purpose = sub-operad = MLIR dialect — but ONLY when purpose actually GATES the grammar (operations outside the dialect rejected, not merely undeclared); today the scoping is described, not enforced, so workspaces are dialects on paper. A dialect you can violate isn't a dialect. (2) 'MTDC is a graph like an AST' holds only as 'a knowledge graph that is ALSO a program' — true precisely to the degree the fold EVALUATES (computes new facts, drives channel-leaf effects) rather than reconstructs; otherwise it is an inert KB in an AST costume. Doom analogy is exact, not metaphor: Doom = deterministic simulation + input datagrams + reconciliation; MTDC = deterministic fold + rewrite datagrams + merge; CI-4 determinism is what makes lockstep possible. Doom-lockstep (same totally-ordered log -> identical state -> NO merge) vs Quake client-server (divergent logs -> sheaf/gluing problem) ARE the two merge options. Three things make MTDC harder than Doom: unbounded growing state (snapshot/GC of an append-only log — real unsolved systems problem); MUTABLE GRAMMAR (WF20 type-promotion means two engines can fold logs written in different dialects — merging grammar, not just state: 'distributed evolving language', the genuinely novel research frontier); expensive slow agents (datagrams are sparse high-value LLM outputs — high value-density, low frequency; the bottleneck is agent cost + merge, never the wire — why the WebTransport revert was right). Symmetry = the merge seen geometrically: order/repetition invariance = commutativity/associativity/idempotence = the lattice-join laws.",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.ffs0",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        }
       }
     },
     {
@@ -77,18 +292,90 @@
       "node_urn": "urn:moos:ki:s0.t261-definition-first-toolbench",
       "type_id": "knowledge_item",
       "properties": {
-        "title": {"value": "T261 method — definition-first with witness rule; Rust home / Lean scalpel; Beckman law-benches (verified tool partition)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_url": {"value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_type": {"value": "conversation-export", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "language": {"value": "en", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "created_at": {"value": "2026-07-20T16:30:00+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "retrieved_at": {"value": "2026-07-22T15:27:11+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "status": {"value": "summarized", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
-        "ingest_actor": {"value": "urn:moos:agent:claude-cowork.hp-z440", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_index": {"value": 3, "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_label": {"value": "t261 definition-first + tool survey", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "umbrella_urn": {"value": "urn:moos:ki:s0.t263-strategy-recovery", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "summary": {"value": "strategy1.pdf pp20-21, 25-27. Sam chose DEFINITION over algorithm for the merge (declarative consistency condition; 'definition demands utmost rigor in typing and pure functions'). Guardrails accepted: (1) the algorithm is NOT secondary — it is the ADEQUACY PROOF; a definition can be perfectly typed and vacuous; you may defer the general algorithm but never a single WITNESS ('definition without a witness' is the rigorous-looking trap). (2) Design rule that reconciles definition-first with algorithm-inevitable: WRITE THE CONSISTENCY CONDITION SO GLUING IS A JOIN (lattice: ordered states, merge = least upper bound, monotone) — then the algorithm is forced by the definition (the CRDT trick: engineer the definition so the algorithm has no choices left). (3) Purity boundary: merge DECISION = pure function of two local states (type-governed, testable); merge EVENT = irreducibly effectful/concurrent (fuzzed by hostile sim) — keep them apart. (4) Language: Rust is home; formal proof is a scalpel, not a foundation — encode what Rust types can hold, property-test the rest, lift AT MOST one central too-subtle invariant into Lean/Agda ('you occasionally borrow a proof for a day'); dependent-types-as-foundation explicitly walked back as the rigor-before-anything-runs rabbit hole. Type-expressiveness where types do work; bare metal where lowering does work — the language holds the truth of the types, C++/MLIR holds the truth of the metal. Beckman method: never state an abstraction — DERIVE it from the laws it must obey and run the smallest example; abstract = executable sketch exhibiting a law, never prose; bottom-up from the smallest law, not top-down from the manifold. Verified 5-tool partition (each a single-purpose law-bench; touch only to run its one law, then leave): egglog = congruence + lattice-join bench (browser REPL; CAVEAT: monotone — no UNLINK/MUTATE-delete; shows only the confluent fragment; what it CANNOT show is where DPO gluing earns its keep); Lean 4 + Mathlib SemilatticeSup.mk' = hand it comm/assoc/idem, it derives the order = the CRDT-convergence proof, and #eval demos in the same place (scored highest; 1-2 weeks not a quarter); Catlab/AlgebraicRewriting = the four-rewrites-as-DPO half, already spiked (t260 ACSet oracle); xDSL = dialect+lowering half (a dialect literally is types+ops+verifier rejecting ill-typed IR; emits real MLIR text; but no DPO/colimit/log-fold); Rust+proptest/Kani = the in-tree checks. MLIR = later lowering target, not day-one; C++ avoided.", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+        "title": {
+          "value": "T261 method — definition-first with witness rule; Rust home / Lean scalpel; Beckman law-benches (verified tool partition)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "conversation-export",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-20T16:30:00+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-22T15:27:11+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_index": {
+          "value": 3,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_label": {
+          "value": "t261 definition-first + tool survey",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "umbrella_urn": {
+          "value": "urn:moos:ki:s0.t263-strategy-recovery",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "strategy1.pdf pp20-21, 25-27. Sam chose DEFINITION over algorithm for the merge (declarative consistency condition; 'definition demands utmost rigor in typing and pure functions'). Guardrails accepted: (1) the algorithm is NOT secondary — it is the ADEQUACY PROOF; a definition can be perfectly typed and vacuous; you may defer the general algorithm but never a single WITNESS ('definition without a witness' is the rigorous-looking trap). (2) Design rule that reconciles definition-first with algorithm-inevitable: WRITE THE CONSISTENCY CONDITION SO GLUING IS A JOIN (lattice: ordered states, merge = least upper bound, monotone) — then the algorithm is forced by the definition (the CRDT trick: engineer the definition so the algorithm has no choices left). (3) Purity boundary: merge DECISION = pure function of two local states (type-governed, testable); merge EVENT = irreducibly effectful/concurrent (fuzzed by hostile sim) — keep them apart. (4) Language: Rust is home; formal proof is a scalpel, not a foundation — encode what Rust types can hold, property-test the rest, lift AT MOST one central too-subtle invariant into Lean/Agda ('you occasionally borrow a proof for a day'); dependent-types-as-foundation explicitly walked back as the rigor-before-anything-runs rabbit hole. Type-expressiveness where types do work; bare metal where lowering does work — the language holds the truth of the types, C++/MLIR holds the truth of the metal. Beckman method: never state an abstraction — DERIVE it from the laws it must obey and run the smallest example; abstract = executable sketch exhibiting a law, never prose; bottom-up from the smallest law, not top-down from the manifold. Verified 5-tool partition (each a single-purpose law-bench; touch only to run its one law, then leave): egglog = congruence + lattice-join bench (browser REPL; CAVEAT: monotone — no UNLINK/MUTATE-delete; shows only the confluent fragment; what it CANNOT show is where DPO gluing earns its keep); Lean 4 + Mathlib SemilatticeSup.mk' = hand it comm/assoc/idem, it derives the order = the CRDT-convergence proof, and #eval demos in the same place (scored highest; 1-2 weeks not a quarter); Catlab/AlgebraicRewriting = the four-rewrites-as-DPO half, already spiked (t260 ACSet oracle); xDSL = dialect+lowering half (a dialect literally is types+ops+verifier rejecting ill-typed IR; emits real MLIR text; but no DPO/colimit/log-fold); Rust+proptest/Kani = the in-tree checks. MLIR = later lowering target, not day-one; C++ avoided.",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.ffs0",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        }
       }
     },
     {
@@ -98,18 +385,90 @@
       "node_urn": "urn:moos:ki:s0.t261-colimit-fork-superseded",
       "type_id": "knowledge_item",
       "properties": {
-        "title": {"value": "T261 colimit-merge decision + the tick fork it opened — SUPERSEDED at T262 by the frame architecture", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_url": {"value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_type": {"value": "conversation-export", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "language": {"value": "en", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "created_at": {"value": "2026-07-20T18:00:00+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "retrieved_at": {"value": "2026-07-22T15:27:11+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "status": {"value": "superseded", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
-        "ingest_actor": {"value": "urn:moos:agent:claude-cowork.hp-z440", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_index": {"value": 4, "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_label": {"value": "t261 colimit fork (superseded)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "umbrella_urn": {"value": "urn:moos:ki:s0.t263-strategy-recovery", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "summary": {"value": "strategy1.pdf pp15, 28-32. STATUS: SUPERSEDED by ki:s0.t262-frame-architecture — preserved as decision trail. The survey pulled apart merge=colimit (Catlab pushout along a gluing span — NOT order-independent/idempotent unless forced) from merge=lattice-join (comm/assoc/idem by construction) — 'not the same claim.' Sam chose COLIMIT (the git model: merge = pushout along merge-base; conflict-surfacing deliberation over conflict-drowning accumulation; homogeneous with DPO rewrites). Its four owned consequences: (1) merge is TERNARY — merge(a,b,K); K = common ancestor, so causal-history tracking becomes mandatory (the machinery CRDTs exist to avoid); (2) no free convergence — order-dependent, needs causal-order agreement or a canonical authority (sovereign log as blessed main); (3) conflicts are real (pushout complement fails, delete-modify classic) — resolution mechanism mandatory, no type discharges it; (4) correctness depends on NODE IDENTITY — the URN-rewrite debt promoted from cosmetic to merge-correctness-critical (wrong same-as = silently corrupt merge). Study target: PARALLEL INDEPENDENCE — two DPO rewrites are parallel-independent iff neither deletes an element the other's match uses; Local Church-Rosser gives order-independence, the concurrency theorem combines them into one pushout; failure = the merge conflict. Runnable in Catlab/AlgebraicRewriting (Ehrig et al.). The convo then hit THE fork: Sam's time-node instinct ('clock cycle in a CPU; distributed hyperware runs the mtdc manifold like a PC runs Windows') pulls toward a GLOBAL tick -> total order -> the merge problem dissolves into a consensus problem; every other prior choice pulled toward per-engine tick -> partial causal order -> the pushout merge with K read off the causal graph. 'They can't both hold.' Sam's last word before the convo broke: leaning GLOBAL, undecided, 'need to deepen before coding.' Wolfram connection named: causal invariance = parallel-independence lifted to the whole rewrite history; a causal graph localizes exactly where invariance breaks (hands you the minimal set of merge points needing adjudication).", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+        "title": {
+          "value": "T261 colimit-merge decision + the tick fork it opened — SUPERSEDED at T262 by the frame architecture",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy1.pdf",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "conversation-export",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-20T18:00:00+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-22T15:27:11+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "superseded",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_index": {
+          "value": 4,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_label": {
+          "value": "t261 colimit fork (superseded)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "umbrella_urn": {
+          "value": "urn:moos:ki:s0.t263-strategy-recovery",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "strategy1.pdf pp15, 28-32. STATUS: SUPERSEDED by ki:s0.t262-frame-architecture — preserved as decision trail. The survey pulled apart merge=colimit (Catlab pushout along a gluing span — NOT order-independent/idempotent unless forced) from merge=lattice-join (comm/assoc/idem by construction) — 'not the same claim.' Sam chose COLIMIT (the git model: merge = pushout along merge-base; conflict-surfacing deliberation over conflict-drowning accumulation; homogeneous with DPO rewrites). Its four owned consequences: (1) merge is TERNARY — merge(a,b,K); K = common ancestor, so causal-history tracking becomes mandatory (the machinery CRDTs exist to avoid); (2) no free convergence — order-dependent, needs causal-order agreement or a canonical authority (sovereign log as blessed main); (3) conflicts are real (pushout complement fails, delete-modify classic) — resolution mechanism mandatory, no type discharges it; (4) correctness depends on NODE IDENTITY — the URN-rewrite debt promoted from cosmetic to merge-correctness-critical (wrong same-as = silently corrupt merge). Study target: PARALLEL INDEPENDENCE — two DPO rewrites are parallel-independent iff neither deletes an element the other's match uses; Local Church-Rosser gives order-independence, the concurrency theorem combines them into one pushout; failure = the merge conflict. Runnable in Catlab/AlgebraicRewriting (Ehrig et al.). The convo then hit THE fork: Sam's time-node instinct ('clock cycle in a CPU; distributed hyperware runs the mtdc manifold like a PC runs Windows') pulls toward a GLOBAL tick -> total order -> the merge problem dissolves into a consensus problem; every other prior choice pulled toward per-engine tick -> partial causal order -> the pushout merge with K read off the causal graph. 'They can't both hold.' Sam's last word before the convo broke: leaning GLOBAL, undecided, 'need to deepen before coding.' Wolfram connection named: causal invariance = parallel-independence lifted to the whole rewrite history; a causal graph localizes exactly where invariance breaks (hands you the minimal set of merge points needing adjudication).",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.ffs0",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        }
       }
     },
     {
@@ -119,18 +478,90 @@
       "node_urn": "urn:moos:ki:s0.t262-frame-architecture",
       "type_id": "knowledge_item",
       "properties": {
-        "title": {"value": "T262 frame architecture — global sequencer via frames + HLC; cognition on the speculative tail, actuation on finality (supersedes the colimit merge)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_url": {"value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy2.pdf", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_type": {"value": "conversation-export", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "language": {"value": "en", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "created_at": {"value": "2026-07-21T11:00:00+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "retrieved_at": {"value": "2026-07-22T15:27:11+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "status": {"value": "summarized", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
-        "ingest_actor": {"value": "urn:moos:agent:claude-cowork.hp-z440", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_index": {"value": 5, "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_label": {"value": "t262 frame/sequencer architecture", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "umbrella_urn": {"value": "urn:moos:ki:s0.t263-strategy-recovery", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "summary": {"value": "strategy2.pdf pp2-9 — the t262 continuation that SUPERSEDES the colimit decision. Sequence: hppro-Claude first argued per-engine tick was 'empirically forced' by the fleet (sovereign logs, offline boxes, read-only fan-in), then RETRACTED after reading the full t261 thread — that is the GO ORACLE's topology, reclassified as disposable; it constrains nothing about MTDC; the tick choice is a free architectural decision. Sam's global lean is MORE defensible than assumed: MTDC's event rate is rewrites-per-MINUTE (sparse expensive LLM outputs), so total order costs ~nothing, and no consensus protocol is needed — the sovereign log IS the single blessed sequencer (no Paxos; consensus only for failover). The clock-node question DISSOLVES: the log is the clock (log_seq = the tick); a reified time node would duplicate the log's own order — t_day is epoch metadata, never an ordering device. The fork stripped of metaphysics: MAY A DETACHED NODE COMMIT? Global tick = offline machines read, fold their prefix, and STAGE PROPOSALS; commitment happens only at the sequencer; a proposal built on stale state fails sequential validation instead of producing a merge conflict — ship inputs, not state (Doom's actual trick; git terms: rebase-only onto one blessed main, merge commits abolished). Sam accepted propose-only-offline conditionally ('it is, but let's think this through') and the design deepened: HLC (hybrid logical clocks) + bounded-e time measurement (TrueTime pattern; NTP 1-10ms, PTP us on LAN) — settled engineering, not research. FRAMES = the global tick made discrete: rewrites within frame N ordered by (HLC timestamp, engine-id), frame commits as a unit. PROPAGATION AND FINALITY DECOUPLED (Sam's swarm objection forced this): cognition runs on the speculative tail (agents consume unfinalized rewrites instantly — CPU bypass network / game client-prediction), ACTUATION GATES ON FINALITY ('effects only at actuator leaves' acquires temporal semantics: channels fire only on the frozen prefix); frame length = per-deployment tunable (~10x-e floor), bounds only actuation latency + speculation depth. Deterministic assembly: per-engine outboxes broadcast + sort-by-stamp within finalized frames -> CANONICAL STATE = A PURE FUNCTION OF THE SET OF ENVELOPES (the CI-4 payoff; convergence by deterministic re-sort + fold — no CRDT, no merge step). Immutability = a monotonically advancing WATERMARK frontier (frozen below, speculative pending tail above — Flink/Dataflow event-time semantics); frames give GC/compaction its unit of work. Session affinity = channel homed on one engine, read-your-writes. The whole design named exactly: OUT-OF-ORDER EXECUTION WITH IN-ORDER RETIREMENT — speculative local apply, in-order frame retirement at the watermark, mis-speculation flushed + re-derived; conflict resolution IS the total order; conflict-rate-per-frame = a measurable observable of distance from causal invariance (the Wolfram instrument). Offline rule derives itself: watermark = min over PARTICIPATING engines; a detached engine is excluded (one dead core must not halt the machine); on return its stale-stamped work re-stamps at arrival with authored-time preserved as provenance. SHARDED WATERMARKS along the agent topology (Sam's 'HG into slices into datagrams onto a graph of agents'): per-slice watermarks finalize independently; global coordination paid only by cross-slice rewrites — the sheaf picture turned operational (local sections finalize locally, gluing only at overlaps); the slicing is the PARTITION OF THE CONFLICT DOMAIN; agent context = delta-slice per frame -> reproducible from (topology, frame range) = provenance at the cognition level. What choosing global FORFEITS (honest bill): the distributed-evolving-grammar research problem collapses to replication lag — trading the deepest research problem for a buildable system; reversible as an EXPERIMENT (deliberately break the total order and watch the merge problem appear) rather than an architecture. NEW problem the swarm introduces: RETRACTION CASCADES (agents building on each other's unfinalized rewrites -> flash-crash dynamics); containment: invalidation propagates mechanically along the provenance DAG (every rewrite records what it read), speculation-depth limit k, per-channel quarantine/rate policy. Engineering bill, none research: clock discipline (own e + ugly cases), lateness/re-stamp policy (a decision = the consistency model), broadcast layer (router grows from read-only fan-in into transport), watermark liveness/membership (heartbeats; the one homeopathic dose of consensus).", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+        "title": {
+          "value": "T262 frame architecture — global sequencer via frames + HLC; cognition on the speculative tail, actuation on finality (supersedes the colimit merge)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy2.pdf",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "conversation-export",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-21T11:00:00+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-22T15:27:11+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_index": {
+          "value": 5,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_label": {
+          "value": "t262 frame/sequencer architecture",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "umbrella_urn": {
+          "value": "urn:moos:ki:s0.t263-strategy-recovery",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "strategy2.pdf pp2-9 — the t262 continuation that SUPERSEDES the colimit decision. Sequence: hppro-Claude first argued per-engine tick was 'empirically forced' by the fleet (sovereign logs, offline boxes, read-only fan-in), then RETRACTED after reading the full t261 thread — that is the GO ORACLE's topology, reclassified as disposable; it constrains nothing about MTDC; the tick choice is a free architectural decision. Sam's global lean is MORE defensible than assumed: MTDC's event rate is rewrites-per-MINUTE (sparse expensive LLM outputs), so total order costs ~nothing, and no consensus protocol is needed — the sovereign log IS the single blessed sequencer (no Paxos; consensus only for failover). The clock-node question DISSOLVES: the log is the clock (log_seq = the tick); a reified time node would duplicate the log's own order — t_day is epoch metadata, never an ordering device. The fork stripped of metaphysics: MAY A DETACHED NODE COMMIT? Global tick = offline machines read, fold their prefix, and STAGE PROPOSALS; commitment happens only at the sequencer; a proposal built on stale state fails sequential validation instead of producing a merge conflict — ship inputs, not state (Doom's actual trick; git terms: rebase-only onto one blessed main, merge commits abolished). Sam accepted propose-only-offline conditionally ('it is, but let's think this through') and the design deepened: HLC (hybrid logical clocks) + bounded-e time measurement (TrueTime pattern; NTP 1-10ms, PTP us on LAN) — settled engineering, not research. FRAMES = the global tick made discrete: rewrites within frame N ordered by (HLC timestamp, engine-id), frame commits as a unit. PROPAGATION AND FINALITY DECOUPLED (Sam's swarm objection forced this): cognition runs on the speculative tail (agents consume unfinalized rewrites instantly — CPU bypass network / game client-prediction), ACTUATION GATES ON FINALITY ('effects only at actuator leaves' acquires temporal semantics: channels fire only on the frozen prefix); frame length = per-deployment tunable (~10x-e floor), bounds only actuation latency + speculation depth. Deterministic assembly: per-engine outboxes broadcast + sort-by-stamp within finalized frames -> CANONICAL STATE = A PURE FUNCTION OF THE SET OF ENVELOPES (the CI-4 payoff; convergence by deterministic re-sort + fold — no CRDT, no merge step). Immutability = a monotonically advancing WATERMARK frontier (frozen below, speculative pending tail above — Flink/Dataflow event-time semantics); frames give GC/compaction its unit of work. Session affinity = channel homed on one engine, read-your-writes. The whole design named exactly: OUT-OF-ORDER EXECUTION WITH IN-ORDER RETIREMENT — speculative local apply, in-order frame retirement at the watermark, mis-speculation flushed + re-derived; conflict resolution IS the total order; conflict-rate-per-frame = a measurable observable of distance from causal invariance (the Wolfram instrument). Offline rule derives itself: watermark = min over PARTICIPATING engines; a detached engine is excluded (one dead core must not halt the machine); on return its stale-stamped work re-stamps at arrival with authored-time preserved as provenance. SHARDED WATERMARKS along the agent topology (Sam's 'HG into slices into datagrams onto a graph of agents'): per-slice watermarks finalize independently; global coordination paid only by cross-slice rewrites — the sheaf picture turned operational (local sections finalize locally, gluing only at overlaps); the slicing is the PARTITION OF THE CONFLICT DOMAIN; agent context = delta-slice per frame -> reproducible from (topology, frame range) = provenance at the cognition level. What choosing global FORFEITS (honest bill): the distributed-evolving-grammar research problem collapses to replication lag — trading the deepest research problem for a buildable system; reversible as an EXPERIMENT (deliberately break the total order and watch the merge problem appear) rather than an architecture. NEW problem the swarm introduces: RETRACTION CASCADES (agents building on each other's unfinalized rewrites -> flash-crash dynamics); containment: invalidation propagates mechanically along the provenance DAG (every rewrite records what it read), speculation-depth limit k, per-channel quarantine/rate policy. Engineering bill, none research: clock discipline (own e + ugly cases), lateness/re-stamp policy (a decision = the consistency model), broadcast layer (router grows from read-only fan-in into transport), watermark liveness/membership (heartbeats; the one homeopathic dose of consensus).",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.ffs0",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        }
       }
     },
     {
@@ -140,18 +571,90 @@
       "node_urn": "urn:moos:ki:s0.t262-open-decisions-pure-spec",
       "type_id": "knowledge_item",
       "properties": {
-        "title": {"value": "T262 open decisions (4, Sam-gated) + organization-derived-from-state spec skeleton + the GC/provenance research lane", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_url": {"value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy2.pdf", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "source_type": {"value": "conversation-export", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "language": {"value": "en", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "created_at": {"value": "2026-07-21T13:00:00+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "retrieved_at": {"value": "2026-07-22T15:27:11+02:00", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "status": {"value": "summarized", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
-        "ingest_actor": {"value": "urn:moos:agent:claude-cowork.hp-z440", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_index": {"value": 6, "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "chunk_label": {"value": "t262 open decisions + pure spec skeleton", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "umbrella_urn": {"value": "urn:moos:ki:s0.t263-strategy-recovery", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "summary": {"value": "strategy2.pdf pp7-11. FOUR OPEN DECISIONS pinned for Sam (his notes pending; these pin the entire clock architecture, everything else follows mechanically): (1) frame length per slice + speculation depth k; (2) e source — NTP vs PTP vs GPS; (3) lateness/re-stamp policy (this IS the consistency model); (4) watermark membership rule (who counts in the min). Ratification also outstanding: 'offline = propose-only at the buddy site' was accepted conditionally, never crisply ratified — say yes and the architecture is settled; say no and it is three-way merges after all. THE RESEARCH LANE (survives all tick choices, promoted to swarm safety system): GC + provenance-integrity on the append-only causal structure — liveness/reachability, supersession, contradiction, quarantine-by-channel-trust ('clutter and poisoning', Sam's named main interest); three ingredients exist in embryo (errata practice, channel.kind trust axis, reviewed-chunker boundary); missing = the unifying substrate: liveness computed over the causal graph rather than asserted in prose; at swarm tempo this lane is what stands between the system and self-amplifying garbage. ORGANIZATION DERIVED FROM STATE (Sam: 'any structure is only meaningful when defined as pure function'): doctrine extended one level — log is truth, state is derived, ORGANIZATION is derived from state; skills/personas/topology/config all F(fold); what is authored is only the rewrites. Four amendments: ground the regress at the log; derivation is pure, APPLICATION is an effect gated on finality (reconfiguration: rewrite -> watermark -> F re-evaluates -> harness leaf updates; run-session-pipeline.ps1 is exactly this F run by hand); within a frame topology is constant — reconfiguration triggers only at frame boundaries (the frame's third job: finality, actuation gate, reconfiguration edge); 'meaningful' is operational — a structure that isn't F(log) can't be governed because the log can't see it (14 months of config drift = the empirical case). Spec skeleton, typed: scaffold (effectful, small) = log store + clock/e + transport + actuation drivers; pure (everything else) = fold: Log -> State; slice: State x Agent -> Context; topo: State -> Graph(Agent); config: State x Agent -> Harness. All four pure functions replayable from the log; agent context reproducible per frame; the org chart a computed artifact.", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+        "title": {
+          "value": "T262 open decisions (4, Sam-gated) + organization-derived-from-state spec skeleton + the GC/provenance research lane",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "https://github.com/Collider-Data-Systems/ffs0/blob/main/dev/design/t263_notes_on_strategy2.pdf",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "conversation-export",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "en",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-21T13:00:00+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-22T15:27:11+02:00",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "summarized",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "ingest_actor": {
+          "value": "urn:moos:agent:claude-cowork.hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_index": {
+          "value": 6,
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "chunk_label": {
+          "value": "t262 open decisions + pure spec skeleton",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "umbrella_urn": {
+          "value": "urn:moos:ki:s0.t263-strategy-recovery",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "strategy2.pdf pp7-11. FOUR OPEN DECISIONS pinned for Sam (his notes pending; these pin the entire clock architecture, everything else follows mechanically): (1) frame length per slice + speculation depth k; (2) e source — NTP vs PTP vs GPS; (3) lateness/re-stamp policy (this IS the consistency model); (4) watermark membership rule (who counts in the min). Ratification also outstanding: 'offline = propose-only at the buddy site' was accepted conditionally, never crisply ratified — say yes and the architecture is settled; say no and it is three-way merges after all. THE RESEARCH LANE (survives all tick choices, promoted to swarm safety system): GC + provenance-integrity on the append-only causal structure — liveness/reachability, supersession, contradiction, quarantine-by-channel-trust ('clutter and poisoning', Sam's named main interest); three ingredients exist in embryo (errata practice, channel.kind trust axis, reviewed-chunker boundary); missing = the unifying substrate: liveness computed over the causal graph rather than asserted in prose; at swarm tempo this lane is what stands between the system and self-amplifying garbage. ORGANIZATION DERIVED FROM STATE (Sam: 'any structure is only meaningful when defined as pure function'): doctrine extended one level — log is truth, state is derived, ORGANIZATION is derived from state; skills/personas/topology/config all F(fold); what is authored is only the rewrites. Four amendments: ground the regress at the log; derivation is pure, APPLICATION is an effect gated on finality (reconfiguration: rewrite -> watermark -> F re-evaluates -> harness leaf updates; run-session-pipeline.ps1 is exactly this F run by hand); within a frame topology is constant — reconfiguration triggers only at frame boundaries (the frame's third job: finality, actuation gate, reconfiguration edge); 'meaningful' is operational — a structure that isn't F(log) can't be governed because the log can't see it (14 months of config drift = the empirical case). Spec skeleton, typed: scaffold (effectful, small) = log store + clock/e + transport + actuation drivers; pure (everything else) = fold: Log -> State; slice: State x Agent -> Context; topo: State -> Graph(Agent); config: State x Agent -> Harness. All four pure functions replayable from the log; agent context reproducible per frame; the org chart a computed artifact.",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:github.ffs0",
+          "mutability": "immutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        }
       }
     },
     {
