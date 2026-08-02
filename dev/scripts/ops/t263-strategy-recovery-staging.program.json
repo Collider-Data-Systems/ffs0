@@ -1,6 +1,6 @@
 {
   "_comment": "APPLY-READY (flipped t274, Sam rev-4 ruling D9; see t274_flip_provenance). G-ingest of the recovered t260/t261/t262 strategy-convo content (the two 'lost' remote-environment sessions), from Sam's PDF exports at dev/design/t263_notes_on_strategy1.pdf (32pp, 't260;1615 Zappa strategy') + t263_notes_on_strategy2.pdf (11pp, 't262;0825 hppro strategy' continuation). Umbrella + 6 chunk knowledge_items + 7 WF12 provides-kb LINKs, one atomic batch per moos-workspace-ingest. Summaries are distillations; the PDFs are the verbatim S0 source. Apply with Test-MoosFederation.ps1 -Mode PostProgram -Persona zappa after flipping apply_ready.",
-  "apply_ready": true,
+  "apply_ready": false,
   "applied": true,
   "do_not_reapply": true,
   "target_kernel": "urn:moos:kernel:hp-z440.primary",

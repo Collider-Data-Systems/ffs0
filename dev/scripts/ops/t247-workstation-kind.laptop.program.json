@@ -2,7 +2,7 @@
   "target_url": "http://localhost:8000/programs",
   "target_kernel": "urn:moos:kernel:hp-laptop.primary",
   "persona": "john-lydon",
-  "approval_basis": "T247 spine-reification, batch laptop. (1) Backfill workstation.kind on the hp-laptop node (sovereign on hp-laptop.primary, §M9). (2) Reify Sam's phone as a surface-only workstation node kind=mobile, owned-by user:sam — the '.device_samsandroid.noagent.user_sam' matrix coordinate made real. The phone hosts NO engine (surface-only, reduced G-reach per P1); its Keep notes enter via the existing google.keep.sam channel + G-ingest + the T239 provenance trailer (channel-kind: keep-widget, workstation: sam-android). DRAFTED, NOT APPLIED.",
+  "approval_basis": "T247 spine-reification, batch laptop. (1) Backfill workstation.kind on the hp-laptop node (sovereign on hp-laptop.primary, §M9). (2) Reify Sam's phone as a surface-only workstation node kind=mobile, owned-by user:sam — the '.device_samsandroid.noagent.user_sam' matrix coordinate made real. The phone hosts NO engine (surface-only, reduced G-reach per P1); its Keep notes enter via the existing google.keep.sam channel + G-ingest + the T239 provenance trailer (channel-kind: keep-widget, workstation: sam-android). APPLIED (flags backfilled t274, census-verified).",
   "envelopes": [
     {
       "rewrite_type": "MUTATE",
