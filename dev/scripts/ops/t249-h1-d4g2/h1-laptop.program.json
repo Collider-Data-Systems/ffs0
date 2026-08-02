@@ -1,8 +1,8 @@
 {
-  "_STATUS": "WRAPPED t274: the READY t249-H1 hosts-leg artifact (rev-4 §5b#15) — Sam-gated, NOT applied; runs through the A2 guard + laptop-seeded scratch on his go",
+  "_STATUS": "CORRECTED t275: this is the OWNS-leg batch, APPLIED at t249 (live: rel:t249.sam.owns.workstation-hp-z440 + workstation node exist; scratch replay rejects the ADD as node-exists). The rev-4 identification of this file as the open hosts-leg artifact was wrong — the hosts-leg fix is t275-h1-hosts-leg.program.json, applied t275.",
   "apply_ready": false,
-  "applied": false,
-  "do_not_reapply": false,
+  "applied": true,
+  "do_not_reapply": true,
   "target_kernel": "urn:moos:kernel:hp-laptop.primary",
   "envelopes": [
     {
@@ -66,5 +66,10 @@
       "new_value": "closed",
       "rewrite_category": "WF07"
     }
-  ]
+  ],
+  "target_url": "http://100.106.220.58:8000/programs",
+  "persona": "john-lydon",
+  "readback_gate": {
+    "require_ontology_version": "4.0.5"
+  }
 }
