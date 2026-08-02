@@ -1,8 +1,8 @@
 {
   "_STATUS": "APPROVED t274 (Sam, rev-4 ruling D10) — user:sam -WF02 governs-> the two hp-laptop seat agents. TARGETS THE LAPTOP FOLD: scratch validation needs a laptop-log-seeded kernel (B5), not a Z440 seed. hpprodesk agent stays deferred (box down, B4).",
-  "apply_ready": true,
-  "applied": false,
-  "do_not_reapply": false,
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
   "target_kernel": "urn:moos:kernel:hp-laptop.primary",
   "target_url": "http://100.106.220.58:8000/programs",
   "persona": "john-lydon",
@@ -30,5 +30,8 @@
       "tgt_port": "governed-by",
       "rewrite_category": "WF02"
     }
-  ]
+  ],
+  "applied_at": "2026-08-02T22:01:06Z",
+  "applied_log_seq": "1587-1588 (max_log_seq basis)",
+  "applied_to": "urn:moos:kernel:hp-laptop.primary"
 }
