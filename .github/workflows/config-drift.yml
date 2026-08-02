@@ -15,6 +15,7 @@ on:
       - "dev/config/session-affordance-map.json"
       - "dev/config/moos-federation.topology.json"
       - ".claude/agents/*.md"
+      - ".github/agents/*.agent.md"
   push:
     branches: [main]
     paths:
@@ -24,6 +25,7 @@ on:
       - "dev/config/session-affordance-map.json"
       - "dev/config/moos-federation.topology.json"
       - ".claude/agents/*.md"
+      - ".github/agents/*.agent.md"
 jobs:
   fence-integrity:
     runs-on: ubuntu-latest

@@ -28,7 +28,7 @@ zero presents-as).
 - **Emit target:** `hp-z440.primary` :8000 (until §M9 twin-sync)
 - **Surface:** VS Code · hp-laptop · `ffs0.code-workspace`
 - **Persona:** Wolfram
-- **Skills:** `moos-rewrite-envelope` · `moos-state-readback`
+- **Skills:** `moos-seat-hydration` · `moos-rewrite-envelope` · `moos-state-readback`
 - **MCP:** moos-primary
 <!-- END GENERATED: moos-config-projection agent-card -->
 

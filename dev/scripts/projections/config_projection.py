@@ -195,13 +195,21 @@ def self_test():
     check("card matcher stops at the blank line", "trailing prose" in captured, False)
     check("card matcher spans both bullets", captured.count("- **"), 2)
 
+    # 9. T268: a configured VS Code agent gets the same generated identity block as its
+    # Claude seat card, without making every Claude card a Copilot picker entry.
+    targets = card_targets({"file": "x.md", "copilot_file": "x.agent.md"})
+    check("card targets include Claude and configured Copilot paths",
+          [label for label, _ in targets],
+          [".claude/agents/x.md", ".github/agents/x.agent.md"])
+
     if fails:
         print("SELF-TEST: FAIL (%d)" % len(fails))
         for f in fails: print("  !", f)
         return 1
-    print("SELF-TEST: PASS — 8 cases (fan-in collapse, §M19 same-pair survival + detection, "
+    print("SELF-TEST: PASS — 9 cases (fan-in collapse, §M19 same-pair survival + detection, "
           "clean fold, non-occupancy ports, urn-less fallback, order stability, "
-          "canonical §M19 two-occupant detection, agent-card identity matcher)")
+          "canonical §M19 two-occupant detection, agent-card identity matcher, "
+          "Copilot agent-card target)")
     return 0
 
 def fold_from_hg(base_url, fallback_url, topo, disp):
@@ -346,11 +354,12 @@ def semantic_drift(hg_rows, authored):
     return drift, info
 
 # ---------- agent-card projection (ffs0#165, harness-diet leg 6) ----------
-# The seven .claude/agents/*.md cards hand-duplicate seat facts (identity URNs, engine,
-# emit, skills, surface) that already live in config + the fold — a third hand-maintained
-# copy of seat truth (the first two: AGENTS.md seat table, seat-context.md). This fences
-# the DRIFTING identity block in each card and regenerates it from source; the persona
-# voice (Start here / GATE / the rule) stays hand-authored OUTSIDE the fence.
+# The .claude/agents/*.md cards and configured .github/agents/*.agent.md Copilot agents
+# hand-duplicate seat facts (identity URNs, engine, emit, skills, surface) that already
+# live in config + the fold — a third hand-maintained copy of seat truth (the first two:
+# AGENTS.md seat table, seat-context.md). This fences the DRIFTING identity block in each
+# card and regenerates it from source; the persona voice (Start here / GATE / the rule)
+# stays hand-authored OUTSIDE the fence.
 #
 # Source of the fenced facts is CONFIG (affordance skills + topology engine/emit/mcp +
 # seat-display persona/surface), not the fold — so the card check runs OFFLINE (all inputs
@@ -463,8 +472,24 @@ def find_card_authored_identity(txt):
     end = start + (bm.start() + 1 if bm else len(seg[start:]))   # include last content newline
     return (h.end() + start, h.end() + end)
 
+def card_targets(card):
+    """Projection destinations for one seat card.
+
+    Every configured card has a Claude card. `copilot_file` opt-in keeps the VS Code picker
+    narrow: only seats intentionally exposed to Copilot get a `.github/agents/*.agent.md`
+    companion, but its identity facts still come from the shared config."""
+    targets = [
+        (".claude/agents/" + card["file"],
+         os.path.join(REPO, ".claude", "agents", card["file"])),
+    ]
+    copilot_file = card.get("copilot_file")
+    if copilot_file:
+        targets.append((".github/agents/" + copilot_file,
+                        os.path.join(REPO, ".github", "agents", copilot_file)))
+    return targets
+
 def run_cards(a, topo, disp):
-    """check / render / write the fenced identity block across the configured cards."""
+    """Check, render, or write fenced identity blocks across configured seat cards."""
     affordance = json.load(open(a.affordance, encoding="utf-8")) if os.path.exists(a.affordance) else {"sessions": []}
     cards = disp.get("cards", [])
     if not cards:
@@ -484,46 +509,58 @@ def run_cards(a, topo, disp):
         except Exception as e:
             print("CARDS: HG unreachable (%s) — config-only projection, cross-check skipped" % type(e).__name__)
 
-    cards_dir = os.path.join(REPO, ".claude", "agents")
     drift, wrote, missing_seat = [], [], []
     for c in cards:
         facts = card_facts(c, topo, disp, affordance)
         if seated is not None and (alias(facts["agent"]), alias(facts["workspace"])) not in seated:
             missing_seat.append("%s (%s / %s)" % (c["file"], alias(facts["agent"]), alias(facts["workspace"])))
         block = render_card_block(facts)
-        path = os.path.join(cards_dir, c["file"])
-        if not os.path.exists(path):
-            print("  ! CARD MISSING: %s" % c["file"]); drift.append(c["file"] + " (file absent)"); continue
-        txt = open(path, encoding="utf-8").read()
-        region = find_card_region(txt)
+        for label, path in card_targets(c):
+            if not os.path.exists(path):
+                print("  ! CARD MISSING: %s" % label)
+                drift.append(label + " (file absent)")
+                continue
+            txt = open(path, encoding="utf-8").read()
+            region = find_card_region(txt)
 
-        if a.mode == "render":
-            print("\n# %s\n%s" % (c["file"], block)); continue
-        if a.mode == "write":
-            if region:
-                new = txt[:region[0]] + block + txt[region[1]:]
-            else:
-                ident = find_card_authored_identity(txt)
-                if not ident:
-                    print("  ! %s: no fenced region and no identity bullet block after '# Seat:' — skipped" % c["file"])
-                    drift.append(c["file"] + " (no insertion point)"); continue
-                new = txt[:ident[0]] + block + "\n" + txt[ident[1]:]
-            if new != txt:
-                open(path, "w", encoding="utf-8", newline="").write(new); wrote.append(c["file"])
-        else:  # check
-            if not region:
-                drift.append(c["file"] + " (no fenced region — run --scope cards --mode write)")
-            elif txt[region[0]:region[1]] != block:
-                drift.append(c["file"] + " (fenced block diverges from source)")
+            if a.mode == "render":
+                print("\n# %s\n%s" % (label, block))
+                continue
+            if a.mode == "write":
+                if region:
+                    new = txt[:region[0]] + block + txt[region[1]:]
+                else:
+                    ident = find_card_authored_identity(txt)
+                    if not ident:
+                        print("  ! %s: no fenced region and no identity bullet block after '# Seat:' — skipped" % label)
+                        drift.append(label + " (no insertion point)")
+                        continue
+                    new = txt[:ident[0]] + block + "\n" + txt[ident[1]:]
+                if new != txt:
+                    open(path, "w", encoding="utf-8", newline="").write(new)
+                    wrote.append(label)
+            else:  # check
+                if not region:
+                    drift.append(label + " (no fenced region — run --scope cards --mode write)")
+                elif txt[region[0]:region[1]] != block:
+                    drift.append(label + " (fenced block diverges from source)")
 
-    # Coverage: .claude/agents/ is seat-card-only, so every *.md there must be a configured
-    # card. An unregistered file would carry an unfenced, hand-authored identity block that
-    # the gate never checks — the exact single-source hole this projection exists to close.
+    # Both card directories are seat-card-only. An unregistered file would carry an
+    # unfenced, hand-authored identity block that the gate never checks — the exact
+    # single-source hole this projection exists to close.
+    cards_dir = os.path.join(REPO, ".claude", "agents")
     if os.path.isdir(cards_dir):
         configured = {c["file"] for c in cards}
         unregistered = sorted(f for f in os.listdir(cards_dir) if f.endswith(".md") and f not in configured)
         for u in unregistered:
-            drift.append(u + " (on disk but not in seat-display cards[] — register it or remove it)")
+            drift.append(".claude/agents/" + u + " (on disk but not in seat-display cards[] — register it or remove it)")
+    copilot_dir = os.path.join(REPO, ".github", "agents")
+    if os.path.isdir(copilot_dir):
+        configured = {c["copilot_file"] for c in cards if c.get("copilot_file")}
+        unregistered = sorted(f for f in os.listdir(copilot_dir)
+                              if f.endswith(".agent.md") and f not in configured)
+        for u in unregistered:
+            drift.append(".github/agents/" + u + " (on disk but not in seat-display cards[] — register it or remove it)")
 
     for m in missing_seat:
         print("  ~ WARN carded seat has no has-occupant in the fold: %s" % m)
@@ -536,7 +573,8 @@ def run_cards(a, topo, disp):
         for d in drift: print("  ! CARD DRIFT", d)
         print("\nCARD CHECK: FAIL (%d) — resolution is --scope cards --mode write (never hand-edit the fenced block)." % len(drift))
         return 1
-    print("CARD CHECK: PASS — every card's fenced identity block is byte-identical to source (%d cards)." % len(cards))
+    target_count = sum(len(card_targets(c)) for c in cards)
+    print("CARD CHECK: PASS — every card's fenced identity block is byte-identical to source (%d cards)." % target_count)
     return 0
 
 def main():
@@ -551,7 +589,7 @@ def main():
     ap.add_argument("--display", default=os.path.join(REPO, "dev", "config", "seat-display.json"))
     ap.add_argument("--mode", choices=["check", "render", "write"], default="check")
     ap.add_argument("--scope", choices=["seats", "cards"], default="seats",
-                    help="seats = AGENTS.md seat table (default, unchanged); cards = .claude/agents/*.md identity blocks (ffs0#165). CI runs both as separate steps.")
+                    help="seats = AGENTS.md seat table (default, unchanged); cards = configured .claude/agents/*.md and .github/agents/*.agent.md identity blocks (ffs0#165/T268). CI runs both as separate steps.")
     ap.add_argument("--affordance", default=os.path.join(REPO, "dev", "config", "session-affordance-map.json"),
                     help="skills source for --scope cards")
     ap.add_argument("--allow-shrink", action="store_true",
