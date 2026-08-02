@@ -1,86 +1,92 @@
-[
- {
-  "rewrite_type": "ADD",
-  "actor": "urn:moos:kernel:hp-laptop.primary",
-  "node_urn": "urn:moos:derivation:persona.john-lydon",
-  "type_id": "derivation",
-  "properties": {
-   "name": {
-    "value": "john-lydon = Phi(sam.doctrine-governance-and-delegation) \u2014 D4 persona derivation; provenance: urn:moos:purpose:sam.doctrine-governance-and-delegation (WF21-purpose LINK gapped, see d4b)",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "owner_urn": {
-    "value": "urn:moos:user:sam",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "created_at": {
-    "value": "2026-07-08T19:50:00Z",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "inference_kind": {
-    "value": "deterministic_rule",
-    "mutability": "mutable",
-    "authority_scope": "owner",
-    "stratum_origin": 2
-   }
-  }
- },
- {
-  "rewrite_type": "LINK",
-  "actor": "urn:moos:kernel:hp-laptop.primary",
-  "relation_urn": "urn:moos:rel:t249.john-lydon.presents-as",
-  "src_urn": "urn:moos:agent:claude-cowork.hp-laptop",
-  "src_port": "presents-as",
-  "tgt_urn": "urn:moos:derivation:persona.john-lydon",
-  "tgt_port": "presented-by",
-  "rewrite_category": "WF19"
- },
- {
-  "rewrite_type": "ADD",
-  "actor": "urn:moos:kernel:hp-laptop.primary",
-  "node_urn": "urn:moos:derivation:persona.guido",
-  "type_id": "derivation",
-  "properties": {
-   "name": {
-    "value": "guido = Phi(sam.laptop-vscode-lead-operations) \u2014 D4 persona derivation; provenance: urn:moos:purpose:sam.laptop-vscode-lead-operations (WF21-purpose LINK gapped, see d4b)",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "owner_urn": {
-    "value": "urn:moos:user:sam",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "created_at": {
-    "value": "2026-07-08T19:50:00Z",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "inference_kind": {
-    "value": "deterministic_rule",
-    "mutability": "mutable",
-    "authority_scope": "owner",
-    "stratum_origin": 2
-   }
-  }
- },
- {
-  "rewrite_type": "LINK",
-  "actor": "urn:moos:kernel:hp-laptop.primary",
-  "relation_urn": "urn:moos:rel:t249.guido.presents-as",
-  "src_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
-  "src_port": "presents-as",
-  "tgt_urn": "urn:moos:derivation:persona.guido",
-  "tgt_port": "presented-by",
-  "rewrite_category": "WF19"
- }
-]
+{
+  "_STATUS": "WRAPPED t274 (D12-extended): bare list from the t249 H1/D4/G2 round; presumed applied t249; all 2 LINKs present in fleet readback 2026-08-02T21:49:09Z. Do not re-run without investigation.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "node_urn": "urn:moos:derivation:persona.john-lydon",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "john-lydon = Phi(sam.doctrine-governance-and-delegation) — D4 persona derivation; provenance: urn:moos:purpose:sam.doctrine-governance-and-delegation (WF21-purpose LINK gapped, see d4b)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-08T19:50:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "deterministic_rule",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t249.john-lydon.presents-as",
+      "src_urn": "urn:moos:agent:claude-cowork.hp-laptop",
+      "src_port": "presents-as",
+      "tgt_urn": "urn:moos:derivation:persona.john-lydon",
+      "tgt_port": "presented-by",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "node_urn": "urn:moos:derivation:persona.guido",
+      "type_id": "derivation",
+      "properties": {
+        "name": {
+          "value": "guido = Phi(sam.laptop-vscode-lead-operations) — D4 persona derivation; provenance: urn:moos:purpose:sam.laptop-vscode-lead-operations (WF21-purpose LINK gapped, see d4b)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-08T19:50:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "inference_kind": {
+          "value": "deterministic_rule",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t249.guido.presents-as",
+      "src_urn": "urn:moos:agent:vscode.hp-laptop.copilot",
+      "src_port": "presents-as",
+      "tgt_urn": "urn:moos:derivation:persona.guido",
+      "tgt_port": "presented-by",
+      "rewrite_category": "WF19"
+    }
+  ]
+}

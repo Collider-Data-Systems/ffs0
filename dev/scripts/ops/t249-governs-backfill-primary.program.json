@@ -1,8 +1,8 @@
 {
   "_STATUS": "APPROVED t274 (Sam, rev-4 ruling D10, #178 comment 5159899124) — the t250-baseline finding 6 authority hole closes: user:sam -WF02 governs-> the four Z440 seat agents. Kernel actor per the t249 note. Guarded apply: step 0c scratch :8899 then 0d sovereign.",
   "apply_ready": true,
-  "applied": false,
-  "do_not_reapply": false,
+  "applied": true,
+  "do_not_reapply": true,
   "target_kernel": "urn:moos:kernel:hp-z440.primary",
   "target_url": "http://localhost:8000/programs",
   "persona": "zappa",
@@ -50,5 +50,8 @@
       "tgt_port": "governed-by",
       "rewrite_category": "WF02"
     }
-  ]
+  ],
+  "applied_at": "2026-08-02T21:47:39Z",
+  "applied_log_seq": "686-689",
+  "applied_to": "urn:moos:kernel:hp-z440.primary"
 }

@@ -6,12 +6,42 @@
       "node_urn": "urn:moos:agent:claude-cowork.hp-laptop",
       "type_id": "agent",
       "properties": {
-        "name":          {"value": "Claude Cowork (hp-laptop)", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "delegate_type": {"value": "ide", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "owner_urn":     {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "created_at":    {"value": "2026-04-23T14:30:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "board_id":      {"value": "AGENT-COWORK-HPLAP", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
-        "status":        {"value": "active", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2}
+        "name": {
+          "value": "Claude Cowork (hp-laptop)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "delegate_type": {
+          "value": "ide",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-04-23T14:30:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "board_id": {
+          "value": "AGENT-COWORK-HPLAP",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "active",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        }
       }
     },
     {
@@ -20,12 +50,47 @@
       "node_urn": "urn:moos:session:sam.laptop-cowork-workspace",
       "type_id": "session",
       "properties": {
-        "started_at":  {"value": "2026-04-23T14:30:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "owner_urn":   {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-        "status":      {"value": "pending_driver", "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
-        "local_t":     {"value": 0, "mutability": "mutable", "authority_scope": "kernel", "stratum_origin": 2},
-        "scope_pins":  {"value": ["urn:moos:channel:google.gmail.sam","urn:moos:channel:google.calendar.sam","urn:moos:channel:google.drive.sam","urn:moos:channel:google.tasks.sam"], "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
-        "text":        {"value": "hp-laptop Cowork platform-host session. Sibling of Z440 sam.z440-cowork-workspace. Per doctrine 20260422-t172-cowork-as-occupant.md. has-occupant fires when Desktop actually runs on hp-laptop.", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2}
+        "started_at": {
+          "value": "2026-04-23T14:30:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "pending_driver",
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "local_t": {
+          "value": 0,
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "scope_pins": {
+          "value": [
+            "urn:moos:channel:google.gmail.sam",
+            "urn:moos:channel:google.calendar.sam",
+            "urn:moos:channel:google.drive.sam",
+            "urn:moos:channel:google.tasks.sam"
+          ],
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "text": {
+          "value": "hp-laptop Cowork platform-host session. Sibling of Z440 sam.z440-cowork-workspace. Per doctrine 20260422-t172-cowork-as-occupant.md. has-occupant fires when Desktop actually runs on hp-laptop.",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        }
       }
     },
     {
@@ -34,7 +99,7 @@
       "relation_urn": "urn:moos:rel:session.sam.laptop-cowork-workspace.opens-on.kernel.hp-laptop-primary",
       "src_urn": "urn:moos:session:sam.laptop-cowork-workspace",
       "src_port": "opens-on",
-      "tgt_urn":  "urn:moos:kernel:hp-laptop.primary",
+      "tgt_urn": "urn:moos:kernel:hp-laptop.primary",
       "tgt_port": "occupied-by",
       "rewrite_category": "WF19"
     },
@@ -44,7 +109,7 @@
       "relation_urn": "urn:moos:rel:session.sam.laptop-cowork-workspace.has-occupant.claude-cowork",
       "src_urn": "urn:moos:session:sam.laptop-cowork-workspace",
       "src_port": "has-occupant",
-      "tgt_urn":  "urn:moos:agent:claude-cowork.hp-laptop",
+      "tgt_urn": "urn:moos:agent:claude-cowork.hp-laptop",
       "tgt_port": "is-occupant-of",
       "rewrite_category": "WF19"
     },
@@ -56,5 +121,8 @@
       "new_value": "active",
       "rewrite_category": "WF19"
     }
-  ]
+  ],
+  "applied": true,
+  "do_not_reapply": true,
+  "t274_flag_evidence": "D12 (Sam rev-4): all 2 LINKs verified present in fleet fold readback 2026-08-02T21:48:24Z; flags backfilled, never re-runnable."
 }

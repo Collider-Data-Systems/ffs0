@@ -1,50 +1,56 @@
-[
- {
-  "rewrite_type": "ADD",
-  "actor": "urn:moos:kernel:hp-z440.lola",
-  "node_urn": "urn:moos:workstation:hp-z440",
-  "type_id": "workstation",
-  "properties": {
-   "hostname": {
-    "value": "hp-z440",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "os": {
-    "value": "windows",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "arch": {
-    "value": "amd64",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "created_at": {
-    "value": "2026-07-08T19:50:00Z",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "kind": {
-    "value": "desktop",
-    "mutability": "mutable",
-    "authority_scope": "owner",
-    "stratum_origin": 2
-   }
-  }
- },
- {
-  "rewrite_type": "LINK",
-  "actor": "urn:moos:kernel:hp-z440.lola",
-  "relation_urn": "urn:moos:rel:t249.hp-z440.hosts.lola",
-  "src_urn": "urn:moos:workstation:hp-z440",
-  "src_port": "hosts",
-  "tgt_urn": "urn:moos:kernel:hp-z440.lola",
-  "tgt_port": "hosted-on",
-  "rewrite_category": "WF03"
- }
-]
+{
+  "_STATUS": "WRAPPED t274 (D12-extended): bare list from the t249 H1/D4/G2 round; presumed applied t249; all 1 LINKs present in fleet readback 2026-08-02T21:49:09Z. Do not re-run without investigation.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.lola",
+      "node_urn": "urn:moos:workstation:hp-z440",
+      "type_id": "workstation",
+      "properties": {
+        "hostname": {
+          "value": "hp-z440",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "os": {
+          "value": "windows",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "arch": {
+          "value": "amd64",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-08T19:50:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "kind": {
+          "value": "desktop",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.lola",
+      "relation_urn": "urn:moos:rel:t249.hp-z440.hosts.lola",
+      "src_urn": "urn:moos:workstation:hp-z440",
+      "src_port": "hosts",
+      "tgt_urn": "urn:moos:kernel:hp-z440.lola",
+      "tgt_port": "hosted-on",
+      "rewrite_category": "WF03"
+    }
+  ]
+}

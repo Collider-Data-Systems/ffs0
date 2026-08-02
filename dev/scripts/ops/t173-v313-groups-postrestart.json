@@ -1,152 +1,208 @@
-[
-  {
-    "rewrite_type": "MUTATE",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "target_urn": "urn:moos:grammar_fragment:v313-6-wf02-delegates-to",
-    "field": "status",
-    "new_value": "merged",
-    "rewrite_category": "WF20"
-  },
-  {
-    "rewrite_type": "MUTATE",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "target_urn": "urn:moos:grammar_fragment:v313-7-group-type",
-    "field": "status",
-    "new_value": "merged",
-    "rewrite_category": "WF20"
-  },
-  {
-    "rewrite_type": "MUTATE",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "target_urn": "urn:moos:grammar_fragment:v313-8-channel-kind-vcs",
-    "field": "status",
-    "new_value": "merged",
-    "rewrite_category": "WF20"
-  },
-  {
-    "rewrite_type": "MUTATE",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "target_urn": "urn:moos:grammar_fragment:v313-9-owns-port-pair",
-    "field": "status",
-    "new_value": "merged",
-    "rewrite_category": "WF20"
-  },
-  {
-    "rewrite_type": "ADD",
-    "actor": "urn:moos:agent:claude-code.hp-z440",
-    "session_urn": "urn:moos:session:sam.kernel-proper",
-    "node_urn": "urn:moos:group:sam",
-    "type_id": "group",
-    "properties": {
-      "created_at":  {"value": "2026-04-23T18:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-      "name":        {"value": "sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-      "owner_urn":   {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-      "description": {"value": "Primary user group — sam and delegated personae/agents. Mirrors the Collider-Data-Systems/sam GitHub team ('user Sam owns kernels and owns delegates and sessions'). Owns: all kernels, all primary sessions + seats, all court purposes, all channels. Superadmin-capability holder via role:superadmin (seeded T=173).", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
-      "status":      {"value": "active", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2}
+{
+  "_STATUS": "WRAPPED t274 (D12-extended): was a bare envelope list, pre-staging-discipline; applied t173 (all 9 LINKs present in fleet readback 2026-08-02T21:49:09Z). The A2 guard refuses bare lists by design.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "envelopes": [
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:v313-6-wf02-delegates-to",
+      "field": "status",
+      "new_value": "merged",
+      "rewrite_category": "WF20"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:v313-7-group-type",
+      "field": "status",
+      "new_value": "merged",
+      "rewrite_category": "WF20"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:v313-8-channel-kind-vcs",
+      "field": "status",
+      "new_value": "merged",
+      "rewrite_category": "WF20"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:v313-9-owns-port-pair",
+      "field": "status",
+      "new_value": "merged",
+      "rewrite_category": "WF20"
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-code.hp-z440",
+      "session_urn": "urn:moos:session:sam.kernel-proper",
+      "node_urn": "urn:moos:group:sam",
+      "type_id": "group",
+      "properties": {
+        "created_at": {
+          "value": "2026-04-23T18:00:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "name": {
+          "value": "sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "description": {
+          "value": "Primary user group — sam and delegated personae/agents. Mirrors the Collider-Data-Systems/sam GitHub team ('user Sam owns kernels and owns delegates and sessions'). Owns: all kernels, all primary sessions + seats, all court purposes, all channels. Superadmin-capability holder via role:superadmin (seeded T=173).",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "active",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-code.hp-z440",
+      "session_urn": "urn:moos:session:sam.kernel-proper",
+      "node_urn": "urn:moos:group:moos",
+      "type_id": "group",
+      "properties": {
+        "created_at": {
+          "value": "2026-04-23T18:00:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "name": {
+          "value": "moos",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "description": {
+          "value": "Moos group — narrower scope covering the multimodal-curation-and-diary lane. Mirrors the Collider-Data-Systems/moos GitHub team ('user Moos owns a kernel and owns delegates and the session on business projection and general traction'). Owns: kernel:hp-z440.moos, session:sam.moos-diary, purpose:sam.multimodal-curation-and-diary, channel:google.drive.sam (diary media source). Scope: business projection + social media output.",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "active",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.kernel.hp-z440-primary",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:kernel:hp-z440.primary",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.kernel.hp-z440-lola",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:kernel:hp-z440.lola",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.kernel.hp-z440-menno",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:kernel:hp-z440.menno",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.session.kernel-proper",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:session:sam.kernel-proper",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.session.mvp-delivery",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:session:sam.mvp-delivery",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.purpose.ship-t187",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:purpose:sam.ship-t187-kernel-proper",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.moos.owns.kernel.hp-z440-moos",
+      "src_urn": "urn:moos:group:moos",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:kernel:hp-z440.moos",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.moos.owns.session.moos-diary",
+      "src_urn": "urn:moos:group:moos",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:session:sam.moos-diary",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "relation_urn": "urn:moos:rel:group.moos.owns.purpose.moos-diary",
+      "src_urn": "urn:moos:group:moos",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:purpose:sam.multimodal-curation-and-diary",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
     }
-  },
-  {
-    "rewrite_type": "ADD",
-    "actor": "urn:moos:agent:claude-code.hp-z440",
-    "session_urn": "urn:moos:session:sam.kernel-proper",
-    "node_urn": "urn:moos:group:moos",
-    "type_id": "group",
-    "properties": {
-      "created_at":  {"value": "2026-04-23T18:00:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-      "name":        {"value": "moos", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-      "owner_urn":   {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-      "description": {"value": "Moos group — narrower scope covering the multimodal-curation-and-diary lane. Mirrors the Collider-Data-Systems/moos GitHub team ('user Moos owns a kernel and owns delegates and the session on business projection and general traction'). Owns: kernel:hp-z440.moos, session:sam.moos-diary, purpose:sam.multimodal-curation-and-diary, channel:google.drive.sam (diary media source). Scope: business projection + social media output.", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
-      "status":      {"value": "active", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2}
-    }
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "relation_urn": "urn:moos:rel:group.sam.owns.kernel.hp-z440-primary",
-    "src_urn": "urn:moos:group:sam",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:kernel:hp-z440.primary",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "relation_urn": "urn:moos:rel:group.sam.owns.kernel.hp-z440-lola",
-    "src_urn": "urn:moos:group:sam",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:kernel:hp-z440.lola",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "relation_urn": "urn:moos:rel:group.sam.owns.kernel.hp-z440-menno",
-    "src_urn": "urn:moos:group:sam",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:kernel:hp-z440.menno",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "relation_urn": "urn:moos:rel:group.sam.owns.session.kernel-proper",
-    "src_urn": "urn:moos:group:sam",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:session:sam.kernel-proper",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "relation_urn": "urn:moos:rel:group.sam.owns.session.mvp-delivery",
-    "src_urn": "urn:moos:group:sam",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:session:sam.mvp-delivery",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "relation_urn": "urn:moos:rel:group.sam.owns.purpose.ship-t187",
-    "src_urn": "urn:moos:group:sam",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:purpose:sam.ship-t187-kernel-proper",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "relation_urn": "urn:moos:rel:group.moos.owns.kernel.hp-z440-moos",
-    "src_urn": "urn:moos:group:moos",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:kernel:hp-z440.moos",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "relation_urn": "urn:moos:rel:group.moos.owns.session.moos-diary",
-    "src_urn": "urn:moos:group:moos",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:session:sam.moos-diary",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-z440.primary",
-    "relation_urn": "urn:moos:rel:group.moos.owns.purpose.moos-diary",
-    "src_urn": "urn:moos:group:moos",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:purpose:sam.multimodal-curation-and-diary",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  }
-]
+  ]
+}
