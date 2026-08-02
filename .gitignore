@@ -74,6 +74,12 @@ robocopy_log*.txt
 .agents/mcp-bridge.js
 .agents/*.js
 
+# Build/backup binaries — never committable (B2 as mechanism, not discipline).
+# Mirrors moos-kernel/.gitignore; that repo's equivalent guard landed as moos-kernel#67.
+# No tracked file matches these patterns (verified t274: git ls-files | grep -E '\.exe~$|\.exe\.bak|\.exe$' -> empty).
+*.exe~
+*.exe.bak*
+
 # OS
 .DS_Store
 Thumbs.db
