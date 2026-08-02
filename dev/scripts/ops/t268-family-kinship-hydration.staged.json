@@ -1,0 +1,112 @@
+{
+  "program_id": "urn:moos:program:t268-family-kinship-hydration",
+  "description": "Hydrate real family kinship relations (Father, Mother, Sam, Menno, Lola, Moos)",
+  "apply_ready": false,
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "target_url": "http://localhost:8000",
+  "persona": "persona.moos-dachshund",
+  "readback_gate": "smoke:live",
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:group:family-maassen",
+      "type_id": "group",
+      "properties": {
+        "name": { "value": "Family Maassen", "mutability": "immutable" },
+        "owner_urn": { "value": "urn:moos:user:sam", "mutability": "immutable" },
+        "created_at": { "value": "2026-08-03T00:00:00Z", "mutability": "immutable" },
+        "status": { "value": "active", "mutability": "mutable", "authority_scope": "kernel" }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:user:father",
+      "type_id": "user",
+      "properties": {
+        "name": { "value": "Father", "mutability": "immutable" },
+        "created_at": { "value": "2026-08-03T00:00:00Z", "mutability": "immutable" }
+      }
+    },
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:user:mother",
+      "type_id": "user",
+      "properties": {
+        "name": { "value": "Mother", "mutability": "immutable" },
+        "created_at": { "value": "2026-08-03T00:00:00Z", "mutability": "immutable" }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "relation_urn": "urn:moos:rel:father.parent-of.sam",
+      "rewrite_category": "WF01",
+      "src_urn": "urn:moos:user:father",
+      "src_port": "parent-of",
+      "tgt_urn": "urn:moos:user:sam",
+      "tgt_port": "child-of"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "relation_urn": "urn:moos:rel:mother.parent-of.sam",
+      "rewrite_category": "WF01",
+      "src_urn": "urn:moos:user:mother",
+      "src_port": "parent-of",
+      "tgt_urn": "urn:moos:user:sam",
+      "tgt_port": "child-of"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "relation_urn": "urn:moos:rel:father.spouse-of.mother",
+      "rewrite_category": "WF01",
+      "src_urn": "urn:moos:user:father",
+      "src_port": "spouse-of",
+      "tgt_urn": "urn:moos:user:mother",
+      "tgt_port": "spouse-of"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "relation_urn": "urn:moos:rel:father.member-of.family",
+      "rewrite_category": "WF02",
+      "src_urn": "urn:moos:user:father",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:family-maassen",
+      "tgt_port": "has-member"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "relation_urn": "urn:moos:rel:mother.member-of.family",
+      "rewrite_category": "WF02",
+      "src_urn": "urn:moos:user:mother",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:family-maassen",
+      "tgt_port": "has-member"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:agent:antigravity.hp-z440",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "relation_urn": "urn:moos:rel:sam.member-of.family",
+      "rewrite_category": "WF02",
+      "src_urn": "urn:moos:user:sam",
+      "src_port": "member-of",
+      "tgt_urn": "urn:moos:group:family-maassen",
+      "tgt_port": "has-member"
+    }
+  ]
+}

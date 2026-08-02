@@ -25,7 +25,6 @@ IDE/agent conversations are **S0 substrate** — they emit work; they are not da
 | Persona (=Φ(purpose), D3·config) | Agent (HG principal) | Workspace ⟵`session` (HG·D2) | Engine ⟵`kernel` (HG opens-on·D6) | Surface / IDE-instance (D7·config) | MCP (config) |
 |---|---|---|---|---|---|
 | Wolfram | `vscode.hp-laptop.wolfram` | `sam.kernel-proper` | `hp-z440.primary` :8000 | VS Code · hp-laptop · `ffs0.code-workspace` | moos-primary |
-| Moos / AG-Z440 | `antigravity.hp-z440` | `sam.moos-diary` | `hp-z440.primary` :8000 | Antigravity · Z440 (desktop 4) · `ffs0.code-workspace` | moos-primary |
 | Zappa | `claude-cowork.hp-z440` | `sam.z440-cowork-workspace` | `hp-z440.primary` :8000 | Claude Code / Cowork pane · Z440 · `ffs0.code-workspace` | moos-primary |
 | Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-primary-vscode-setup` | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 · `ffs0.code-workspace` | moos-primary |
 | Z440 VS Code lead | `vscode.hp-z440.primary` | `sam.z440-vscode-projection-lead` | `hp-z440.primary` :8000 | VS Code/Copilot pane · Z440 · `ffs0.code-workspace` | moos-primary |
@@ -34,6 +33,7 @@ IDE/agent conversations are **S0 substrate** — they emit work; they are not da
 | Φ(purpose)? | `lola` | `lola.birth-workspace` | `hp-z440.lola` :8002 | — | — |
 | Karpathy | `vscode.hp-z440.lola` | `sam.karpathy-seat` | `hp-z440.lola` :8002 *(emits `hp-z440.primary` pre-§M9)* | VS Code · Z440 (desktop 3) · `ffs0.code-workspace` | moos-primary *(opens-on `moos-lola`)* |
 | Φ(purpose)? | `moos` | `moos.birth-workspace` | `hp-z440.moos` :8003 | — | — |
+| Moos / AG-Z440 | `antigravity.hp-z440` | `sam.moos-diary` | `hp-z440.moos` :8003 *(emits `hp-z440.primary` pre-§M9)* | Antigravity · Z440 (desktop 4) · `ffs0.code-workspace` | moos-primary |
 | John Lydon (governance) | `claude-cowork.hp-laptop` | `sam.governance` | `hp-laptop.primary` :8000 | Claude Desktop / Cowork · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
 | John Lydon (governance) | `claude-cowork.hp-laptop` | `sam.laptop-cowork-workspace` | `hp-laptop.primary` :8000 | Claude Desktop / Cowork · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
 | AG-laptop | `antigravity.hp-laptop` | `sam.laptop-moos-diary` | `hp-laptop.primary` :8000 | Antigravity · hp-laptop · `ffs0.code-workspace` | moos-hp-laptop-primary |
