@@ -20,7 +20,7 @@ categorical space, etc.) stay in `dev/design/` root.
 | `20260620-t231-moos-soom.md` | mo:os ⊣ so:om — engine/surface adjunction; device F/G degrees; wiring |
 | `20260620-t231-poly-foundations.md` | **Poly** as the unifier: comonoids = the data layer, lenses/coalgebras = the surfaces; trees = free monads; HAL/Erban lineage |
 | `20260725-t265-lp-placement-functor.md` | **L_p** — the placement map (rooms → semantic nodes) and the space `(P, S, r)` it lives in; measured: monotone 4/14, projection ~11% specified; D8 reify ruling = objects first, relation deferred |
-| `20260802-t274-engine-language-choice.md` | Engine rewrite language: C/Dependable C + MLIR examined against the four T274 drivers; C++ recorded pending the xDSL dialect spike; `libmoosfold` named alternative; ruling in `DECISION-engine-language.md` |
+| `20260802-t274-engine-language-choice.md` | Engine rewrite language: C/Dependable C + MLIR examined against the four T274 drivers; spikes run; superseded same round by Sam's ruling — language deferred, Go stays as oracle, dialect topology adopted (addendum: corrected mo:os↔compiler spine + purpose-slice convergence); ruling in `DECISION-engine-language.md` (rev 2) |
 | `poly-navigation-map.md` | one-screen guided tour: mo:os → so:om → mtdc → Poly → functorial semantics → Set |
 | `hyperprompt-moos-soom.md` | paste-ready seed booting Claude on hpz/hplap/hppro already wired into the mo:os ⊣ so:om frame |
 

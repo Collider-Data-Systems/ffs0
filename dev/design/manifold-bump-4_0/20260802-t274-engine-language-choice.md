@@ -74,12 +74,61 @@ Verdict: the T=263 re-judgment holds with local numbers — the dominant costs a
 
 **Spike B — survives, with the premise narrowed.** xDSL 0.69.0, ontology 4.0.4 loaded at runtime, 6/6 fixture cases correct (`dev/research/mlir/20260802-t274-spike-b-findings.md`). A dialect generated at process start can carry the runtime-versioned operad — *in a dynamic host*. Accidental headline: the t244 sketch verbatim is **rejected** by the 4.0.4 operad (WF21 is `causes/caused-by` now, not `produces/produced-by`) — the build-time-freeze rot demonstrated by our own two-round-old fixture. Sharpest conclusion: **the operad verifier does not need MLIR** — it is a table-driven checker in any language (the Go `operad.Registry` already is one). MLIR's value is pass/lowering machinery over a future committed `moos IR`, plausibly as an offline tool; it is not needed inside the engine. C++'s MLIR-proximity advantage is therefore real but narrower than the T=274 framing assumed.
 
-**Spike C — gate built and pinned.** `moos-kernel/testdata/replay/t274-fixture.jsonl` (12 entries: all four rewrite types, idempotent-skip duplicate ADD, additive MUTATE via PropertySpec, WF15 contract LINK) folds to canonical-state SHA-256 `6bb67afc79b23155cb79a38a0be74ed5c5685a5f519b5e081a128300a81e6d90` (`internal/fold/replay_fixture_test.go`, golden + hash committed). Any candidate engine reproduces this hash from the same JSONL or is not an engine. Full `go test ./...` stays green; `go.mod` untouched.
+**Spike C — gate built and pinned.** `moos-kernel/testdata/replay/t274-fixture.jsonl` (12 entries: all four rewrite types, idempotent-skip duplicate ADD, additive MUTATE via PropertySpec, WF15 contract LINK) folds to canonical-state SHA-256 `6bb67afc79b23155cb79a38a0be74ed5c5685a5f519b5e081a128300a81e6d90` (`internal/fold/replay_fixture_test.go`, golden + hash committed). Any candidate engine reproduces this hash from the same JSONL or is not an engine. Full `go test ./...` stays green; `go.mod` untouched. *(Rev 2, same round: after the lane-A dead-grammar finding, three fixture envelopes moved onto declared 4.0.4 port pairs and the goldens re-baked — the gate hash of record is `d8283f2777648bb38eeaecbcb7023b10dfee90784529aeb70d1788bd65098dc1`, merged to master via moos-kernel#66 and reproduced cross-OS/cross-Go by lane A. The `6bb67afc…` hash is void.)*
 
 ## Open Questions
 
-1. Does the full-replacement scope survive Spike A's numbers, or does the lane narrow back to the T244 fold-core spike with Go retained as the runtime shell?
-2. If Spike B kills the build-time dialect, does MLIR leave the engine decision entirely, or return later as an offline tool over a committed `moos IR` text format (T244 open question #1)?
+1. Does the full-replacement scope survive Spike A's numbers, or does the lane narrow back to the T244 fold-core spike with Go retained as the runtime shell? *(Answered by the ruling — see addendum: scope dissolved; Go stays as oracle and running engine; no port lane.)*
+2. If Spike B kills the build-time dialect, does MLIR leave the engine decision entirely, or return later as an offline tool over a committed `moos IR` text format (T244 open question #1)? *(Answered — see addendum: offline tooling; dialects generated from the live HG.)*
+
+## Addendum (t274, same round) — the ruling: language deferred, dialect topology adopted
+
+Sam's ruling landed mid-round, after the spikes: **stop choosing a language.** Go stays put
+(oracle + running engine, no retirement plan); languages become **targets, plural**, chosen
+per lowering; the object of study is the **dialect topology** — workspaces connect to
+purpose, a purpose slices the HG's wiring to its operations, per-concern dialects (compute,
+transport, maths, …) lower to code catered per target, and workspaces (via user/group
+topology) govern the manifold including its ontology and engine code. The DECISION file was
+amended accordingly (rev 2). What follows is the reviewed groundwork for that lane.
+
+**The corrected correspondence spine** (first-draft mapping adversarially reviewed; the
+review moved every row one level and the corrected spine survived):
+
+| mo:os | compiler seat | status |
+| --- | --- | --- |
+| ontology / operad | **dialect** (op vocabulary + verifiers) | the seat is taken by `ontology.json` — not by purpose |
+| engine (kernel) | **context** (uniquing arena owning loaded dialects) | `Registry` + GraphState indexes are the interning layer |
+| workspace (session) | **module + target descriptor (DLTI) + pipeline config** | the seat tuple decomposes exactly: agent × workspace × engine × surface × skills |
+| purpose | **legality set + visibility scope** — purpose *selects* from the vocabulary, never defines one | see the convergence below |
+| F-projection | **lowering / dialect conversion** | CI-2's naturality law `Project(Apply(M,S)) = Apply(M', Project(S))` *is* the lowering-correctness square; `ci2_projection_registry` seeds the pass registry |
+| §M11/§M12 + WF02 gates | **verifier-admitted execution** — no MLIR precedent; real kin: eBPF verifier, proof-carrying code (envelope `actor` ≈ the certificate), WASI capability imports (WF02 `delegates-to` ≈ capability narrowing) | genuinely novel *within* compilers; well-precedented in systems |
+| log-is-truth | **no compiler analog** — MLIR is not event-sourced | the F half is compiler-shaped; the G half stays sovereign. "None of them is mo:os; the rewrite log and the operad are" (t244) survives with a precise compiler reading |
+
+**The convergence finding (the "purpose = slice" work has a precise shape):** the operations
+slice already exists as `capability.scope` ("list of WF categories this capability grants" —
+a legality set, verbatim) but hangs off WF02; the wiring slice already exists as `pins-urn`
+(33 live) + `view_filter`/`filtered-by` (the §M15 t-cone lens) but hangs off session; the
+purpose node (7 live `has-purpose`, φ(purpose) already described in the ontology as a
+steering vector field) carries neither. The missing grammar is **joining the two slices at
+the purpose node** so `has-purpose` pulls both — a future fragment in the t231 style,
+Sam-gated. This also resolves t231's deferred `compile-target` question the way MLIR does:
+the target is *described* (DLTI-shaped capability properties on workstation/kernel — the
+moos-soom F/G-degree vector) and separately *addressed* (a channel).
+
+**Pinned facts for the lane** (verified this round): LLVM 22.x Windows
+`clang+llvm-*-msvc.tar.xz` (full tarball, not the installer) now ships
+`mlir-opt`/`mlir-translate` — the t244 tooling blocker is closed upstream. IRDL defines
+dialects at runtime but its declarative constraints cannot express the port-pair matrix, and
+`irdl.c_pred` (arbitrary predicates) forfeits runtime loading — independently confirming
+Spike B's table-driven-checker conclusion from the MLIR side. The transform dialect is the
+precedent for pipelines-as-program-nodes (transformations as first-class IR); stock MLIR has
+compute lowering (vector/gpu/linalg) but no transport dialects — even its MPI dialect bottoms
+out in runtime-library calls, which *is* the actuator-leaves doctrine.
+
+**Marked conjecture:** whether "memory-allocation projections" means bufferization is open —
+the correspondence is real only if workspace projections decide *materialization sharing vs
+copy* (one-shot bufferize's alias-set problem); otherwise the honest analog is plain lowering
+plus DLTI layout attributes. Sam to disambiguate when the fragment lands.
 
 ---
 authored-by: agent:claude-code.remote / session:none-ungoverned-remote-s0 / t274-engine-language-choice

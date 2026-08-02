@@ -1,69 +1,87 @@
-# DECISION — engine rewrite language (T=274)
+# DECISION — engine rewrite language (T=274, amended same round)
 
-Full-runtime replacement lane (Sam's scope call, T=274; supersedes the T244 semantic-core-only
-scope as *target*, keeps it as *ordering*). Rationale + measurements: `20260802-t274-engine-language-choice.md`.
-The Go `moos-kernel` remains the **reference oracle** until a replacement proves replay
-equivalence (Spike C gate below); this document licenses no port ahead of that gate.
+> **Amendment history:** rev 1 recorded "C++ (C++20) throughout" as the direction. Sam's
+> mid-round ruling (t274) superseded it before merge; rev 2 (this text) records the actual
+> decision. Rationale + measurements: `20260802-t274-engine-language-choice.md` (incl. its
+> t274 addendum). Nothing in rev 1's evidence was overturned — only its ruling.
 
-## 1. Language decision
+## 1. Ruling
 
-**Engine language: C++ (C++20), chosen for LLVM/MLIR proximity, Eigen, and allocator control —
-Sam's direction, T=274.** The MLIR premise is explicitly **pending Spike B** (xDSL: can a
-dialect generated from `ontology.json` carry a runtime-versioned operad?). If Spike B fails,
-this decision's premise clause is void and the language question reopens on runtime merits,
-where the T274 note records Rust as the measured leader.
+**The engine-language question is DEFERRED, and dissolved into a better-posed one.** No
+language is chosen for a runtime port this round. The Go `moos-kernel` stays where it is —
+**reference oracle behind the replay-equivalence gate** (§3, now merged) and the running
+engine, with no retirement plan attached. The object of study for the rewrite lane is the
+**dialect topology**: workspaces connect to purpose; a purpose slices the HG's wiring to its
+operations; per-concern dialects (compute, transport, maths, …) lower to code catered per
+target. Languages are **targets, plural**, selected per lowering by the conversion pipeline —
+not an identity the engine commits to. Design work continues in the t274 note's addendum and
+its successor notes under `purpose:sam.compiler-lowering`.
 
-**C / Dependable C: rejected for the runtime.** Three of four drivers score against it
-(dependency count *increases* — OpenSSL + HTTP/2 stack + ngtcp2/nghttp3 + JSON + hashmap;
-~40 hand-written serializer pairs for 181 tagged fields; no structural invariants). Reserved
-as the candidate for **`libmoosfold`** — fold + GraphState + operad validation as a
-zero-dependency C-ABI library (~926 Go src LOC today) — a named alternative requiring a scope
-reversal by Sam, not licensed here.
+Rulings that stand from rev 1 (evidence unaffected by the reframe):
 
-**Zig, Mojo: out.** Zig has one line of prior art in the repo (`dev/tools/landscape.md`,
-"from-scratch perf experiments") and no stable HTTP/2/TLS story; Mojo has zero prior art here.
+- **C / Dependable C: rejected for a full runtime.** The zero-dep driver inverts (OpenSSL +
+  HTTP/2 stack + ngtcp2/nghttp3 + JSON + hashmap vs today's stdlib+quic-go); ~40 hand-written
+  serializer pairs for 181 tagged fields; no structural invariants. Reserved candidate for
+  **`libmoosfold`** — fold + GraphState + operad validation as a zero-dependency C-ABI
+  library (~926 Go src LOC today) — requiring an explicit scope call by Sam, not licensed here.
+- **Zig, Mojo: out** (one line and zero lines of prior art respectively; no stable
+  HTTP/2/TLS story for Zig).
+- **MLIR is not an engine dependency.** Spike B's conclusion of record: the operad verifier is
+  a table-driven checker in any language (the Go `operad.Registry` already is one); MLIR's
+  value is pass/lowering machinery over a committed `moos IR`, as offline tooling. Confirmed
+  independently from the MLIR side: IRDL's declarative constraints cannot express the
+  port-pair matrix, and its `irdl.c_pred` escape hatch forfeits runtime loading — so
+  per-purpose dialects generated from the HG stay in xDSL/dynamic-host territory.
 
-## 2. Anti-goals (what this decision does NOT license)
+## 2. Anti-goals (unchanged in substance; what this decision does NOT license)
 
 - **No LLVM/MLIR in the engine's build graph.** MLIR work stays in xDSL/offline-tool space
-  until Spike B rules and `moos IR` has a committed textual format (T244 open question #1).
-- **No port of transport, MCP, sweep, or router ahead of the fold core** (T244 ordering, kept).
+  until `moos IR` has a committed textual format (T244 open question #1).
+- **No port of transport, MCP, sweep, or router ahead of the fold core** (T244 ordering, kept
+  for whenever a port lane opens).
 - **No new dependencies in `moos-kernel`** while it is the oracle — "stdlib + quic-go only"
-  stands (defended T=260, T=263). Spike A is test-files-only.
-- **No ontology edit, no HG rewrite, no `moos-kernel` production-source change** in this lane
-  until the replay gate exists and a reviewed apply says otherwise.
-- **No C++ dependency sprawl at port time.** The port's dependency list is a future DECISION
-  edit here, with pins, before the first `CMakeLists.txt` lands — not an accretion.
+  stands (defended T=260, T=263).
+- **No ontology edit, no HG rewrite** in this lane without a reviewed apply. The dialect-
+  topology grammar work (purpose → operations-slice + scope-slice join) is future fragments,
+  Sam-gated.
+- **Go hygiene fixes are licensed on their own merits** (batch `EncodeNodes` in
+  `spectral.go`, persistent encoder on `Runtime`, CoW state per the existing
+  `TODO(perf)`) — they are oracle maintenance, not a port.
 
-## 3. Acceptance gate (language-neutral, Spike C)
+## 3. Acceptance gate — MERGED (moos-kernel#66)
 
-A committed JSONL log fixture + canonical serialization of the folded state (`Nodes` +
+Committed JSONL log fixture + canonical serialization of the folded state (`Nodes` +
 `Relations` only; derived indexes are `json:"-"`, rebuilt by `Rebuild()`,
-`graph/state.go:69`) + a stable SHA-256. Any candidate engine reproduces the hash or is not an
-engine. Reference path: `fold.Replay` (`fold/replay.go:29`).
+`graph/state.go:69`) + stable SHA-256. Any candidate engine, in any language, reproduces the
+hash from the same JSONL or is not an engine. Reference path: `fold.Replay`
+(`fold/replay.go:29`).
 
-## 4. Re-open triggers — status after the same-round spike runs
+Current gate hash (rev 2 — fixture envelopes on declared 4.0.4 port pairs after the lane-A
+dead-grammar finding; reproduced cross-OS/cross-Go by lane A):
 
-1. Spike A shows Go hygiene fixes (persistent encoder, CoW state, batch encode) recover most
-   of the throughput → the perf driver lapses; scope narrows back to the T244 fold-core spike.
-   **Status: TRIGGERED-IN-PART.** Measured: the unused batch path alone is ~4× time / ~50×
-   allocation on the dominant cost (full-state HDC encode, run twice per rewrite under the
-   write lock — ~7.3 GB/call at 300 nodes on the per-node path). The perf driver for a
-   *language* change is substantially deflated; Sam rules on scope.
-2. Spike B fails → MLIR leaves the engine decision; language reopens on runtime merits.
-   **Status: not triggered, but premise NARROWED.** The runtime-generated dialect survives
-   6/6 in xDSL (dynamic host); the C++ ODS path remains build-time and the t244 sketch
-   verbatim is already rejected by operad 4.0.4 (WF21 pair renamed). Conclusion of record:
-   the operad verifier needs a table-driven checker, not MLIR; MLIR's value is offline
-   pass/lowering tooling over a committed `moos IR`. C++'s §1 premise is thereby weakened
-   but not void — Sam rules on whether it still carries the decision.
-3. The "stdlib + quic-go only" ethos is extended to the replacement → revisit §1, since C++'s
-   HTTP/2 + JSON story depends on third-party libraries as much as Rust's does.
-   **Status: open — this is a values call only Sam can make.**
+```
+d8283f2777648bb38eeaecbcb7023b10dfee90784529aeb70d1788bd65098dc1
+```
 
-Gate artifact (§3) exists as of this round: fixture SHA-256
-`6bb67afc79b23155cb79a38a0be74ed5c5685a5f519b5e081a128300a81e6d90`
-(`moos-kernel/testdata/replay/`, `internal/fold/replay_fixture_test.go`).
+The rev-1 hash `6bb67afc…` is void — its fixture encoded undeclared grammar (WF19
+`occupies`, WF12 `kb-provided-by` + out-of-`tgt_types` target, WF15 non-literal pair).
+`testdata/replay/* -text` in `.gitattributes` protects the golden bytes on autocrlf clones.
+
+## 4. Re-open triggers → resolution
+
+Rev 1's triggers are resolved by the ruling itself:
+
+1. *Spike A deflates the perf motive* — **CONFIRMED and absorbed**: the dominant costs are
+   algorithmic and Go-fixable (~4× time / ~50× allocation on the write path's dominant term
+   via the existing batch path alone). This is now §2's licensed hygiene work.
+2. *Spike B narrows the MLIR premise* — **CONFIRMED and absorbed**: table-driven checker in
+   the engine; MLIR as offline tooling; dialects generated from the live HG, never frozen at
+   build time (the t244 sketch verbatim is already rejected by operad 4.0.4).
+3. *The stdlib-only values call* — **MOOT for now**: no replacement runtime is being built,
+   so no replacement dependency list needs ruling. Reopens with any future port lane.
+
+This DECISION reopens only on an explicit scope call by Sam (e.g. `libmoosfold`, or a
+concrete lowering target that needs a non-Go engine surface).
 
 ---
 authored-by: agent:claude-code.remote / session:none-ungoverned-remote-s0 / t274-engine-language-choice
