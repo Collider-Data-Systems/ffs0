@@ -3203,10 +3203,10 @@
     "port_color_map": {
       "member-of": "auth",
       "has-member": "auth",
-      "parent_of": "auth",
-      "child_of": "auth",
-      "spouse_of": "auth",
-      "sibling_of": "auth"
+      "parent-of": "topology",
+      "child-of": "topology",
+      "spouse-of": "topology",
+      "sibling-of": "topology"
     },
     "port_colors": [
       "auth",
@@ -3781,8 +3781,8 @@
           "description": "Generalized ownership port-pair. Lifts the ownership relation from property (owner_urn, scattered across every node type) to typed topology. Coexists with the primary owns/child pair (legacy user→workstation) and also with owner_urn properties (sticky provenance) — operads can derive owner_urn from inbound owned-by edges when needed, deprecating the property gradually. Enables group→downstream traversal (what does group:sam own?)."
         },
         {
-          "src_port": "parent_of",
-          "tgt_port": "child_of",
+          "src_port": "parent-of",
+          "tgt_port": "child-of",
           "src_types": [
             "user"
           ],
@@ -3793,8 +3793,8 @@
           "description": "Kinship: parent of user. Directed kinship relation linking parent user to child user."
         },
         {
-          "src_port": "spouse_of",
-          "tgt_port": "spouse_of",
+          "src_port": "spouse-of",
+          "tgt_port": "spouse-of",
           "src_types": [
             "user"
           ],
@@ -3805,8 +3805,8 @@
           "description": "Kinship: spouse of user. Symmetric kinship relation linking spouse users."
         },
         {
-          "src_port": "sibling_of",
-          "tgt_port": "sibling_of",
+          "src_port": "sibling-of",
+          "tgt_port": "sibling-of",
           "src_types": [
             "user"
           ],
