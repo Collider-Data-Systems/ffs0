@@ -1,0 +1,110 @@
+{
+  "review_only": false,
+  "apply_ready": false,
+  "applied": true,
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "target_url": "http://localhost:8000/programs",
+  "persona": "zappa",
+  "approval_basis": "t260 /goal item 3 (#157 ask 4); design note kb/moos-diary/shorts/20260711-t252-moos-short.md",
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "node_urn": "urn:moos:ki:video.moos-short-t252",
+      "type_id": "knowledge_item",
+      "properties": {
+        "title": {
+          "value": "Moos — 5-second YouTube Short (T=252)",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "kb/moos-diary/shorts/moos-short-t252.mp4",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_type": {
+          "value": "video",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "language": {
+          "value": "none",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "retrieved_at": {
+          "value": "2026-07-11",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-11",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "substrate": {
+          "value": "external-channel",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "substrate_anchor_urn": {
+          "value": "urn:moos:channel:local.moos-footage",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:moos",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "summary": {
+          "value": "Derived 1080x1920 5.04s silent H.264 montage of mascot dachshund Moos, 3 beats (couch hook / cozy window / head-tilt button) cut from channel:local.moos-footage Veo diary renders. PR #156. Silent v1; AI cut (Veo) + voiceover + YouTube publish are follow-on legs (#157).",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "active",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "relation_urn": "urn:moos:rel:t260-moos-short.urn-moos-channel-local-moos-footage.provides-kb.urn-moos-ki-video-moos-short-t252",
+      "rewrite_category": "WF12",
+      "src_urn": "urn:moos:channel:local.moos-footage",
+      "src_port": "provides-kb",
+      "tgt_urn": "urn:moos:ki:video.moos-short-t252",
+      "tgt_port": "kb-source"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "session_urn": "urn:moos:session:sam.moos-diary",
+      "relation_urn": "urn:moos:rel:t260-moos-short.urn-moos-session-sam-moos-diary.pins-urn.urn-moos-ki-video-moos-short-t252",
+      "rewrite_category": "WF19",
+      "src_urn": "urn:moos:session:sam.moos-diary",
+      "src_port": "pins-urn",
+      "tgt_urn": "urn:moos:ki:video.moos-short-t252",
+      "tgt_port": "pinned-by-session"
+    }
+  ],
+  "do_not_reapply": true,
+  "applied_via": "Invoke-RestMethod -InFile; 3/3 results (ki + WF12 + WF19)"
+}

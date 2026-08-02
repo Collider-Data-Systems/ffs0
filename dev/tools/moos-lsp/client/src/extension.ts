@@ -31,6 +31,7 @@ export function activate(context: vscode.ExtensionContext): void {
   const clientOptions: LanguageClientOptions = {
     documentSelector: [
       { scheme: "file", language: "json", pattern: "**/*.{program,envelope,moos}.json" },
+      { scheme: "file", language: "json", pattern: "**/*.staged.json" },
       { scheme: "file", language: "moos" },
     ],
   };
