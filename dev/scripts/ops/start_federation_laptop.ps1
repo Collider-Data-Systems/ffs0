@@ -54,8 +54,31 @@ if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     Write-Host "Primary kernel already running — skipping." -ForegroundColor Gray
 } else {
     Write-Host "Starting moos primary kernel (laptop)..." -ForegroundColor Cyan
+    # --kernel-urn (moos-kernel#69 / A6): explicit self-identity for /healthz +
+    # /log/integrity. The laptop fold holds several peers' kernel nodes, so the
+    # kernel cannot derive "which one is me" from the fold alone; without the
+    # flag it honestly omits the field rather than guessing. Identity only —
+    # never an actor. Probed rather than assumed: Go's flag package FAILS FAST
+    # on unknown flags, so passing this to a pre-#69 binary would kill the
+    # kernel at boot (e.g. an autostart after reboot, before a redeploy) —
+    # the same defensive shape as the auth-token check above.
+    # Probe details (Copilot catches on #191): match the raw line ARRAY, not
+    # Out-String — Out-String width-wraps long help text and a wrapped flag
+    # name would false-negative; Go flag help always leads each flag with its
+    # own line, and -match over an array tests per line. And a probe FAILURE
+    # must be as visible as a probe miss — both degrade to flag-off, loudly.
+    $KernelUrnArgs = ""
+    try {
+        if ((& $KernelExe --help 2>&1) -match 'kernel-urn') {
+            $KernelUrnArgs = " --kernel-urn urn:moos:kernel:hp-laptop.primary"
+        } else {
+            Write-Host "NOTE: binary predates moos-kernel#69 - starting without --kernel-urn (kernel_urn omitted from reports until redeploy)." -ForegroundColor Yellow
+        }
+    } catch {
+        Write-Host "WARNING: --kernel-urn probe failed ($($_.Exception.Message)) - starting without the flag (kernel_urn omitted from reports)." -ForegroundColor Yellow
+    }
     Start-Process -FilePath $KernelExe `
-        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hp-laptop$AuthArgs" `
+        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hp-laptop$KernelUrnArgs$AuthArgs" `
         -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }
