@@ -608,7 +608,13 @@ function Get-ProgramGuardVerdict {
     $meta.target_kernel = Get-ObjectProperty -Object $Payload -Name 'target_kernel'
     $meta.target_url = Get-ObjectProperty -Object $Payload -Name 'target_url'
     $meta.readback_gate = Get-ObjectProperty -Object $Payload -Name 'readback_gate'
-    if ($meta.target_kernel -and $EmitKernelName -and -not $HasTargetUrlOverride) {
+    if (-not $meta.target_kernel) {
+        # Copilot finding, ffs0#189: an ABSENT target_kernel must refuse too, or the
+        # wrong-fold failure mode returns through the files that never got stamped
+        # (the two t249 governs backfills carried only _STATUS + envelopes).
+        $refusals += 'no target_kernel in the wrapper — stamp targeting metadata (step 0b discipline) before any POST, or -Force'
+    }
+    elseif ($EmitKernelName -and -not $HasTargetUrlOverride) {
         if (-not ([string]$meta.target_kernel).EndsWith([string]$EmitKernelName)) {
             $refusals += "target_kernel '$($meta.target_kernel)' does not match resolved persona emit kernel '$EmitKernelName' — a wrong-fold apply is silent (B5); use the matching -Persona, or -TargetUrl for a scratch kernel"
         }
@@ -634,6 +640,8 @@ function Invoke-GuardSelfTest {
     $results += [pscustomobject]@{ case = 'target_kernel mismatch refused'; pass = ($v.Refusals -like 'target_kernel*').Count -eq 1 }
     $v = Get-ProgramGuardVerdict -Payload $wrongFold -EmitKernelName 'hp-z440.primary' -HasTargetUrlOverride
     $results += [pscustomobject]@{ case = '-TargetUrl override skips the kernel match'; pass = ($v.Refusals -like 'target_kernel*').Count -eq 0 }
+    $v = Get-ProgramGuardVerdict -Payload ([pscustomobject]@{ apply_ready = $true; envelopes = @(1) }) -EmitKernelName 'hp-z440.primary'
+    $results += [pscustomobject]@{ case = 'missing target_kernel refused'; pass = (($v.Refusals -like 'no target_kernel*').Count -eq 1 -and $v.Refusals.Count -eq 1) }
     $clean = [pscustomobject]@{ apply_ready = $true; applied = $false; do_not_reapply = $false; target_kernel = 'urn:moos:kernel:hp-z440.primary'; readback_gate = [pscustomobject]@{ require_ontology_version = '4.0.4' }; envelopes = @(1) }
     $v = Get-ProgramGuardVerdict -Payload $clean -EmitKernelName 'hp-z440.primary'
     $results += [pscustomobject]@{ case = 'clean wrapper passes + meta extracted'; pass = ($v.Refusals.Count -eq 0 -and $v.Meta.readback_gate.require_ontology_version -eq '4.0.4') }

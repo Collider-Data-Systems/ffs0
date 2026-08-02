@@ -41,10 +41,16 @@ foreach ($required in @($SeedLogPath, $OntologyPath, $KernelExe)) {
 }
 
 # B2 guard: refuse a scratch root inside any git worktree — the seed is a copy
-# of a sovereign log and must never become committable.
-$gitProbe = git -C $ScratchRoot rev-parse --is-inside-work-tree 2>$null
-if ($LASTEXITCODE -eq 0 -and "$gitProbe".Trim() -eq 'true') {
-    throw "ScratchRoot '$ScratchRoot' is inside a git worktree — refuse (B2: sovereign-log copies never live where git can see them)."
+# of a sovereign log and must never become committable. Probe the nearest
+# EXISTING ancestor so a not-yet-created -ScratchRoot cannot bypass the check
+# (Copilot finding, ffs0#189).
+$probeDir = $ScratchRoot
+while ($probeDir -and -not (Test-Path $probeDir)) { $probeDir = Split-Path $probeDir -Parent }
+if ($probeDir) {
+    $gitProbe = git -C $probeDir rev-parse --is-inside-work-tree 2>$null
+    if ($LASTEXITCODE -eq 0 -and "$gitProbe".Trim() -eq 'true') {
+        throw "ScratchRoot '$ScratchRoot' resolves inside a git worktree (probe: '$probeDir') — refuse (B2: sovereign-log copies never live where git can see them)."
+    }
 }
 
 # Refuse a busy port instead of stacking kernels.
