@@ -1,48 +1,54 @@
-[
- {
-  "rewrite_type": "ADD",
-  "actor": "urn:moos:kernel:hp-laptop.primary",
-  "node_urn": "urn:moos:manifold:my-tiny-data-collider",
-  "type_id": "manifold",
-  "properties": {
-   "name": {
-    "value": "my-tiny-data-collider",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "owner_urn": {
-    "value": "urn:moos:user:sam",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   },
-   "created_at": {
-    "value": "2026-07-08T19:50:00Z",
-    "mutability": "immutable",
-    "authority_scope": "",
-    "stratum_origin": 2
-   }
-  }
- },
- {
-  "rewrite_type": "LINK",
-  "actor": "urn:moos:kernel:hp-laptop.primary",
-  "relation_urn": "urn:moos:rel:t249.mtdc.spans.purpose-tdc",
-  "src_urn": "urn:moos:manifold:my-tiny-data-collider",
-  "src_port": "spans",
-  "tgt_urn": "urn:moos:purpose:sam.tiny-data-collider",
-  "tgt_port": "spanned-by",
-  "rewrite_category": "WF18"
- },
- {
-  "rewrite_type": "LINK",
-  "actor": "urn:moos:kernel:hp-laptop.primary",
-  "relation_urn": "urn:moos:rel:t249.mtdc.spans.program-tdc-federation",
-  "src_urn": "urn:moos:manifold:my-tiny-data-collider",
-  "src_port": "spans",
-  "tgt_urn": "urn:moos:program:sam.t200plus.tiny-data-collider-federation",
-  "tgt_port": "spanned-by",
-  "rewrite_category": "WF18"
- }
-]
+{
+  "_STATUS": "WRAPPED t274 (D12-extended): bare list from the t249 H1/D4/G2 round; presumed applied t249; all 2 LINKs present in fleet readback 2026-08-02T21:49:09Z. Do not re-run without investigation.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "node_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "type_id": "manifold",
+      "properties": {
+        "name": {
+          "value": "my-tiny-data-collider",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-08T19:50:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t249.mtdc.spans.purpose-tdc",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:purpose:sam.tiny-data-collider",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t249.mtdc.spans.program-tdc-federation",
+      "src_urn": "urn:moos:manifold:my-tiny-data-collider",
+      "src_port": "spans",
+      "tgt_urn": "urn:moos:program:sam.t200plus.tiny-data-collider-federation",
+      "tgt_port": "spanned-by",
+      "rewrite_category": "WF18"
+    }
+  ]
+}

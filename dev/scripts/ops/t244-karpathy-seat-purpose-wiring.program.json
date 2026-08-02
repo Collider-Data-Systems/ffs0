@@ -53,5 +53,8 @@
       "tgt_port": "pinned-by-session",
       "rewrite_category": "WF19"
     }
-  ]
+  ],
+  "applied": true,
+  "do_not_reapply": true,
+  "t274_flag_evidence": "D12 (Sam rev-4): all 2 LINKs verified present in fleet fold readback 2026-08-02T21:48:24Z; flags backfilled, never re-runnable."
 }

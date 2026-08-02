@@ -1,46 +1,77 @@
-[
-  {
-    "rewrite_type": "ADD",
-    "actor": "urn:moos:agent:claude-code.hp-laptop",
-    "session_urn": "urn:moos:session:sam.governance",
-    "node_urn": "urn:moos:group:sam",
-    "type_id": "group",
-    "properties": {
-      "created_at":  {"value": "2026-04-23T21:30:00Z", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-      "name":        {"value": "sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-      "owner_urn":   {"value": "urn:moos:user:sam", "mutability": "immutable", "authority_scope": "", "stratum_origin": 2},
-      "description": {"value": "Primary user group — sam's hp-laptop scope. Sovereign mirror of urn:moos:group:sam on kernel:hp-z440.primary. Owns hp-laptop.primary + governance session + laptop-cowork-workspace session. Superadmin-capability holder via role:superadmin (log_seq 586-587).", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2},
-      "status":      {"value": "active", "mutability": "mutable", "authority_scope": "owner", "stratum_origin": 2}
+{
+  "_STATUS": "WRAPPED t274 (D12-extended): was a bare envelope list, pre-staging-discipline; applied t173 (all 3 LINKs present in fleet readback 2026-08-02T21:49:09Z). The A2 guard refuses bare lists by design.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:agent:claude-code.hp-laptop",
+      "session_urn": "urn:moos:session:sam.governance",
+      "node_urn": "urn:moos:group:sam",
+      "type_id": "group",
+      "properties": {
+        "created_at": {
+          "value": "2026-04-23T21:30:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "name": {
+          "value": "sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:sam",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "description": {
+          "value": "Primary user group — sam's hp-laptop scope. Sovereign mirror of urn:moos:group:sam on kernel:hp-z440.primary. Owns hp-laptop.primary + governance session + laptop-cowork-workspace session. Superadmin-capability holder via role:superadmin (log_seq 586-587).",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        },
+        "status": {
+          "value": "active",
+          "mutability": "mutable",
+          "authority_scope": "owner",
+          "stratum_origin": 2
+        }
+      }
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.kernel.hp-laptop-primary",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:kernel:hp-laptop.primary",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.session.governance",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:session:sam.governance",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:group.sam.owns.session.laptop-cowork-workspace",
+      "src_urn": "urn:moos:group:sam",
+      "src_port": "owns",
+      "tgt_urn": "urn:moos:session:sam.laptop-cowork-workspace",
+      "tgt_port": "owned-by",
+      "rewrite_category": "WF01"
     }
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-laptop.primary",
-    "relation_urn": "urn:moos:rel:group.sam.owns.kernel.hp-laptop-primary",
-    "src_urn": "urn:moos:group:sam",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:kernel:hp-laptop.primary",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-laptop.primary",
-    "relation_urn": "urn:moos:rel:group.sam.owns.session.governance",
-    "src_urn": "urn:moos:group:sam",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:session:sam.governance",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  },
-  {
-    "rewrite_type": "LINK",
-    "actor": "urn:moos:kernel:hp-laptop.primary",
-    "relation_urn": "urn:moos:rel:group.sam.owns.session.laptop-cowork-workspace",
-    "src_urn": "urn:moos:group:sam",
-    "src_port": "owns",
-    "tgt_urn": "urn:moos:session:sam.laptop-cowork-workspace",
-    "tgt_port": "owned-by",
-    "rewrite_category": "WF01"
-  }
-]
+  ]
+}

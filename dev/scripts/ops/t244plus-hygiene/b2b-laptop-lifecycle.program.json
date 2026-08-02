@@ -1,91 +1,95 @@
 {
- "envelopes": [
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:session:sam.t200plus-calendar-readback",
-   "field": "status",
-   "new_value": "abandoned",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:session:sam.t200plus-project-bridge",
-   "field": "status",
-   "new_value": "abandoned",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:session:sam.t200plus-s0-staging",
-   "field": "status",
-   "new_value": "abandoned",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:session:sam.t200plus-application-surface-map",
-   "field": "status",
-   "new_value": "abandoned",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
-   "field": "status",
-   "new_value": "abandoned",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:external_op:sam.t206-google-keep-oauth-scope-approval",
-   "field": "status",
-   "new_value": "cancelled"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:program:sam.t193.hpprodesk-topology-materialization",
-   "field": "status",
-   "new_value": "completed",
-   "rewrite_category": "WF18"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:program:sam.t189.cytoscape-typed-hg-inspector",
-   "field": "status",
-   "new_value": "completed",
-   "rewrite_category": "WF18"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:program:sam.t192.application-group-model-my-tiny-data-collider",
-   "field": "status",
-   "new_value": "archived",
-   "rewrite_category": "WF18"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:program:sam.t189.github-project-urn-refresh",
-   "field": "status",
-   "new_value": "archived",
-   "rewrite_category": "WF18"
-  },
-  {
-   "rewrite_type": "MUTATE",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "target_urn": "urn:moos:program:sam.t189.calendar-event-g-ingest-shape",
-   "field": "status",
-   "new_value": "archived",
-   "rewrite_category": "WF18"
-  }
- ]
+  "_STATUS": "STAMPED t274 (D12-extended): applied t245 per the Sam-approved four-batch round (t244plus-hygiene.md); flags were never written. Evidence: live has-purpose x7 + lifecycle statuses.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "envelopes": [
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:session:sam.t200plus-calendar-readback",
+      "field": "status",
+      "new_value": "abandoned",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:session:sam.t200plus-project-bridge",
+      "field": "status",
+      "new_value": "abandoned",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:session:sam.t200plus-s0-staging",
+      "field": "status",
+      "new_value": "abandoned",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:session:sam.t200plus-application-surface-map",
+      "field": "status",
+      "new_value": "abandoned",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:session:sam.t200plus-z440-rejoin",
+      "field": "status",
+      "new_value": "abandoned",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:external_op:sam.t206-google-keep-oauth-scope-approval",
+      "field": "status",
+      "new_value": "cancelled"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:program:sam.t193.hpprodesk-topology-materialization",
+      "field": "status",
+      "new_value": "completed",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:program:sam.t189.cytoscape-typed-hg-inspector",
+      "field": "status",
+      "new_value": "completed",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:program:sam.t192.application-group-model-my-tiny-data-collider",
+      "field": "status",
+      "new_value": "archived",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:program:sam.t189.github-project-urn-refresh",
+      "field": "status",
+      "new_value": "archived",
+      "rewrite_category": "WF18"
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "target_urn": "urn:moos:program:sam.t189.calendar-event-g-ingest-shape",
+      "field": "status",
+      "new_value": "archived",
+      "rewrite_category": "WF18"
+    }
+  ]
 }

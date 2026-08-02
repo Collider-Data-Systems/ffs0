@@ -1,10 +1,16 @@
-[
- {
-  "rewrite_type": "MUTATE",
-  "actor": "urn:moos:kernel:hp-z440.primary",
-  "target_urn": "urn:moos:session:vscode-codex-hp-z440.t161",
-  "field": "status",
-  "new_value": "closed",
-  "rewrite_category": "WF07"
- }
-]
+{
+  "_STATUS": "WRAPPED t274 (D12-extended): bare list from the t249 H1/D4/G2 round; presumed applied t249; no LINKs — presence not census-verifiable, MUTATE/ADD only. Do not re-run without investigation.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "envelopes": [
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:session:vscode-codex-hp-z440.t161",
+      "field": "status",
+      "new_value": "closed",
+      "rewrite_category": "WF07"
+    }
+  ]
+}

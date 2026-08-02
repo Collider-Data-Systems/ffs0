@@ -1,376 +1,380 @@
 {
- "envelopes": [
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-fbf5bd4bc763ea524b605e9c",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-72c33d1569c0a9361302275a",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-4aa99f2916caef0c98d5e11c",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-b2398bff1dda85e29aeec5a3",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-d4dc08ed4cdc681623e72fbd",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-18-moos-fbf5bd4bc763ea524b605e9c",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-83d3dd372a8ab83c302b310b",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-b2398bff1dda85e29aeec5a3",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-30-moos-fbf5bd4bc763ea524b605e9c",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-731ea6e3fc2c0902de497931",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-12.moos-2b096bed9e407d8f4e98a380",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-6ea4d6ff03b1dba16a179080",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-7d860cb1f50b29272cb6df01",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-e626ed63f0b0f07ccb4cc2d2",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-657123eca115dbcd2e3ee5ae",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-72c33d1569c0a9361302275a",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-2b096bed9e407d8f4e98a380",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-27bcd02235de0c73205e56da",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-521f3619c41e8b271c9b97c9",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-1d55f871b77f7f93db72a646",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-8b818ad6ab841fdcee78712a",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-d213cae622b0d26c0f72dd5a",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-4aa99f2916caef0c98d5e11c",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-d4dc08ed4cdc681623e72fbd",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-7d860cb1f50b29272cb6df01",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-8b818ad6ab841fdcee78712a",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-198e99c75d8617b0755204a9",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-73e0e04ff9e8e4229398fc05",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-d213cae622b0d26c0f72dd5a",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-e626ed63f0b0f07ccb4cc2d2",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-18-moos-108b5c248bbb82240ebf3037",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-108b5c248bbb82240ebf3037",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-521f3619c41e8b271c9b97c9",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-83d3dd372a8ab83c302b310b",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-f211401e5f8cb3a9c95c89c3",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-73e0e04ff9e8e4229398fc05",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-2b096bed9e407d8f4e98a380",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-e626ed63f0b0f07ccb4cc2d2",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-27bcd02235de0c73205e56da",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-731ea6e3fc2c0902de497931",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-5239773a6f1b15d576ad0f94",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-27bcd02235de0c73205e56da",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-6ea4d6ff03b1dba16a179080",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-f211401e5f8cb3a9c95c89c3",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-30-moos-108b5c248bbb82240ebf3037",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-73e0e04ff9e8e4229398fc05",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-7d860cb1f50b29272cb6df01",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-1d55f871b77f7f93db72a646",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-521f3619c41e8b271c9b97c9",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-5239773a6f1b15d576ad0f94",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-1d55f871b77f7f93db72a646",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-657123eca115dbcd2e3ee5ae",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-657123eca115dbcd2e3ee5ae",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-198e99c75d8617b0755204a9",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-d4dc08ed4cdc681623e72fbd",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-5239773a6f1b15d576ad0f94",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-8b818ad6ab841fdcee78712a",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-d213cae622b0d26c0f72dd5a",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-198e99c75d8617b0755204a9",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-731ea6e3fc2c0902de497931",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-b2398bff1dda85e29aeec5a3",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "UNLINK",
-   "actor": "urn:moos:kernel:hp-laptop.primary",
-   "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-6ea4d6ff03b1dba16a179080",
-   "rewrite_category": "WF19"
-  }
- ]
+  "_STATUS": "STAMPED t274 (D12-extended): applied t245 per the Sam-approved four-batch round (t244plus-hygiene.md); flags were never written. Evidence: live has-purpose x7 + lifecycle statuses.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "envelopes": [
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-fbf5bd4bc763ea524b605e9c",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-72c33d1569c0a9361302275a",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-4aa99f2916caef0c98d5e11c",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-b2398bff1dda85e29aeec5a3",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-d4dc08ed4cdc681623e72fbd",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-18-moos-fbf5bd4bc763ea524b605e9c",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-83d3dd372a8ab83c302b310b",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-b2398bff1dda85e29aeec5a3",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-30-moos-fbf5bd4bc763ea524b605e9c",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-731ea6e3fc2c0902de497931",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-12.moos-2b096bed9e407d8f4e98a380",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-6ea4d6ff03b1dba16a179080",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-7d860cb1f50b29272cb6df01",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-e626ed63f0b0f07ccb4cc2d2",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-657123eca115dbcd2e3ee5ae",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-72c33d1569c0a9361302275a",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-2b096bed9e407d8f4e98a380",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-27bcd02235de0c73205e56da",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-521f3619c41e8b271c9b97c9",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-1d55f871b77f7f93db72a646",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-8b818ad6ab841fdcee78712a",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-d213cae622b0d26c0f72dd5a",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-4aa99f2916caef0c98d5e11c",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-d4dc08ed4cdc681623e72fbd",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-7d860cb1f50b29272cb6df01",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-8b818ad6ab841fdcee78712a",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-198e99c75d8617b0755204a9",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-73e0e04ff9e8e4229398fc05",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-d213cae622b0d26c0f72dd5a",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-e626ed63f0b0f07ccb4cc2d2",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-18-moos-108b5c248bbb82240ebf3037",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-108b5c248bbb82240ebf3037",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-521f3619c41e8b271c9b97c9",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-83d3dd372a8ab83c302b310b",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-f211401e5f8cb3a9c95c89c3",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-73e0e04ff9e8e4229398fc05",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-29-moos-2b096bed9e407d8f4e98a380",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-e626ed63f0b0f07ccb4cc2d2",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-27bcd02235de0c73205e56da",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-731ea6e3fc2c0902de497931",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-5239773a6f1b15d576ad0f94",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-27bcd02235de0c73205e56da",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-6ea4d6ff03b1dba16a179080",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-17-moos-f211401e5f8cb3a9c95c89c3",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-30-moos-108b5c248bbb82240ebf3037",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-73e0e04ff9e8e4229398fc05",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-14-moos-7d860cb1f50b29272cb6df01",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-1d55f871b77f7f93db72a646",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-10.moos-521f3619c41e8b271c9b97c9",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-5239773a6f1b15d576ad0f94",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-28-moos-1d55f871b77f7f93db72a646",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-657123eca115dbcd2e3ee5ae",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-657123eca115dbcd2e3ee5ae",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-15-moos-198e99c75d8617b0755204a9",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-d4dc08ed4cdc681623e72fbd",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-5239773a6f1b15d576ad0f94",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-09.moos-8b818ad6ab841fdcee78712a",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-d213cae622b0d26c0f72dd5a",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-27-moos-198e99c75d8617b0755204a9",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t206-wf07-calendar-anchor-catchup.session-sam-governance.pins-urn.cal-2026-05-26-moos-731ea6e3fc2c0902de497931",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t189.calendar-pin.2026-05-11.moos-b2398bff1dda85e29aeec5a3",
+      "rewrite_category": "WF19"
+    },
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t194-calendar.urn-moos-session-sam-governance.pins-urn.urn-moos-cal-2026-05-16-moos-6ea4d6ff03b1dba16a179080",
+      "rewrite_category": "WF19"
+    }
+  ]
 }

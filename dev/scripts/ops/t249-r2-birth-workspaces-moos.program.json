@@ -1,86 +1,89 @@
 {
- "envelopes": [
-  {
-   "rewrite_type": "ADD",
-   "actor": "urn:moos:kernel:hp-z440.moos",
-   "node_urn": "urn:moos:session:moos.birth-workspace",
-   "type_id": "session",
-   "properties": {
-    "started_at": {
-     "value": "2026-07-08T15:55:00Z",
-     "mutability": "immutable",
-     "authority_scope": "",
-     "stratum_origin": 2
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.moos",
+      "node_urn": "urn:moos:session:moos.birth-workspace",
+      "type_id": "session",
+      "properties": {
+        "started_at": {
+          "value": "2026-07-08T15:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "created_at": {
+          "value": "2026-07-08T15:55:00Z",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "local_t": {
+          "value": 0,
+          "mutability": "mutable",
+          "authority_scope": "kernel",
+          "stratum_origin": 2
+        },
+        "owner_urn": {
+          "value": "urn:moos:user:moos",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "text": {
+          "value": "Birth workspace (R2, t249): moos's stage — minimal liveness kit per governance authority note §4. Owner-occupied; opens-on kernel:hp-z440.moos.",
+          "mutability": "mutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        }
+      }
     },
-    "created_at": {
-     "value": "2026-07-08T15:55:00Z",
-     "mutability": "immutable",
-     "authority_scope": "",
-     "stratum_origin": 2
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.moos",
+      "node_urn": "urn:moos:role:superadmin",
+      "type_id": "role",
+      "properties": {
+        "name": {
+          "value": "superadmin",
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 1
+        }
+      }
     },
-    "local_t": {
-     "value": 0,
-     "mutability": "mutable",
-     "authority_scope": "kernel",
-     "stratum_origin": 2
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.moos",
+      "relation_urn": "urn:moos:rel:session.moos.birth-workspace.has-occupant.user.moos",
+      "src_urn": "urn:moos:session:moos.birth-workspace",
+      "src_port": "has-occupant",
+      "tgt_urn": "urn:moos:user:moos",
+      "tgt_port": "is-occupant-of",
+      "rewrite_category": "WF19"
     },
-    "owner_urn": {
-     "value": "urn:moos:user:moos",
-     "mutability": "immutable",
-     "authority_scope": "",
-     "stratum_origin": 2
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.moos",
+      "relation_urn": "urn:moos:rel:user.moos.governs.role.superadmin",
+      "src_urn": "urn:moos:user:moos",
+      "src_port": "governs",
+      "tgt_urn": "urn:moos:role:superadmin",
+      "tgt_port": "governed-by",
+      "rewrite_category": "WF02"
     },
-    "text": {
-     "value": "Birth workspace (R2, t249): moos's stage — minimal liveness kit per governance authority note §4. Owner-occupied; opens-on kernel:hp-z440.moos.",
-     "mutability": "mutable",
-     "authority_scope": "",
-     "stratum_origin": 2
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-z440.moos",
+      "relation_urn": "urn:moos:rel:session.moos.birth-workspace.opens-on.kernel.hp-z440-moos",
+      "src_urn": "urn:moos:session:moos.birth-workspace",
+      "src_port": "opens-on",
+      "tgt_urn": "urn:moos:kernel:hp-z440.moos",
+      "tgt_port": "occupied-by",
+      "rewrite_category": "WF19"
     }
-   }
-  },
-  {
-   "rewrite_type": "ADD",
-   "actor": "urn:moos:kernel:hp-z440.moos",
-   "node_urn": "urn:moos:role:superadmin",
-   "type_id": "role",
-   "properties": {
-    "name": {
-     "value": "superadmin",
-     "mutability": "immutable",
-     "authority_scope": "",
-     "stratum_origin": 1
-    }
-   }
-  },
-  {
-   "rewrite_type": "LINK",
-   "actor": "urn:moos:kernel:hp-z440.moos",
-   "relation_urn": "urn:moos:rel:session.moos.birth-workspace.has-occupant.user.moos",
-   "src_urn": "urn:moos:session:moos.birth-workspace",
-   "src_port": "has-occupant",
-   "tgt_urn": "urn:moos:user:moos",
-   "tgt_port": "is-occupant-of",
-   "rewrite_category": "WF19"
-  },
-  {
-   "rewrite_type": "LINK",
-   "actor": "urn:moos:kernel:hp-z440.moos",
-   "relation_urn": "urn:moos:rel:user.moos.governs.role.superadmin",
-   "src_urn": "urn:moos:user:moos",
-   "src_port": "governs",
-   "tgt_urn": "urn:moos:role:superadmin",
-   "tgt_port": "governed-by",
-   "rewrite_category": "WF02"
-  },
-  {
-   "rewrite_type": "LINK",
-   "actor": "urn:moos:kernel:hp-z440.moos",
-   "relation_urn": "urn:moos:rel:session.moos.birth-workspace.opens-on.kernel.hp-z440-moos",
-   "src_urn": "urn:moos:session:moos.birth-workspace",
-   "src_port": "opens-on",
-   "tgt_urn": "urn:moos:kernel:hp-z440.moos",
-   "tgt_port": "occupied-by",
-   "rewrite_category": "WF19"
-  }
- ]
+  ],
+  "applied": true,
+  "do_not_reapply": true,
+  "t274_flag_evidence": "D12: all 3 LINKs present on the twin folds (readback 2026-08-02T21:49:09Z incl. :8001-8003 — the earlier census missed the twins)."
 }
