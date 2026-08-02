@@ -77,7 +77,15 @@ if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     try {
         $ErrorActionPreference = 'Continue'
         $kernelHelp = (& $KernelExe --help 2>&1 | ForEach-Object { "$_" })
-        if ($kernelHelp -match 'kernel-urn') {
+        # Copilot catch (#198): with EAP relaxed, a GENUINE failure (access
+        # denied, bad image, missing dependency) would stringify into
+        # $kernelHelp, match nothing, and fall into the benign "predates"
+        # NOTE. Gate on exit code first: Go exits 0 or (for --help) 2; anything
+        # else is a failed probe, not an old binary — warn, flag off.
+        if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne 2) {
+            $firstLine = if ($kernelHelp) { @($kernelHelp)[0] } else { '<no output>' }
+            Write-Host "WARNING: --kernel-urn probe failed (exit $LASTEXITCODE: $firstLine) - starting without the flag (kernel_urn omitted from reports)." -ForegroundColor Yellow
+        } elseif ($kernelHelp -match 'kernel-urn') {
             $KernelUrnArgs = " --kernel-urn urn:moos:kernel:hp-laptop.primary"
         } else {
             Write-Host "NOTE: binary predates moos-kernel#69 - starting without --kernel-urn (kernel_urn omitted from reports until redeploy)." -ForegroundColor Yellow
