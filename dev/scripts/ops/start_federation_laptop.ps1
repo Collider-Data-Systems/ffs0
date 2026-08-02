@@ -54,8 +54,24 @@ if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     Write-Host "Primary kernel already running — skipping." -ForegroundColor Gray
 } else {
     Write-Host "Starting moos primary kernel (laptop)..." -ForegroundColor Cyan
+    # --kernel-urn (moos-kernel#69 / A6): explicit self-identity for /healthz +
+    # /log/integrity. The laptop fold holds several peers' kernel nodes, so the
+    # kernel cannot derive "which one is me" from the fold alone; without the
+    # flag it honestly omits the field rather than guessing. Identity only —
+    # never an actor. Probed rather than assumed: Go's flag package FAILS FAST
+    # on unknown flags, so passing this to a pre-#69 binary would kill the
+    # kernel at boot (e.g. an autostart after reboot, before a redeploy) —
+    # the same defensive shape as the auth-token check above.
+    $KernelUrnArgs = ""
+    try {
+        if ((& $KernelExe --help 2>&1 | Out-String) -match 'kernel-urn') {
+            $KernelUrnArgs = " --kernel-urn urn:moos:kernel:hp-laptop.primary"
+        } else {
+            Write-Host "NOTE: binary predates moos-kernel#69 - starting without --kernel-urn (kernel_urn omitted from reports until redeploy)." -ForegroundColor Yellow
+        }
+    } catch {}
     Start-Process -FilePath $KernelExe `
-        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hp-laptop$AuthArgs" `
+        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hp-laptop$KernelUrnArgs$AuthArgs" `
         -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }
