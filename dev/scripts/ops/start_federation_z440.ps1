@@ -81,17 +81,33 @@ foreach ($p in $owners) {
 
 Start-Sleep -Seconds 1
 
+# --kernel-urn (moos-kernel#69 / A6, t275 G8): explicit self-identity for
+# /healthz + /log/integrity — the twins are the case that forced this (the
+# <ws>.primary template cannot express hp-z440.menno etc., and a multi-peer
+# fold cannot self-derive "which one is me"). Probed not assumed, mirroring
+# ffs0#191's laptop shape: Go's flag package fails fast on unknown flags, so
+# a pre-#69 binary (e.g. autostart after reboot, before a rebuild) boots
+# WITHOUT the flag instead of dying at launch. Identity only — never an actor.
+$KernelUrnSupported = $false
+try {
+    if ((& $KernelExe --help 2>&1 | Out-String) -match 'kernel-urn') { $KernelUrnSupported = $true }
+    else { Write-Host 'NOTE: binary predates moos-kernel#69 — starting without --kernel-urn (kernel_urn omitted from reports until rebuild).' -ForegroundColor Yellow }
+} catch {}
+function Get-KernelUrnArgs { param([string]$Urn)
+    if ($KernelUrnSupported) { @('--kernel-urn', $Urn) } else { @() }
+}
+
 # --- 1. Primary kernel — :8000 / MCP :8080 -----------------------------------
 Write-Host "Starting primary kernel (:8000)..."
-Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\moos-kernel\moos.jsonl','--listen',':8000','--mcp-addr',':8080','--seed','--seed-user','sam','--seed-ws','hp-z440') + $AuthArgs + $LLMArgs) -WorkingDirectory 'D:\HPZ440\moos-kernel' -WindowStyle Minimized
+Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\moos-kernel\moos.jsonl','--listen',':8000','--mcp-addr',':8080','--seed','--seed-user','sam','--seed-ws','hp-z440') + (Get-KernelUrnArgs 'urn:moos:kernel:hp-z440.primary') + $AuthArgs + $LLMArgs) -WorkingDirectory 'D:\HPZ440\moos-kernel' -WindowStyle Minimized
 
 Start-Sleep -Seconds 3
 
 # --- 2. Twin kernels ----------------------------------------------------------
 Write-Host "Starting twin kernels (:8001-8003)..."
-Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\kernels\menno\moos.jsonl','--listen',':8001','--mcp-addr',':9001') + $AuthArgs) -WindowStyle Minimized
-Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\kernels\lola\moos.jsonl','--listen',':8002','--mcp-addr',':9002') + $AuthArgs) -WindowStyle Minimized
-Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\kernels\moos\moos.jsonl','--listen',':8003','--mcp-addr',':9003') + $AuthArgs) -WindowStyle Minimized
+Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\kernels\menno\moos.jsonl','--listen',':8001','--mcp-addr',':9001') + (Get-KernelUrnArgs 'urn:moos:kernel:hp-z440.menno') + $AuthArgs) -WindowStyle Minimized
+Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\kernels\lola\moos.jsonl','--listen',':8002','--mcp-addr',':9002') + (Get-KernelUrnArgs 'urn:moos:kernel:hp-z440.lola') + $AuthArgs) -WindowStyle Minimized
+Start-Process -FilePath $KernelExe -ArgumentList (@('--ontology',$Ontology,'--log','D:\HPZ440\kernels\moos\moos.jsonl','--listen',':8003','--mcp-addr',':9003') + (Get-KernelUrnArgs 'urn:moos:kernel:hp-z440.moos') + $AuthArgs) -WindowStyle Minimized
 
 Start-Sleep -Seconds 3
 
