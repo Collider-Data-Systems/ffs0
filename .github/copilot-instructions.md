@@ -16,6 +16,10 @@
 ### Multi-repo workspace
 - Tracked `ffs0.code-workspace` = portable baseline (roots `ffs0`/`moos-kernel`/`moos-router` + tasks + extension recs). Local-only roots (Downloads, worktrees, legacy `moos-config`) → gitignored `*.local.code-workspace`. (Per the AGENTS.md `*.code-workspace` model = D7 surface realization.)
 
+### Team custom agents
+- `.github/agents/*.agent.md` supplies the user-invocable Copilot picker entries. These are harness adapters, not semantic authority: their fenced identity cards are generated from the same seat configuration as `.claude/agents/` and must be refreshed with `config_projection.py --scope cards --mode write`, never hand-edited.
+- Use the normal multi-root `ffs0.code-workspace` for Guido's laptop IDE/DX seat. Wolfram is the separate cross-box kernel-proper seat and emits to Z440 primary through `moos-primary`.
+
 ### Validation
 - After config edits: check JSON/MCP syntax + `git diff --check`. If projection-affected, run `Moos: Run Session Pipeline` / `dev/scripts/projections/run-session-pipeline.ps1`. Report local-only edits (esp. ignored `.vscode/mcp.json`).
 

@@ -13,14 +13,14 @@
     "urn:moos:agent:antigravity.hp-laptop":    { "persona": "AG-laptop",         "surface": "Antigravity · hp-laptop · `ffs0.code-workspace`" },
     "urn:moos:agent:vscode.hpprodesk.primary": { "persona": "HP ProDesk",        "surface": "VS Code · ProDesk · `ffs0.code-workspace`" }
   },
-  "_cards_comment": "ffs0#165: card file -> (actor, session, persona_key) for the fenced identity block in .claude/agents/*.md. Skills come from session-affordance-map keyed on the (actor, session) pair; engine/emit/mcp from the topology persona named by persona_key (required to disambiguate when one actor backs two persona blocks); persona/surface from seats above. .claude/agents is seat-card-only — every *.md there must appear here. Regenerate with: config_projection.py --scope cards --mode write.",
+  "_cards_comment": "ffs0#165 + T268: card file -> (actor, session, persona_key) for the fenced identity block in .claude/agents/*.md; optional copilot_file projects the same block into a user-invocable VS Code agent under .github/agents/*.agent.md. Skills come from session-affordance-map keyed on the (actor, session) pair; engine/emit/mcp from the topology persona named by persona_key (required to disambiguate when one actor backs two persona blocks); persona/surface from seats above. Both directories are seat-card-only — every card file there must appear here. Regenerate with: config_projection.py --scope cards --mode write.",
   "cards": [
     { "file": "zappa.md",       "actor_urn": "urn:moos:agent:claude-cowork.hp-z440",   "session_urn": "urn:moos:session:sam.z440-cowork-workspace", "persona_key": "zappa" },
-    { "file": "wolfram.md",     "actor_urn": "urn:moos:agent:vscode.hp-laptop.wolfram", "session_urn": "urn:moos:session:sam.kernel-proper", "persona_key": "wolfram" },
+    { "file": "wolfram.md",     "copilot_file": "wolfram.agent.md", "actor_urn": "urn:moos:agent:vscode.hp-laptop.wolfram", "session_urn": "urn:moos:session:sam.kernel-proper", "persona_key": "wolfram" },
     { "file": "steinberger.md", "actor_urn": "urn:moos:agent:vscode.hp-z440.menno",     "session_urn": "urn:moos:session:sam.steinberger-seat", "persona_key": "steinberger" },
     { "file": "karpathy.md",    "actor_urn": "urn:moos:agent:vscode.hp-z440.lola",      "session_urn": "urn:moos:session:sam.karpathy-seat", "persona_key": "karpathy" },
     { "file": "moos-ag.md",     "actor_urn": "urn:moos:agent:antigravity.hp-z440",      "session_urn": "urn:moos:session:sam.moos-diary", "persona_key": "moos" },
     { "file": "john-lydon.md",  "actor_urn": "urn:moos:agent:claude-cowork.hp-laptop",  "session_urn": "urn:moos:session:sam.governance", "persona_key": "john-lydon" },
-    { "file": "guido.md",       "actor_urn": "urn:moos:agent:vscode.hp-laptop.copilot", "session_urn": "urn:moos:session:sam.laptop-vscode-lead", "persona_key": "guido" }
+    { "file": "guido.md",       "copilot_file": "guido.agent.md", "actor_urn": "urn:moos:agent:vscode.hp-laptop.copilot", "session_urn": "urn:moos:session:sam.laptop-vscode-lead", "persona_key": "guido" }
   ]
 }

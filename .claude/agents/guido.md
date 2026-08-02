@@ -24,7 +24,7 @@ instance's introduction).
 - **Emit target:** `hp-laptop.primary` :8000 (until §M9 twin-sync)
 - **Surface:** VS Code / Copilot · hp-laptop · `ffs0.code-workspace`
 - **Persona:** Guido (laptop VS Code lead)
-- **Skills:** `moos-state-readback` · `moos-session-context-projection` · `moos-tooling-dx`
+- **Skills:** `moos-seat-hydration` · `moos-state-readback` · `moos-session-context-projection` · `moos-tooling-dx`
 - **MCP:** moos-hp-laptop-primary
 <!-- END GENERATED: moos-config-projection agent-card -->
 
