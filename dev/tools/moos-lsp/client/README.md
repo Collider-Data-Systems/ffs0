@@ -26,5 +26,6 @@ cd client && npm install && npm run compile
 
 ## Scope
 
-Activates on `.moos` files and `**/*.{program,envelope,moos}.json`. Adjust the
-`documentSelector` in `src/extension.ts` if you want it on more/fewer JSON files.
+Activates on `.moos` files, `**/*.{program,envelope,moos}.json`, and
+`**/*.staged.json`. Adjust the `documentSelector` in `src/extension.ts` if you
+want it on more/fewer JSON files.

@@ -1,8 +1,8 @@
 {
   "review_only": true,
   "apply_ready": false,
-  "applied": false,
-  "do_not_reapply": false,
+  "applied": true,
+  "do_not_reapply": true,
   "target_url": "http://localhost:8000/programs",
   "target_kernel": "urn:moos:kernel:hp-z440.primary",
   "persona": "zappa",
@@ -47,7 +47,7 @@
           "stratum_origin": 2
         },
         "source_type": {
-          "value": "cowork-conversation",
+          "value": "chat",
           "mutability": "immutable",
           "authority_scope": "",
           "stratum_origin": 2
@@ -83,7 +83,7 @@
           "stratum_origin": 2
         },
         "substrate": {
-          "value": "s0-conversation",
+          "value": "external-channel",
           "mutability": "immutable",
           "authority_scope": "",
           "stratum_origin": 2
@@ -109,6 +109,12 @@
             "GROUNDED — a merge is a real G-ingest only with the E2 provenance trailer (authored-by agent/session/purpose); E5 adds user/workstation/channel-kind when disambiguating (t218:116-171).",
             "GROUNDED — G-direction is gated: M11/M12 fail closed; for code repos the build gate is the ANALOG of the apply gate (t218:61-74; 20260708-t249-governance-authority-note.md:14)."
           ],
+          "mutability": "immutable",
+          "authority_scope": "",
+          "stratum_origin": 2
+        },
+        "source_url": {
+          "value": "urn:moos:session:sam.z440-cowork-workspace",
           "mutability": "immutable",
           "authority_scope": "",
           "stratum_origin": 2
@@ -561,5 +567,10 @@
       "tgt_urn": "urn:moos:derivation:zappa.t260-global-local",
       "tgt_port": "pinned-by-session"
     }
-  ]
+  ],
+  "applied_at": "T=260 2026-07-19 (see commit clock)",
+  "log_len_before": 585,
+  "log_len_after": 604,
+  "applied_via": "Invoke-RestMethod -InFile; 19/19 results after fixing 3 KI enum/immutable violations (source_type chat, substrate external-channel, +source_url)",
+  "apply_notes": "Workflow-authored umbrella KI had invented enum values (cowork-conversation/s0-conversation) + missing required immutable source_url; corrected pre-apply."
 }

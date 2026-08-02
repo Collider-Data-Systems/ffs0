@@ -18,7 +18,7 @@
     "git.autofetch": true,
     "git.pruneOnFetch": true,
     "git.openRepositoryInParentFolders": "never",
-    "chat.viewSessions.orientation": "stacked",
+    "chat.viewSessions.orientation": "sideBySide",
     "github.copilot.enable": {
       "*": true,
       "plaintext": false,
