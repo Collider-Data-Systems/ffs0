@@ -16,7 +16,7 @@
       "fragments_promoted": [
         "v405-1-wf01-kinship-ports"
       ],
-      "summary": "ADDITIVE. WF01 gains four kebab-case kinship port pairs: parent-of/child-of (directed), spouse-of/spouse-of (symmetric), sibling-of/sibling-of (symmetric) (src {user} -> tgt {user}). Port-color compatibility port_color_map entry added mapping all four kinship ports to `topology` color. Aligns baseline ontology.json version with repo-side kinship additions (PR #183) and unblocks 4.0.5 federation engine reload ceremony."
+      "summary": "ADDITIVE. WF01 gains four kebab-case kinship port pairs: parent-of/child-of (directed), spouse-of/spouse-of (symmetric), sibling-of/sibling-of (symmetric) (src {user} -> tgt {user}). Port-color compatibility port_color_map entry added mapping all four kinship ports to `topology` color. Restamps added_in_version: 4.0.5 and trues dev/config/moos-federation.topology.json across all engines to 4.0.5. Deferrals: d4b-wf21-purpose-src / g2b-wf01-manifold-tgt (D14) held at `proposed`, coupled to D8 per t250 Ruling 3; WF21 type lists naming `task` and `knowledge_artifact` (undeclared node types) deferred to future grammar round. Aligns baseline ontology.json version with repo-side kinship additions (PR #183) and unblocks 4.0.5 federation engine reload ceremony."
     },
     {
       "version": "4.0.4",
@@ -3799,7 +3799,7 @@
           "tgt_types": [
             "user"
           ],
-          "added_in_version": "4.0.4",
+          "added_in_version": "4.0.5",
           "description": "Kinship: parent of user. Directed kinship relation linking parent user to child user."
         },
         {
@@ -3811,7 +3811,7 @@
           "tgt_types": [
             "user"
           ],
-          "added_in_version": "4.0.4",
+          "added_in_version": "4.0.5",
           "description": "Kinship: spouse of user. Symmetric kinship relation linking spouse users."
         },
         {
@@ -3823,7 +3823,7 @@
           "tgt_types": [
             "user"
           ],
-          "added_in_version": "4.0.4",
+          "added_in_version": "4.0.5",
           "description": "Kinship: sibling of user. Symmetric kinship relation linking sibling users."
         }
       ]
