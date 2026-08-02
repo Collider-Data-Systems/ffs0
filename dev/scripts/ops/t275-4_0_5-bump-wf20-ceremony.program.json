@@ -1,0 +1,134 @@
+{
+  "_comment": "t275 4.0.5 bump WF20 ceremony (A4, rev-4). Run ONLY AFTER #195 merged AND the Z440 federation restarted on 4.0.5 — both true at authoring. Carries: (1) v405-1 fragment ADD + walk to merged (the changelog names it promoted); (2) the d22-1..4 status-alignment walk ruled at changelog 3.16.0 that this fold never received (the ceremony-drift defect D14 documents). Every MUTATE carries expected_version (CAS) per the A2 doctrine — the precedent ceremonies were CAS-less, this one is not. D14 deferrals (d4b/g2b) intentionally ABSENT per Sam t274 ruling.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "target_url": "http://localhost:8000/programs",
+  "persona": "zappa",
+  "readback_gate": {
+    "require_ontology_version": "4.0.5"
+  },
+  "envelopes": [
+    {
+      "rewrite_type": "ADD",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "node_urn": "urn:moos:grammar_fragment:v405-1-wf01-kinship-ports",
+      "type_id": "grammar_fragment",
+      "properties": {
+        "name": {
+          "value": "v405-1 wf01 kinship port pairs",
+          "mutability": "immutable"
+        },
+        "fragment_kind": {
+          "value": "port",
+          "mutability": "immutable"
+        },
+        "specification": {
+          "value": {
+            "change": "WF01 additional_port_pairs parent-of/child-of (directed), spouse-of/spouse-of, sibling-of/sibling-of (symmetric), src {user} -> tgt {user}; port_color_map all four -> topology",
+            "landed_in": "4.0.5 (ffs0#183 content + #195 bump)"
+          },
+          "mutability": "immutable"
+        },
+        "evidence_urns": {
+          "value": [
+            "urn:moos:channel:github.ffs0"
+          ],
+          "mutability": "immutable"
+        },
+        "status": {
+          "value": "proposed",
+          "mutability": "mutable"
+        },
+        "created_at": {
+          "value": "2026-08-02T22:54:30Z",
+          "mutability": "immutable"
+        }
+      }
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:v405-1-wf01-kinship-ports",
+      "field": "status",
+      "new_value": "promoted",
+      "expected_version": 1
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:v405-1-wf01-kinship-ports",
+      "field": "status",
+      "new_value": "merged",
+      "expected_version": 2
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d22-1-session-has-purpose",
+      "field": "status",
+      "new_value": "promoted",
+      "expected_version": 1
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d22-1-session-has-purpose",
+      "field": "status",
+      "new_value": "merged",
+      "expected_version": 2
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d22-2-session-single-driver-invariant",
+      "field": "status",
+      "new_value": "promoted",
+      "expected_version": 1
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d22-2-session-single-driver-invariant",
+      "field": "status",
+      "new_value": "merged",
+      "expected_version": 2
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d22-3-session-attach-detach",
+      "field": "status",
+      "new_value": "promoted",
+      "expected_version": 1
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d22-3-session-attach-detach",
+      "field": "status",
+      "new_value": "merged",
+      "expected_version": 2
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d22-4-kernel-birth-session-pair",
+      "field": "status",
+      "new_value": "promoted",
+      "expected_version": 1
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d22-4-kernel-birth-session-pair",
+      "field": "status",
+      "new_value": "merged",
+      "expected_version": 2
+    }
+  ],
+  "applied_at": "2026-08-02T22:59:38Z",
+  "applied_log_seq": "695-705",
+  "applied_to": "urn:moos:kernel:hp-z440.primary"
+}
