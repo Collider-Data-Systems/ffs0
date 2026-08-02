@@ -1,0 +1,31 @@
+{
+  "_comment": "t275 H1 hosts-leg reconciliation (Sam go; rev-4 §5b#15 / t249-governance-authority-note:71). The owns-leg was reconciled at t249 (h1-laptop.program.json, verified applied); this completes H1: UNLINK the hosts leg mis-anchored on the zero-relation orphan ws:hp-z440, re-LINK from workstation:hp-z440. Actor=kernel per the t249 spec.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "target_kernel": "urn:moos:kernel:hp-laptop.primary",
+  "target_url": "http://100.106.220.58:8000/programs",
+  "persona": "john-lydon",
+  "readback_gate": {
+    "require_ontology_version": "4.0.5"
+  },
+  "envelopes": [
+    {
+      "rewrite_type": "UNLINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:hp-z440.hosts.primary"
+    },
+    {
+      "rewrite_type": "LINK",
+      "actor": "urn:moos:kernel:hp-laptop.primary",
+      "relation_urn": "urn:moos:rel:t275.workstation-hp-z440.hosts.primary",
+      "src_urn": "urn:moos:workstation:hp-z440",
+      "src_port": "hosts",
+      "tgt_urn": "urn:moos:kernel:hp-z440.primary",
+      "tgt_port": "hosted-on",
+      "rewrite_category": "WF03"
+    }
+  ],
+  "applied_at": "2026-08-02T23:39:33Z",
+  "applied_to": "urn:moos:kernel:hp-laptop.primary"
+}
