@@ -95,10 +95,15 @@ ffs0 is an event-sourced system with a categorical type layer; the production sy
   workspace"), Martin Kleppmann's "local-first" essay. **(ffs0)**
 
 ## Languages, by component
-- **Go** — keep the kernel (concurrency, HTTP/federation). **Rust** — fast LSP, e-graph layer,
-  CRDTs, wasm host, perf-critical lanes. **Julia** — projections + AlgebraicJulia. **TypeScript** —
-  IDE extensions, MCP servers, webviews. **Lean 4** (or Rocq/Coq) — to *prove* CI-1…CI-5.
-  **Zig** — from-scratch perf experiments.
+- **Go** — the kernel as **reference oracle** until a replacement proves replay equivalence
+  (T=274 full-replacement decision, `dev/design/manifold-bump-4_0/DECISION-engine-language.md`;
+  formerly "keep the kernel"). **C++** — the recorded replacement direction (MLIR premise pending
+  the xDSL spike). **Rust** — fast LSP, e-graph layer, CRDTs, wasm host, perf-critical lanes;
+  measured leader on the four T274 drivers if the MLIR premise falls. **Julia** — projections +
+  AlgebraicJulia. **TypeScript** — IDE extensions, MCP servers, webviews. **Lean 4** (or Rocq/Coq)
+  — to *prove* CI-1…CI-5. **Zig** — from-scratch perf experiments (this line is the repo's only
+  Zig reference). **C / Dependable C** — rejected for the runtime; reserved candidate for a
+  zero-dep C-ABI `libmoosfold` (see DECISION).
 
 ## Communities / where the science lives
 - **AlgebraicJulia Zulip** + **Topos Institute** (toposinstitute.org) — the literal math.
