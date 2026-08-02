@@ -1,6 +1,6 @@
 {
-  "_comment": "STAGED, apply_ready=false — the G4 asymmetric-presence completion of ffs0#174 item 3. Adds the two seat agents the t263 membership batch DELIBERATELY EXCLUDED because they had no node on the Z440 fold (see t263-membership-topology.staged.json staging_notes: 'vscode.hp-laptop.copilot + vscode.hpprodesk.primary — NOT nodes in the Z440 fold — LINK would ErrNodeNotFound; ride the laptop/ProDesk replication round'). This IS that round. Membership is a FLEET register that lives on the Z440 fold (ffs0#174 ruling: 3 of the 8 t263 members are laptop-resident, so the register is not per-fold) — so these nodes + links belong on hp-z440.primary, NOT on the ProDesk/laptop folds. Because both agents 404 on the Z440 fold today, each is ADD-then-LINK, not a bare LINK. OPERATOR SAFETY: Test-MoosFederation.ps1 -Mode PostProgram reads ONLY the .envelopes array and does NOT honor apply_ready/applied/review_only — do NOT run it on this file until you have flipped apply_ready and checked the readback gate by hand.",
-  "review_only": true,
+  "_comment": "APPLY-READY (flipped t274, Sam rev-4 ruling D2) — the G4 asymmetric-presence completion of ffs0#174 item 3. Adds the two seat agents the t263 membership batch DELIBERATELY EXCLUDED because they had no node on the Z440 fold (see t263-membership-topology.staged.json staging_notes: 'vscode.hp-laptop.copilot + vscode.hpprodesk.primary — NOT nodes in the Z440 fold — LINK would ErrNodeNotFound; ride the laptop/ProDesk replication round'). This IS that round. Membership is a FLEET register that lives on the Z440 fold (ffs0#174 ruling: 3 of the 8 t263 members are laptop-resident, so the register is not per-fold) — so these nodes + links belong on hp-z440.primary, NOT on the ProDesk/laptop folds. Because both agents 404 on the Z440 fold today, each is ADD-then-LINK, not a bare LINK. OPERATOR SAFETY: Test-MoosFederation.ps1 -Mode PostProgram reads ONLY the .envelopes array and does NOT honor apply_ready/applied/review_only — do NOT run it on this file until you have flipped apply_ready and checked the readback gate by hand. t274: review_only cleared, codex LINK bundled, expect_after updated 13->14 / +3 relations (Copilot catches on ffs0#190).",
+  "review_only": false,
   "apply_ready": true,
   "applied": false,
   "target_url": "http://localhost:8000/programs",
@@ -27,10 +27,11 @@
       "urn:moos:agent:vscode.hp-laptop.copilot"
     ],
     "expect_after": {
-      "member_of_total": 13,
+      "member_of_total": 14,
       "new_relations": [
         "urn:moos:rel:t264.guido.member-of.group-moos",
-        "urn:moos:rel:t264.hpprodesk.member-of.group-moos"
+        "urn:moos:rel:t264.hpprodesk.member-of.group-moos",
+        "urn:moos:rel:t274.vscode-codex-hp-z440.member-of.group-moos"
       ]
     }
   },
