@@ -67,15 +67,33 @@ if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     # name would false-negative; Go flag help always leads each flag with its
     # own line, and -match over an array tests per line. And a probe FAILURE
     # must be as visible as a probe miss — both degrade to flag-off, loudly.
+    # ...and (t275 live catch): Go's --help EXITS 2 with usage on stderr; under
+    # this script's $ErrorActionPreference='Stop', redirected native stderr
+    # becomes throwing error records — the probe itself threw and skipped the
+    # flag on a perfectly good binary. Relax EAP around the probe only, and
+    # stringify the stream so it's lines, not error records.
     $KernelUrnArgs = ""
+    $prevEAP = $ErrorActionPreference
     try {
-        if ((& $KernelExe --help 2>&1) -match 'kernel-urn') {
+        $ErrorActionPreference = 'Continue'
+        $kernelHelp = (& $KernelExe --help 2>&1 | ForEach-Object { "$_" })
+        # Copilot catch (#198): with EAP relaxed, a GENUINE failure (access
+        # denied, bad image, missing dependency) would stringify into
+        # $kernelHelp, match nothing, and fall into the benign "predates"
+        # NOTE. Gate on exit code first: Go exits 0 or (for --help) 2; anything
+        # else is a failed probe, not an old binary — warn, flag off.
+        if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne 2) {
+            $firstLine = if ($kernelHelp) { @($kernelHelp)[0] } else { '<no output>' }
+            Write-Host "WARNING: --kernel-urn probe failed (exit $LASTEXITCODE: $firstLine) - starting without the flag (kernel_urn omitted from reports)." -ForegroundColor Yellow
+        } elseif ($kernelHelp -match 'kernel-urn') {
             $KernelUrnArgs = " --kernel-urn urn:moos:kernel:hp-laptop.primary"
         } else {
             Write-Host "NOTE: binary predates moos-kernel#69 - starting without --kernel-urn (kernel_urn omitted from reports until redeploy)." -ForegroundColor Yellow
         }
     } catch {
         Write-Host "WARNING: --kernel-urn probe failed ($($_.Exception.Message)) - starting without the flag (kernel_urn omitted from reports)." -ForegroundColor Yellow
+    } finally {
+        $ErrorActionPreference = $prevEAP
     }
     Start-Process -FilePath $KernelExe `
         -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hp-laptop$KernelUrnArgs$AuthArgs" `
