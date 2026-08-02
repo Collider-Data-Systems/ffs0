@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('Doctor', 'Start', 'VerifyPersona', 'PostProgram')]
+    [ValidateSet('Doctor', 'Start', 'VerifyPersona', 'PostProgram', 'SelfTest')]
     [string]$Mode = 'Doctor',
 
     [ValidateSet('wolfram', 'steinberger', 'karpathy', 'moos', 'zappa', 'cowork-z440', 'z440-vscode-lead', 'john-lydon', 'guido', 'cowork-laptop', 'ag-laptop', 'hpprodesk-vscode')]
@@ -9,6 +9,10 @@ param(
     [string]$PayloadPath,
     [string]$TopologyPath,
     [string]$McpConfigPath,
+    # A2 (t274): POST the payload to this base URL instead of the persona's emit URL —
+    # the scratch-kernel dry-run path (Start-ScratchKernel.ps1, :8899). The guard still
+    # runs; only the destination changes.
+    [string]$TargetUrl,
     [switch]$Force
 )
 
@@ -578,11 +582,77 @@ function Get-ProgramEnvelopes {
     @($source)
 }
 
+function Get-ProgramGuardVerdict {
+    param(
+        [Parameter(Mandatory)]$Payload,
+        [string]$EmitKernelName,
+        [switch]$HasTargetUrlOverride
+    )
+    # A2 (t274, rev-4 blocker B5): this harness previously honoured NONE of
+    # apply_ready/applied/do_not_reapply and never read target_kernel — a stray
+    # -Mode PostProgram could land staged envelopes on the sovereign fold with no
+    # decision from Sam, and a wrong-fold apply was silent. Every refusal here is
+    # printed and -Force-overridable; nothing is silent in either direction.
+    $refusals = @()
+    $meta = [ordered]@{ target_kernel = $null; target_url = $null; readback_gate = $null }
+    if ($Payload -is [array]) {
+        $refusals += 'bare envelope list (no wrapper) — wrap with _STATUS + apply_ready before applying (the t249-h1-d4g2 class)'
+        return [pscustomobject]@{ Refusals = $refusals; Meta = $meta }
+    }
+    $applyReady = Get-ObjectProperty -Object $Payload -Name 'apply_ready'
+    $applied = Get-ObjectProperty -Object $Payload -Name 'applied'
+    $doNotReapply = Get-ObjectProperty -Object $Payload -Name 'do_not_reapply'
+    if ($applyReady -ne $true) { $refusals += "apply_ready is not true — flip it deliberately (with provenance) or -Force" }
+    if ($applied -eq $true) { $refusals += 'applied:true — this program already ran; re-apply is -Force only' }
+    if ($doNotReapply -eq $true) { $refusals += 'do_not_reapply:true — the file forbids re-apply; -Force overrides' }
+    $meta.target_kernel = Get-ObjectProperty -Object $Payload -Name 'target_kernel'
+    $meta.target_url = Get-ObjectProperty -Object $Payload -Name 'target_url'
+    $meta.readback_gate = Get-ObjectProperty -Object $Payload -Name 'readback_gate'
+    if ($meta.target_kernel -and $EmitKernelName -and -not $HasTargetUrlOverride) {
+        if (-not ([string]$meta.target_kernel).EndsWith([string]$EmitKernelName)) {
+            $refusals += "target_kernel '$($meta.target_kernel)' does not match resolved persona emit kernel '$EmitKernelName' — a wrong-fold apply is silent (B5); use the matching -Persona, or -TargetUrl for a scratch kernel"
+        }
+    }
+    [pscustomobject]@{ Refusals = $refusals; Meta = $meta }
+}
+
+function Invoke-GuardSelfTest {
+    # A2: the guard exercised offline — no network, no fold, no repo files.
+    # Precedent: config_projection.py --self-test (ffs0#165).
+    $results = @()
+    $bare = @(@{ rewrite_type = 'ADD' }, @{ rewrite_type = 'LINK' })
+    $v = Get-ProgramGuardVerdict -Payload $bare -EmitKernelName 'hp-z440.primary'
+    $results += [pscustomobject]@{ case = 'bare envelope list refused'; pass = ($v.Refusals.Count -eq 1 -and $v.Refusals[0] -like 'bare envelope list*') }
+    $v = Get-ProgramGuardVerdict -Payload ([pscustomobject]@{ apply_ready = $false; envelopes = @(1) }) -EmitKernelName 'hp-z440.primary'
+    $results += [pscustomobject]@{ case = 'apply_ready:false refused'; pass = ($v.Refusals -like 'apply_ready*').Count -eq 1 }
+    $v = Get-ProgramGuardVerdict -Payload ([pscustomobject]@{ apply_ready = $true; applied = $true; envelopes = @(1) }) -EmitKernelName 'hp-z440.primary'
+    $results += [pscustomobject]@{ case = 'applied:true refused'; pass = ($v.Refusals -like 'applied:true*').Count -eq 1 }
+    $v = Get-ProgramGuardVerdict -Payload ([pscustomobject]@{ apply_ready = $true; do_not_reapply = $true; envelopes = @(1) }) -EmitKernelName 'hp-z440.primary'
+    $results += [pscustomobject]@{ case = 'do_not_reapply:true refused'; pass = ($v.Refusals -like 'do_not_reapply*').Count -eq 1 }
+    $wrongFold = [pscustomobject]@{ apply_ready = $true; target_kernel = 'urn:moos:kernel:hp-laptop.primary'; envelopes = @(1) }
+    $v = Get-ProgramGuardVerdict -Payload $wrongFold -EmitKernelName 'hp-z440.primary'
+    $results += [pscustomobject]@{ case = 'target_kernel mismatch refused'; pass = ($v.Refusals -like 'target_kernel*').Count -eq 1 }
+    $v = Get-ProgramGuardVerdict -Payload $wrongFold -EmitKernelName 'hp-z440.primary' -HasTargetUrlOverride
+    $results += [pscustomobject]@{ case = '-TargetUrl override skips the kernel match'; pass = ($v.Refusals -like 'target_kernel*').Count -eq 0 }
+    $clean = [pscustomobject]@{ apply_ready = $true; applied = $false; do_not_reapply = $false; target_kernel = 'urn:moos:kernel:hp-z440.primary'; readback_gate = [pscustomobject]@{ require_ontology_version = '4.0.4' }; envelopes = @(1) }
+    $v = Get-ProgramGuardVerdict -Payload $clean -EmitKernelName 'hp-z440.primary'
+    $results += [pscustomobject]@{ case = 'clean wrapper passes + meta extracted'; pass = ($v.Refusals.Count -eq 0 -and $v.Meta.readback_gate.require_ontology_version -eq '4.0.4') }
+
+    $failed = @($results | Where-Object { -not $_.pass })
+    $results | Format-Table -AutoSize | Out-String | Write-Host
+    if ($failed.Count -gt 0) {
+        Write-Host "SELF-TEST: FAIL ($($failed.Count) of $($results.Count))" -ForegroundColor Red
+        exit 1
+    }
+    Write-Host "SELF-TEST: PASS — $($results.Count) guard cases." -ForegroundColor Green
+}
+
 function Invoke-PostProgram {
     param(
         [Parameter(Mandatory)]$Topology,
         [Parameter(Mandatory)][string]$Name,
         [Parameter(Mandatory)][string]$Path,
+        [string]$TargetUrl,
         [switch]$Force
     )
     $Path = Resolve-MoosPath -Path $Path
@@ -608,7 +678,20 @@ function Invoke-PostProgram {
     $json = Read-JsonFile -Path $Path
     $envelopes = @(Get-ProgramEnvelopes -Payload $json)
     if ($envelopes.Count -eq 0) { throw 'Program payload must contain at least one envelope.' }
-    $url = $resolved.EmitUrl.TrimEnd('/') + '/programs'
+
+    # --- A2 guard (t274): flags + targeting, before anything touches the wire ---
+    $verdict = Get-ProgramGuardVerdict -Payload $json -EmitKernelName $resolved.EmitKernelName -HasTargetUrlOverride:([bool]$TargetUrl)
+    if ($verdict.Refusals.Count -gt 0) {
+        foreach ($r in $verdict.Refusals) { Write-Host "  ! GUARD: $r" -ForegroundColor Yellow }
+        if (-not $Force) { throw "Program guard refused ($($verdict.Refusals.Count)) — see lines above; -Force overrides deliberately." }
+        Write-Host '  ~ -Force: proceeding past guard refusals.' -ForegroundColor Yellow
+    }
+    $url = if ($TargetUrl) { $TargetUrl.TrimEnd('/') + '/programs' } else { $resolved.EmitUrl.TrimEnd('/') + '/programs' }
+    $baseUrl = $url -replace '/programs$', ''
+    $liveLen = '(unreachable)'
+    try { $liveLen = (Invoke-RestMethod -Uri ($baseUrl + '/healthz') -TimeoutSec 5).log_len } catch {}
+    $tk = if ($null -ne $verdict.Meta.target_kernel) { $verdict.Meta.target_kernel } else { '(none)' }
+    Write-Host "GUARD: target_kernel=$tk -> $url (live log_len=$liveLen)" -ForegroundColor Cyan
 
     $postFile = $Path
     $tmp = $null
@@ -636,6 +719,23 @@ function Invoke-PostProgram {
     Write-Host "POST $Path -> $url as persona '$Name' (emit=$($resolved.EmitKernelName), opens-on=$($resolved.OpensOnKernelName))" -ForegroundColor Cyan
     try {
         Invoke-RestMethod -Uri $url -Method Post -InFile $postFile -ContentType 'application/json; charset=utf-8' -Headers $authHeaders | ConvertTo-Json -Depth 20
+
+        # A2 (t274): execute readback_gate — authored in staged files since t249, read by
+        # nothing until now. Identity assertion per the #178 ledger (ask #4): ontology
+        # version, not log_len.
+        $gate = $verdict.Meta.readback_gate
+        if ($gate) {
+            $wantVer = Get-ObjectProperty -Object $gate -Name 'require_ontology_version'
+            if ($wantVer) {
+                $hz = Invoke-RestMethod -Uri ($baseUrl + '/healthz') -TimeoutSec 10
+                $gateStatus = if ($hz.ontology_version -eq $wantVer) { 'PASS' } else { 'FAIL' }
+                $gateColor = if ($gateStatus -eq 'PASS') { 'Green' } else { 'Red' }
+                Write-Host "READBACK GATE: require_ontology_version=$wantVer live=$($hz.ontology_version) -> $gateStatus" -ForegroundColor $gateColor
+                if ($gateStatus -eq 'FAIL' -and -not $Force) {
+                    throw 'readback_gate failed AFTER apply — the envelopes are on the fold; investigate before any further POST.'
+                }
+            }
+        }
     }
     finally {
         if ($tmp) { Remove-Item -Force $tmp -ErrorAction SilentlyContinue }
@@ -712,6 +812,9 @@ switch ($Mode) {
     'PostProgram' {
         if (-not $Persona) { throw '-Persona is required for PostProgram' }
         if (-not $PayloadPath) { throw '-PayloadPath is required for PostProgram' }
-        Invoke-PostProgram -Topology $topology -Name $Persona -Path $PayloadPath -Force:$Force
+        Invoke-PostProgram -Topology $topology -Name $Persona -Path $PayloadPath -TargetUrl $TargetUrl -Force:$Force
+    }
+    'SelfTest' {
+        Invoke-GuardSelfTest
     }
 }
