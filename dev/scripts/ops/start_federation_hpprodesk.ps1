@@ -52,13 +52,83 @@ if ($AuthTokenUsable) {
     Write-Host "WARNING: $AuthTokenFile missing or empty - kernel starts UNAUTHENTICATED (write routes open)." -ForegroundColor Yellow
 }
 
+# --- Redeploy leg (T=278, marker-gated) -----------------------------------
+# ProDesk runs headless: the kernel is launched by the `moos-prodesk` task's
+# S4U principal, and an unelevated interactive/harness shell CANNOT terminate
+# that process (PROCESS_TERMINATE denied) or register new S4U tasks. It CAN,
+# however, fire the existing task - so the swap rides THIS script, which runs
+# in the task's own context. redeploy_hpprodesk_kernel.ps1 builds
+# moos-kernel.new.exe, drops redeploy-request.flag, and fires the task; this
+# leg performs stop -> backup -> swap, then falls through to normal bring-up.
+# The marker is consumed unconditionally (no boot loops); progress goes to
+# redeploy-result.txt because the task window is hidden.
+$RedeployFlag   = "$Base\moos-kernel\redeploy-request.flag"
+$RedeployNewExe = "$Base\moos-kernel\moos-kernel.new.exe"
+$RedeployResult = "$Base\moos-kernel\redeploy-result.txt"
+if (Test-Path $RedeployFlag) {
+    $rlog = New-Object System.Collections.Generic.List[string]
+    $rlog.Add("redeploy leg fired: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')")
+    try {
+        Remove-Item $RedeployFlag -Force
+        if ((Test-Path $RedeployNewExe) -and ((Get-Item $RedeployNewExe).Length -gt 0)) {
+            $running = Get-Process -Name moos-kernel -ErrorAction SilentlyContinue
+            if ($running) {
+                $rlog.Add("stopping kernel PID $($running.Id)")
+                Stop-Process -Id $running.Id -Force
+                Start-Sleep -Seconds 3
+            }
+            $rstamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+            if (Test-Path $KernelExe) {
+                Move-Item $KernelExe "$KernelExe.bak-$rstamp" -Force
+                $rlog.Add("backup: moos-kernel.exe.bak-$rstamp")
+            }
+            Move-Item $RedeployNewExe $KernelExe -Force
+            $rlog.Add("swapped: new binary LastWriteTime $((Get-Item $KernelExe).LastWriteTime)")
+        } else {
+            $rlog.Add("SKIP: no usable moos-kernel.new.exe next to the flag - nothing swapped")
+        }
+    } catch {
+        $rlog.Add("ERROR: $($_.Exception.Message)")
+    }
+    $rlog | Out-File $RedeployResult -Encoding utf8
+}
+
 # --- Kernel (idempotent: skip if already running) -------------------------
 if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     Write-Host "Primary kernel already running - skipping." -ForegroundColor Gray
 } else {
     Write-Host "Starting moos primary kernel (ProDesk)..." -ForegroundColor Cyan
+    # --kernel-urn (moos-kernel#69 / A6): explicit self-identity for /healthz +
+    # /log/integrity. Identity only - never an actor. Probed rather than
+    # assumed: Go's flag package FAILS FAST on unknown flags, so passing this
+    # to a pre-#69 binary would kill the kernel at boot (e.g. an autostart
+    # after reboot, before a redeploy). Same probe as the laptop/Z440
+    # launchers (#191/#197 + the t275 EAP catch + the #198 exit-code gate):
+    # Go's --help EXITS 2 with usage on stderr; under $ErrorActionPreference
+    # 'Stop', redirected native stderr becomes throwing error records - relax
+    # EAP around the probe only and stringify the stream. Gate on exit code
+    # first: 0 or 2 is a real answer; anything else is a failed probe, not an
+    # old binary - warn, flag off.
+    $KernelUrnArgs = ""
+    $prevEAP = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        $kernelHelp = (& $KernelExe --help 2>&1 | ForEach-Object { "$_" })
+        if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne 2) {
+            $firstLine = if ($kernelHelp) { @($kernelHelp)[0] } else { '<no output>' }
+            Write-Host "WARNING: --kernel-urn probe failed (exit ${LASTEXITCODE}: $firstLine) - starting without the flag (kernel_urn omitted from reports)." -ForegroundColor Yellow
+        } elseif ($kernelHelp -match 'kernel-urn') {
+            $KernelUrnArgs = " --kernel-urn urn:moos:kernel:hpprodesk.primary"
+        } else {
+            Write-Host "NOTE: binary predates moos-kernel#69 - starting without --kernel-urn (kernel_urn omitted from reports until redeploy)." -ForegroundColor Yellow
+        }
+    } catch {
+        Write-Host "WARNING: --kernel-urn probe failed ($($_.Exception.Message)) - starting without the flag (kernel_urn omitted from reports)." -ForegroundColor Yellow
+    } finally {
+        $ErrorActionPreference = $prevEAP
+    }
     Start-Process -FilePath $KernelExe `
-        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hpprodesk$AuthArgs" `
+        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hpprodesk$KernelUrnArgs$AuthArgs" `
         -WindowStyle Hidden
     Start-Sleep -Seconds 2
 }

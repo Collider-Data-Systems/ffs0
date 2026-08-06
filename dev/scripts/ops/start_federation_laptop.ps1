@@ -84,7 +84,7 @@ if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
         # else is a failed probe, not an old binary — warn, flag off.
         if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne 2) {
             $firstLine = if ($kernelHelp) { @($kernelHelp)[0] } else { '<no output>' }
-            Write-Host "WARNING: --kernel-urn probe failed (exit $LASTEXITCODE: $firstLine) - starting without the flag (kernel_urn omitted from reports)." -ForegroundColor Yellow
+            Write-Host "WARNING: --kernel-urn probe failed (exit ${LASTEXITCODE}: $firstLine) - starting without the flag (kernel_urn omitted from reports)." -ForegroundColor Yellow
         } elseif ($kernelHelp -match 'kernel-urn') {
             $KernelUrnArgs = " --kernel-urn urn:moos:kernel:hp-laptop.primary"
         } else {
