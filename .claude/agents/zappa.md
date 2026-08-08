@@ -23,7 +23,7 @@ joining the court naming (Wolfram · Steinberger · Karpathy · Moos · John Lyd
 - **Emit target:** `hp-z440.primary` :8000 (until §M9 twin-sync)
 - **Surface:** Claude Code / Cowork pane · Z440 · `ffs0.code-workspace`
 - **Persona:** Zappa
-- **Skills:** `moos-seat-hydration` · `moos-workspace-ingest` · `moos-multimodal-ingest` · `moos-session-context-projection` · `moos-rewrite-envelope`
+- **Skills:** `moos-seat-hydration` · `moos-state-readback` · `moos-workspace-ingest` · `moos-multimodal-ingest` · `moos-session-context-projection` · `moos-round-close` · `moos-cross-persona-audit` · `moos-rewrite-envelope`
 - **MCP:** moos-primary
 <!-- END GENERATED: moos-config-projection agent-card -->
 

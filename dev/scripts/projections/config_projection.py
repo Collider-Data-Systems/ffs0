@@ -8,9 +8,8 @@ drift check (spec section 4).
 
   --mode check   (default)  fold from HG; if fences exist, byte-compare the fenced region
                             against the regenerated table (exit 1 on drift); else run the
-                            legacy semantic check against the hand-authored table. If the
-                            fold came from --fallback-url (router down) and drops
-                            previously-generated seats, that is ERROR exit 2 (partial
+                            legacy semantic check against the hand-authored table. If a fold
+                            drops previously-generated seats, that is ERROR exit 2 (partial
                             fan-in — bring the router up), never proposed as row deletions
   --mode render             print the generated seat-table markdown + write evidence sidecar
   --mode write              the explicit boundary act: replace the fenced region in AGENTS.md
@@ -18,11 +17,12 @@ drift check (spec section 4).
                             the fences). Refuses to drop previously-generated seats unless
                             --allow-shrink (protects against a partial fan-in eating rows).
 
-  --self-test               offline gate for the fan-in collapse + §M19 detector; no engine
+    --self-test               offline gate for fan-in, relation-target, and desktop validation; no engine
 
-Exit codes: 0 ok · 1 drift · 2 partial fan-in · 3 §M19 duplicate occupancy. 3 is distinct
-from 1 on purpose — drift is resolved by regenerating, a §M19 violation is not (regenerating
-renders the duplicate faithfully; the fix is an UNLINK on the owning engine).
+Exit codes: 0 ok · 1 drift · 2 partial fan-in · 3 §M19 duplicate occupancy · 4 conflicting
+relation targets · 5 desktop configuration mismatch. Each is distinct from 1 on purpose:
+drift is resolved by regenerating, while graph/config contradictions must be repaired at their
+source before a projection can be trusted.
 
 Fan-in duplicates (T=264, ffs0#174): the router concatenates /state/relations across
 kernels, so one relation can arrive over more than one path. Those are collapsed on the
@@ -50,6 +50,8 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")
 
 EXIT_M19 = 3   # §M19 duplicate occupancy — distinct from drift (1) and partial fan-in (2),
                # because "regenerate with --mode write" is the wrong resolution for it
+EXIT_AMBIGUOUS_TARGETS = 4
+EXIT_DESKTOP_CONFIG = 5
 
 def get_json(url, timeout=20):
     with urllib.request.urlopen(url, timeout=timeout) as r:
@@ -119,6 +121,90 @@ def duplicate_occupancy(rels):
         by_ws.setdefault(r.get("src_urn"), []).append((r.get("tgt_urn"), r.get("urn") or "<no-urn>"))
     return sorted((ws, sorted(occ)) for ws, occ in by_ws.items() if len(occ) > 1)
 
+def relation_target_map(rels, port):
+    """Return a source-to-target map for one relation port, refusing competing targets.
+
+    The router's response order is not a topology rule. A dict comprehension over a relation
+    list silently selects the last target, which made the 9/10 partial-fan-in run capable of
+    rendering a row from whichever duplicate happened to arrive last. Same-target duplicate
+    relations are not ambiguous here; distinct targets for one source are. The caller must
+    refuse the fold when `conflicts` is non-empty rather than use a selected winner.
+
+    Returns (unique_targets, conflicts), where conflicts are
+    [(source_urn, [(target_urn, [relation_urn, ...]), ...]), ...]."""
+    targets_by_source = {}
+    for relation in rels:
+        if relation.get("src_port") != port:
+            continue
+        source = relation.get("src_urn")
+        target = relation.get("tgt_urn")
+        targets_by_source.setdefault(source, {}).setdefault(target, []).append(
+            relation.get("urn") or "<no-urn>")
+
+    targets, conflicts = {}, []
+    for source, target_relations in sorted(targets_by_source.items()):
+        if len(target_relations) == 1:
+            targets[source] = next(iter(target_relations))
+            continue
+        conflicts.append((source, [(target, sorted(relation_urns))
+                                  for target, relation_urns in sorted(target_relations.items())]))
+    return targets, conflicts
+
+def validate_z440_desktop_assignments(affordance, desktop_config):
+    """Validate numeric Z440 session assignments against durable desktop surface keys.
+
+    `desktop: null` (or an omitted desktop) deliberately means no local desktop assignment.
+    A numeric assignment must resolve through the session URN to one configured desktop's
+    anchor_urn and match that desktop's index. The surface_key makes the mapped surface
+    explicit in diagnostics instead of treating a desktop number as standalone truth.
+    """
+    errors = []
+    desktops_by_anchor = {}
+    for desktop in desktop_config.get("desktops", []):
+        anchor = desktop.get("anchor_urn")
+        if not anchor:
+            continue
+        desktops_by_anchor.setdefault(anchor, []).append(desktop)
+
+    for session in affordance.get("sessions", []):
+        if session.get("host") != "hp-z440":
+            continue
+        desktop_number = session.get("desktop")
+        if desktop_number is None:
+            continue
+        session_key = session.get("key", "<missing key>")
+        session_urn = session.get("session_urn", "<missing session_urn>")
+        if isinstance(desktop_number, bool) or not isinstance(desktop_number, int):
+            errors.append("%s (%s): desktop must be an integer or null, got %r" %
+                          (session_key, session_urn, desktop_number))
+            continue
+        matches = desktops_by_anchor.get(session_urn, [])
+        if len(matches) != 1:
+            errors.append("%s (%s): desktop %d resolves to %d desktop surface(s) by anchor_urn" %
+                          (session_key, session_urn, desktop_number, len(matches)))
+            continue
+        surface = matches[0]
+        surface_key = surface.get("surface_key")
+        surface_index = surface.get("index")
+        if not surface_key:
+            errors.append("%s (%s): mapped desktop %r has no stable surface_key" %
+                          (session_key, session_urn, surface_index))
+            continue
+        if desktop_number != surface_index:
+            errors.append("%s (%s): desktop %d disagrees with surface %s (index %r)" %
+                          (session_key, session_urn, desktop_number, surface_key, surface_index))
+    return errors
+
+def print_relation_target_conflicts(conflicts):
+    print("!! AMBIGUOUS RELATION TARGETS — refusing to construct seat rows from competing targets.")
+    for port, sources in conflicts:
+        print("   %s:" % port)
+        for source, targets in sources:
+            print("     %s" % alias(source))
+            for target, relation_urns in targets:
+                print("       -> %-42s %s" % (alias(target), ", ".join(relation_urns)))
+    print("   resolution is an UNLINK or topology repair on the owning engine, never a chosen map winner.")
+
 def self_test():
     """Offline gate for the fan-in collapse and the §M19 detector (T=264, ffs0#174). No
     engine required, stdlib only — runnable on a cloud runner alongside the fence check.
@@ -181,7 +267,42 @@ def self_test():
     check("two occupants named", duplicate_occupancy(kept),
           [(ws, [("urn:moos:agent:a", "urn:moos:rel:r1"), ("urn:moos:agent:b", "urn:moos:rel:r2")])])
 
-    # 8. agent-card identity matcher (ffs0#165) — the block must extend to the terminating
+    # 8. A7: a source with competing targets is a topology contradiction, never a map-order
+    #    choice. This models the 9/10 partial-fan-in evidence handed to Guido at T=275.
+    opens_on = [rel("urn:moos:rel:o1", ws, "urn:moos:kernel:primary", "opens-on"),
+                rel("urn:moos:rel:o2", ws, "urn:moos:kernel:moos", "opens-on")]
+    targets, conflicts = relation_target_map(opens_on, "opens-on")
+    check("conflicting opens-on has no winner", targets, {})
+    check("conflicting opens-on detected", conflicts,
+          [(ws, [("urn:moos:kernel:moos", ["urn:moos:rel:o2"]),
+                 ("urn:moos:kernel:primary", ["urn:moos:rel:o1"])])])
+    purposes = [rel("urn:moos:rel:p1", ws, "urn:moos:purpose:one", "has-purpose"),
+                rel("urn:moos:rel:p2", ws, "urn:moos:purpose:two", "has-purpose")]
+    targets, conflicts = relation_target_map(purposes, "has-purpose")
+    check("conflicting has-purpose has no winner", targets, {})
+    check("conflicting has-purpose detected", len(conflicts), 1)
+
+    # 9. A8: numeric assignments resolve by session anchor to a stable desktop surface key;
+    #    null remains a valid no-assignment state.
+    desktop_affordance = {"sessions": [
+        {"key": "menno", "host": "hp-z440", "session_urn": "urn:moos:session:menno", "desktop": 2},
+        {"key": "unplaced", "host": "hp-z440", "session_urn": "urn:moos:session:unplaced", "desktop": None},
+    ]}
+    desktop_config = {"desktops": [
+        {"index": 2, "surface_key": "z440-menno", "anchor_urn": "urn:moos:session:menno"},
+    ]}
+    check("desktop assignment valid", validate_z440_desktop_assignments(desktop_affordance, desktop_config), [])
+    desktop_affordance["sessions"][0]["desktop"] = 3
+    check("desktop mismatch detected", len(validate_z440_desktop_assignments(desktop_affordance, desktop_config)), 1)
+
+    # 10. The T=275 9/10 case: a router can respond while omitting one fan-in leg. A dropped
+    #     committed seat is partial fan-in even without a connection exception, never drift.
+    previous_region = "| Persona | Agent | Workspace |\n|---|---|---|\n| A | `a` | `one` |\n| B | `b` | `two` |"
+    check("partial fan-in dropped seat detected",
+          dropped_seat_ids(previous_region, [{"agent": "a", "workspace": "one"}]),
+          {("b", "two")})
+
+    # 11. agent-card identity matcher (ffs0#165) — the block must extend to the terminating
     #    blank line so an INDENTED continuation line stays inside it. Matching `^-` only
     #    stopped at john-lydon's `  *(T247 ...)*` note and left the tail as a duplicate.
     card_txt = ("# Seat: X\n\nintro prose.\n\n"
@@ -195,22 +316,23 @@ def self_test():
     check("card matcher stops at the blank line", "trailing prose" in captured, False)
     check("card matcher spans both bullets", captured.count("- **"), 2)
 
-    # 9. T268: a configured VS Code agent gets the same generated identity block as its
+    # 12. T268: a configured VS Code agent gets the same generated identity block as its
     # Claude seat card, without making every Claude card a Copilot picker entry.
     targets = card_targets({"file": "x.md", "copilot_file": "x.agent.md"})
     check("card targets include Claude and configured Copilot paths",
           [label for label, _ in targets],
           [".claude/agents/x.md", ".github/agents/x.agent.md"])
 
-    if fails:
-        print("SELF-TEST: FAIL (%d)" % len(fails))
-        for f in fails: print("  !", f)
-        return 1
-    print("SELF-TEST: PASS — 9 cases (fan-in collapse, §M19 same-pair survival + detection, "
-          "clean fold, non-occupancy ports, urn-less fallback, order stability, "
-          "canonical §M19 two-occupant detection, agent-card identity matcher, "
-          "Copilot agent-card target)")
-    return 0
+    if not fails:
+        print("SELF-TEST: PASS — 12 cases (fan-in collapse, §M19 same-pair survival + detection, "
+              "clean fold, non-occupancy ports, urn-less fallback, order stability, canonical §M19 "
+              "two-occupant detection, conflicting relation-target refusal, desktop validation, partial-fan-in "
+              "seat-drop detection, agent-card identity matcher, Copilot agent-card target)")
+        return 0
+    print("SELF-TEST: FAIL (%d)" % len(fails))
+    for failure in fails:
+        print("  !", failure)
+    return 1
 
 def fold_from_hg(base_url, fallback_url, topo, disp):
     """One row per WF19 has-occupant edge (spec section 3). Returns (rows, source_url,
@@ -227,8 +349,8 @@ def fold_from_hg(base_url, fallback_url, topo, disp):
     rels, collapsed = collapse_fanin(rels)
     fold_notes = {"fanin_collapsed": collapsed, "duplicate_occupancy": duplicate_occupancy(rels)}
     by_port = lambda p: [r for r in rels if r.get("src_port") == p]
-    opens_on    = {r["src_urn"]: r["tgt_urn"] for r in by_port("opens-on")}
-    has_purpose = {r["src_urn"]: r["tgt_urn"] for r in by_port("has-purpose")}
+    opens_on, duplicate_opens_on = relation_target_map(rels, "opens-on")
+    has_purpose, duplicate_has_purpose = relation_target_map(rels, "has-purpose")
     persona_by_actor = {b["actor_urn"]: dict(b, key=name) for name, b in topo.get("personas", {}).items()}
     kernels = topo.get("kernels", {})
     seats_disp = disp.get("seats", {})
@@ -266,6 +388,10 @@ def fold_from_hg(base_url, fallback_url, topo, disp):
             "_sort": (host_order.get(host, 99), kernel_port(k_alias), alias(ws)),
         })
     rows.sort(key=lambda r: r["_sort"])
+    fold_notes["ambiguous_targets"] = [
+        ("opens-on", duplicate_opens_on),
+        ("has-purpose", duplicate_has_purpose),
+    ]
     return rows, src, primary_err, fold_notes
 
 def render_region(rows):
@@ -320,6 +446,16 @@ def region_seat_ids(region_txt):
         if len(cells) >= 3 and cells[1].startswith("`") and not cells[0].lower().startswith("persona"):
             ids.add((cells[1].strip("`"), cells[2].strip("`")))
     return ids
+
+def dropped_seat_ids(previous_region, folded_rows):
+    """Seat identities present in the committed region but missing from this fold.
+
+    A successful HTTP response can still be a partial router fan-in. The T=275 9/10 run
+    proved that connection exceptions are not the only partial-source signal, so callers
+    must gate on the seat identity set itself before classifying a change as ordinary drift.
+    """
+    folded_ids = {(row["agent"], row["workspace"]) for row in folded_rows}
+    return region_seat_ids(previous_region) - folded_ids
 
 # ---------- legacy semantic check (pre-fence tables) ----------
 def parse_authored_seats(txt):
@@ -592,6 +728,8 @@ def main():
                     help="seats = AGENTS.md seat table (default, unchanged); cards = configured .claude/agents/*.md and .github/agents/*.agent.md identity blocks (ffs0#165/T268). CI runs both as separate steps.")
     ap.add_argument("--affordance", default=os.path.join(REPO, "dev", "config", "session-affordance-map.json"),
                     help="skills source for --scope cards")
+    ap.add_argument("--desktops", default=os.path.join(REPO, "dev", "config", "z440-session-desktops.json"),
+                    help="stable Z440 desktop surface mapping for numeric session-assignment validation")
     ap.add_argument("--allow-shrink", action="store_true",
                     help="permit --mode write to drop seats present in the previous generated region")
     ap.add_argument("--offline-ok", action="store_true",
@@ -606,6 +744,14 @@ def main():
 
     topo = json.load(open(a.topology, encoding="utf-8"))
     disp = json.load(open(a.display, encoding="utf-8")) if os.path.exists(a.display) else {}
+    affordance = json.load(open(a.affordance, encoding="utf-8"))
+    desktop_config = json.load(open(a.desktops, encoding="utf-8"))
+    desktop_errors = validate_z440_desktop_assignments(affordance, desktop_config)
+    if desktop_errors:
+        print("!! Z440 DESKTOP CONFIGURATION MISMATCH — refusing projection until assignments agree.")
+        for error in desktop_errors:
+            print("   " + error)
+        return EXIT_DESKTOP_CONFIG
 
     if a.scope == "cards":
         return run_cards(a, topo, disp)
@@ -625,6 +771,11 @@ def main():
             print("fence integrity: NO fenced region in AGENTS.md — FAIL (run --mode write on a live box)")
             return 1
         raise
+
+    ambiguous_targets = [(port, sources) for port, sources in fold_notes["ambiguous_targets"] if sources]
+    if ambiguous_targets:
+        print_relation_target_conflicts(ambiguous_targets)
+        return EXIT_AMBIGUOUS_TARGETS
 
     region = render_region(hg_rows)
     os.makedirs(a.out, exist_ok=True)
@@ -667,7 +818,7 @@ def main():
     if a.mode == "write":
         if span:
             old_region = txt[span[0]:span[1]]
-            dropped = region_seat_ids(old_region) - {(r["agent"], r["workspace"]) for r in hg_rows}
+            dropped = dropped_seat_ids(old_region, hg_rows)
             if dropped and not a.allow_shrink:
                 print("WRITE REFUSED: fold would drop previously-generated seat(s): %s" % ", ".join(sorted("%s/%s" % t for t in dropped)))
                 print("(partial fan-in? bring the kernel up, or pass --allow-shrink deliberately)")
@@ -692,13 +843,13 @@ def main():
         if committed == region:
             print("DRIFT CHECK: PASS — fenced region is byte-identical to the HG fold (%d rows)." % len(hg_rows))
             return 0
-        if primary_err is not None:
-            dropped = region_seat_ids(committed) - {(r["agent"], r["workspace"]) for r in hg_rows}
-            if dropped:
-                print("DRIFT CHECK: ERROR — partial fan-in: FALLBACK fold (%s) is missing previously-generated seat(s): %s"
-                      % (src, ", ".join(sorted("%s/%s" % t for t in dropped))))
-                print("partial fan-in — bring the router up (%s) and re-run; refusing to propose row deletions from a partial source." % a.base_url)
-                return 2
+        dropped = dropped_seat_ids(committed, hg_rows)
+        if dropped:
+            source_kind = "FALLBACK fold" if primary_err is not None else "router fold"
+            print("DRIFT CHECK: ERROR — partial fan-in: %s (%s) is missing previously-generated seat(s): %s"
+                  % (source_kind, src, ", ".join(sorted("%s/%s" % t for t in dropped))))
+            print("partial fan-in — bring the router up (%s) and re-run; refusing to propose row deletions from a partial source." % a.base_url)
+            return 2
         import difflib
         diff = list(difflib.unified_diff(committed.splitlines(), region.splitlines(),
                                          "AGENTS.md (committed)", "HG fold (regenerated)", lineterm=""))

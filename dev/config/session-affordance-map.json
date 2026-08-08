@@ -170,9 +170,12 @@
       "prompts": [],
       "skills": [
         "moos-seat-hydration",
+        "moos-state-readback",
         "moos-workspace-ingest",
         "moos-multimodal-ingest",
         "moos-session-context-projection",
+        "moos-round-close",
+        "moos-cross-persona-audit",
         "moos-rewrite-envelope"
       ],
       "validation": [
