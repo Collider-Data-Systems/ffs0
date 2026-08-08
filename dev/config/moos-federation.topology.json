@@ -1,9 +1,9 @@
 
 {
   "schema_version": 1,
-  "source_of_truth": "kb/superset/running-state.md federation port map. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands. T=251 true-up (ffs0#154) + T=263 bump (ffs0#172): fleet is 6 kernels / 3 routers — Z440 kernels expected 4.0.4 post-restart, laptop/ProDesk per their kernel entries below — full 3-way Tailscale peer mesh (Z440 100.82.243.13 · hp-laptop 100.106.220.58 · ProDesk 100.87.28.95, rejoined T=226/T=251). This file is READ BY moos-router (--topology-file: kernels host/http_local/http_tailscale + routers host/peers/default_kernel/shard_aliases, loaded at boot, hot-reload via POST /admin/topology/reload) and by config_projection.py / Test-MoosFederation.ps1 / t193_workstation_inventory.jl / surface_context_atlas.jl — keep key renames/removals additive-only. Launchers: dev/scripts/ops/start_federation_{z440,laptop,hpprodesk}.ps1.",
+  "source_of_truth": "kb/superset/running-state.md federation port map. Emit-target and opens-on topology are distinct until §M9 twin_link sync lands. T=251 true-up (ffs0#154) + T=263 bump (ffs0#172): fleet is 6 kernels / 3 routers — kernels expected at the version in expected_ontology_version (bump both together), laptop/ProDesk per their kernel entries below — full 3-way Tailscale peer mesh (Z440 100.82.243.13 · hp-laptop 100.106.220.58 · ProDesk 100.87.28.95, rejoined T=226/T=251). This file is READ BY moos-router (--topology-file: kernels host/http_local/http_tailscale + routers host/peers/default_kernel/shard_aliases, loaded at boot, hot-reload via POST /admin/topology/reload) and by config_projection.py / Test-MoosFederation.ps1 / t193_workstation_inventory.jl / surface_context_atlas.jl — keep key renames/removals additive-only. Launchers: dev/scripts/ops/start_federation_{z440,laptop,hpprodesk}.ps1.",
   "local_host": "auto",
-  "expected_ontology_version": "4.0.5",
+  "expected_ontology_version": "4.0.6",
   "kernels": {
     "hp-z440.primary": {
       "urn": "urn:moos:kernel:hp-z440.primary",
@@ -13,7 +13,7 @@
       "http_tailscale": "http://100.82.243.13:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_server": "moos-primary",
-      "expected_ontology_version": "4.0.5",
+      "expected_ontology_version": "4.0.6",
       "seats": [
         "urn:moos:session:sam.kernel-proper",
         "urn:moos:session:sam.moos-diary",
@@ -30,7 +30,7 @@
       "http_tailscale": "http://100.82.243.13:8001",
       "mcp_sse_local": "http://localhost:9001/sse",
       "mcp_server": "moos-menno",
-      "expected_ontology_version": "4.0.5",
+      "expected_ontology_version": "4.0.6",
       "seats": ["urn:moos:session:sam.steinberger-seat"]
     },
     "hp-z440.lola": {
@@ -41,7 +41,7 @@
       "http_tailscale": "http://100.82.243.13:8002",
       "mcp_sse_local": "http://localhost:9002/sse",
       "mcp_server": "moos-lola",
-      "expected_ontology_version": "4.0.5",
+      "expected_ontology_version": "4.0.6",
       "seats": ["urn:moos:session:sam.karpathy-seat"]
     },
     "hp-z440.moos": {
@@ -52,7 +52,7 @@
       "http_tailscale": "http://100.82.243.13:8003",
       "mcp_sse_local": "http://localhost:9003/sse",
       "mcp_server": "moos-moos",
-      "expected_ontology_version": "4.0.5",
+      "expected_ontology_version": "4.0.6",
       "seats": []
     },
     "hp-laptop.primary": {
@@ -65,7 +65,7 @@
       "mcp_sse_lan": "http://192.168.1.10:8080/sse",
       "mcp_sse_tailscale": "http://100.106.220.58:8080/sse",
       "mcp_server": "moos-hp-laptop-primary",
-      "expected_ontology_version": "4.0.5",
+      "expected_ontology_version": "4.0.6",
       "seats": [
         "urn:moos:session:sam.governance",
         "urn:moos:session:sam.laptop-cowork-workspace",
@@ -83,7 +83,7 @@
       "mcp_sse_lan": "http://100.87.28.95:8080/sse",
       "mcp_sse_tailscale": "http://100.87.28.95:8080/sse",
       "mcp_server": "moos-hpprodesk-primary",
-      "expected_ontology_version": "4.0.5",
+      "expected_ontology_version": "4.0.6",
       "seats": ["urn:moos:session:sam.hpprodesk-setup"]
     }
   },
