@@ -10,7 +10,9 @@
   "changelog": [
     {
       "version": "4.0.6",
+      "date": "2026-08-08",
       "t_day": 280,
+      "round": "t280-collected-round",
       "fragments_promoted": [
         "d4b-wf21-purpose-src",
         "g2b-wf01-manifold-tgt"
