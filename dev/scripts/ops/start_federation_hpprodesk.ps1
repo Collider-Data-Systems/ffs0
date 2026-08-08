@@ -90,13 +90,25 @@ if (Test-Path $RedeployFlag) {
     } catch {
         $rlog.Add("ERROR: $($_.Exception.Message)")
     }
-    $rlog | Out-File $RedeployResult -Encoding utf8
+    try { $rlog | Out-File $RedeployResult -Encoding utf8 }
+    catch { Write-Host "WARNING: could not write $RedeployResult ($($_.Exception.Message))" -ForegroundColor Yellow }
 }
 
 # --- Kernel (idempotent: skip if already running) -------------------------
 if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     Write-Host "Primary kernel already running - skipping." -ForegroundColor Gray
 } else {
+    # Self-heal (T=280 hardening): a failed swap can leave only a .bak behind
+    # (backup move succeeded, swap move failed) and would otherwise crash the
+    # boot path at Start-Process under EAP=Stop - permanently, since the flag
+    # was already consumed. Restore the newest backup instead of dying headless.
+    if (-not (Test-Path $KernelExe)) {
+        $KernelBak = Get-ChildItem -Path "$KernelExe.bak-*" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if ($KernelBak) {
+            Copy-Item $KernelBak.FullName $KernelExe -Force
+            Write-Host "WARNING: moos-kernel.exe was missing - restored from $($KernelBak.Name)." -ForegroundColor Yellow
+        }
+    }
     Write-Host "Starting moos primary kernel (ProDesk)..." -ForegroundColor Cyan
     # --kernel-urn (moos-kernel#69 / A6): explicit self-identity for /healthz +
     # /log/integrity. Identity only - never an actor. Probed rather than
@@ -127,10 +139,14 @@ if (Get-Process -Name moos-kernel -ErrorAction SilentlyContinue) {
     } finally {
         $ErrorActionPreference = $prevEAP
     }
-    Start-Process -FilePath $KernelExe `
-        -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hpprodesk$KernelUrnArgs$AuthArgs" `
-        -WindowStyle Hidden
-    Start-Sleep -Seconds 2
+    if (Test-Path $KernelExe) {
+        Start-Process -FilePath $KernelExe `
+            -ArgumentList "--ontology `"$Ontology`" --log `"$Log`" --listen :8000 --mcp-addr :8080 --seed --seed-user sam --seed-ws hpprodesk$KernelUrnArgs$AuthArgs" `
+            -WindowStyle Hidden
+        Start-Sleep -Seconds 2
+    } else {
+        Write-Host "ERROR: moos-kernel.exe missing and no backup to restore - kernel NOT started." -ForegroundColor Red
+    }
 }
 
 try {
@@ -141,10 +157,61 @@ try {
     Write-Host "WARNING: kernel healthz failed - may still be starting. Check log: $Log" -ForegroundColor Yellow
 }
 
+# --- Router redeploy leg (T=280, marker-gated; twin of the kernel leg) -----
+# Same S4U constraint as the kernel: the router is task-launched, so an
+# unelevated interactive/harness shell cannot stop it (PROCESS_TERMINATE
+# denied). redeploy_hpprodesk_router.ps1 builds moos-router.new.exe, drops
+# router-redeploy-request.flag, and fires the task; this leg performs
+# stop -> backup -> swap in the task's own context, then falls through to
+# the normal router bring-up below. The marker is consumed unconditionally
+# (no boot loops); progress goes to router-redeploy-result.txt because the
+# task window is hidden. First used T=280 (lane-C kernel_urn fan-in stamp,
+# moos-router#12).
+$RouterRedeployFlag   = "$Base\moos-router\router-redeploy-request.flag"
+$RouterRedeployNewExe = "$Base\moos-router\moos-router.new.exe"
+$RouterRedeployResult = "$Base\moos-router\router-redeploy-result.txt"
+if (Test-Path $RouterRedeployFlag) {
+    $rtrLog = New-Object System.Collections.Generic.List[string]
+    $rtrLog.Add("router redeploy leg fired: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')")
+    try {
+        Remove-Item $RouterRedeployFlag -Force
+        if ((Test-Path $RouterRedeployNewExe) -and ((Get-Item $RouterRedeployNewExe).Length -gt 0)) {
+            $rtrRunning = Get-Process -Name moos-router -ErrorAction SilentlyContinue
+            if ($rtrRunning) {
+                $rtrLog.Add("stopping router PID $($rtrRunning.Id)")
+                Stop-Process -Id $rtrRunning.Id -Force
+                Start-Sleep -Seconds 3
+            }
+            $rtrStamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+            if (Test-Path $RouterExe) {
+                Move-Item $RouterExe "$RouterExe.bak-$rtrStamp" -Force
+                $rtrLog.Add("backup: moos-router.exe.bak-$rtrStamp")
+            }
+            Move-Item $RouterRedeployNewExe $RouterExe -Force
+            $rtrLog.Add("swapped: new binary LastWriteTime $((Get-Item $RouterExe).LastWriteTime)")
+        } else {
+            $rtrLog.Add("SKIP: no usable moos-router.new.exe next to the flag - nothing swapped")
+        }
+    } catch {
+        $rtrLog.Add("ERROR: $($_.Exception.Message)")
+    }
+    try { $rtrLog | Out-File $RouterRedeployResult -Encoding utf8 }
+    catch { Write-Host "WARNING: could not write $RouterRedeployResult ($($_.Exception.Message))" -ForegroundColor Yellow }
+}
+
 # --- Router (idempotent; topology-file SOT) --------------------------------
 if (Get-Process -Name moos-router -ErrorAction SilentlyContinue) {
     Write-Host "Router already running - skipping (POST /admin/topology/reload to pick up topology changes)." -ForegroundColor Gray
 } else {
+    # Self-heal (T=280 hardening): same .bak restore as the kernel bring-up -
+    # a failed swap must not leave the boot path crashing at Start-Process.
+    if (-not (Test-Path $RouterExe)) {
+        $RouterBak = Get-ChildItem -Path "$RouterExe.bak-*" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if ($RouterBak) {
+            Copy-Item $RouterBak.FullName $RouterExe -Force
+            Write-Host "WARNING: moos-router.exe was missing - restored from $($RouterBak.Name)." -ForegroundColor Yellow
+        }
+    }
     Write-Host "Starting moos router (ProDesk; topology from $TopologyFile)..." -ForegroundColor Cyan
     $RouterArgs = @(
         '--listen', ':9000',
@@ -152,8 +219,12 @@ if (Get-Process -Name moos-router -ErrorAction SilentlyContinue) {
         '--topology-file', $TopologyFile,
         '--local-host', 'hpprodesk'
     )
-    Start-Process -FilePath $RouterExe -ArgumentList $RouterArgs -WindowStyle Hidden
-    Start-Sleep -Seconds 2
+    if (Test-Path $RouterExe) {
+        Start-Process -FilePath $RouterExe -ArgumentList $RouterArgs -WindowStyle Hidden
+        Start-Sleep -Seconds 2
+    } else {
+        Write-Host "ERROR: moos-router.exe missing and no backup to restore - router NOT started." -ForegroundColor Red
+    }
 }
 
 try {

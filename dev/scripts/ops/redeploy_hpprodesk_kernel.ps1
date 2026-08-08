@@ -75,6 +75,14 @@ if (-not $stopped) {
   $flag   = "$KernelDir\redeploy-request.flag"
   $result = "$KernelDir\redeploy-result.txt"
   if (Test-Path $result) { Remove-Item $result -Force }
+  # Wait for any running task instance first: the task is MultipleInstances =
+  # IgnoreNew, so Start-ScheduledTask against a Running instance is SILENTLY
+  # dropped and the armed flag would sit until the next boot (T=280 review).
+  $idleDeadline = (Get-Date).AddSeconds(60)
+  while (((Get-ScheduledTask -TaskName 'moos-prodesk').State -eq 'Running') -and ((Get-Date) -lt $idleDeadline)) { Start-Sleep -Seconds 1 }
+  if ((Get-ScheduledTask -TaskName 'moos-prodesk').State -eq 'Running') {
+    throw "moos-prodesk task still Running after 60s - fire would be silently ignored (IgnoreNew); retry later"
+  }
   "requested $stamp" | Out-File $flag -Encoding utf8
   Start-ScheduledTask -TaskName 'moos-prodesk'
   Write-Host "== task fired; waiting for the redeploy leg ==" -ForegroundColor Cyan
@@ -83,7 +91,12 @@ if (-not $stopped) {
     if ((Test-Path $result) -and -not (Test-Path $flag)) { break }
   }
   if (Test-Path $result) { Get-Content $result | ForEach-Object { "  $_" } }
-  else { Write-Host "!! no redeploy-result.txt after 30s - inspect the task and $KernelDir manually" -ForegroundColor Red }
+  else {
+    # Do NOT fall through to verify: the old kernel may still answer healthz
+    # and green-light a swap that never happened (T=280 review).
+    if (Test-Path $flag) { Remove-Item $flag -Force; Write-Host "  flag disarmed (would fire a surprise swap at next boot)" -ForegroundColor Yellow }
+    throw "no redeploy-result.txt after 30s - the task-routed swap did not report; inspect the task and $KernelDir"
+  }
 } else {
   Write-Host "== backup + swap ==" -ForegroundColor Cyan
   if (Test-Path $Exe) { Move-Item $Exe "$Exe.bak-$stamp" -Force; Write-Host "  backup: moos-kernel.exe.bak-$stamp" }
@@ -107,4 +120,4 @@ for ($i = 0; $i -lt 12; $i++) {
     $ok = $true; break
   } catch { Write-Host "  waiting... ($i)" }
 }
-if (-not $ok) { Write-Host "!! kernel did not answer /healthz within timeout - check $KernelDir\moos.hpprodesk.jsonl" -ForegroundColor Red }
+if (-not $ok) { throw "kernel did not answer /healthz within timeout - check $KernelDir\moos.hpprodesk.jsonl" }
