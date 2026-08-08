@@ -83,3 +83,7 @@ robocopy_log*.txt
 # OS
 .DS_Store
 Thumbs.db
+
+# t280: diary media stays local (Sam ruling: option a)
+kb/moos-diary/Moos_Montage.mp4
+kb/moos-diary/videos.txt
