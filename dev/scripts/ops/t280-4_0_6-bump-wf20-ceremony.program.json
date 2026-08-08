@@ -1,0 +1,49 @@
+{
+  "_comment": "t280 4.0.6 bump WF20 ceremony (the t250 Ruling-3 collected round). Run ONLY AFTER #206 merged AND the federation restarted on 4.0.6 - both true at authoring. Walks d4b/g2b proposed->promoted->merged (they waited since 4.0.2-proposed, four versions). D8 realizes: decided in this round = RE-DEFERRED BY MEASUREMENT (changelog 4.0.6); no fragment minted for it by design. All MUTATEs CAS.",
+  "apply_ready": false,
+  "applied": true,
+  "do_not_reapply": true,
+  "target_kernel": "urn:moos:kernel:hp-z440.primary",
+  "target_url": "http://localhost:8000/programs",
+  "persona": "zappa",
+  "readback_gate": {
+    "require_ontology_version": "4.0.6"
+  },
+  "envelopes": [
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d4b-wf21-purpose-src",
+      "field": "status",
+      "new_value": "promoted",
+      "expected_version": 1
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:d4b-wf21-purpose-src",
+      "field": "status",
+      "new_value": "merged",
+      "expected_version": 2
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:g2b-wf01-manifold-tgt",
+      "field": "status",
+      "new_value": "promoted",
+      "expected_version": 1
+    },
+    {
+      "rewrite_type": "MUTATE",
+      "actor": "urn:moos:kernel:hp-z440.primary",
+      "target_urn": "urn:moos:grammar_fragment:g2b-wf01-manifold-tgt",
+      "field": "status",
+      "new_value": "merged",
+      "expected_version": 2
+    }
+  ],
+  "applied_at": "2026-08-08T19:46:32Z",
+  "applied_log_seq": "706-709",
+  "applied_to": "urn:moos:kernel:hp-z440.primary"
+}
