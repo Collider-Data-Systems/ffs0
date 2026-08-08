@@ -1,4 +1,12 @@
 {
+	"inputs": [
+		{
+			"type": "promptString",
+			"id": "moos-auth-token",
+			"description": "moos kernel bearer - paste contents of secrets/moos-auth-token once; VS Code stores it in secret storage, never in this file",
+			"password": true
+		}
+	],
 	"servers": {
 		"moos-mcp-z440-lead": {
 			"type": "stdio",
@@ -28,42 +36,42 @@
 			"type": "sse",
 			"url": "http://localhost:8080/sse",
 			"headers": {
-				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+				"Authorization": "Bearer ${input:moos-auth-token}"
 			}
 		},
 		"moos-hpprodesk-primary": {
 			"type": "sse",
 			"url": "http://localhost:8080/sse",
 			"headers": {
-				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+				"Authorization": "Bearer ${input:moos-auth-token}"
 			}
 		},
 		"moos-primary": {
 			"type": "sse",
 			"url": "http://localhost:8080/sse",
 			"headers": {
-				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+				"Authorization": "Bearer ${input:moos-auth-token}"
 			}
 		},
 		"moos-menno": {
 			"type": "sse",
 			"url": "http://localhost:9001/sse",
 			"headers": {
-				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+				"Authorization": "Bearer ${input:moos-auth-token}"
 			}
 		},
 		"moos-lola": {
 			"type": "sse",
 			"url": "http://localhost:9002/sse",
 			"headers": {
-				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+				"Authorization": "Bearer ${input:moos-auth-token}"
 			}
 		},
 		"moos-moos": {
 			"type": "sse",
 			"url": "http://localhost:9003/sse",
 			"headers": {
-				"Authorization": "Bearer <contents of secrets/moos-auth-token>"
+				"Authorization": "Bearer ${input:moos-auth-token}"
 			}
 		},
 		"moos-kernel-cloud": {
