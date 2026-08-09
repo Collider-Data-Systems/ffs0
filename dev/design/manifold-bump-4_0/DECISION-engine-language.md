@@ -1,11 +1,52 @@
-# DECISION — engine rewrite language (T=274, amended same round)
+# DECISION — engine rewrite language (T=274, rev 3 at T=281)
 
-> **Amendment history:** rev 1 recorded "C++ (C++20) throughout" as the direction. Sam's
-> mid-round ruling (t274) superseded it before merge; rev 2 (this text) records the actual
-> decision. Rationale + measurements: `20260802-t274-engine-language-choice.md` (incl. its
-> t274 addendum). Nothing in rev 1's evidence was overturned — only its ruling.
+> **Amendment history:** rev 1 recorded "C++ (C++20) throughout". Sam's mid-round ruling (t274)
+> superseded it before merge; rev 2 recorded the deferral-and-reframe. **rev 3 (T=281)** records
+> Sam's scope call that rev 2's closing line invited — the question is now **deferred
+> *indefinitely*, FP semantics first** — and is applied here from `mtdc-lab` (the design
+> authority under the t281 primacy ruling), by a governed seat. Nothing in rev 1's or rev 2's
+> evidence was overturned; rev 3 tightens the ruling and corrects one reading. Grounding:
+> `mtdc-lab/spec/0002-the-rewrite.md` §0/§1/§6 + `mtdc-lab/findings/20260809-t281-round4-fp-first.md`.
 
-## 1. Ruling
+## 0. Ruling — rev 3 (T=281, Sam; supersedes §1 where they differ)
+
+**The engine-language question is DEFERRED INDEFINITELY. FP semantics come first; a language is
+not on the table until the algebra is.** Sam's words, t281: *"I am in no hurry to rewrite in code.
+Like the engine/kernel, be patient. Think Brian Beckman and FP first — functions before code."*
+
+Three things this makes concrete over rev 2:
+
+1. **The open question is the algebra, not the implementation.** Work proceeds as *FP semantics
+   pinned as passing tests* (mtdc-lab's rounds), not as a port. The t249 FP concordance
+   (`20260708-t249-fp-fruits.md`) is being **executed, not re-argued** — round 4 already closed
+   the `time.Now()`-in-fold purity claim (CI-4 is bit-stable on replay via `replayAppliedAt`;
+   the time-node argument's live form is now time-as-property vs `topology_property_boundary`).
+2. **A language, whenever finally chosen, is INSTRUMENTAL** — a stepping stone to the dialect
+   layer, selected on *time-to-dialect*, not on longevity. The **Rust-as-end-state** suggestion
+   that appeared in draft material is **STRUCK**: it answered an implementation question while the
+   open question is the algebra. No port lane opens; the Go `moos-kernel` keeps running as engine
+   and oracle, no retirement plan attached.
+3. **Perf is confirmed *not* the motive.** t281 measured the dominant write-path cost as
+   algorithmic and Go-fixable — **49.4× allocation** recoverable from a batch path already in the
+   tree (`internal/hdc/encode.go:90`, unused on the write path). A rewrite justified on speed
+   would be justified on a `make()` call; the justification must be the algebra. *(That one-line
+   fix is oracle hygiene, licensed under §2 — it belongs to the kernel lane, Wolfram; see the
+   t281 bus asks. It is not a port and does not touch this ruling.)*
+
+**One correction carried up from mtdc-lab (t281):** rev 2's §1 line "MLIR is not an engine
+dependency" is right *for admissibility checking* and stays — but it must **not** be read as
+evidence against MLIR generally. MLIR earns its place exactly where its **pass and lowering
+machinery** is used (Spike B findings, item 2), which is the stated use and was never refuted;
+round 4 executed the first such lowering. §2's anti-goal "No LLVM/MLIR in the engine's *build
+graph*" still stands, because per-purpose dialects sit **outside** that build graph.
+
+**Reopen condition unchanged:** only an explicit further scope call by Sam (a concrete lowering
+target needing a non-Go surface, or `libmoosfold`). Stage/retirement-vs-second-engine questions
+stay open in `mtdc-lab/spec/0002` §6 and are not decided here.
+
+---
+
+## 1. Ruling — rev 2 (T=274, retained; read under §0)
 
 **The engine-language question is DEFERRED, and dissolved into a better-posed one.** No
 language is chosen for a runtime port this round. The Go `moos-kernel` stays where it is —
@@ -85,3 +126,4 @@ concrete lowering target that needs a non-Go engine surface).
 
 ---
 authored-by: agent:claude-code.remote / session:none-ungoverned-remote-s0 / t274-engine-language-choice
+rev-3 applied-by: agent:claude-cowork.hp-z440 / session:sam.z440-cowork-workspace / t281-decision-rev3 (governed-seat apply of an mtdc-lab proposal)
