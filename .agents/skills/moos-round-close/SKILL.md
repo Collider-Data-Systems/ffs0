@@ -31,6 +31,26 @@ diff, include it in this round's commit. (The generated seat table is the fenced
 `AGENTS.md`; authority spine = HG `/state` via the router fan-in — spec
 `dev/design/manifold-bump-4_0/20260620-t231-moos-config-projection-spec.md` §4.)
 
+### 0b. Doc-index gate (BLOCKING — t283)
+
+```bash
+python dev/scripts/projections/docs_index_projection.py --mode check
+```
+
+Exit 0 required to proceed. Three distinct failures, each with its own remedy:
+
+- **exit 6, UNREGISTERED** — a markdown file is on disk but not in `dev/config/doc-index.json`.
+  This is the whole point of the gate: **index it or archive it**. Add a row (`path`, `t_day`,
+  `kind`, `scope`, `status`, `what`) in the same PR that created the doc. Half this repo's docs
+  were unreachable before this gate existed; a new orphan is a regression.
+- **exit 6, MISSING** — a registered path no longer exists. Remove the row, or restore the file
+  if something external cites it (`pinned: true` marks the ones that must never vanish).
+- **exit 1, drift** — the fenced index in `dev/README.md` diverges from the registry. Resolution
+  is **regenerate, never hand-edit**: `--mode write`, then include the diff in this round's commit.
+
+`status` is transcribed from the doc, never assigned by the index — if a row and a doc disagree,
+**the doc wins and the row is the bug**.
+
 ### 1. Update `kb/superset/running-state.md`
 
 Minimum required edits:

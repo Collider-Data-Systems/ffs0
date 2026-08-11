@@ -16,6 +16,10 @@ on:
       - "dev/config/moos-federation.topology.json"
       - ".claude/agents/*.md"
       - ".github/agents/*.agent.md"
+      - "dev/**/*.md"
+      - "kb/**/*.md"
+      - "dev/config/doc-index.json"
+      - "dev/scripts/projections/docs_index_projection.py"
   push:
     branches: [main]
     paths:
@@ -26,6 +30,10 @@ on:
       - "dev/config/moos-federation.topology.json"
       - ".claude/agents/*.md"
       - ".github/agents/*.agent.md"
+      - "dev/**/*.md"
+      - "kb/**/*.md"
+      - "dev/config/doc-index.json"
+      - "dev/scripts/projections/docs_index_projection.py"
 jobs:
   fence-integrity:
     runs-on: ubuntu-latest
@@ -39,3 +47,7 @@ jobs:
         run: python dev/scripts/projections/config_projection.py --mode check --offline-ok
       - name: agent-card drift check (offline -> full byte-compare from config)
         run: python dev/scripts/projections/config_projection.py --scope cards --mode check --offline-ok
+      - name: doc-index self-test (offline)
+        run: python dev/scripts/projections/docs_index_projection.py --self-test
+      - name: doc-index coverage + drift (fully checkable offline)
+        run: python dev/scripts/projections/docs_index_projection.py --mode check
