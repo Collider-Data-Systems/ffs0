@@ -1,6 +1,8 @@
 # Cloudflare tunnel + Access — verified state and the last mile (t283)
 
-> Runbook for `kernel.my-tiny-data-collider.nl` (SSE) and `api.my-tiny-data-collider.nl` (REST).
+> **STATUS: WORKING end-to-end since t283** — both hostnames return **200** to a request carrying the
+> service token, and **302 → login** without one. Runbook for `kernel.my-tiny-data-collider.nl` (SSE)
+> and `api.my-tiny-data-collider.nl` (REST).
 > Everything in §1 is **MEASURED** from Z440 at t283. §3 is the remaining work and it is
 > owner-gated (dashboard + credential creation = Sam's hands, never an agent's).
 
@@ -29,7 +31,7 @@ headers were being sent as literal text and could never authenticate. Fixed: bot
 inputs (`password: true`), so the values live in VS Code secret storage and never in the file.
 The portable shape is in the tracked `.vscode/mcp.json.example`.
 
-## 3 · The last mile — TWO dashboard steps, both Sam's
+## 3 · The last mile — DONE (t283). Recorded here as the procedure and its gotchas
 
 The common failure here is doing only the first step. A service token by itself changes nothing:
 an Access application ignores service-token headers unless a **policy** admits them.
@@ -62,6 +64,33 @@ curl -s -o /dev/null -w "%{http_code}\n" \
 
 `200` = done: the edge authenticated the machine and the origin answered. `302` = step 2 is missing
 (policy does not admit the token). `403` = the policy exists but does not include *this* token.
+
+## 3b · What was actually done (t283) — and three gotchas that cost real time
+
+**Configured:** service token **`z440-vscode-mcp`**; a reusable Access policy **`service-token-mcp`**
+(`c1a22969-03f2-4463-80e8-592d3462f45a`, action **Service Auth**, include = that specific token, not
+"Any Access Service Token"); attached to **both** apps — `moos-kernel` and `moos-api` — which already
+shared the single `sam-only` policy. Verified live: `200` with the token on both hostnames, `302`
+without. Anonymous reads remain gated at the edge.
+
+**Gotcha 1 — a token alone does nothing.** Confirmed by inspection, not inference: before this, both
+apps carried exactly one policy (`sam-only`) and the account had **zero** service tokens. An Access
+app ignores service-token headers unless a policy with action **Service Auth** admits them. That is
+why the pre-t283 probe returned 302 rather than 401.
+
+**Gotcha 2 — the dashboard moved.** Zero Trust paths are now
+`dash.cloudflare.com/<account>/one/access-controls/{apps,policies,service-credentials}`. The older
+`/access/apps` and `/one/access/apps` URLs 404. Service tokens live under **Service credentials**,
+not "Service Auth".
+
+**Gotcha 3 — paste the VALUE, not the header.** Cloudflare shows the credential as a ready-made
+header line (`CF-Access-Client-Id: <value>`). Pasting that whole line into `secrets/api_keys.env`
+puts the header name *inside* the variable, and the space makes `set -a; . api_keys.env` try to
+execute the value as a command. The file wants bare `KEY=value` — no header prefix, no spaces around
+`=`, and the template's lines start commented, so uncomment them.
+
+**Client config:** `.vscode/mcp.json`'s two cloud servers read `${input:cf-access-client-id}` /
+`${input:cf-access-client-secret}` (VS Code secret storage). Restart an MCP server to be prompted.
 
 ## 4 · Notes worth keeping
 
