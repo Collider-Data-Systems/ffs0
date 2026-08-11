@@ -37,16 +37,21 @@ diff, include it in this round's commit. (The generated seat table is the fenced
 python dev/scripts/projections/docs_index_projection.py --mode check
 ```
 
-Exit 0 required to proceed. Three distinct failures, each with its own remedy:
+Exit 0 required to proceed. Four distinct failures, each with its own remedy:
 
 - **exit 6, UNREGISTERED** — a markdown file is on disk but not in `dev/config/doc-index.json`.
   This is the whole point of the gate: **index it or archive it**. Add a row (`path`, `t_day`,
   `kind`, `scope`, `status`, `what`) in the same PR that created the doc. Half this repo's docs
   were unreachable before this gate existed; a new orphan is a regression.
-- **exit 6, MISSING** — a registered path no longer exists. Remove the row, or restore the file
-  if something external cites it (`pinned: true` marks the ones that must never vanish).
+- **exit 6, MISSING** — a registered path no longer exists. Remove the row, or restore the file.
+  `pinned: true` does not enforce anything; it is a **flag that this doc is cited by an external
+  surface** (`kb/superset/ontology.json`, mtdc-lab, or a skill), so deleting or renaming it means
+  updating that citer in the same change. Treat a MISSING on a pinned row as a stop-and-check.
 - **exit 1, drift** — the fenced index in `dev/README.md` diverges from the registry. Resolution
   is **regenerate, never hand-edit**: `--mode write`, then include the diff in this round's commit.
+- **exit 7, REGISTRY INVALID** — `doc-index.json` is unreadable, malformed, or an entry is bad
+  (unknown `status`/`scope`, duplicate `path`, missing `what`, `pinned` on a live row). Fix the
+  registry itself; nothing is projected until it parses.
 
 `status` is transcribed from the doc, never assigned by the index — if a row and a doc disagree,
 **the doc wins and the row is the bug**.
