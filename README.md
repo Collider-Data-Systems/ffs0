@@ -19,7 +19,11 @@ Orientation (the rule, seat map, SOT hierarchy, F⊣G pipeline, vocabulary, bran
 | `dev/claude-skills/` | Project skills (synced to `~/.claude/skills/` via `sync-claude-skills.ps1`). |
 | `dev/config/` | Federation topology, session-affordance, desktop maps. |
 | `dev/design/` | 4.0 / ontology design drafts (relation-first, rewrite-first; see `AGENTS.md` design discipline). Grouped lane: `manifold-bump-4_0/` (vocab deltas, mtdc, branching, mo:os ⊣ so:om, Poly). |
-| `dev/runbooks/` | Runbooks (e.g. `keep-ingest-runbook.md`), `research-archive/`, papers, evaluations. |
+| `dev/runbooks/` | Operational runbooks only — how to run a thing (`keep-ingest-runbook.md`, `github-org-operations.md`, `cloudflare-tunnel-access.md`, `agents-reference.md`). |
+| `dev/research/` | Measurements and findings, plus `papers/` and `thought/`. |
+| `dev/archive/` | Superseded docs, kept for provenance and still indexed. Do not re-activate. |
+| `dev/data/` | Reference data: `youtube/` entries, `calendar/`, `evaluations/`, `tasks/`. |
+| `dev/README.md` | **The generated index of every doc in this repo** — start here. |
 | `dev/moos-viz/` | Visualization build output. |
 | `secrets/` | Local-first, **gitignored** — never commit. |
 | `tmp/` | Generated projection artifacts — local unless a snapshot is explicitly requested. |

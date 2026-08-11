@@ -4,8 +4,8 @@
 Set-StrictMode -Version Latest
 
 $script:RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
-$script:EntriesDir = Join-Path $script:RepoRoot "dev\reference\youtube\entries"
-$script:ListsDir = Join-Path $script:RepoRoot "dev\reference\youtube\lists"
+$script:EntriesDir = Join-Path $script:RepoRoot "dev\data\youtube\entries"
+$script:ListsDir = Join-Path $script:RepoRoot "dev\data\youtube\lists"
 $script:YtTmpDir = Join-Path $script:RepoRoot "tmp\youtube"
 
 function Resolve-YtDlpCommand {

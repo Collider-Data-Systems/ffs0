@@ -46,7 +46,7 @@ function Read-JsonFile {
     return Get-Content -Raw $Path | ConvertFrom-Json
 }
 
-$Cache = Read-JsonFile (Join-Path $RepoRoot 'dev\reference\project-field-ids.json')
+$Cache = Read-JsonFile (Join-Path $RepoRoot 'dev\runbooks\project-field-ids.json')
 $ProjectId = $Cache.project_id
 
 function Get-FieldId { param([Parameter(Mandatory)][string]$Name) $Cache.fields.$Name.id }
