@@ -51,7 +51,15 @@ ROOT_DOCS = ("AGENTS.md", "CLAUDE.md", "ANTIGRAVITY.md", "README.md")
 
 # ---------- corpus ----------
 def walk_corpus():
-    """Every markdown file the registry must account for. Deterministic order."""
+    """The markdown the registry must account for: dev/, kb/, and the root instructional docs.
+
+    Deliberately NOT repo-wide, because two other surfaces already have their own gates and
+    double-covering them would mean two registries disagreeing about one file:
+      .claude/agents/*.md and .github/agents/*.agent.md -> config_projection.py --scope cards
+      .agents/**                                        -> generated mirror, sync-antigravity-config.ps1
+    Everything else (tmp/, scratch/, .venv/, node_modules/) is build or scratch output.
+    Deterministic order.
+    """
     found = []
     for base in ("dev", "kb"):
         for root, dirs, files in os.walk(os.path.join(REPO, base)):
@@ -66,13 +74,21 @@ def walk_corpus():
 
 
 def load_registry(path=REGISTRY):
-    with open(path, encoding="utf-8-sig") as fh:
-        return json.load(fh)
+    """Read the registry. A missing or malformed file is a registry problem, not a traceback."""
+    try:
+        with open(path, encoding="utf-8-sig") as fh:
+            return json.load(fh)
+    except OSError as e:
+        return {"_load_error": "cannot read %s: %s" % (path, e)}
+    except ValueError as e:  # json.JSONDecodeError
+        return {"_load_error": "malformed JSON in %s: %s" % (path, e)}
 
 
 def validate_registry(reg):
     """Structural validation. Returns a list of problem strings."""
     problems = []
+    if reg.get("_load_error"):
+        return [reg["_load_error"]]
     docs = reg.get("docs")
     if not isinstance(docs, list):
         return ["registry has no docs[] array"]
@@ -138,7 +154,11 @@ def render_block(reg):
     out.append("")
     groups = {}
     for d in docs:
-        top = "/".join(d["path"].split("/")[:2]) if "/" in d["path"] else "(repo root)"
+        parts = d["path"].split("/")
+        # group by DIRECTORY, never by a filename: dev/README.md belongs under "dev",
+        # not under a heading called "dev/README.md"
+        top = "/".join(parts[:-1]) if len(parts) > 1 else "(repo root)"
+        top = "/".join(top.split("/")[:2])
         groups.setdefault(top, []).append(d)
     for top in sorted(groups):
         out.append("### %s" % top)

@@ -20,7 +20,7 @@
 | `CLAUDE.md` | — | substrate | live | CLAUDE.md |
 | `README.md` | — | process | live | ffs0 |
 
-### dev/README.md
+### dev
 
 | doc | t-day | scope | status | what |
 |---|---|---|---|---|
