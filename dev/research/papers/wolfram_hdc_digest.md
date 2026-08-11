@@ -1,8 +1,8 @@
-# HyperGraphRAG Digest
+# Wolfram HDC Digest
 
 ## Source
 
-`dev/reference/papers/hypergraphrag_digest.md`
+`dev/research/papers/wolfram_hdc_digest.md`
 
 ## Status
 

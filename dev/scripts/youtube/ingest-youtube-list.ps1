@@ -1,4 +1,4 @@
-# Batch ingest: runs ingest-youtube-url.ps1 per URL, writes a ledger to dev/reference/youtube/lists.
+# Batch ingest: runs ingest-youtube-url.ps1 per URL, writes a ledger to dev/data/youtube/lists.
 param(
     [Parameter(Mandatory = $true)]
     [string[]]$Urls,

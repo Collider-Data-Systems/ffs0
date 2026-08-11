@@ -19,7 +19,7 @@ To confirm: open a new Claude Code conversation — the opening system-reminder 
 
 ## Current skills (12)
 
-Grouped by role; each `SKILL.md` carries its own trigger `description` (the authoritative when-to-use) — not restated here. Index in `dev/reference/agents-reference.md`.
+Grouped by role; each `SKILL.md` carries its own trigger `description` (the authoritative when-to-use) — not restated here. Index in `dev/runbooks/agents-reference.md`.
 
 | Group | Skills |
 |---|---|

@@ -53,7 +53,7 @@
 
 - **Pixtral 12B**: fully evaluated (Jun 16) and declined — VRAM floor on the 12 GB 3060, no
   genuine abliterated variant, fragile Ollama mmproj path. Qwen2.5-VL-7B won. The eval note
-  survives at `dev/reference/pixtral-12b-vision-eval-t231.md`.
+  survives at `dev/runbooks/pixtral-12b-vision-eval-t231.md`.
 - **EXIF-date scanning over the Drive virtual filesystem** for montage ordering: too slow,
   abandoned for path sorting.
 - **A blocking running-state-write guard hook** (T219 review): contested — Z440 lead pro,

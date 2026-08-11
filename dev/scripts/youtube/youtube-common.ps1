@@ -1,11 +1,11 @@
 # Shared helpers for the YouTube ingest lane. Dot-source from the sibling scripts.
-# Successor to the retired .agent/dev/*.ps1 trio (removed at d649b60) — see dev/reference/youtube/README.md.
+# Successor to the retired .agent/dev/*.ps1 trio (removed at d649b60) — see dev/data/youtube/README.md.
 
 Set-StrictMode -Version Latest
 
 $script:RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
-$script:EntriesDir = Join-Path $script:RepoRoot "dev\reference\youtube\entries"
-$script:ListsDir = Join-Path $script:RepoRoot "dev\reference\youtube\lists"
+$script:EntriesDir = Join-Path $script:RepoRoot "dev\data\youtube\entries"
+$script:ListsDir = Join-Path $script:RepoRoot "dev\data\youtube\lists"
 $script:YtTmpDir = Join-Path $script:RepoRoot "tmp\youtube"
 
 function Resolve-YtDlpCommand {

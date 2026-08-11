@@ -13,7 +13,7 @@ the unifier** (the only store already on every device *and* already MCP-wired).
 - **Primary: the collider Workspace account** (Workspace plan, more capability, already signed in on
   all workstations). It has the **official Keep API** (service account + domain-wide delegation),
   already plumbed in `dev/scripts/google_keep_fetch.jl` + `dev/scripts/ops/Invoke-KeepIngestHarness.ps1`
-  (see `dev/reference/keep-ingest-runbook.md`). This is the robust path and the default.
+  (see `dev/runbooks/keep-ingest-runbook.md`). This is the robust path and the default.
 - **Optional fallback: personal gmail** — no official API, only unofficial `gkeepapi` (master
   token). Opt in with `-IncludePersonal`; skip it entirely if all the notes you want live on the
   Workspace account.
@@ -41,7 +41,7 @@ already has a Claude MCP. So we mirror Keep → a Drive `keep-mirror/` folder an
 | `secrets/keep_personal.env.example` | template for the optional personal master token (real file gitignored) |
 
 ## Setup (once, on Z440)
-1. **Workspace** — already configured per `dev/reference/keep-ingest-runbook.md` (service account
+1. **Workspace** — already configured per `dev/runbooks/keep-ingest-runbook.md` (service account
    `moos-keep-ingest@…`, delegated subject `sam@my-tiny-data-collider.nl`, scope `keep.readonly`).
 2. **rclone** — `rclone config` → a Drive remote named `gdrive` on the **collider Workspace Drive**
    (the account signed in on all your boxes), so `keep-mirror/` lands where every device sees it.

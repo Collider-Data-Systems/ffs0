@@ -1,4 +1,4 @@
-# Write one normalized transcript entry (dev/reference/youtube/schema.json contract).
+# Write one normalized transcript entry (dev/data/youtube/schema.json contract).
 param(
     [Parameter(Mandatory = $true)]
     [string]$Url,

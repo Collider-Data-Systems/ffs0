@@ -2,7 +2,7 @@
 
 @AGENTS.md
 
-> **Mirror of `AGENTS.md`** (the project SOT) · manual · don't edit except emergency de-rot. Canonical cross-tool orientation lives in **`AGENTS.md`** (kernel) + `dev/reference/agents-reference.md` (deep tier). This file = Claude-Code-specific deltas only.
+> **Mirror of `AGENTS.md`** (the project SOT) · manual · don't edit except emergency de-rot. Canonical cross-tool orientation lives in **`AGENTS.md`** (kernel) + `dev/runbooks/agents-reference.md` (deep tier). This file = Claude-Code-specific deltas only.
 
 Personal portable private workspace for mo:os. Owner `urn:moos:user:sam`. **Read `kb/superset/running-state.md` first for live state**; folded HG + live `/healthz` outrank any doc (readback wins).
 

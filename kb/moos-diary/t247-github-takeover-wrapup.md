@@ -23,7 +23,7 @@ Mid-arc, the loop caught Sam's go-ahead on moos-kernel#40 (the Δ17 multi-writer
 - moos-kernel#40(d) executable half: Guido's `Test-MoosFederation -Mode Doctor` Pass 2b (plan posted; no PR yet).
 - moos-kernel#40(e): Sam's ops sequencing — repoint the two hp-laptop stdio sidecars (→ live engine MCP :8080) **before** restarting the laptop kernel onto `4c99df8`; both kernels still run pre-fix binaries.
 - ffs0#112: one laptop surface act (stale user-level `moos.serverPath`); optional hardening split to #117 (Karpathy).
-- Owner hardening queue in `dev/reference/github-org-operations.md`: 2FA flip (no-lockout verified), `PROJECTS_TOKEN` → org secret, Q2 rulesets (classifier-blocked, command ready), Q4 legacy project close, demo-repository archive, MoosT2025 least-privilege.
+- Owner hardening queue in `dev/runbooks/github-org-operations.md`: 2FA flip (no-lockout verified), `PROJECTS_TOKEN` → org secret, Q2 rulesets (classifier-blocked, command ready), Q4 legacy project close, demo-repository archive, MoosT2025 least-privilege.
 
 ## Close-out (T=247 night, same session)
 

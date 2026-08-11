@@ -2,7 +2,7 @@
 
 > Part of the mo:os `ffs0` workspace. Project SOT: `../../AGENTS.md`. Live state: `../../kb/superset/running-state.md`.
 
-Operational + projection tooling: validation checks, ops helpers, and the dry F-projection lane (folded HG state → local artifacts under `tmp/projections/`). Scripts read HG/folded state and write reviewable local artifacts; they never emit rewrites or perform cloud writes except at explicit OAuth-boundary writers (`--mode write`). Historical one-shot Python emitters are archived under `dev/reference/research-archive/scripts/legacy-emitters/`.
+Operational + projection tooling: validation checks, ops helpers, and the dry F-projection lane (folded HG state → local artifacts under `tmp/projections/`). Scripts read HG/folded state and write reviewable local artifacts; they never emit rewrites or perform cloud writes except at explicit OAuth-boundary writers (`--mode write`). Historical one-shot Python emitters are archived under `dev/archive/scripts/legacy-emitters/`.
 
 Active projection lane is Julia-first. Julia binary on Z440: `C:\Users\maass\AppData\Local\Programs\Julia-1.12.6\bin\julia.exe`.
 
@@ -56,7 +56,7 @@ Individual adapters run directly, e.g.:
 
 ## Keep / Calendar OAuth boundaries
 
-Google Calendar/Keep writers are explicit actuator steps, not part of the dry lane. Local OAuth client + token files live under `secrets/` (gitignored). The full Keep ingest contract (source modes, review boundary, and the Cloud Console `invalid_scope` fix) is the harness-neutral runbook `dev/reference/keep-ingest-runbook.md`. Harness-neutral entrypoint:
+Google Calendar/Keep writers are explicit actuator steps, not part of the dry lane. Local OAuth client + token files live under `secrets/` (gitignored). The full Keep ingest contract (source modes, review boundary, and the Cloud Console `invalid_scope` fix) is the harness-neutral runbook `dev/runbooks/keep-ingest-runbook.md`. Harness-neutral entrypoint:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File dev\scripts\ops\Invoke-KeepIngestHarness.ps1 -Mode Check

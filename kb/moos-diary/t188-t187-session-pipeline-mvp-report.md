@@ -109,7 +109,7 @@ Phase two turned the scripts into an MVP gate. The user asked whether the lane p
 
 Phase three made the MVP human-facing. The user asked for a human-friendly and insightful interface to the CI/CD-like filesystem pipeline. The outputs were reorganized under `tmp/projections/session_pipeline/`, the PowerShell runner was added, and `index.html` became the local control surface with runtime status, stage summaries, artifacts, priority actions, gates, and embedded visual output.
 
-Phase four cleaned the tool surface and closed the WF19 issue. Old one-shot Python emitters were archived into `dev/reference/research-archive/scripts/legacy-emitters/`; active Python validation modules stayed in `dev/scripts/validation/`; README files were added to active script folders and local output folders; the governance session got its durable `has-purpose` relation; and the gate improved from 10/3/0 to 11/2/0.
+Phase four cleaned the tool surface and closed the WF19 issue. Old one-shot Python emitters were archived into `dev/archive/scripts/legacy-emitters/`; active Python validation modules stayed in `dev/scripts/validation/`; README files were added to active script folders and local output folders; the governance session got its durable `has-purpose` relation; and the gate improved from 10/3/0 to 11/2/0.
 
 ## Design Choices
 
@@ -203,7 +203,7 @@ The output tree is ignored local state. README markers were added locally so the
 T188 cleaned up old active-script clutter without deleting provenance. Historical one-shot Python emitters were moved to:
 
 ```text
-dev/reference/research-archive/scripts/legacy-emitters/
+dev/archive/scripts/legacy-emitters/
 ```
 
 They are explicitly marked as provenance, not current operators. Many predate v3.16 actor/session/kernel-authority rules, so they should not be fired against a live kernel without envelope review.

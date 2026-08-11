@@ -214,7 +214,7 @@ At round-close (`moos-round-close`): emit a single F-direction sweep so the boar
 
 - CLI wrapper `moos-github-bridge.ps1` (Windows primary) or `.sh` (Linux later)
 - F direction: walk state snapshot for {program, session, agent, purpose} with `status ∈ {active, pending, in-progress}`, upsert board items, populate HG URN + PRG + Agent ID + Owner Role + Status fields
-- Hydrate field-ID map once, cache in `ffs0/dev/reference/project-field-ids.json`
+- Hydrate field-ID map once, cache in `ffs0/dev/runbooks/project-field-ids.json`
 - Idempotent on re-run
 
 **Phase 2 (G direction)**:

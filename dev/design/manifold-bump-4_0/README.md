@@ -32,6 +32,6 @@ stay in `dev/design/` root.
 
 Authoritative vocabulary + gate status live in `AGENTS.md` (4.0 vocabulary table) and
 `kb/superset/ontology.json`. The categorical spine these drafts extend lives in
-`dev/reference/research-archive/20260420-t170-functorial-semantics-explicit.md` and the ACT 2026
-paper `dev/reference/papers/act2026/main.tex` (which now carries a `\section{Future Direction: A
+`dev/archive/20260420-t170-functorial-semantics-explicit.md` and the ACT 2026
+paper `dev/research/papers/act2026/main.tex` (which now carries a `\section{Future Direction: A
 Polynomial Interaction Layer}`).

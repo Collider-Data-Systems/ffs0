@@ -8,7 +8,7 @@ Owner: `urn:moos:user:sam` — pulled on every workstation.
 > the rule (ADD·LINK·MUTATE·UNLINK), SOT hierarchy, generated seat table, S0→HG pipeline,
 > actor discipline (§M11/§M12), branching summary, safety. Deep doctrine (4.0 vocab D1–D8,
 > full branching/attribution, design-doc discipline, skills index) lives in
-> `dev/reference/agents-reference.md` (T=262 split).
+> `dev/runbooks/agents-reference.md` (T=262 split).
 > **Read `kb/superset/running-state.md` first for live round-to-round state.**
 > Workspace rules: `.agents/rules/` (`sot-hierarchy.md`, `four-rewrites.md`, `seat-context.md`).
 > Skills sync: `dev/scripts/sync-antigravity-config.ps1` (syncs `dev/claude-skills/` -> `.agents/skills/` & `~/.gemini/antigravity/skills/`).

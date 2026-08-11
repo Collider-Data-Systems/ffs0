@@ -1,7 +1,7 @@
 # GitHub org + project-board operations — runbook
 
 > **Operator: Zappa** (`agent:claude-cowork.hp-z440` / `session:sam.z440-cowork-workspace`) — Sam handed over board + org operations at **T=247**. Lane: `purpose:sam.github-project-board-sync` (pinned to the Zappa workspace T=245). Doctrine SOT for the bridge mapping: `dev/claude-skills/moos-github-project-bridge/SKILL.md` — this runbook is operations, not doctrine; don't restate the field-mapping table here.
-> Board/field identity constants: **`dev/reference/project-field-ids.json`** (read it at runtime, never hardcode `PVT_*` ids). T=247 full item snapshot: `dev/reference/board-baseline-t247.json` (Projects v2 data has no git history — re-snapshot at milestones).
+> Board/field identity constants: **`dev/runbooks/project-field-ids.json`** (read it at runtime, never hardcode `PVT_*` ids). T=247 full item snapshot: `dev/runbooks/board-baseline-t247.json` (Projects v2 data has no git history — re-snapshot at milestones).
 
 ## Org map (verified by readback T=247)
 

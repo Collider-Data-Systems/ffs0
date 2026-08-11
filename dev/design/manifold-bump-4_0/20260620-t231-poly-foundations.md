@@ -5,8 +5,8 @@
 > produced `20260620-t231-moos-soom.md`). Math grounded in Spivak & Niu, *Polynomial Functors: A
 > Mathematical Theory of Interaction* (`poly-book.pdf`) and Spivak, *The Polynomial Abacus* (Topos
 > Institute, `Pfunc2021.pdf`); reconciled against the repo's existing categorical spine
-> (`dev/reference/research-archive/20260420-t170-functorial-semantics-explicit.md`,
-> `dev/reference/papers/act2026/main.tex`, `20260322-categorical-space.md`,
+> (`dev/archive/20260420-t170-functorial-semantics-explicit.md`,
+> `dev/research/papers/act2026/main.tex`, `20260322-categorical-space.md`,
 > `20260620-t231-moos-soom.md`, `20260326-fiber-decomposition.md`).
 
 ## 0. Thesis: everything is Poly

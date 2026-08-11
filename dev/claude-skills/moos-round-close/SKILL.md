@@ -14,7 +14,7 @@ The shape of every round's closing ritual. Runs as a small checklist; each step 
 ## Preconditions
 
 - HG rewrites (if any) have landed via `mcp__moos-kernel__apply_program` and you've verified affected URNs via `node_lookup`.
-- Research / doctrine notes (if any) are written under the active design lane (e.g. `dev/design/manifold-bump-4_0/`) with dated filename (`YYYYMMDD-t<N>-<slug>.md`) — `kb/research/` is retired (archive: `dev/reference/research-archive/`).
+- Research / doctrine notes (if any) are written under the active design lane (e.g. `dev/design/manifold-bump-4_0/`) with dated filename (`YYYYMMDD-t<N>-<slug>.md`) — `kb/research/` is retired (archive: `dev/archive/`).
 - `git status` on the repo(s) you touched shows the intended changes, nothing accidentally staged.
 
 ## Steps

@@ -1,6 +1,6 @@
 # AGENTS.md — mo:os project (ffs0)
 
-> **Authored projection SOT for tools** — read natively by Copilot, Cursor, Codex, Gemini/Antigravity; Claude via `CLAUDE.md` `@import`. Phases 1–4 complete (ffs0#58). **T=262 diet:** this file is the always-loaded kernel; full doctrine detail (4.0 vocabulary, branching/attribution, design-doc discipline, network detail) lives in `dev/reference/agents-reference.md` — sections below point there. **Live runtime truth: `kb/superset/running-state.md` — read it first for round-to-round state.**
+> **Authored projection SOT for tools** — read natively by Copilot, Cursor, Codex, Gemini/Antigravity; Claude via `CLAUDE.md` `@import`. Phases 1–4 complete (ffs0#58). **T=262 diet:** this file is the always-loaded kernel; full doctrine detail (4.0 vocabulary, branching/attribution, design-doc discipline, network detail) lives in `dev/runbooks/agents-reference.md` — sections below point there. **Live runtime truth: `kb/superset/running-state.md` — read it first for round-to-round state.**
 
 ## SOT hierarchy (read this first)
 ```
@@ -55,7 +55,7 @@ workspace(session)  —WF19 opens-on→  engine(kernel)   (topology intent)
 agent  —presents-as→  persona (= Φ(purpose))     (D4; presentation, NOT authority)
 surface  —realizes→  channel / workspace          (D8; observed-first, S0 substrate)
 ```
-Spine commentary, 4.0 vocabulary (D1–D8 table), and grammar-fragment status: `dev/reference/agents-reference.md`.
+Spine commentary, 4.0 vocabulary (D1–D8 table), and grammar-fragment status: `dev/runbooks/agents-reference.md`.
 
 ## Skills (capabilities; model-invoked by description)
 Canonical copies in `dev/claude-skills/`, synced per-seat to `~/.claude/skills/` via `dev/scripts/sync-claude-skills.ps1`. Seat mount lists: `.claude/rules/seat-context.md` + `dev/config/session-affordance-map.json`. Detail lives in each `SKILL.md` — do not restate elsewhere.
