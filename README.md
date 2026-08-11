@@ -19,7 +19,7 @@ Orientation (the rule, seat map, SOT hierarchy, F⊣G pipeline, vocabulary, bran
 | `dev/claude-skills/` | Project skills (synced to `~/.claude/skills/` via `sync-claude-skills.ps1`). |
 | `dev/config/` | Federation topology, session-affordance, desktop maps. |
 | `dev/design/` | 4.0 / ontology design drafts (relation-first, rewrite-first; see `AGENTS.md` design discipline). Grouped lane: `manifold-bump-4_0/` (vocab deltas, mtdc, branching, mo:os ⊣ so:om, Poly). |
-| `dev/reference/` | Runbooks (e.g. `keep-ingest-runbook.md`), `research-archive/`, papers, evaluations. |
+| `dev/runbooks/` | Runbooks (e.g. `keep-ingest-runbook.md`), `research-archive/`, papers, evaluations. |
 | `dev/moos-viz/` | Visualization build output. |
 | `secrets/` | Local-first, **gitignored** — never commit. |
 | `tmp/` | Generated projection artifacts — local unless a snapshot is explicitly requested. |

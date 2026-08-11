@@ -281,7 +281,7 @@ This skill walks the document against the live kernel state on both machines and
 
 - **Round-open ritual** (after `moos-state-readback`) — confirm the top entry matches today's actual T-day + log state
 - **Round-close ritual** (after `moos-round-close`) — confirm the new top entry's citations all resolve before push
-- **Post-doctrine-commit** — every time a derivation/claim ADD lands or a `kb/research/planning.md` edit ships, citations may drift
+- **Post-doctrine-commit** — every time a derivation/claim ADD lands or a `dev/archive/planning.md` edit ships, citations may drift
 - **New persona seating** — when a new agent reads `running-state.md` for the first time, validate freshness first
 - **Anomaly investigation** — "this comment in #35 cites log_seq X but I can't find it" → run the validator
 
@@ -349,7 +349,7 @@ A bad merge or careless edit can destroy a `> Updated:` header, silently fusing 
 ### Pass 5 — orphan-citation check
 
 `kb/research/` now contains only `planning.md` (T=178 cleanup); past doctrine notes are reified as `derivation:*` URNs on log. Walk md-path citations in entries:
-- Confirm each cited `kb/research/...` path resolves to a live file (almost always `planning.md`) OR is correctly redirected to `dev/reference/research-archive/`
+- Confirm each cited `kb/research/...` path resolves to a live file (almost always `planning.md`) OR is correctly redirected to `dev/archive/`
 - Flag a citation pointing at `kb/research/<deleted-doctrine>.md` — replace with the corresponding `derivation:*` URN cited via Pass 3
 
 ### Pass 6 — ontology-version cross-check
@@ -388,7 +388,7 @@ This skill is **read-only** — it never mutates running-state or HG state. If d
 **Pass 2.** Top entry cites log_seq 339 (Z440), 638 (hp-laptop). Both resolve. ✓
 **Pass 3.** Top entry cites `agent:claude-code.hp-z440`, `session:sam.kernel-proper`, `kernel:hp-z440.primary` — all resolve. ✓
 **Pass 4.** Top entries: T=175 ~17:45, T=175 ~16:30, T=175 ~16:15, T=175 ~14:00. Monotonic. ✓
-**Pass 5.** Cites `derivation:t175.program-authoring-fabric` (post-T=178 cleanup; was `kb/research/session/20260424-t175-program-authoring-fabric.md`) — resolves on log. ✓
+**Pass 5.** Cites `derivation:t175.program-authoring-fabric` (post-T=178 cleanup; was `dev/archive/20260424-t175-program-authoring-fabric.md`) — resolves on log. ✓
 **Pass 6.** ontology.json says 3.13.0; top entry doesn't claim a higher version. ✓
 
 verdict: GREEN.

@@ -18,7 +18,7 @@ jobs:
   sync-project-item:
     runs-on: ubuntu-latest
     env:
-      # T=247 takeover: org board #4 is the live board (see dev/reference/github-org-operations.md).
+      # T=247 takeover: org board #4 is the live board (see dev/runbooks/github-org-operations.md).
       # github.token cannot write org Projects v2 — PROJECTS_TOKEN (PAT with project scope) is required;
       # the script warns + skips if the token lacks access, so repo checks stay non-blocking.
       PROJECT_OWNER: Collider-Data-Systems

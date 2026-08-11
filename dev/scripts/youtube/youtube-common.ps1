@@ -1,5 +1,5 @@
 # Shared helpers for the YouTube ingest lane. Dot-source from the sibling scripts.
-# Successor to the retired .agent/dev/*.ps1 trio (removed at d649b60) — see dev/reference/youtube/README.md.
+# Successor to the retired .agent/dev/*.ps1 trio (removed at d649b60) — see dev/data/youtube/README.md.
 
 Set-StrictMode -Version Latest
 

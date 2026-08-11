@@ -65,7 +65,7 @@ All three reversible (a ruleset is deletable). Both rules and the `~DEFAULT_BRAN
 
 **ffs0 ledger (git, direct-to-main per the standing running-state allowance):** commit `c503772`, pushed `c16dc96..c503772`. Two files, one commit:
 - `kb/superset/running-state.md` — new T=248 ~03:30 close entry (6/6 queue, ruleset ids, boundary note).
-- `dev/reference/github-org-operations.md` — Q2 struck DONE with ids; the stale "remaining three are owner-gated" status banner corrected to "remaining owner-gated: `PROJECTS_TOKEN`" (it contradicted the now-done Q2 otherwise).
+- `dev/runbooks/github-org-operations.md` — Q2 struck DONE with ids; the stale "remaining three are owner-gated" status banner corrected to "remaining owner-gated: `PROJECTS_TOKEN`" (it contradicted the now-done Q2 otherwise).
 
 Bundling the runbook §hardening strike into the running-state direct-to-main commit follows the precedent set by the 02:41 2FA entry, which did the same for hardening item #1 — the §hardening section is effectively part of the same state ledger as running-state for this queue.
 

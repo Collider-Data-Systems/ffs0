@@ -101,7 +101,7 @@ In mo:os, copyright is not a label on a file. It's a **node** in the graph, with
 
 When you wire copyright into the graph this way, something powerful happens: you can ask structural questions. "Which works derive from this copyrighted material?" is a graph traversal. "What is the economic value of this IP, given everything that depends on it?" is a Shapley value computation.
 
-The research note on this is at `dev/reference/research-archive/20260409-value-attribution-t159.md` — value as a functor from graph state to real numbers. Not metadata. Not a spreadsheet. A mathematical decomposition.
+The research note on this is at `dev/archive/20260409-value-attribution-t159.md` — value as a functor from graph state to real numbers. Not metadata. Not a spreadsheet. A mathematical decomposition.
 
 If you have knowledge about how copyright properties work in practice — the legal properties, the licensing structures, the chain of rights — that becomes raw material (we call it S0, substrate) that feeds into the formal type system. You'd literally be contributing a node to the graph. Your expertise, wired in, makes the system smarter about IP valuation for everyone who runs it.
 

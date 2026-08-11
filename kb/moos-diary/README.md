@@ -12,7 +12,7 @@ Use it for:
 - Moos diary entries and multimodal observations (the media files below are their source artifacts).
 
 Don't use it for:
-- Scratch plans or half-formed doctrine — durable goes to HG; historical goes to `../../dev/reference/research-archive/`.
+- Scratch plans or half-formed doctrine — durable goes to HG; historical goes to `../../dev/archive/`.
 - Secrets, tokens, OAuth material, credentials.
 - Replacing `running-state.md` (the latest-state index). Wrap-ups are slower narrative packets.
 

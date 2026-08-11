@@ -199,4 +199,4 @@ Both failures preventable by: (a) per-repo explicit `git -C <path>`, (b) reading
 - `moos-rewrite-envelope` — envelope shapes for applying state changes after readback.
 - `moos-round-close` — the end-of-round counterpart.
 - `ffs0/kb/superset/running-state.md` — the living state card this skill reads.
-- `ffs0/dev/reference/research-archive/20260421-t171-guido-governance-session.md` — persona context for the hp-laptop agent running this skill (archived; original session-materialisation snapshot).
+- `ffs0/dev/archive/20260421-t171-guido-governance-session.md` — persona context for the hp-laptop agent running this skill (archived; original session-materialisation snapshot).

@@ -53,7 +53,7 @@ function Get-FieldId { param([Parameter(Mandatory)][string]$Name) $Cache.fields.
 function Get-OptionId {
     param([Parameter(Mandatory)][string]$Field, [Parameter(Mandatory)][string]$Option)
     $id = $Cache.fields.$Field.options.$Option
-    if (-not $id) { throw "Unknown option '$Option' for field '$Field' (cache: dev/reference/project-field-ids.json)" }
+    if (-not $id) { throw "Unknown option '$Option' for field '$Field' (cache: dev/runbooks/project-field-ids.json)" }
     return $id
 }
 

@@ -1,6 +1,6 @@
 # ffs0 Repository Instructions (Copilot)
 
-> **Mirror of `AGENTS.md`** (the project SOT) · manual · don't edit except emergency de-rot. Copilot reads `AGENTS.md` natively — that is the canonical cross-tool kernel (3-tier SOT hierarchy, the rule + actor discipline, generated seat map, S0→HG pipeline, branching summary, safety); deep doctrine (4.0 vocab D1–D8, full branching/attribution, design-doc discipline, skills index) lives in `dev/reference/agents-reference.md` (T=262 split). This file holds only Copilot-surface deltas.
+> **Mirror of `AGENTS.md`** (the project SOT) · manual · don't edit except emergency de-rot. Copilot reads `AGENTS.md` natively — that is the canonical cross-tool kernel (3-tier SOT hierarchy, the rule + actor discipline, generated seat map, S0→HG pipeline, branching summary, safety); deep doctrine (4.0 vocab D1–D8, full branching/attribution, design-doc discipline, skills index) lives in `dev/runbooks/agents-reference.md` (T=262 split). This file holds only Copilot-surface deltas.
 
 ## Read first
 `AGENTS.md` (project SOT) → `kb/superset/running-state.md` (live runtime/seat state). Folded HG + live `/healthz` outrank any doc; if a doc and live readback disagree, re-read — readback wins.
@@ -24,7 +24,7 @@
 - After config edits: check JSON/MCP syntax + `git diff --check`. If projection-affected, run `Moos: Run Session Pipeline` / `dev/scripts/projections/run-session-pipeline.ps1`. Report local-only edits (esp. ignored `.vscode/mcp.json`).
 
 ## Skill routing
-Capabilities live in `dev/claude-skills/` (synced to `~/.claude/skills/`); full index in `dev/reference/agents-reference.md`. Key: `moos-session-context-projection` (F-projection / dashboard / MVP gate), `moos-rewrite-envelope` (envelope authoring, post-§M11 actor discipline), `moos-categorical-research` (categorical / HDC), `moos-tooling-dx` (IDE / MCP / DX), `moos-workspace-ingest` (G-ingest, WF12), `moos-seat-hydration` (workstation open/readback/handoff).
+Capabilities live in `dev/claude-skills/` (synced to `~/.claude/skills/`); full index in `dev/runbooks/agents-reference.md`. Key: `moos-session-context-projection` (F-projection / dashboard / MVP gate), `moos-rewrite-envelope` (envelope authoring, post-§M11 actor discipline), `moos-categorical-research` (categorical / HDC), `moos-tooling-dx` (IDE / MCP / DX), `moos-workspace-ingest` (G-ingest, WF12), `moos-seat-hydration` (workstation open/readback/handoff).
 
 ## Safety
 Never commit `secrets/` values or `.vscode/mcp.json`. Mutations (commit/push/merge, DNS/Cloudflare/tunnel/Access, Calendar/Workspace writes, HG apply) are explicit boundary acts — surface before doing. IDE/UI/pinned-chat state is not durable HG truth until G-ingested.

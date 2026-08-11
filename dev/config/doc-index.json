@@ -11,10 +11,10 @@
     ]
   },
   "counts": {
-    "total": 198,
+    "total": 206,
     "live": 133,
-    "archived": 65,
-    "pinned": 7
+    "archived": 73,
+    "pinned": 15
   },
   "docs": [
     {
@@ -61,6 +61,787 @@
       "status": "live",
       "what": "dev/ — the generated index of every doc in this repo",
       "why": "the index itself; generated from doc-index.json"
+    },
+    {
+      "path": "dev/archive/05-external-substrates.md",
+      "t_day": null,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "Section 05 — External Substrates",
+      "why": "RESTORED t283 from git history — was cited by kb/superset/ontology.json (and, for the kernel-proper spec, by moos-kernel/CLAUDE.md) while existing nowhere on disk"
+    },
+    {
+      "path": "dev/archive/07-time-fabric.md",
+      "t_day": null,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "Section 07 — Time Fabric and Cycles",
+      "why": "RESTORED t283 from git history — was cited by kb/superset/ontology.json (and, for the kernel-proper spec, by moos-kernel/CLAUDE.md) while existing nowhere on disk"
+    },
+    {
+      "path": "dev/archive/20260319-ptp-binding-categories.md",
+      "t_day": 138,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Port-to-Port Bindings and Binding Categories",
+      "declared_status": "Foundational proposal — Program 2 direction, pre-task",
+      "why": "pre-cutoff (t138 < t260)",
+      "previous_path": "dev/design/20260319-ptp-binding-categories.md"
+    },
+    {
+      "path": "dev/archive/20260321-prg-in-graph.md",
+      "t_day": 140,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "PRG-in-Graph: KG → HG Migration",
+      "declared_status": "Active",
+      "why": "pre-cutoff (t140 < t260)",
+      "previous_path": "dev/design/20260321-prg-in-graph.md"
+    },
+    {
+      "path": "dev/archive/20260322-categorical-space.md",
+      "t_day": 141,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Categorical Space & PTP Inventory",
+      "why": "pre-cutoff (t141 < t260)",
+      "previous_path": "dev/design/20260322-categorical-space.md"
+    },
+    {
+      "path": "dev/archive/20260322-moos-diary.md",
+      "t_day": 141,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Moos' Diary — The Complete Chronicle",
+      "why": "pre-cutoff (t141 < t260)",
+      "previous_path": "dev/design/20260322-moos-diary.md"
+    },
+    {
+      "path": "dev/archive/20260324-triangle-operations-manual.md",
+      "t_day": 143,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Triangle Operations Manual",
+      "why": "pre-cutoff (t143 < t260)",
+      "previous_path": "dev/design/20260324-triangle-operations-manual.md"
+    },
+    {
+      "path": "dev/archive/20260325-cloverleaf-autonomous-kernels.md",
+      "t_day": 144,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "PRG036 — Autonomous Kernel Federation (Dynamic Fibers)",
+      "why": "pre-cutoff (t144 < t260)",
+      "previous_path": "dev/design/20260325-cloverleaf-autonomous-kernels.md"
+    },
+    {
+      "path": "dev/archive/20260326-fiber-decomposition.md",
+      "t_day": 145,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "PRG036.2 — Dynamic Fiber Decomposition",
+      "why": "pre-cutoff (t145 < t260)",
+      "previous_path": "dev/design/20260326-fiber-decomposition.md"
+    },
+    {
+      "path": "dev/archive/20260330-local-to-ontology-promotion.md",
+      "t_day": 149,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Local-to-Ontology Promotion",
+      "why": "pre-cutoff (t149 < t260)",
+      "previous_path": "dev/design/20260330-local-to-ontology-promotion.md"
+    },
+    {
+      "path": "dev/archive/20260401-conversation-summary.md",
+      "t_day": 151,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Conversation Summary",
+      "why": "pre-cutoff (t151 < t260)",
+      "previous_path": "dev/design/20260401-conversation-summary.md"
+    },
+    {
+      "path": "dev/archive/20260408-foundation-t158.md",
+      "t_day": 158,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "mo:os Foundation — Unified Reference",
+      "declared_status": "Living document. Reflects implemented state + agreed theoretical extensions.",
+      "why": "archive-resident but externally cited — never delete/rename unpinned",
+      "previous_path": "dev/archive/20260408-foundation-t158.md"
+    },
+    {
+      "path": "dev/archive/20260408-presheaf-classification-temporal-t158.md",
+      "t_day": 158,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Presheaf Formalization, Classification Functors, and Temporal Model",
+      "declared_status": "Theoretical agreement. Not yet implemented.",
+      "why": "already archived (t158)",
+      "previous_path": "dev/archive/20260408-presheaf-classification-temporal-t158.md"
+    },
+    {
+      "path": "dev/archive/20260408-reactive-topology-t158.md",
+      "t_day": 158,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Reactive Topology — Cascade Matrix + Leaf Portals",
+      "declared_status": "Theoretical agreement. Not yet implemented.",
+      "why": "already archived (t158)",
+      "previous_path": "dev/archive/20260408-reactive-topology-t158.md"
+    },
+    {
+      "path": "dev/archive/20260409-reactive-tools-unification-t159.md",
+      "t_day": 159,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Reactive Tools Unification — Watch+React IS the Tool Layer",
+      "declared_status": "Conceptual agreement. Not yet implemented beyond depth-1 Watch/React/Guard.",
+      "why": "already archived (t159)",
+      "previous_path": "dev/archive/20260409-reactive-tools-unification-t159.md"
+    },
+    {
+      "path": "dev/archive/20260409-t159-session-summary.md",
+      "t_day": 159,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "mo:os T=159 Session Summary",
+      "declared_status": "Complete. All items shipped, all repos clean, all issues closed.",
+      "why": "already archived (t159)",
+      "previous_path": "dev/archive/20260409-t159-session-summary.md"
+    },
+    {
+      "path": "dev/archive/20260409-temporal-dependency-model-t159.md",
+      "t_day": 159,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "Temporal Dependency Model",
+      "declared_status": "Implemented in ontology v3.3 (program node type + WF18). Theoretical model agree",
+      "why": "already archived (t159)",
+      "previous_path": "dev/archive/20260409-temporal-dependency-model-t159.md"
+    },
+    {
+      "path": "dev/archive/20260409-value-attribution-t159.md",
+      "t_day": 159,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Economic Value Attribution via Graph Topology",
+      "declared_status": "Theoretical framework. Not yet implemented.",
+      "why": "already archived (t159)",
+      "previous_path": "dev/archive/20260409-value-attribution-t159.md"
+    },
+    {
+      "path": "dev/archive/20260410-agent-delegate-provenance-t160.md",
+      "t_day": 160,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "Agent-Delegate-User Provenance Model — T=160",
+      "why": "already archived (t160)",
+      "previous_path": "dev/archive/20260410-agent-delegate-provenance-t160.md"
+    },
+    {
+      "path": "dev/archive/20260410-config-to-kb-sot-transition-t160.md",
+      "t_day": 160,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "Config to KB SoT Transition — T=160",
+      "declared_status": "Active extraction completed for durable knowledge.",
+      "why": "already archived (t160)",
+      "previous_path": "dev/archive/20260410-config-to-kb-sot-transition-t160.md"
+    },
+    {
+      "path": "dev/archive/20260410-dev-reference-corpus-promotion-t160.md",
+      "t_day": 160,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "Dev Reference Corpus Promotion Plan — T=160",
+      "declared_status": "Snapshot + promotion rules captured in SoT.",
+      "why": "already archived (t160)",
+      "previous_path": "dev/archive/20260410-dev-reference-corpus-promotion-t160.md"
+    },
+    {
+      "path": "dev/archive/20260410-fundamentals-map-t160.md",
+      "t_day": 160,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Fundamentals Map — T=160",
+      "declared_status": "Session map for Z440 operations and fundamentals research.",
+      "why": "already archived (t160)",
+      "previous_path": "dev/archive/20260410-fundamentals-map-t160.md"
+    },
+    {
+      "path": "dev/archive/20260410-t162-delegation-plan-t160.md",
+      "t_day": 162,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=162 Delegation Plan — Menno Presentation Weekend Sprint",
+      "why": "already archived (t162)",
+      "previous_path": "dev/archive/20260410-t162-delegation-plan-t160.md"
+    },
+    {
+      "path": "dev/archive/20260410-websource-to-hg-ki-flow-t160.md",
+      "t_day": 160,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Websource to HG Knowledge Flow — T=160",
+      "why": "already archived (t160)",
+      "previous_path": "dev/archive/20260410-websource-to-hg-ki-flow-t160.md"
+    },
+    {
+      "path": "dev/archive/20260410-yoneda-hdc-graded-algebra-t160.md",
+      "t_day": 160,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "Yoneda-HDC Graded Algebra — Category Space Characterization",
+      "why": "archive-resident but externally cited — never delete/rename unpinned",
+      "previous_path": "dev/archive/20260410-yoneda-hdc-graded-algebra-t160.md"
+    },
+    {
+      "path": "dev/archive/20260412-t162-demo-narration.md",
+      "t_day": 162,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "Demo Narration Script: `mo:os` Menno Presentation (T-162)",
+      "why": "already archived (t162)",
+      "previous_path": "dev/archive/20260412-t162-demo-narration.md"
+    },
+    {
+      "path": "dev/archive/20260414-t164-session-channel-purpose.md",
+      "t_day": 164,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "operad_cited": true,
+      "what": "T=164 — Session, Channel, Purpose, Interface Duality",
+      "why": "archive-resident but externally cited — never delete/rename unpinned",
+      "previous_path": "dev/archive/20260414-t164-session-channel-purpose.md"
+    },
+    {
+      "path": "dev/archive/20260414-t164-wires-come-from.md",
+      "t_day": 164,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=164 — Where do wires come from?",
+      "why": "already archived (t164)",
+      "previous_path": "dev/archive/20260414-t164-wires-come-from.md"
+    },
+    {
+      "path": "dev/archive/20260417-t166-wire-answer-folder-nesting.md",
+      "t_day": 166,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=166 - Wire answer: folder nesting",
+      "why": "already archived (t166)",
+      "previous_path": "dev/archive/20260417-t166-wire-answer-folder-nesting.md"
+    },
+    {
+      "path": "dev/archive/20260417-t187-kernel-proper.md",
+      "t_day": 187,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "T=187 — Kernel Proper: session-as-actor, categorical backbone",
+      "why": "RESTORED t283 from git history — was cited by kb/superset/ontology.json (and, for the kernel-proper spec, by moos-kernel/CLAUDE.md) while existing nowhere on disk"
+    },
+    {
+      "path": "dev/archive/20260418-t168-irl-to-hg-pipeline.md",
+      "t_day": 168,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "IRL → HG pipeline — the vector-space & sheaf lingo",
+      "why": "already archived (t168)",
+      "previous_path": "dev/archive/20260418-t168-irl-to-hg-pipeline.md"
+    },
+    {
+      "path": "dev/archive/20260418-t168-s0-operadic-layer.md",
+      "t_day": 168,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "S0 — the operadic layer over S1",
+      "why": "already archived (t168)",
+      "previous_path": "dev/archive/20260418-t168-s0-operadic-layer.md"
+    },
+    {
+      "path": "dev/archive/20260418-t168-s1-superset-doctrine.md",
+      "t_day": 168,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "operad_cited": true,
+      "what": "S1 as semantic embedding superset",
+      "why": "archive-resident but externally cited — never delete/rename unpinned",
+      "previous_path": "dev/archive/20260418-t168-s1-superset-doctrine.md"
+    },
+    {
+      "path": "dev/archive/20260418-t168-session-kernel-bound.md",
+      "t_day": 168,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "pinned": true,
+      "operad_cited": true,
+      "what": "Sessions are kernel-bound — FAQ",
+      "why": "archive-resident but externally cited — never delete/rename unpinned",
+      "previous_path": "dev/archive/20260418-t168-session-kernel-bound.md"
+    },
+    {
+      "path": "dev/archive/20260418-t168-t187-delivery-clock.md",
+      "t_day": 168,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "T=187 delivery clock — IRL-time anchoring of the kernel-proper program",
+      "why": "already archived (t168)",
+      "previous_path": "dev/archive/20260418-t168-t187-delivery-clock.md"
+    },
+    {
+      "path": "dev/archive/20260418-t168-v3.9-ontology-audit.md",
+      "t_day": 168,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "operad_cited": true,
+      "what": "Ontology v3.9 — T=168 baseline audit",
+      "why": "archive-resident but externally cited — never delete/rename unpinned",
+      "previous_path": "dev/archive/20260418-t168-v3.9-ontology-audit.md"
+    },
+    {
+      "path": "dev/archive/20260418-t187-categorical-contract.md",
+      "t_day": 187,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "20260418-t187-categorical-contract.md",
+      "declared_status": "completed",
+      "why": "already archived (t187)",
+      "previous_path": "dev/archive/20260418-t187-categorical-contract.md"
+    },
+    {
+      "path": "dev/archive/20260418-t187-walk-answers-Q1-Q4.md",
+      "t_day": 187,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=187 walk — answers Q1..Q4",
+      "declared_status": "completed",
+      "why": "already archived (t187)",
+      "previous_path": "dev/archive/20260418-t187-walk-answers-Q1-Q4.md"
+    },
+    {
+      "path": "dev/archive/20260419-t169-session-generalization.md",
+      "t_day": 169,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "T=169 — Session generalization: kernel-bound workspaces, not IDE conversations",
+      "why": "RESTORED t283 from git history — was cited by kb/superset/ontology.json (and, for the kernel-proper spec, by moos-kernel/CLAUDE.md) while existing nowhere on disk"
+    },
+    {
+      "path": "dev/archive/20260420-t170-branching-strategy.md",
+      "t_day": 170,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=170 — branching strategy for mo:os repos",
+      "why": "already archived (t170)",
+      "previous_path": "dev/archive/20260420-t170-branching-strategy.md"
+    },
+    {
+      "path": "dev/archive/20260420-t170-functorial-semantics-explicit.md",
+      "t_day": 170,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "T=170 — Functorial semantics, explicit",
+      "why": "already archived (t170)",
+      "previous_path": "dev/archive/20260420-t170-functorial-semantics-explicit.md"
+    },
+    {
+      "path": "dev/archive/20260420-t170-s0-materialization.md",
+      "t_day": 170,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "T=170 — S0 operadic vocab, materialization sketch",
+      "why": "already archived (t170)",
+      "previous_path": "dev/archive/20260420-t170-s0-materialization.md"
+    },
+    {
+      "path": "dev/archive/20260421-t171-guido-governance-session.md",
+      "t_day": 171,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "pinned": true,
+      "what": "T=171 — Guido governance session (hp-laptop counterpart)",
+      "why": "archive-resident but externally cited — never delete/rename unpinned",
+      "previous_path": "dev/archive/20260421-t171-guido-governance-session.md"
+    },
+    {
+      "path": "dev/archive/20260421-t171-m11-m12-implementation-plan.md",
+      "t_day": 171,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "T=171 — §M11 / §M12 implementation plan (PR 3 & PR 4)",
+      "why": "already archived (t171)",
+      "previous_path": "dev/archive/20260421-t171-m11-m12-implementation-plan.md"
+    },
+    {
+      "path": "dev/archive/20260421-t171-wolfram-kernel-proper-session.md",
+      "t_day": 171,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=171 — Wolfram kernel-proper session (Z440 counterpart)",
+      "why": "already archived (t171)",
+      "previous_path": "dev/archive/20260421-t171-wolfram-kernel-proper-session.md"
+    },
+    {
+      "path": "dev/archive/20260422-t172-cowork-as-occupant.md",
+      "t_day": 172,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "T=172 — Cowork as platform-host: Claude Desktop occupying a Workspace session",
+      "why": "RESTORED t283 from git history — was cited by kb/superset/ontology.json (and, for the kernel-proper spec, by moos-kernel/CLAUDE.md) while existing nowhere on disk"
+    },
+    {
+      "path": "dev/archive/20260422-t172-wolframs-court-social-topology.md",
+      "t_day": 172,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "T=172 — Wolfram's court, social topology, and the outside-inward functor",
+      "why": "RESTORED t283 from git history — was cited by kb/superset/ontology.json (and, for the kernel-proper spec, by moos-kernel/CLAUDE.md) while existing nowhere on disk"
+    },
+    {
+      "path": "dev/archive/20260424-t175-program-authoring-fabric.md",
+      "t_day": 175,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "T=175 — Program-authoring fabric: derivations, clocks, causation, substrate, leaves",
+      "why": "RESTORED t283 from git history — was cited by kb/superset/ontology.json (and, for the kernel-proper spec, by moos-kernel/CLAUDE.md) while existing nowhere on disk"
+    },
+    {
+      "path": "dev/archive/20260605-t216-mtdc-channel-inventory-dry-plan.md",
+      "t_day": 216,
+      "kind": "design",
+      "scope": "v1",
+      "status": "archived",
+      "what": "DRAFT — my-tiny-data-collider domain/channel inventory (dry HG plan, T=216)",
+      "declared_status": "DRY candidate plan. NOT applied.** No HG rewrite emitted. For review (Sam + Z440",
+      "why": "pre-cutoff (t216 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260605-t216-mtdc-channel-inventory-dry-plan.md"
+    },
+    {
+      "path": "dev/archive/20260605-t216-ontology-4.0-draft.md",
+      "t_day": 216,
+      "kind": "design",
+      "scope": "v1",
+      "status": "archived",
+      "what": "DRAFT — mo:os ontology 4.0 delta proposal (T=216)",
+      "declared_status": "APPLIED to `ontology.json` v4.0.0 (T=231) — additive/alias-first core (D1 manifo",
+      "why": "pre-cutoff (t216 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260605-t216-ontology-4.0-draft.md"
+    },
+    {
+      "path": "dev/archive/20260607-t218-branching-strategy.md",
+      "t_day": 218,
+      "kind": "design",
+      "scope": "v1",
+      "status": "archived",
+      "what": "Branching strategy — git as topology, not hierarchy (T=218)",
+      "declared_status": "PROPOSAL for review.** No workflow is enforced by this doc; it records the",
+      "why": "pre-cutoff (t218 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260607-t218-branching-strategy.md"
+    },
+    {
+      "path": "dev/archive/20260607-t218-manifold-instance-vocab-delta.md",
+      "t_day": 218,
+      "kind": "design",
+      "scope": "v1",
+      "status": "archived",
+      "what": "mo:os 4.0 vocab delta — `kernel`→`instance` + the workstation projection surface (T=218)",
+      "declared_status": "APPLIED (alias-first) in `ontology.json` v4.0.0 (T=231)** — D6 `instance` alias",
+      "why": "pre-cutoff (t218 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260607-t218-manifold-instance-vocab-delta.md"
+    },
+    {
+      "path": "dev/archive/20260707-t248-identity-relations-plan.md",
+      "t_day": 248,
+      "kind": "design",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=248 — Identity relations plan: engines · users · delegates · personae",
+      "why": "pre-cutoff (t248 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260707-t248-identity-relations-plan.md"
+    },
+    {
+      "path": "dev/archive/20260707-t248-mtdc-conceptual-continuity.md",
+      "t_day": 248,
+      "kind": "design",
+      "scope": "v1",
+      "status": "archived",
+      "what": "my-tiny-data-collider — the conceptual continuity (T=248 dossier)",
+      "why": "pre-cutoff (t248 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260707-t248-mtdc-conceptual-continuity.md"
+    },
+    {
+      "path": "dev/archive/20260708-t249-guido-identity-projection-tooling.md",
+      "t_day": 249,
+      "kind": "design",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=249 — Guido lane: identity-projection tooling note",
+      "why": "pre-cutoff (t249 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260708-t249-guido-identity-projection-tooling.md"
+    },
+    {
+      "path": "dev/archive/20260708-t249-karpathy-identity-shape-note.md",
+      "t_day": 249,
+      "kind": "design",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=249 — Identity shape: persona-as-derivation, manifold spanning relations, owner placement",
+      "declared_status": "= \"closed\"                       (persona is born closed; it is a conclusion, no",
+      "why": "pre-cutoff (t249 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260708-t249-karpathy-identity-shape-note.md"
+    },
+    {
+      "path": "dev/archive/20260708-t249-t250-baseline.md",
+      "t_day": 249,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "t249 → t250 — baseline, historical evaluation, and the t250 program sketch",
+      "why": "pre-cutoff (t249 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260708-t249-t250-baseline.md"
+    },
+    {
+      "path": "dev/archive/20260708-t249-wf20-round-package.md",
+      "t_day": 249,
+      "kind": "design",
+      "scope": "v1",
+      "status": "archived",
+      "what": "The collected WF20 round — package for Sam's review (t249)",
+      "why": "pre-cutoff (t249 < t260)",
+      "previous_path": "dev/design/manifold-bump-4_0/20260708-t249-wf20-round-package.md"
+    },
+    {
+      "path": "dev/archive/kb-reference-apr5/README.md",
+      "t_day": 173,
+      "kind": "readme",
+      "scope": "v1",
+      "status": "live",
+      "what": "kb-reference-apr5 — archived Google Workspace mirror",
+      "why": "carve-out: readme",
+      "previous_path": "dev/archive/kb-reference-apr5/README.md"
+    },
+    {
+      "path": "dev/archive/planning.md",
+      "t_day": null,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "pinned": true,
+      "what": "planning",
+      "why": "RESTORED t283 from git history — was cited by kb/superset/ontology.json (and, for the kernel-proper spec, by moos-kernel/CLAUDE.md) while existing nowhere on disk"
+    },
+    {
+      "path": "dev/archive/prompts-t166-t164/README.md",
+      "t_day": 166,
+      "kind": "readme",
+      "scope": "process",
+      "status": "live",
+      "what": "Archived prompts — T164/T166 (superseded)",
+      "why": "carve-out: readme",
+      "previous_path": "dev/archive/prompts-t166-t164/README.md"
+    },
+    {
+      "path": "dev/archive/prompts-t166-t164/delegate-ag-t166-overhaul.prompt.md",
+      "t_day": 166,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "T=166 Item B — Antigravity",
+      "why": "already archived (t166)",
+      "previous_path": "dev/archive/prompts-t166-t164/delegate-ag-t166-overhaul.prompt.md"
+    },
+    {
+      "path": "dev/archive/prompts-t166-t164/delegate-vscode-t166-overhaul.prompt.md",
+      "t_day": 166,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "T=166 Item B — VSCode",
+      "why": "already archived (t166)",
+      "previous_path": "dev/archive/prompts-t166-t164/delegate-vscode-t166-overhaul.prompt.md"
+    },
+    {
+      "path": "dev/archive/prompts-t166-t164/running-start-t164.prompt.md",
+      "t_day": 166,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "running-start-t164.prompt.md",
+      "why": "already archived (t166)",
+      "previous_path": "dev/archive/prompts-t166-t164/running-start-t164.prompt.md"
+    },
+    {
+      "path": "dev/archive/round11-pr1-postmerge-compensating-batch.md",
+      "t_day": null,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "Round-11 PR 1 compensating batch — Z440 side",
+      "declared_status": "staged. Do **not** submit before:",
+      "why": "already archived (tNone)",
+      "previous_path": "dev/archive/round11-pr1-postmerge-compensating-batch.md"
+    },
+    {
+      "path": "dev/archive/scripts/legacy-emitters/README.md",
+      "t_day": null,
+      "kind": "readme",
+      "scope": "process",
+      "status": "live",
+      "what": "Legacy Script Emitters",
+      "why": "carve-out: readme",
+      "previous_path": "dev/archive/scripts/legacy-emitters/README.md"
+    },
+    {
+      "path": "dev/archive/spec-drafts/11-hardware-network-r14-draft.md",
+      "t_day": 247,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "Section 11 - Hardware and Network",
+      "why": "already archived (t247)",
+      "previous_path": "dev/archive/spec-drafts/11-hardware-network-r14-draft.md"
+    },
+    {
+      "path": "dev/archive/t169_conv_sum_claude_HPlap.md",
+      "t_day": 168,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=168 → T=169 conversation summary (claude-code on hp-laptop)",
+      "why": "already archived (t168)",
+      "previous_path": "dev/archive/t169_conv_sum_claude_HPlap.md"
+    },
+    {
+      "path": "dev/archive/t169_memory_MEMORY.md",
+      "t_day": null,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "Memory Index",
+      "why": "already archived (tNone)",
+      "previous_path": "dev/archive/t169_memory_MEMORY.md"
+    },
+    {
+      "path": "dev/archive/t169_memory_project_moos.md",
+      "t_day": 187,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "t169_memory_project_moos.md",
+      "why": "already archived (t187)",
+      "previous_path": "dev/archive/t169_memory_project_moos.md"
+    },
+    {
+      "path": "dev/archive/t169_memory_project_prg_naming.md",
+      "t_day": 168,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "t169_memory_project_prg_naming.md",
+      "why": "already archived (t168)",
+      "previous_path": "dev/archive/t169_memory_project_prg_naming.md"
+    },
+    {
+      "path": "dev/archive/t169_memory_user_sam.md",
+      "t_day": 168,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "t169_memory_user_sam.md",
+      "why": "already archived (t168)",
+      "previous_path": "dev/archive/t169_memory_user_sam.md"
+    },
+    {
+      "path": "dev/archive/t169plan_claude_HPlap.md",
+      "t_day": 169,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=169 conversation cleanup + handoff",
+      "why": "already archived (t169)",
+      "previous_path": "dev/archive/t169plan_claude_HPlap.md"
+    },
+    {
+      "path": "dev/archive/t169round10_conv_sum_claude_z440.md",
+      "t_day": 169,
+      "kind": "archived-already",
+      "scope": "v1",
+      "status": "archived",
+      "what": "T=169 round 10 — conversation summary (claude-code on Z440)",
+      "why": "already archived (t169)",
+      "previous_path": "dev/archive/t169round10_conv_sum_claude_z440.md"
+    },
+    {
+      "path": "dev/archive/t169round10_next_plan.md",
+      "t_day": 169,
+      "kind": "archived-already",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "T=169 round 10 → round 11 — plan for the fresh conversation",
+      "why": "already archived (t169)",
+      "previous_path": "dev/archive/t169round10_next_plan.md"
     },
     {
       "path": "dev/claude-skills/README.md",
@@ -180,87 +961,14 @@
       "why": "carve-out: skill"
     },
     {
-      "path": "dev/design/20260319-ptp-binding-categories.md",
-      "t_day": 138,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Port-to-Port Bindings and Binding Categories",
-      "declared_status": "Foundational proposal — Program 2 direction, pre-task",
-      "why": "pre-cutoff (t138 < t260)"
-    },
-    {
-      "path": "dev/design/20260321-prg-in-graph.md",
-      "t_day": 140,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "PRG-in-Graph: KG → HG Migration",
-      "declared_status": "Active",
-      "why": "pre-cutoff (t140 < t260)"
-    },
-    {
-      "path": "dev/design/20260322-categorical-space.md",
-      "t_day": 141,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Categorical Space & PTP Inventory",
-      "why": "pre-cutoff (t141 < t260)"
-    },
-    {
-      "path": "dev/design/20260322-moos-diary.md",
-      "t_day": 141,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Moos' Diary — The Complete Chronicle",
-      "why": "pre-cutoff (t141 < t260)"
-    },
-    {
-      "path": "dev/design/20260324-triangle-operations-manual.md",
-      "t_day": 143,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Triangle Operations Manual",
-      "why": "pre-cutoff (t143 < t260)"
-    },
-    {
-      "path": "dev/design/20260325-cloverleaf-autonomous-kernels.md",
-      "t_day": 144,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "PRG036 — Autonomous Kernel Federation (Dynamic Fibers)",
-      "why": "pre-cutoff (t144 < t260)"
-    },
-    {
-      "path": "dev/design/20260326-fiber-decomposition.md",
-      "t_day": 145,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "PRG036.2 — Dynamic Fiber Decomposition",
-      "why": "pre-cutoff (t145 < t260)"
-    },
-    {
-      "path": "dev/design/20260330-local-to-ontology-promotion.md",
-      "t_day": 149,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Local-to-Ontology Promotion",
-      "why": "pre-cutoff (t149 < t260)"
-    },
-    {
-      "path": "dev/design/20260401-conversation-summary.md",
-      "t_day": 151,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Conversation Summary",
-      "why": "pre-cutoff (t151 < t260)"
+      "path": "dev/data/youtube/README.md",
+      "t_day": 260,
+      "kind": "readme",
+      "scope": "process",
+      "status": "live",
+      "what": "YouTube transcript archive",
+      "why": "carve-out: readme",
+      "previous_path": "dev/data/youtube/README.md"
     },
     {
       "path": "dev/design/20260722-t263-topological-repo-identity-versioning.md",
@@ -280,46 +988,6 @@
       "status": "live",
       "what": "MCP 2026-07-28 stateless migration — audit, recommendation, plan (t280)",
       "why": "cited (mtdc-lab/skill/bus/running-state)"
-    },
-    {
-      "path": "dev/design/manifold-bump-4_0/20260605-t216-mtdc-channel-inventory-dry-plan.md",
-      "t_day": 216,
-      "kind": "design",
-      "scope": "v1",
-      "status": "archived",
-      "what": "DRAFT — my-tiny-data-collider domain/channel inventory (dry HG plan, T=216)",
-      "declared_status": "DRY candidate plan. NOT applied.** No HG rewrite emitted. For review (Sam + Z440",
-      "why": "pre-cutoff (t216 < t260)"
-    },
-    {
-      "path": "dev/design/manifold-bump-4_0/20260605-t216-ontology-4.0-draft.md",
-      "t_day": 216,
-      "kind": "design",
-      "scope": "v1",
-      "status": "archived",
-      "what": "DRAFT — mo:os ontology 4.0 delta proposal (T=216)",
-      "declared_status": "APPLIED to `ontology.json` v4.0.0 (T=231) — additive/alias-first core (D1 manifo",
-      "why": "pre-cutoff (t216 < t260)"
-    },
-    {
-      "path": "dev/design/manifold-bump-4_0/20260607-t218-branching-strategy.md",
-      "t_day": 218,
-      "kind": "design",
-      "scope": "v1",
-      "status": "archived",
-      "what": "Branching strategy — git as topology, not hierarchy (T=218)",
-      "declared_status": "PROPOSAL for review.** No workflow is enforced by this doc; it records the",
-      "why": "pre-cutoff (t218 < t260)"
-    },
-    {
-      "path": "dev/design/manifold-bump-4_0/20260607-t218-manifold-instance-vocab-delta.md",
-      "t_day": 218,
-      "kind": "design",
-      "scope": "v1",
-      "status": "archived",
-      "what": "mo:os 4.0 vocab delta — `kernel`→`instance` + the workstation projection surface (T=218)",
-      "declared_status": "APPLIED (alias-first) in `ontology.json` v4.0.0 (T=231)** — D6 `instance` alias",
-      "why": "pre-cutoff (t218 < t260)"
     },
     {
       "path": "dev/design/manifold-bump-4_0/20260620-t231-grammar-fragment-proposals.md",
@@ -382,24 +1050,6 @@
       "why": "cited (mtdc-lab/skill/bus/running-state)"
     },
     {
-      "path": "dev/design/manifold-bump-4_0/20260707-t248-identity-relations-plan.md",
-      "t_day": 248,
-      "kind": "design",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=248 — Identity relations plan: engines · users · delegates · personae",
-      "why": "pre-cutoff (t248 < t260)"
-    },
-    {
-      "path": "dev/design/manifold-bump-4_0/20260707-t248-mtdc-conceptual-continuity.md",
-      "t_day": 248,
-      "kind": "design",
-      "scope": "v1",
-      "status": "archived",
-      "what": "my-tiny-data-collider — the conceptual continuity (T=248 dossier)",
-      "why": "pre-cutoff (t248 < t260)"
-    },
-    {
       "path": "dev/design/manifold-bump-4_0/20260708-t249-fp-fruits.md",
       "t_day": 249,
       "kind": "design",
@@ -416,43 +1066,6 @@
       "status": "live",
       "what": "T=249 — Governance authority note: four superadmins, four folds",
       "why": "cited (mtdc-lab/skill/bus/running-state)"
-    },
-    {
-      "path": "dev/design/manifold-bump-4_0/20260708-t249-guido-identity-projection-tooling.md",
-      "t_day": 249,
-      "kind": "design",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=249 — Guido lane: identity-projection tooling note",
-      "why": "pre-cutoff (t249 < t260)"
-    },
-    {
-      "path": "dev/design/manifold-bump-4_0/20260708-t249-karpathy-identity-shape-note.md",
-      "t_day": 249,
-      "kind": "design",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=249 — Identity shape: persona-as-derivation, manifold spanning relations, owner placement",
-      "declared_status": "= \"closed\"                       (persona is born closed; it is a conclusion, no",
-      "why": "pre-cutoff (t249 < t260)"
-    },
-    {
-      "path": "dev/design/manifold-bump-4_0/20260708-t249-t250-baseline.md",
-      "t_day": 249,
-      "kind": "design",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "t249 → t250 — baseline, historical evaluation, and the t250 program sketch",
-      "why": "pre-cutoff (t249 < t260)"
-    },
-    {
-      "path": "dev/design/manifold-bump-4_0/20260708-t249-wf20-round-package.md",
-      "t_day": 249,
-      "kind": "design",
-      "scope": "v1",
-      "status": "archived",
-      "what": "The collected WF20 round — package for Sam's review (t249)",
-      "why": "pre-cutoff (t249 < t260)"
     },
     {
       "path": "dev/design/manifold-bump-4_0/20260708-t250-ag-questions-for-zappa.md",
@@ -559,616 +1172,6 @@
       "why": "open governance: unabsorbed research, never overturned — 6 undecided Sam gates"
     },
     {
-      "path": "dev/reference/agents-reference.md",
-      "t_day": 262,
-      "kind": "runbook",
-      "scope": "v1",
-      "status": "live",
-      "what": "AGENTS reference — mo:os doctrine, deep tier",
-      "declared_status": "Phases 1–4 COMPLETE (#58 closed T=244+).** Phase-1 approved on ffs0#58 (PR #59);",
-      "why": "carve-out: runbook (ageless)"
-    },
-    {
-      "path": "dev/reference/cloudflare-tunnel-access.md",
-      "t_day": null,
-      "kind": "runbook",
-      "scope": "v1",
-      "status": "live",
-      "what": "Cloudflare tunnel + Access — verified state and the last mile (t283)",
-      "why": "cited (mtdc-lab/skill/bus/running-state)"
-    },
-    {
-      "path": "dev/reference/github-org-operations.md",
-      "t_day": 247,
-      "kind": "runbook",
-      "scope": "process",
-      "status": "live",
-      "what": "GitHub org + project-board operations — runbook",
-      "why": "carve-out: runbook (ageless)"
-    },
-    {
-      "path": "dev/reference/keep-ingest-runbook.md",
-      "t_day": null,
-      "kind": "agent-routed",
-      "scope": "v1",
-      "status": "live",
-      "what": "Keep Ingest Any Harness",
-      "why": "carve-out: agent-routed"
-    },
-    {
-      "path": "dev/reference/moos-fleet-convo-bootstrap.md",
-      "t_day": 262,
-      "kind": "runbook",
-      "scope": "v1",
-      "status": "live",
-      "what": "mo:os standing fleet convo — bootstrap (one per box)",
-      "why": "carve-out: runbook (ageless)"
-    },
-    {
-      "path": "dev/reference/moos-nomenclature.md",
-      "t_day": null,
-      "kind": "runbook",
-      "scope": "v1",
-      "status": "live",
-      "what": "mo:os nomenclature — the crisp reference",
-      "why": "carve-out: runbook (ageless)"
-    },
-    {
-      "path": "dev/reference/papers/act2026/easychair_abstract.md",
-      "t_day": null,
-      "kind": "research",
-      "scope": "substrate",
-      "status": "live",
-      "what": "Abstract: Functorial Composition over Task Decomposition: A Categorical Kernel for AI-Human Computation",
-      "why": "no t-day; classified by kind"
-    },
-    {
-      "path": "dev/reference/papers/hypergraphrag_digest.md",
-      "t_day": null,
-      "kind": "research",
-      "scope": "substrate",
-      "status": "live",
-      "what": "HyperGraphRAG Digest",
-      "why": "no t-day; classified by kind"
-    },
-    {
-      "path": "dev/reference/papers/wolfram_hdc_digest.md",
-      "t_day": null,
-      "kind": "research",
-      "scope": "substrate",
-      "status": "live",
-      "what": "Wolfram HDC Digest",
-      "why": "no t-day; classified by kind"
-    },
-    {
-      "path": "dev/reference/papers/yoonho_lee_neurips2025_digest.md",
-      "t_day": null,
-      "kind": "research",
-      "scope": "substrate",
-      "status": "live",
-      "what": "Research Digest: Disentangling Hyperedges through the Lens of Category Theory",
-      "why": "no t-day; classified by kind"
-    },
-    {
-      "path": "dev/reference/pixtral-12b-vision-eval-t231.md",
-      "t_day": 231,
-      "kind": "runbook",
-      "scope": "v1",
-      "status": "live",
-      "what": "Pixtral 12B (+ uncensored fine-tunes) as multimodal-ingest vision backbone — survey",
-      "why": "carve-out: runbook (ageless)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260408-foundation-t158.md",
-      "t_day": 158,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "pinned": true,
-      "what": "mo:os Foundation — Unified Reference",
-      "declared_status": "Living document. Reflects implemented state + agreed theoretical extensions.",
-      "why": "archive-resident but externally cited — never delete/rename unpinned"
-    },
-    {
-      "path": "dev/reference/research-archive/20260408-presheaf-classification-temporal-t158.md",
-      "t_day": 158,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Presheaf Formalization, Classification Functors, and Temporal Model",
-      "declared_status": "Theoretical agreement. Not yet implemented.",
-      "why": "already archived (t158)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260408-reactive-topology-t158.md",
-      "t_day": 158,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Reactive Topology — Cascade Matrix + Leaf Portals",
-      "declared_status": "Theoretical agreement. Not yet implemented.",
-      "why": "already archived (t158)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260409-reactive-tools-unification-t159.md",
-      "t_day": 159,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Reactive Tools Unification — Watch+React IS the Tool Layer",
-      "declared_status": "Conceptual agreement. Not yet implemented beyond depth-1 Watch/React/Guard.",
-      "why": "already archived (t159)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260409-t159-session-summary.md",
-      "t_day": 159,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "mo:os T=159 Session Summary",
-      "declared_status": "Complete. All items shipped, all repos clean, all issues closed.",
-      "why": "already archived (t159)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260409-temporal-dependency-model-t159.md",
-      "t_day": 159,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "Temporal Dependency Model",
-      "declared_status": "Implemented in ontology v3.3 (program node type + WF18). Theoretical model agree",
-      "why": "already archived (t159)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260409-value-attribution-t159.md",
-      "t_day": 159,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Economic Value Attribution via Graph Topology",
-      "declared_status": "Theoretical framework. Not yet implemented.",
-      "why": "already archived (t159)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260410-agent-delegate-provenance-t160.md",
-      "t_day": 160,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "Agent-Delegate-User Provenance Model — T=160",
-      "why": "already archived (t160)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260410-config-to-kb-sot-transition-t160.md",
-      "t_day": 160,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "Config to KB SoT Transition — T=160",
-      "declared_status": "Active extraction completed for durable knowledge.",
-      "why": "already archived (t160)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260410-dev-reference-corpus-promotion-t160.md",
-      "t_day": 160,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "Dev Reference Corpus Promotion Plan — T=160",
-      "declared_status": "Snapshot + promotion rules captured in SoT.",
-      "why": "already archived (t160)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260410-fundamentals-map-t160.md",
-      "t_day": 160,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Fundamentals Map — T=160",
-      "declared_status": "Session map for Z440 operations and fundamentals research.",
-      "why": "already archived (t160)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260410-t162-delegation-plan-t160.md",
-      "t_day": 162,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=162 Delegation Plan — Menno Presentation Weekend Sprint",
-      "why": "already archived (t162)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260410-websource-to-hg-ki-flow-t160.md",
-      "t_day": 160,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Websource to HG Knowledge Flow — T=160",
-      "why": "already archived (t160)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260410-yoneda-hdc-graded-algebra-t160.md",
-      "t_day": 160,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "pinned": true,
-      "what": "Yoneda-HDC Graded Algebra — Category Space Characterization",
-      "why": "archive-resident but externally cited — never delete/rename unpinned"
-    },
-    {
-      "path": "dev/reference/research-archive/20260412-t162-demo-narration.md",
-      "t_day": 162,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "Demo Narration Script: `mo:os` Menno Presentation (T-162)",
-      "why": "already archived (t162)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260414-t164-session-channel-purpose.md",
-      "t_day": 164,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "pinned": true,
-      "operad_cited": true,
-      "what": "T=164 — Session, Channel, Purpose, Interface Duality",
-      "why": "archive-resident but externally cited — never delete/rename unpinned"
-    },
-    {
-      "path": "dev/reference/research-archive/20260414-t164-wires-come-from.md",
-      "t_day": 164,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=164 — Where do wires come from?",
-      "why": "already archived (t164)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260417-t166-wire-answer-folder-nesting.md",
-      "t_day": 166,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=166 - Wire answer: folder nesting",
-      "why": "already archived (t166)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260418-t168-irl-to-hg-pipeline.md",
-      "t_day": 168,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "IRL → HG pipeline — the vector-space & sheaf lingo",
-      "why": "already archived (t168)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260418-t168-s0-operadic-layer.md",
-      "t_day": 168,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "S0 — the operadic layer over S1",
-      "why": "already archived (t168)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260418-t168-s1-superset-doctrine.md",
-      "t_day": 168,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "pinned": true,
-      "operad_cited": true,
-      "what": "S1 as semantic embedding superset",
-      "why": "archive-resident but externally cited — never delete/rename unpinned"
-    },
-    {
-      "path": "dev/reference/research-archive/20260418-t168-session-kernel-bound.md",
-      "t_day": 168,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "pinned": true,
-      "operad_cited": true,
-      "what": "Sessions are kernel-bound — FAQ",
-      "why": "archive-resident but externally cited — never delete/rename unpinned"
-    },
-    {
-      "path": "dev/reference/research-archive/20260418-t168-t187-delivery-clock.md",
-      "t_day": 168,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "T=187 delivery clock — IRL-time anchoring of the kernel-proper program",
-      "why": "already archived (t168)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260418-t168-v3.9-ontology-audit.md",
-      "t_day": 168,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "pinned": true,
-      "operad_cited": true,
-      "what": "Ontology v3.9 — T=168 baseline audit",
-      "why": "archive-resident but externally cited — never delete/rename unpinned"
-    },
-    {
-      "path": "dev/reference/research-archive/20260418-t187-categorical-contract.md",
-      "t_day": 187,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "20260418-t187-categorical-contract.md",
-      "declared_status": "completed",
-      "why": "already archived (t187)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260418-t187-walk-answers-Q1-Q4.md",
-      "t_day": 187,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=187 walk — answers Q1..Q4",
-      "declared_status": "completed",
-      "why": "already archived (t187)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260420-t170-branching-strategy.md",
-      "t_day": 170,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=170 — branching strategy for mo:os repos",
-      "why": "already archived (t170)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260420-t170-functorial-semantics-explicit.md",
-      "t_day": 170,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "T=170 — Functorial semantics, explicit",
-      "why": "already archived (t170)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260420-t170-s0-materialization.md",
-      "t_day": 170,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "T=170 — S0 operadic vocab, materialization sketch",
-      "why": "already archived (t170)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260421-t171-guido-governance-session.md",
-      "t_day": 171,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "pinned": true,
-      "what": "T=171 — Guido governance session (hp-laptop counterpart)",
-      "why": "archive-resident but externally cited — never delete/rename unpinned"
-    },
-    {
-      "path": "dev/reference/research-archive/20260421-t171-m11-m12-implementation-plan.md",
-      "t_day": 171,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "T=171 — §M11 / §M12 implementation plan (PR 3 & PR 4)",
-      "why": "already archived (t171)"
-    },
-    {
-      "path": "dev/reference/research-archive/20260421-t171-wolfram-kernel-proper-session.md",
-      "t_day": 171,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=171 — Wolfram kernel-proper session (Z440 counterpart)",
-      "why": "already archived (t171)"
-    },
-    {
-      "path": "dev/reference/research-archive/kb-reference-apr5/README.md",
-      "t_day": 173,
-      "kind": "readme",
-      "scope": "v1",
-      "status": "live",
-      "what": "kb-reference-apr5 — archived Google Workspace mirror",
-      "why": "carve-out: readme"
-    },
-    {
-      "path": "dev/reference/research-archive/prompts-t166-t164/README.md",
-      "t_day": 166,
-      "kind": "readme",
-      "scope": "process",
-      "status": "live",
-      "what": "Archived prompts — T164/T166 (superseded)",
-      "why": "carve-out: readme"
-    },
-    {
-      "path": "dev/reference/research-archive/prompts-t166-t164/delegate-ag-t166-overhaul.prompt.md",
-      "t_day": 166,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "T=166 Item B — Antigravity",
-      "why": "already archived (t166)"
-    },
-    {
-      "path": "dev/reference/research-archive/prompts-t166-t164/delegate-vscode-t166-overhaul.prompt.md",
-      "t_day": 166,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "T=166 Item B — VSCode",
-      "why": "already archived (t166)"
-    },
-    {
-      "path": "dev/reference/research-archive/prompts-t166-t164/running-start-t164.prompt.md",
-      "t_day": 166,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "running-start-t164.prompt.md",
-      "why": "already archived (t166)"
-    },
-    {
-      "path": "dev/reference/research-archive/round11-pr1-postmerge-compensating-batch.md",
-      "t_day": null,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "Round-11 PR 1 compensating batch — Z440 side",
-      "declared_status": "staged. Do **not** submit before:",
-      "why": "already archived (tNone)"
-    },
-    {
-      "path": "dev/reference/research-archive/scripts/legacy-emitters/README.md",
-      "t_day": null,
-      "kind": "readme",
-      "scope": "process",
-      "status": "live",
-      "what": "Legacy Script Emitters",
-      "why": "carve-out: readme"
-    },
-    {
-      "path": "dev/reference/research-archive/spec-drafts/11-hardware-network-r14-draft.md",
-      "t_day": 247,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "Section 11 - Hardware and Network",
-      "why": "already archived (t247)"
-    },
-    {
-      "path": "dev/reference/research-archive/t169_conv_sum_claude_HPlap.md",
-      "t_day": 168,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=168 → T=169 conversation summary (claude-code on hp-laptop)",
-      "why": "already archived (t168)"
-    },
-    {
-      "path": "dev/reference/research-archive/t169_memory_MEMORY.md",
-      "t_day": null,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "Memory Index",
-      "why": "already archived (tNone)"
-    },
-    {
-      "path": "dev/reference/research-archive/t169_memory_project_moos.md",
-      "t_day": 187,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "t169_memory_project_moos.md",
-      "why": "already archived (t187)"
-    },
-    {
-      "path": "dev/reference/research-archive/t169_memory_project_prg_naming.md",
-      "t_day": 168,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "t169_memory_project_prg_naming.md",
-      "why": "already archived (t168)"
-    },
-    {
-      "path": "dev/reference/research-archive/t169_memory_user_sam.md",
-      "t_day": 168,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "t169_memory_user_sam.md",
-      "why": "already archived (t168)"
-    },
-    {
-      "path": "dev/reference/research-archive/t169plan_claude_HPlap.md",
-      "t_day": 169,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=169 conversation cleanup + handoff",
-      "why": "already archived (t169)"
-    },
-    {
-      "path": "dev/reference/research-archive/t169round10_conv_sum_claude_z440.md",
-      "t_day": 169,
-      "kind": "archived-already",
-      "scope": "v1",
-      "status": "archived",
-      "what": "T=169 round 10 — conversation summary (claude-code on Z440)",
-      "why": "already archived (t169)"
-    },
-    {
-      "path": "dev/reference/research-archive/t169round10_next_plan.md",
-      "t_day": 169,
-      "kind": "archived-already",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "T=169 round 10 → round 11 — plan for the fresh conversation",
-      "why": "already archived (t169)"
-    },
-    {
-      "path": "dev/reference/t275-keep-mirror-dryrun-manifest.md",
-      "t_day": 275,
-      "kind": "runbook",
-      "scope": "substrate",
-      "status": "live",
-      "what": "T8 - Keep->Drive mirror DRY-RUN manifest (t275, gate G4)",
-      "why": "cited (mtdc-lab/skill/bus/running-state)"
-    },
-    {
-      "path": "dev/reference/tailscale-ssh-acl.md",
-      "t_day": null,
-      "kind": "runbook",
-      "scope": "v1",
-      "status": "live",
-      "what": "Tailscale SSH ACL — enable ProDesk → peer remote trigger",
-      "why": "carve-out: runbook (ageless)"
-    },
-    {
-      "path": "dev/reference/thought/COLLIDER_MANIFESTO.md",
-      "t_day": null,
-      "kind": "research",
-      "scope": "substrate",
-      "status": "live",
-      "what": "COLLIDER_MANIFESTO.md",
-      "why": "no t-day; classified by kind"
-    },
-    {
-      "path": "dev/reference/thought/my-tiny-data-collider_manuscript.md",
-      "t_day": null,
-      "kind": "research",
-      "scope": "substrate",
-      "status": "live",
-      "what": "my-tiny-data-collider_manuscript.md",
-      "why": "no t-day; classified by kind"
-    },
-    {
-      "path": "dev/reference/thought/pitch-for-friends-t166.md",
-      "t_day": 166,
-      "kind": "research",
-      "scope": "substrate",
-      "status": "archived",
-      "what": "mo:os — pitch for friends",
-      "why": "pre-cutoff (t166 < t260)"
-    },
-    {
-      "path": "dev/reference/youtube/README.md",
-      "t_day": 260,
-      "kind": "readme",
-      "scope": "process",
-      "status": "live",
-      "what": "YouTube transcript archive",
-      "why": "carve-out: readme"
-    },
-    {
       "path": "dev/research/algebraicjulia/DECISION.md",
       "t_day": 260,
       "kind": "research",
@@ -1205,6 +1208,167 @@
       "what": "The Rust corner of the dialect topology, measured (t274 lane E; 2b executed t275)",
       "declared_status": "executed; every claim is a passing test in `Collider-Data-Systems/mtdc-lab`",
       "why": "cited (mtdc-lab/skill/bus/running-state)"
+    },
+    {
+      "path": "dev/research/papers/act2026/easychair_abstract.md",
+      "t_day": null,
+      "kind": "research",
+      "scope": "substrate",
+      "status": "live",
+      "what": "Abstract: Functorial Composition over Task Decomposition: A Categorical Kernel for AI-Human Computation",
+      "why": "no t-day; classified by kind",
+      "previous_path": "dev/research/papers/act2026/easychair_abstract.md"
+    },
+    {
+      "path": "dev/research/papers/hypergraphrag_digest.md",
+      "t_day": null,
+      "kind": "research",
+      "scope": "substrate",
+      "status": "live",
+      "what": "HyperGraphRAG Digest",
+      "why": "no t-day; classified by kind",
+      "previous_path": "dev/research/papers/hypergraphrag_digest.md"
+    },
+    {
+      "path": "dev/research/papers/wolfram_hdc_digest.md",
+      "t_day": null,
+      "kind": "research",
+      "scope": "substrate",
+      "status": "live",
+      "what": "Wolfram HDC Digest",
+      "why": "no t-day; classified by kind",
+      "previous_path": "dev/research/papers/wolfram_hdc_digest.md"
+    },
+    {
+      "path": "dev/research/papers/yoonho_lee_neurips2025_digest.md",
+      "t_day": null,
+      "kind": "research",
+      "scope": "substrate",
+      "status": "live",
+      "what": "Research Digest: Disentangling Hyperedges through the Lens of Category Theory",
+      "why": "no t-day; classified by kind",
+      "previous_path": "dev/research/papers/yoonho_lee_neurips2025_digest.md"
+    },
+    {
+      "path": "dev/research/thought/COLLIDER_MANIFESTO.md",
+      "t_day": null,
+      "kind": "research",
+      "scope": "substrate",
+      "status": "live",
+      "what": "COLLIDER_MANIFESTO.md",
+      "why": "no t-day; classified by kind",
+      "previous_path": "dev/research/thought/COLLIDER_MANIFESTO.md"
+    },
+    {
+      "path": "dev/research/thought/my-tiny-data-collider_manuscript.md",
+      "t_day": null,
+      "kind": "research",
+      "scope": "substrate",
+      "status": "live",
+      "what": "my-tiny-data-collider_manuscript.md",
+      "why": "no t-day; classified by kind",
+      "previous_path": "dev/research/thought/my-tiny-data-collider_manuscript.md"
+    },
+    {
+      "path": "dev/research/thought/pitch-for-friends-t166.md",
+      "t_day": 166,
+      "kind": "research",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "mo:os — pitch for friends",
+      "why": "pre-cutoff (t166 < t260)",
+      "previous_path": "dev/research/thought/pitch-for-friends-t166.md"
+    },
+    {
+      "path": "dev/runbooks/agents-reference.md",
+      "t_day": 262,
+      "kind": "runbook",
+      "scope": "v1",
+      "status": "live",
+      "what": "AGENTS reference — mo:os doctrine, deep tier",
+      "declared_status": "Phases 1–4 COMPLETE (#58 closed T=244+).** Phase-1 approved on ffs0#58 (PR #59);",
+      "why": "carve-out: runbook (ageless)",
+      "previous_path": "dev/runbooks/agents-reference.md"
+    },
+    {
+      "path": "dev/runbooks/cloudflare-tunnel-access.md",
+      "t_day": null,
+      "kind": "runbook",
+      "scope": "v1",
+      "status": "live",
+      "what": "Cloudflare tunnel + Access — verified state and the last mile (t283)",
+      "why": "cited (mtdc-lab/skill/bus/running-state)",
+      "previous_path": "dev/runbooks/cloudflare-tunnel-access.md"
+    },
+    {
+      "path": "dev/runbooks/github-org-operations.md",
+      "t_day": 247,
+      "kind": "runbook",
+      "scope": "process",
+      "status": "live",
+      "what": "GitHub org + project-board operations — runbook",
+      "why": "carve-out: runbook (ageless)",
+      "previous_path": "dev/runbooks/github-org-operations.md"
+    },
+    {
+      "path": "dev/runbooks/keep-ingest-runbook.md",
+      "t_day": null,
+      "kind": "agent-routed",
+      "scope": "v1",
+      "status": "live",
+      "what": "Keep Ingest Any Harness",
+      "why": "carve-out: agent-routed",
+      "previous_path": "dev/runbooks/keep-ingest-runbook.md"
+    },
+    {
+      "path": "dev/runbooks/moos-fleet-convo-bootstrap.md",
+      "t_day": 262,
+      "kind": "runbook",
+      "scope": "v1",
+      "status": "live",
+      "what": "mo:os standing fleet convo — bootstrap (one per box)",
+      "why": "carve-out: runbook (ageless)",
+      "previous_path": "dev/runbooks/moos-fleet-convo-bootstrap.md"
+    },
+    {
+      "path": "dev/runbooks/moos-nomenclature.md",
+      "t_day": null,
+      "kind": "runbook",
+      "scope": "v1",
+      "status": "live",
+      "what": "mo:os nomenclature — the crisp reference",
+      "why": "carve-out: runbook (ageless)",
+      "previous_path": "dev/runbooks/moos-nomenclature.md"
+    },
+    {
+      "path": "dev/runbooks/pixtral-12b-vision-eval-t231.md",
+      "t_day": 231,
+      "kind": "runbook",
+      "scope": "v1",
+      "status": "live",
+      "what": "Pixtral 12B (+ uncensored fine-tunes) as multimodal-ingest vision backbone — survey",
+      "why": "carve-out: runbook (ageless)",
+      "previous_path": "dev/runbooks/pixtral-12b-vision-eval-t231.md"
+    },
+    {
+      "path": "dev/runbooks/t275-keep-mirror-dryrun-manifest.md",
+      "t_day": 275,
+      "kind": "runbook",
+      "scope": "substrate",
+      "status": "live",
+      "what": "T8 - Keep->Drive mirror DRY-RUN manifest (t275, gate G4)",
+      "why": "cited (mtdc-lab/skill/bus/running-state)",
+      "previous_path": "dev/runbooks/t275-keep-mirror-dryrun-manifest.md"
+    },
+    {
+      "path": "dev/runbooks/tailscale-ssh-acl.md",
+      "t_day": null,
+      "kind": "runbook",
+      "scope": "v1",
+      "status": "live",
+      "what": "Tailscale SSH ACL — enable ProDesk → peer remote trigger",
+      "why": "carve-out: runbook (ageless)",
+      "previous_path": "dev/runbooks/tailscale-ssh-acl.md"
     },
     {
       "path": "dev/scripts/README.md",

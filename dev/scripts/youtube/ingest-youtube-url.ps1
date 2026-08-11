@@ -1,4 +1,4 @@
-# Ingest one YouTube URL → normalized entry in dev/reference/youtube/entries.
+# Ingest one YouTube URL → normalized entry in dev/data/youtube/entries.
 # Emits a JSON result object: status ingested | duplicate | no-captions | failed.
 param(
     [Parameter(Mandatory = $true)]
