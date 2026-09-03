@@ -11,8 +11,8 @@
     ]
   },
   "counts": {
-    "total": 206,
-    "live": 133,
+    "total": 207,
+    "live": 134,
     "archived": 73,
     "pinned": 15
   },
@@ -1349,6 +1349,17 @@
       "what": "Pixtral 12B (+ uncensored fine-tunes) as multimodal-ingest vision backbone — survey",
       "why": "carve-out: runbook (ageless)",
       "previous_path": "dev/runbooks/pixtral-12b-vision-eval-t231.md"
+    },
+    {
+      "path": "dev/runbooks/seat-security-audit.md",
+      "t_day": 306,
+      "kind": "runbook",
+      "scope": "v1",
+      "status": "live",
+      "what": "Seat security audit — local blast radius of an agent IDE (Antigravity, t306)",
+      "declared_status": "",
+      "why": "carve-out: runbook (ageless)",
+      "previous_path": "dev/runbooks/seat-security-audit.md"
     },
     {
       "path": "dev/runbooks/t275-keep-mirror-dryrun-manifest.md",

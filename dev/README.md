@@ -7,7 +7,7 @@
 
 <!-- BEGIN GENERATED: moos-docs-index v1 (source: dev/config/doc-index.json; do not hand-edit — regenerate with python dev/scripts/projections/docs_index_projection.py --mode write) -->
 
-**206 documents** — 133 live, 73 archived (15 of those pinned by an external citer). Cutoff **t260**: docs older than it default to archived, overridden by citation, open governance, and kind.
+**207 documents** — 134 live, 73 archived (15 of those pinned by an external citer). Cutoff **t260**: docs older than it default to archived, overridden by citation, open governance, and kind.
 
 `scope` — **substrate** is manifold-generic and travels to any manifold; **v1** is `my-tiny-data-collider` instance history; **process** is ops and governance.
 
@@ -183,6 +183,7 @@
 | `dev/runbooks/moos-fleet-convo-bootstrap.md` | t262 | v1 | live | mo:os standing fleet convo — bootstrap (one per box) |
 | `dev/runbooks/moos-nomenclature.md` | — | v1 | live | mo:os nomenclature — the crisp reference |
 | `dev/runbooks/pixtral-12b-vision-eval-t231.md` | t231 | v1 | live | Pixtral 12B (+ uncensored fine-tunes) as multimodal-ingest vision backbone — survey |
+| `dev/runbooks/seat-security-audit.md` | t306 | v1 | live | Seat security audit — local blast radius of an agent IDE (Antigravity, t306) |
 | `dev/runbooks/t275-keep-mirror-dryrun-manifest.md` | t275 | substrate | live | T8 - Keep->Drive mirror DRY-RUN manifest (t275, gate G4) |
 | `dev/runbooks/tailscale-ssh-acl.md` | — | v1 | live | Tailscale SSH ACL — enable ProDesk → peer remote trigger |
 
