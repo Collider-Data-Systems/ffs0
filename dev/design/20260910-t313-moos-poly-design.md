@@ -1,6 +1,7 @@
 # T313: Designing the mo:os Polynomial
 
 **Authored:** 2026-09-10 (T=313)
+**Status:** unratified design draft. Written 2026-09-10 in an Antigravity session; it sat uncommitted until it was landed at t336 (ffs0#217). It proposes a mapping and changes nothing: the ontology, the operad and the kernel are as `kb/superset/ontology.json` (4.0.7) and moos-kernel define them, and any adoption goes through the mtdc-lab lane.
 **Context:** Formalizing the departure from legacy OOP. Mapping the `mo:os` kernel to Colored Polynomial Functors (Poly_C) and Moore Machines/Coalgebras.
 
 ---
@@ -10,14 +11,14 @@
 Before we write the equation, we must strictly delineate what each mathematical concept maps to in the `mo:os` 4.0 architecture.
 
 ### **Colors (C)**
-*   **Math:** The index set for the fibration of polynomials. 
+*   **Math:** The index set for the fibration of polynomials.
 *   **mo:os:** The **Ontology Port Colors** (`auth`, `topology`, `transport`, `compute`, `storage`, `workflow`, `semantic`, `projection`).
 *   **Role:** The *Type Checker*. Colors do not store state and do not accept inputs. They exist solely to dictate *which* directions can flow into *which* positions during composition (enforced by the `color_compatibility_matrix`).
 
 ### **Positions (I or B)**
 *   **Math:** The readout, the observable states of the polynomial interface, typed by an output color (c_out).
 *   **mo:os:** A specific **Out-Port Readout** or **F-Projection**.
-*   **Role:** When a surface (like your VS Code IDE or the Antigravity UI) looks at the system, it is observing a Position. A Position is *what the system exposes* at a given moment. 
+*   **Role:** When a surface (like your VS Code IDE or the Antigravity UI) looks at the system, it is observing a Position. A Position is *what the system exposes* at a given moment.
 
 ### **Directions (D_i or E)**
 *   **Math:** The set of admissible inputs at a given position $i$, typed by an input color (c_in).
@@ -41,11 +42,11 @@ p(y) = \sum_{i \in I} y^{D_i}
 For `mo:os`, we define this iteratively:
 
 ### The Set of Positions (I)
-A position $i$ is a specific observable state of the `GraphState`. 
+A position $i$ is a specific observable state of the `GraphState`.
 Let $I$ be the set of all possible valid graph states (or projections thereof) that the kernel can expose via its HTTP `/state` readback.
 
 ### The Set of Directions (D_i)
-At any given position (GraphState) $i$, what inputs are allowed? 
+At any given position (GraphState) $i$, what inputs are allowed?
 D_i is the set of all valid **Rewrite Envelopes** that pass validation at state $i$.
 D_i = { env \in {ADD, LINK, MUTATE, UNLINK} | Validate(i, env) = True }
 
@@ -81,19 +82,18 @@ To audit the Go kernel against this design, we must verify:
 By choosing to bake authorization into the colors, we shift access control from a *runtime check* inside the Coalgebra to a *structural type check* at the Polynomial interface.
 
 ### The New Color Space
-Our original color set was exactly 8 colors: 
+Our original color set was exactly 8 colors:
 C_{base} = {auth, topology, transport, compute, storage, workflow, semantic, projection}
 
 Now, the true color set C is a Cartesian product of the base colors and the set of Identities (URNs):
 C = C_{base} \times Identities
 
-*   An output port isn't just 	opology; it is (topology, urn:moos:agent:zappa).
-*   An incoming MUTATE envelope isn't just 	opology; it carries the identity of the sender (Actor): (topology, urn:moos:agent:lydon).
+*   An output port isn't just `topology`; it is (topology, urn:moos:agent:zappa).
+*   An incoming MUTATE envelope isn't just `topology`; it carries the identity of the sender (Actor): (topology, urn:moos:agent:lydon).
 
 ### Why this is mathematically beautiful:
 In Poly_C, composition requires that the output color of the position strictly matches the input color of the direction.
 If Lydon tries to MUTATE a node owned by Zappa, the colors (topology, lydon) and (topology, zappa) **do not match**.
-The composition evaluates to zero (is annihilated). 
+The composition evaluates to zero (is annihilated).
 
 The invalid envelope is rejected structurally by the Polynomial interface *before* it ever reaches the Coalgebra's Fold function. The Fold function remains completely pure and ignorant of authorization logic, because the interface only passes it valid Directions!
-
