@@ -7,7 +7,7 @@
 
 <!-- BEGIN GENERATED: moos-docs-index v1 (source: dev/config/doc-index.json; do not hand-edit — regenerate with python dev/scripts/projections/docs_index_projection.py --mode write) -->
 
-**207 documents** — 134 live, 73 archived (15 of those pinned by an external citer). Cutoff **t260**: docs older than it default to archived, overridden by citation, open governance, and kind.
+**208 documents** — 135 live, 73 archived (15 of those pinned by an external citer). Cutoff **t260**: docs older than it default to archived, overridden by citation, open governance, and kind.
 
 `scope` — **substrate** is manifold-generic and travels to any manifold; **v1** is `my-tiny-data-collider` instance history; **process** is ops and governance.
 
