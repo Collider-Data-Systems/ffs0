@@ -282,7 +282,7 @@ function fetch_notes(access_token::AbstractString; page_size::Integer=100, max_p
             if hydrate_details
                 name = string(object_value(note, :name, ""))
                 if !isempty(name)
-                    note = fetch_note_detail(name, access_token; request_json_fn=request_json_fn)
+                    sleep(0.7); note = fetch_note_detail(name, access_token; request_json_fn=request_json_fn)
                 end
             end
             push!(notes, note)

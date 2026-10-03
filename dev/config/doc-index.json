@@ -11,8 +11,8 @@
     ]
   },
   "counts": {
-    "total": 206,
-    "live": 133,
+    "total": 207,
+    "live": 134,
     "archived": 73,
     "pinned": 15
   },
@@ -988,6 +988,16 @@
       "status": "live",
       "what": "MCP 2026-07-28 stateless migration — audit, recommendation, plan (t280)",
       "why": "cited (mtdc-lab/skill/bus/running-state)"
+    },
+    {
+      "path": "dev/design/20260910-t313-moos-poly-design.md",
+      "t_day": 313,
+      "kind": "design",
+      "scope": "substrate",
+      "status": "live",
+      "what": "T313: Designing the mo:os Polynomial — colors, positions, directions and the manifold mapped to colored polynomial functors and coalgebras",
+      "declared_status": "uncommitted from 2026-09-10 until t336; unratified design draft",
+      "why": "post-cutoff (t313)"
     },
     {
       "path": "dev/design/manifold-bump-4_0/20260620-t231-grammar-fragment-proposals.md",
