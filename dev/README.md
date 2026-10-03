@@ -7,7 +7,7 @@
 
 <!-- BEGIN GENERATED: moos-docs-index v1 (source: dev/config/doc-index.json; do not hand-edit — regenerate with python dev/scripts/projections/docs_index_projection.py --mode write) -->
 
-**206 documents** — 133 live, 73 archived (15 of those pinned by an external citer). Cutoff **t260**: docs older than it default to archived, overridden by citation, open governance, and kind.
+**207 documents** — 134 live, 73 archived (15 of those pinned by an external citer). Cutoff **t260**: docs older than it default to archived, overridden by citation, open governance, and kind.
 
 `scope` — **substrate** is manifold-generic and travels to any manifold; **v1** is `my-tiny-data-collider` instance history; **process** is ops and governance.
 
@@ -136,6 +136,7 @@
 |---|---|---|---|---|
 | `dev/design/20260722-t263-topological-repo-identity-versioning.md` | t263 | v1 | live | T=263 — Workspace access and the topological repo (v2.1) |
 | `dev/design/20260808-t280-mcp-stateless-migration.md` | t280 | v1 | live | MCP 2026-07-28 stateless migration — audit, recommendation, plan (t280) |
+| `dev/design/20260910-t313-moos-poly-design.md` | t313 | substrate | live | T313: Designing the mo:os Polynomial — colors, positions, directions and the manifold mapped to colored polynomial functors and coalgebras |
 | `dev/design/manifold-bump-4_0/20260620-t231-grammar-fragment-proposals.md` | t231 | v1 | live | Grammar-fragment proposals — maturing the so:om / Poly conjectures (T=231) |
 | `dev/design/manifold-bump-4_0/20260620-t231-moos-config-projection-spec.md` | t231 | v1 | live | moos-config-projection — generating tool-config markdown FROM folded HG (#58 Phase-4) |
 | `dev/design/manifold-bump-4_0/20260620-t231-moos-soom.md` | t231 | substrate | live | mo:os ⊣ so:om — the engine and the surface matrix |
