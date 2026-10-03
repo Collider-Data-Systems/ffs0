@@ -87,3 +87,10 @@ Thumbs.db
 # t280: diary media stays local (Sam ruling: option a)
 kb/moos-diary/Moos_Montage.mp4
 kb/moos-diary/videos.txt
+
+# t336 — Antigravity working files on Z440 (ffs0 is PUBLIC). The hyperprompt
+# drafting dir holds extracted Drive docs with third-party personal material;
+# the two Drive/Docs/Calendar helpers are Antigravity-local tools, not ffs0 code.
+/hyperprompt/
+dev/scripts/ops/traverse_drive.py
+dev/scripts/ops/workspace_api.py
