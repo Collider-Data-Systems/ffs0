@@ -68,6 +68,17 @@ $userProfile = $env:USERPROFILE
 # ops -> scripts -> dev -> <ffs0 root>
 $repoRoot = (Resolve-Path (Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Path) '..\..\..')).Path
 $secretsDir = Join-Path $repoRoot 'secrets'
+# The secret values in secrets/ are gitignored, so they exist only in the main clone; a linked
+# worktree (ffs0.wt\<branch>) has secrets/ with the tracked examples only. From a linked worktree,
+# audit the main clone's secrets/ (resolved through the shared git dir).
+try {
+    $gitDir = (& git -C $repoRoot rev-parse --path-format=absolute --git-dir 2>$null)
+    $common = (& git -C $repoRoot rev-parse --path-format=absolute --git-common-dir 2>$null)
+    if ($gitDir -and $common -and ($gitDir -ne $common)) {
+        $mainSecrets = Join-Path (Split-Path -Parent $common) 'secrets'
+        if (Test-Path -LiteralPath $mainSecrets) { $secretsDir = $mainSecrets }
+    }
+} catch {}
 
 # moos ports per dev/config/moos-federation.topology.json
 $moosPorts = @(8000, 8001, 8002, 8003, 8080, 9000, 9001, 9002, 9003)
@@ -126,6 +137,12 @@ if ($mcpConfigs.Count -eq 0) {
     Add-Finding -Check 'B' -Severity 'PASS' -Title 'No agent-IDE MCP registration files found outside .vscode/'
 }
 
+# Antigravity keeps several copies of the same registry (antigravity\, antigravity-backup\,
+# antigravity-ide\, config\, playground\*\.vscode\). Report each distinct server/root once and
+# list every config that carries it, instead of one finding per copy.
+$serverSeen = [ordered]@{}
+$rootSeen = [ordered]@{}
+
 foreach ($cfg in $mcpConfigs) {
     Add-Finding -Check 'B' -Severity 'INFO' -Title 'Agent-IDE MCP config' -Detail $cfg.FullName
     $parsed = $null
@@ -148,21 +165,38 @@ foreach ($cfg in $mcpConfigs) {
         # A filesystem/shell/desktop MCP server is a general file-access grant.
         $isFileAccess = $line -match 'server-filesystem|filesystem|mcp-server-commands|shell|desktop-commander|iterm|terminal|git\b'
         $sev = if ($isFileAccess) { 'FAIL' } else { 'WARN' }
-        Add-Finding -Check 'B' -Severity $sev -Title ("MCP server '{0}' registered by an agent IDE" -f $name) `
-            -Detail (("cmd: {0}" -f $line) + $(if ($url) { "  url: $url" } else { '' })) `
-            -Remediation 'Confirm this server is one you added. A filesystem/shell MCP server grants the IDE agent read+write over every path passed as a root — remove it or narrow its roots.'
+        $key = "$name|$line|$url"
+        if (-not $serverSeen.Contains($key)) {
+            $serverSeen[$key] = [pscustomobject]@{ Name = $name; Line = $line; Url = $url; Sev = $sev; Configs = [System.Collections.Generic.List[string]]::new() }
+        }
+        $serverSeen[$key].Configs.Add($cfg.FullName)
 
         # Roots the server was handed.
         foreach ($a in $cmd) {
-            if ($a -match '^[A-Za-z]:\\' -and (Test-Path $a)) {
+            # Directories only: a server's own entry script (node ...\mcp-server.js) is not a root it was handed.
+            if ($a -match '^[A-Za-z]:\\' -and (Test-Path -LiteralPath $a -PathType Container)) {
                 $covers = $false
                 try { $covers = $secretsDir.ToLower().StartsWith($a.ToLower()) -or $a.ToLower().Contains('secret') } catch {}
-                Add-Finding -Check 'B' -Severity $(if ($covers) { 'FAIL' } else { 'WARN' }) `
-                    -Title ("MCP server '{0}' granted filesystem root" -f $name) -Detail $a `
-                    -Remediation $(if ($covers) { 'This root reaches ffs0\secrets. Narrow it now.' } else { 'Verify the root is intended.' })
+                $rkey = "$name|$a"
+                if (-not $rootSeen.Contains($rkey)) {
+                    $rootSeen[$rkey] = [pscustomobject]@{ Name = $name; Root = $a; Covers = $covers; Configs = [System.Collections.Generic.List[string]]::new() }
+                }
+                $rootSeen[$rkey].Configs.Add($cfg.FullName)
             }
         }
     }
+}
+
+foreach ($s in $serverSeen.Values) {
+    Add-Finding -Check 'B' -Severity $s.Sev -Title ("MCP server '{0}' registered by an agent IDE" -f $s.Name) `
+        -Detail (("cmd: {0}" -f $s.Line) + $(if ($s.Url) { "  url: $($s.Url)" } else { '' }) + ("  configs ({0}): {1}" -f $s.Configs.Count, ($s.Configs -join '; '))) `
+        -Remediation 'Confirm this server is one you added. A filesystem/shell MCP server grants the IDE agent read+write over every path passed as a root — remove it or narrow its roots (in every config listed).'
+}
+foreach ($r in $rootSeen.Values) {
+    Add-Finding -Check 'B' -Severity $(if ($r.Covers) { 'FAIL' } else { 'WARN' }) `
+        -Title ("MCP server '{0}' granted filesystem root" -f $r.Name) `
+        -Detail ("{0}  configs ({1}): {2}" -f $r.Root, $r.Configs.Count, ($r.Configs -join '; ')) `
+        -Remediation $(if ($r.Covers) { 'This root reaches ffs0\secrets. Narrow it now.' } else { 'Verify the root is intended.' })
 }
 
 # ---------------------------------------------------------------- C · listeners
@@ -198,7 +232,9 @@ foreach ($c in $conns) {
 # ---------------------------------------------------------------- D · kernel write-auth
 $kernelProcs = @()
 try {
-    $kernelProcs = Get-CimInstance Win32_Process -Filter "Name LIKE 'moos%'" -ErrorAction SilentlyContinue
+    # Exact name: moos-router.exe and moos-lsp.exe take no --auth-token-file (the router forwards the
+    # caller's bearer; the LSP is a read client), so matching 'moos%' reported them as unauthenticated kernels.
+    $kernelProcs = @(Get-CimInstance Win32_Process -Filter "Name = 'moos-kernel.exe'" -ErrorAction SilentlyContinue)
 }
 catch {}
 if ($kernelProcs.Count -eq 0) {
@@ -375,6 +411,8 @@ if ($Json) {
         repo_root = $repoRoot
         findings  = $findings
     } | ConvertTo-Json -Depth 6
+    # Same exit contract as the console path: 1 when any check FAILs.
+    if (@($findings | Where-Object { $_.severity -eq 'FAIL' }).Count -gt 0) { exit 1 }
     exit 0
 }
 
