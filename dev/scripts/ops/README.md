@@ -8,6 +8,7 @@ Operational PowerShell helpers for local kernel/federation, the Windows-11 sessi
 
 | Script | Purpose |
 | --- | --- |
+| `Test-SeatSecurity.ps1` | READ-ONLY security audit of one seat host: agent-IDE (Antigravity/Gemini/Codeium) footprint, MCP servers registered outside `.vscode/mcp.json` and their filesystem roots, moos-port bind addresses, kernel write-auth (live 401 probe), firewall/autostart/service residue, `secrets/` ACL, cloudflared credentials, browser extensions + native messaging hosts. `-Json` for G-ingest. Runbook: `dev/runbooks/seat-security-audit.md`. |
 | `Test-MoosFederation.ps1` | Doctor / Start / VerifyPersona / PostProgram helper for the local federation + per-persona MCP surface. Reads `dev/config/moos-federation.topology.json` + `.vscode/mcp.json`. |
 | `ops-snapshot.ps1` | Local readback: per-repo git status + `/healthz` for the fleet. |
 | `Start-Z440SessionDesktops.ps1` | Idempotent Windows-11 startup launcher for the 14-desktop x 4-monitor Z440 placement cache. |
