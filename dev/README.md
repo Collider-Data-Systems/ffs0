@@ -7,7 +7,7 @@
 
 <!-- BEGIN GENERATED: moos-docs-index v1 (source: dev/config/doc-index.json; do not hand-edit — regenerate with python dev/scripts/projections/docs_index_projection.py --mode write) -->
 
-**208 documents** — 135 live, 73 archived (15 of those pinned by an external citer). Cutoff **t260**: docs older than it default to archived, overridden by citation, open governance, and kind.
+**209 documents** — 135 live, 74 archived (15 of those pinned by an external citer). Cutoff **t260**: docs older than it default to archived, overridden by citation, open governance, and kind.
 
 `scope` — **substrate** is manifold-generic and travels to any manifold; **v1** is `my-tiny-data-collider` instance history; **process** is ops and governance.
 
@@ -31,6 +31,7 @@
 | doc | t-day | scope | status | what |
 |---|---|---|---|---|
 | `dev/archive/05-external-substrates.md` | — | substrate | archived · pinned | Section 05 — External Substrates |
+| `dev/archive/06-multimodal-substrate.md` | — | substrate | archived | §6 Multimodal Substrate (AG-laptop rewrite) |
 | `dev/archive/07-time-fabric.md` | — | substrate | archived · pinned | Section 07 — Time Fabric and Cycles |
 | `dev/archive/20260319-ptp-binding-categories.md` | t138 | substrate | archived | Port-to-Port Bindings and Binding Categories |
 | `dev/archive/20260321-prg-in-graph.md` | t140 | substrate | archived | PRG-in-Graph: KG → HG Migration |
