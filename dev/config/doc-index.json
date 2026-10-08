@@ -11,9 +11,9 @@
     ]
   },
   "counts": {
-    "total": 208,
+    "total": 209,
     "live": 135,
-    "archived": 73,
+    "archived": 74,
     "pinned": 15
   },
   "docs": [
@@ -71,6 +71,17 @@
       "pinned": true,
       "what": "Section 05 — External Substrates",
       "why": "RESTORED t283 from git history — was cited by kb/superset/ontology.json (and, for the kernel-proper spec, by moos-kernel/CLAUDE.md) while existing nowhere on disk"
+    },
+    {
+      "path": "dev/archive/06-multimodal-substrate.md",
+      "t_day": null,
+      "kind": "research",
+      "scope": "substrate",
+      "status": "archived",
+      "what": "§6 Multimodal Substrate (AG-laptop rewrite)",
+      "declared_status": "Round 14+ draft",
+      "why": "RECOVERED t338 from an hp-laptop stash (2026-04-26, never committed) on Sam's word; the committed T=175 Z440 version is 6edd687, trashed with kb/research at edddd15",
+      "previous_path": "kb/research/spec/06-multimodal-substrate.md"
     },
     {
       "path": "dev/archive/07-time-fabric.md",
