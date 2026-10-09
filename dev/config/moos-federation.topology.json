@@ -13,7 +13,7 @@
       "http_tailscale": "http://100.82.243.13:8000",
       "mcp_sse_local": "http://localhost:8080/sse",
       "mcp_server": "moos-primary",
-      "expected_ontology_version": "4.0.7",
+      "expected_ontology_version": "4.0.9",
       "seats": [
         "urn:moos:session:sam.kernel-proper",
         "urn:moos:session:sam.moos-diary",
@@ -30,7 +30,7 @@
       "http_tailscale": "http://100.82.243.13:8001",
       "mcp_sse_local": "http://localhost:9001/sse",
       "mcp_server": "moos-menno",
-      "expected_ontology_version": "4.0.7",
+      "expected_ontology_version": "4.0.9",
       "seats": ["urn:moos:session:sam.steinberger-seat"]
     },
     "hp-z440.lola": {
@@ -41,7 +41,7 @@
       "http_tailscale": "http://100.82.243.13:8002",
       "mcp_sse_local": "http://localhost:9002/sse",
       "mcp_server": "moos-lola",
-      "expected_ontology_version": "4.0.7",
+      "expected_ontology_version": "4.0.9",
       "seats": ["urn:moos:session:sam.karpathy-seat"]
     },
     "hp-z440.moos": {
@@ -52,7 +52,7 @@
       "http_tailscale": "http://100.82.243.13:8003",
       "mcp_sse_local": "http://localhost:9003/sse",
       "mcp_server": "moos-moos",
-      "expected_ontology_version": "4.0.7",
+      "expected_ontology_version": "4.0.9",
       "seats": []
     },
     "hp-laptop.primary": {
