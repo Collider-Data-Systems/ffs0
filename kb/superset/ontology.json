@@ -3348,7 +3348,7 @@
       "projection"
     ],
     "projection_rule": "projection ports are read-only S4 sinks — never source of truth, never form causal relations",
-    "semantic_rule": "semantic ports (WF15) may compose with any color only when contract_urn is provided",
+    "semantic_rule": "WF15 semantic ports. Kernels without moos-kernel#80 (98f2ccc and earlier) read matrix, whose wf15_only cells let a semantic port compose with any colour on WF15 when contract_urn is provided. Kernels with #80 apply colour equality instead: WF15's {semantic} pair is semantic at both ends, so it passes, and a semantic port never composes with another colour. Both generations require contract_urn on every WF15 LINK (a separate check, moos-kernel validate.go).",
     "matrix": {
       "auth": {
         "auth": true,
